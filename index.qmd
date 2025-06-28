@@ -1,0 +1,13 @@
+---
+title: "Welcome"
+format: html
+---
+
+# Welcome to Orbitus Robotics
+
+This is the official Orbitus Robotics website built with Quarto and deployed on GitHub Pages.
+
+```{r}
+#| echo: true
+summary(cars)
+```
