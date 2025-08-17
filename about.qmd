@@ -1,8 +1,0 @@
----
-title: "About"
-format: html
----
-
-# About Orbitus Robotics
-
-We are dedicated to advancing robotics technology. This site is generated with [Quarto](https://quarto.org).
