@@ -1,5 +1,6 @@
-baseURL: ''
-title: TailBliss
+baseURL: "https://orbitusrobotics.com/" ##baseURL: ''
+title: "Orbitus Robotics"  ##title: TailBliss
+theme: "tailbliss"
 languageCode: en-us
 DefaultContentLanguage: en
 enableEmoji: true
@@ -219,3 +220,17 @@ module:
   hugoVersion:
     extended: true
     min: "0.114.0"
+  imports:
+    - path: github.com/nusserstudios/tailbliss
+      mounts:
+        - source: layouts
+          target: layouts
+        - source: i18n
+          target: i18n
+        - source: archetypes
+          target: archetypes
+        - source: assets
+          target: assets
+          #excludeFiles: images/* # uncomment for production
+        #- source: content # comment for production
+        # target: content # comment for production
