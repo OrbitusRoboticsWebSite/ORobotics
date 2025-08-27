@@ -10,8 +10,8 @@ description: A test with @tailwindcss/typography & Prose
 
 <section class="lg:pb-24">
   <div class="max-w-screen-md px-4 mx-auto">
-      <p class="mb-8 font-light text-center text-gray-500 lg:mb-16 dark:text-gray-400 sm:text-xl">Got a technical issue? Want to send feedback about a beta feature? Need details about our Business plan? Let us know.</p>
-      <form name="contact" action="https://formsubmit.co/your@email.com" method="POST" class="space-y-8">
+      <p class="mb-8 font-light text-center text-gray-500 lg:mb-16 dark:text-gray-400 sm:text-xl">Have questions about our development services? Do you want to learn more about our Droids? Are you interested in working with us? Let us know.</p>
+      <form name="contact" action="https://formsubmit.co/e521db3489027cfc9d158b4a3d7c147f" method="POST" class="space-y-8">
           <div class="my-4">
               <label for="email" class="block mb-2 font-medium text-gray-900 text-md dark:text-gray-300"><strong>Your Email:</strong></label>
               <input type="email" name="email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500 dark:shadow-sm-light" placeholder="name@example.com" required>
@@ -27,6 +27,9 @@ description: A test with @tailwindcss/typography & Prose
           <div class="mt-6 lg:pb-16">
              <button type="submit" class="px-5 py-3 font-bold text-center text-white bg-indigo-600 rounded-lg text-md sm:w-fit hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800">Send Message</button>
           </div>
+          <input type="hidden" name="_next" value="https://orbitusrobotics.com/thanks.html">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_autoresponse" value="your custom message">
       </form>
   </div>
 </section>

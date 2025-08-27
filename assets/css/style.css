@@ -2556,6 +2556,10 @@ video {
   border-width: 0;
 }
 
+.static {
+  position: static;
+}
+
 .absolute {
   position: absolute;
 }
@@ -2771,8 +2775,12 @@ video {
   height: 100%;
 }
 
-.max-h-12 {
-  max-height: 3rem;
+.h-1 {
+  height: 0.25rem;
+}
+
+.max-h-60 {
+  max-height: 15rem;
 }
 
 .w-0 {
@@ -2805,6 +2813,14 @@ video {
 
 .w-screen {
   width: 100vw;
+}
+
+.w-auto {
+  width: auto;
+}
+
+.w-1 {
+  width: 0.25rem;
 }
 
 .min-w-0 {
@@ -4345,11 +4361,6 @@ EmojiSymbols;
 
 .dark\:ring-gray-900\/40:is(.dark *) {
   --tw-ring-color: rgb(17 24 39 / 0.4);
-}
-
-.dark\:invert:is(.dark *) {
-  --tw-invert: invert(100%);
-  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .dark\:hover\:bg-indigo-700:hover:is(.dark *) {

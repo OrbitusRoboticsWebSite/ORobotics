@@ -1,5 +1,5 @@
 ---
-author: TailBliss
+author: Orbitus
 title: "{{ replace .Name "-" " " | title }}"
 date: {{ .Date }}
 ---
