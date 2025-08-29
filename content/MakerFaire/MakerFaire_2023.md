@@ -11,3 +11,7 @@ authorimage: ../assets/images/global/author.webp
 categories: Makerfaire
 tags: Makerfaire_2023
 ---
+
+{{< foldergallery src="2023_MakerFaire" >}}
+
+{{< foldergallery src="2023" >}}

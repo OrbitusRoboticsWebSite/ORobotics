@@ -19,3 +19,7 @@ https://makerfaire.com/maker/entry/76120/
 Historic Mare Island
 560 Nimitz Ave, Vallejo, California - 94592
 United States
+
+{{< foldergallery src="2024_MakerFaire" >}}
+
+{{< foldergallery src="2024" >}}

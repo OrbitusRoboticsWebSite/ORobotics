@@ -11,3 +11,11 @@ authorimage: ../assets/images/global/author.webp
 categories: Makerfaire
 tags: Makerfaire_2019
 ---
+
+
+![ROB profile view](../../images/IMG_1308.jpg "ROB Profile View")
+
+{{< foldergallery src="2019" >}}
+
+![ROB profile view](../../assets/images/global/author_hu_357bd39e264c7f17.webp "ROB Profile View")
+
