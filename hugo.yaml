@@ -51,7 +51,7 @@ params:
   author: Rodolfo Aramayo
   authorimage: ../assets/images/global/author.webp
   og_image: /images/tailbliss-cover.png
-  moto: "Leading the A.I. revolutioun"
+  moto: "Leading the A.I. revolution"
   description: "Meet R.O.B. our world class open source macOSX droid powered with Gemini."
   disable_theme_toggle: false
   disable_stay_uptodate: false
