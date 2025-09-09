@@ -28,7 +28,7 @@ description: A test with @tailwindcss/typography & Prose
              <button type="submit" class="px-5 py-3 font-bold text-center text-white bg-indigo-600 rounded-lg text-md sm:w-fit hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800">Send Message</button>
           </div>
           <input type="hidden" name="_next" value="https://orbitusrobotics.com/thanks.html">
-          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_captcha" value="true">
           <input type="hidden" name="_autoresponse" value="your custom message">
       </form>
   </div>
