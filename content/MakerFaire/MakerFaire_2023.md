@@ -1,17 +1,18 @@
 ---
 title: "Maker Faire 2023"
-date: 2021-12-18T11:10:36+08:00
 draft: false
+date: 2023-01-01
 language: en
-featured_image: ../assets/images/pages/Makerfaire_2023.webp
-summary: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed cursus, odio nec venenatis lacinia, lacus lectus varius nisi, in tristique mi purus ut libero.
-description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed cursus, odio nec venenatis lacinia, lacus lectus varius nisi, in tristique mi purus ut libero. Vestibulum vel convallis felis. Ut finibus lorem vestibulum lobortis rhoncus.
+event_year: 2023
+featured_image: images/pages/Makerfaire_2023.webp
+summary: Photos from R.O.B.'s 2023 Maker Faire gallery and the broader 2023 project archive.
+description: Photos from R.O.B.'s 2023 Maker Faire gallery and the broader 2023 project archive.
 author: Orbitus
-authorimage: ../assets/images/global/author.webp
+authorimage: images/global/author.webp
 categories: Makerfaire
 tags: Makerfaire_2023
 ---
 
-{{< foldergallery src="2023_MakerFaire" >}}
+{{< foldergallery src="2023_MakerFaire" title="Maker Faire photos" initial="8" >}}
 
-{{< foldergallery src="2023" >}}
+{{< foldergallery src="2023" title="Project photos" initial="4" >}}

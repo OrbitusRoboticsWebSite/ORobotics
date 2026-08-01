@@ -1,8 +1,8 @@
 {
-  "name": "TailBliss",
-  "version": "0.6.1",
-  "description": "Hugo + Alpine.js + TailwindCSS",
-  "main": "index.js",
+  "name": "orobotics-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Orbitus Robotics Hugo website and optimized media gallery",
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.15",
     "alpinejs": "^3.14.3",
@@ -16,30 +16,29 @@
     "start": "concurrently npm:watch:*",
     "watch:tw": "tailwindcss -i ./assets/css/main.css -o ./assets/css/style.css --watch",
     "watch:hugo": "hugo server",
-    "build": "hugo --minify",
-    "test": "hugo"
+    "build:css": "tailwindcss -i ./assets/css/main.css -o ./assets/css/style.css --minify && node scripts/normalize-generated-css.mjs",
+    "build": "npm run build:css && hugo --gc --minify",
+    "validate": "node scripts/validate-gallery.mjs",
+    "validate:subpath": "node scripts/validate-subpath.mjs",
+    "test": "npm run build && npm run validate && npm run validate:subpath"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nusserstudios/tailbliss.git"
+    "url": "git+https://github.com/OrbitusRoboticsWebSite/ORobotics.git"
   },
   "keywords": [
     "hugo",
     "tailwind",
     "tailwindcss",
     "alpinejs",
-    "minimal",
-    "responsive",
-    "light mode",
-    "dark mode",
-    "hugo blog",
-    "categories",
-    "tags"
+    "robotics",
+    "responsive-gallery",
+    "web-performance"
   ],
-  "author": "NusserStudios",
+  "author": "Orbitus Robotics",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/nusserstudios/tailbliss/issues"
+    "url": "https://github.com/OrbitusRoboticsWebSite/ORobotics/issues"
   },
-  "homepage": "https://github.com/nusserstudios/tailbliss"
+  "homepage": "https://orbitusrobotics.com/"
 }

@@ -1,5 +1,5 @@
 {{ define "main" }}
-<main>
+<main id="main">
     <div class="bg-gray-200 dark:bg-gray-900">
         <div class="max-w-screen-xl px-4 py-8 mx-auto">
             <div class="grid items-center gap-8 mb-8 sm:mb-0 lg:gap-12 lg:grid-cols-12">
@@ -17,12 +17,18 @@
                 <div class="col-span-6">
                     {{ $hero := resources.GetMatch "images/pages/ROB & R2D2.jpeg" }}
 
-                    {{ $thumb := ($hero.Fill "400x400 webp q90") }}
-                    {{ $large := ($hero.Fill "576x576 webp q90") }}
-
-                    <img srcset="
-                        {{- with $thumb.RelPermalink -}}{{.}} 400w{{- end -}}
-                        {{- with $large.RelPermalink -}}, {{.}} 576w{{- end -}}" src="{{ $hero.RelPermalink }}" width="100%" height="" alt="TailBliss Hero" class="w-full max-w-xl mx-auto rounded-lg" />
+                    {{ $heroSmall := $hero.Fill "480x480 webp q80" }}
+                    {{ $heroMedium := $hero.Fill "720x720 webp q80" }}
+                    {{ $heroLarge := $hero.Fill "960x960 webp q82" }}
+                    <img src="{{ $heroMedium.RelPermalink }}"
+                         srcset="{{ $heroSmall.RelPermalink }} 480w, {{ $heroMedium.RelPermalink }} 720w, {{ $heroLarge.RelPermalink }} 960w"
+                         sizes="(min-width: 1024px) 50vw, calc(100vw - 2rem)"
+                         width="{{ $heroMedium.Width }}"
+                         height="{{ $heroMedium.Height }}"
+                         fetchpriority="high"
+                         decoding="async"
+                         alt="R.O.B., a tracked humanoid robot, on a patio beside an R2-D2 model"
+                         class="w-full max-w-xl h-auto mx-auto rounded-lg" />
                 </div>
             </div>
         </div>
@@ -47,11 +53,18 @@
                 <div class="relative w-full h-auto px-4 py-6 mx-auto sm:max-w-3xl sm:px-6 lg:px-0 lg:py-20">
                     <div class="overflow-hidden shadow-xl rounded-2xl">
                         {{ $p1image := resources.Get .Site.Params.P1.Image }}
-                        {{ with $p1image }}
-                        {{ with .Resize (printf "%dx%d webp q90" .Width .Height) }}
-                        <img imgh src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" class="w-full h-auto" alt="P1" loading="lazy" />
-                        {{ end }}
-                        {{ end }}
+                        {{ $p1small := $p1image.Resize "480x webp q78" }}
+                        {{ $p1medium := $p1image.Resize "800x webp q80" }}
+                        {{ $p1large := $p1image.Resize "1200x webp q80" }}
+                        <img src="{{ $p1medium.RelPermalink }}"
+                             srcset="{{ $p1small.RelPermalink }} {{ $p1small.Width }}w, {{ $p1medium.RelPermalink }} {{ $p1medium.Width }}w, {{ $p1large.RelPermalink }} {{ $p1large.Width }}w"
+                             sizes="(min-width: 1024px) 50vw, calc(100vw - 3rem)"
+                             width="{{ $p1medium.Width }}"
+                             height="{{ $p1medium.Height }}"
+                             class="w-full h-auto"
+                             alt="R.O.B. beside a spatial display of its Mac control software"
+                             loading="lazy"
+                             decoding="async" />
                     </div>
                 </div>
             </div>
@@ -88,7 +101,6 @@
                             {{ .text }}
                         </p>
                         {{ end }}
-                        </p>
                     </div>
                 </div>
             </div>
@@ -107,11 +119,18 @@
                 </div>
                 <div class="relative pl-4 -mr-40 sm:mx-auto sm:max-w-3xl sm:px-0 lg:h-full lg:max-w-none lg:pl-12">
                     {{ $p2image := resources.Get .Site.Params.P2.Image }}
-                    {{ with $p2image }}
-                    {{ with .Resize (printf "%dx%d webp q90" .Width .Height) }}
-                    <img imgh src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="p2" class="w-full rounded-lg shadow-xl lg:h-full lg:w-auto lg:max-w-none" loading="lazy" />
-                    {{ end }}
-                    {{ end }}
+                    {{ $p2small := $p2image.Resize "480x webp q78" }}
+                    {{ $p2medium := $p2image.Resize "800x webp q80" }}
+                    {{ $p2large := $p2image.Resize "1200x webp q80" }}
+                    <img src="{{ $p2medium.RelPermalink }}"
+                         srcset="{{ $p2small.RelPermalink }} {{ $p2small.Width }}w, {{ $p2medium.RelPermalink }} {{ $p2medium.Width }}w, {{ $p2large.RelPermalink }} {{ $p2large.Width }}w"
+                         sizes="(min-width: 1024px) 50vw, calc(100vw - 3rem)"
+                         width="{{ $p2medium.Width }}"
+                         height="{{ $p2medium.Height }}"
+                         alt="Concept rendering of a humanoid robot"
+                         class="w-full h-auto rounded-lg shadow-xl lg:w-auto lg:max-w-none"
+                         loading="lazy"
+                         decoding="async" />
 
                 </div>
             </div>
@@ -127,10 +146,17 @@
                 <div class="flex justify-center col-span-1 px-8 py-8 bg-gray-50 dark:bg-gray-900/10">
                     {{ if .image }}
                     {{ $sponsor := resources.Get .image }}
-                    <img src="{{ $sponsor.RelPermalink }}" class="max-h-60" alt="{{ .alt }}" loading="lazy" />
+                    {{ $sponsorThumb := $sponsor.Fill "480x320 webp q78" }}
+                    <img src="{{ $sponsorThumb.RelPermalink }}"
+                         width="{{ $sponsorThumb.Width }}"
+                         height="{{ $sponsorThumb.Height }}"
+                         class="w-full h-auto max-h-60 object-cover"
+                         alt="{{ .alt }}"
+                         loading="lazy"
+                         decoding="async" />
                     {{ else }}
                     {{ $sponsor := resources.Get "images/global/sample-logo.svg" }}
-                    <img src="{{ $sponsor.RelPermalink }}" class="max-h-200" alt="{{ .alt }}" loading="lazy" />
+                    <img src="{{ $sponsor.RelPermalink }}" class="max-h-60" alt="{{ .alt }}" loading="lazy" decoding="async" />
                     {{ end }}
                 </div>
                 {{ end }}
@@ -146,7 +172,7 @@
                 {{ end }}
                 {{ range .Site.Params.P3.Links }}
                 <div class="my-6">
-                    <a href="{{ .url }}" class="text-base font-medium text-primary-400 dark:text-primary-100">
+                    <a href="{{ .url | relLangURL }}" class="text-base font-medium text-primary-700 underline decoration-2 underline-offset-4 hover:text-primary-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 dark:text-primary-100 dark:hover:text-white">
                         {{ .text }}&nbsp&rarr;
                     </a>
                 </div>
@@ -175,56 +201,10 @@
             <div class="mx-auto text-gray-900 max-w-7xl dark:text-gray-50 md:px-1.5">
                 <div class="px-4 text-gray-900 dark:text-white not-prose dark:text-zinc-200">
                     <div class="grid gap-4 mx-auto mt-12 mb-4 lg:max-w-none md:grid-cols-3">
-                        {{ range (.Paginator 3).Pages }}
-                        <div class="flex flex-col overflow-hidden rounded-lg shadow-lg bg-gray-50 dark:bg-gray-900">
-                            <a href="{{.Permalink}}">
-                                {{ with .Params.featured_image }}
-                                {{ with resources.Get . }}
-                                {{ $postimage := (.Resize "500x webp q90").RelPermalink }}
-                                <img src="{{ $postimage }}" class="object-fill overflow-hidden rounded-t-lg" width="100%" height="" loading="lazy" alt="{{ .Title }}" />
-
-                                {{ end }}
-                                {{ end }}
-                            </a>
-                            <div class="p-6">
-                                <div class="flex-1">
-                                    <a href="{{.Permalink}}" class="block mt-2 text-2xl font-black text-gray-900 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-500 hover:underline">
-                                        {{ .Title }}
-                                    </a>
-                                    <p class="mt-3 text-base text-gray-900 dark:text-gray-300">
-                                        {{ .Params.summary }}
-                                    </p>
-                                </div>
-                                <div class="flex pt-6 font-medium text-primary-600 dark:text-primary-100 text-md">
-                                    <span class="pr-2 font-black">Tags:</span>
-                                    {{ range $elem_index, $elem_val := (.GetTerms "tags") }}
-                                    {{- if gt $elem_index 0 }}, {{ end -}}
-                                    <a href="{{ .Permalink }}" class="inline-flex items-center rounded-md bg-gray-300 hover:bg-primary-200 hover:text-black px-2.5 py-0.5 text-sm font-medium text-gray-900 ">{{ .LinkTitle }}</a>
-                                    {{- end -}}
-                                </div>
-                                <div class="flex items-center mt-6">
-                                    <div class="flex-shrink-0">
-                                        <span class="sr-only">{{ .Params.author }}</span>
-                                        {{ with .Params.authorimage }}
-                                        {{ with resources.Get . }}
-                                        {{ $authorimage := (.Resize "400x webp").RelPermalink }}
-                                        <img class="w-10 h-10 rounded-full" src="{{ $authorimage }}" alt="">
-                                        {{ end }}
-                                        {{ end }}
-                                    </div>
-                                    <div class="pt-1 ml-3">
-                                        <p class="text-sm font-medium text-gray-900 dark:text-white">
-                                            {{ .Params.author }}
-                                        </p>
-                                        <div class="flex space-x-1 text-sm text-gray-500 dark:text-white">
-                                            <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "2006-01-02" }}</time>
-                                            <span aria-hidden="true">&middot;</span>
-                                            <span>{{ math.Round (div (countwords .Content) 220.0) }} min read</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {{ $galleryPages := where site.RegularPages "Section" "makerfaire" }}
+                        {{ $galleryPages = ($galleryPages.ByParam "event_year").Reverse }}
+                        {{ range first 3 $galleryPages }}
+                            {{ partial "gallery-card.html" . }}
                         {{ end }}
                     </div>
                 </div>
@@ -257,7 +237,7 @@
                     <form action="{{ .Site.Params.P5.Action }}" method="POST" class="mt-12 sm:mx-auto sm:flex sm:max-w-lg">
                         <div class="flex-1 min-w-0">
                             <label for="cta-email" class="sr-only">{{ .Site.Params.P5.Label }}</label>
-                            <input id="cta-email" type="email" class="block w-full px-5 py-3 text-base text-gray-900 placeholder-gray-500 border border-transparent rounded-md shadow-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-500" placeholder="{{ .Site.Params.P5.Placeholder }}">
+                            <input id="cta-email" name="email" type="email" autocomplete="email" required class="block w-full px-5 py-3 text-base text-gray-900 placeholder-gray-500 border border-transparent rounded-md shadow-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-500" placeholder="{{ .Site.Params.P5.Placeholder }}">
                         </div>
                         <div class="mt-4 sm:mt-0 sm:ml-3">
                             <button type="submit" class="block w-full px-5 py-3 text-base font-medium text-white bg-gray-900 border border-transparent rounded-md shadow hover:bg-black focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-500 sm:px-10">

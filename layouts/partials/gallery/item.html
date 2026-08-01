@@ -1,0 +1,42 @@
+{{- $file := .file -}}
+{{- $isVideo := eq $file.kind "video" -}}
+{{- $base := printf "images/galleries/%s" .folder -}}
+{{- $thumb320 := printf "%s/thumb/%s-320.webp" $base $file.name -}}
+{{- $thumb640 := printf "%s/thumb/%s-640.webp" $base $file.name -}}
+{{- $display := printf "%s/display/%s.webp" $base $file.name -}}
+{{- $source := $display -}}
+{{- $kind := "image" -}}
+{{- $kindLabel := "Photo" -}}
+{{- if $isVideo -}}
+  {{- $source = printf "%s/video/%s.mp4" $base $file.name -}}
+  {{- $kind = "video" -}}
+  {{- $kindLabel = "Video" -}}
+{{- end -}}
+{{- $number := add .index 1 -}}
+{{- $caption := printf "%s %d of %d — %s" $kindLabel $number .total .title -}}
+<li class="media-gallery__item" data-gallery-item>
+  <a class="media-gallery__link"
+     href="{{ $source | relURL }}"
+     data-gallery-open
+     data-gallery-kind="{{ $kind }}"
+     data-gallery-src="{{ $source | absURL }}"
+     data-gallery-poster="{{ $display | absURL }}"
+     data-gallery-caption="{{ $caption }}"
+     aria-label="Open {{ lower $kindLabel }} {{ $number }} of {{ .total }} in {{ .title }}">
+    <img class="media-gallery__thumbnail"
+         src="{{ $thumb320 | relURL }}"
+         srcset="{{ $thumb320 | relURL }} 320w, {{ $thumb640 | relURL }} 640w"
+         sizes="(min-width: 1280px) 292px, (min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+         width="320"
+         height="240"
+         loading="lazy"
+         decoding="async"
+         alt="">
+    {{- if $isVideo -}}
+    <span class="media-gallery__play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" focusable="false"><path d="M8 5v14l11-7z"></path></svg>
+    </span>
+    {{- end -}}
+    <span class="media-gallery__label">{{ $kindLabel }} {{ $number }}</span>
+  </a>
+</li>

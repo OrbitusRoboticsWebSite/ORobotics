@@ -1,16 +1,31 @@
-<title itemprop="name">{{if .IsHome}} {{ $.Site.Params.description }} | {{ .Title }}
-    {{else}} {{ .Title }} | {{ .Site.Title }} {{end}}
-</title>
-<meta name="description" content="{{ if .Description }}{{ .Description }}{{ else }}{{ .Site.Params.description }}{{ end }}" />
-<meta property="og:title" content="{{ .Title }} | {{ .Site.Title }}" />
-<meta name="twitter:title" content="{{ .Title }} | {{ .Site.Title }}" />
-<meta itemprop="name" content="{{ .Title }} | {{ .Site.Title }}" />
-<meta name="application-name" content="{{ .Title }} | {{ .Site.Title }}" />
-<meta property="og:description"
-      content="{{ if .Description }}{{ .Description }}{{ else }}{{ .Site.Params.description }}{{ end }}" />
-<meta property="og:site_name" content="{{ .Site.Title }}" />
-<meta property="og:url" content="{{ .Permalink }}" />
-<meta property="og:locale" content="en">
-<meta property="og:image" content="{{ if .Params.featured_image }}{{ .Params.featured_image | relURL }}{{ else }}{{ .Site.Params.og_image | relURL }}{{ end }}" />
-<meta property="og:image:secure_url" content="{{ if .Params.featured_image }}{{ .Params.featured_image | absURL }}{{ else }}{{ .Site.Params.og_image | absURL }}{{ end }}" />
-<meta property="og:type" content="{{if .IsHome}}website{{else}}article{{end}}" />
+{{- $pageTitle := .Site.Title -}}
+{{- if not .IsHome -}}
+  {{- $pageTitle = printf "%s | %s" .Title .Site.Title -}}
+{{- end -}}
+{{- $description := .Site.Params.description -}}
+{{- with .Description -}}
+  {{- $description = . -}}
+{{- end -}}
+{{- $socialImage := .Site.Params.og_image | absURL -}}
+{{- with .Params.featured_image -}}
+  {{- with resources.Get . -}}
+    {{- $socialResource := .Fill "1200x630 webp q82" -}}
+    {{- $socialImage = $socialResource.Permalink -}}
+  {{- end -}}
+{{- end -}}
+<title>{{ $pageTitle }}</title>
+<meta name="description" content="{{ $description }}">
+<meta name="application-name" content="{{ .Site.Title }}">
+<meta property="og:title" content="{{ $pageTitle }}">
+<meta property="og:description" content="{{ $description }}">
+<meta property="og:site_name" content="{{ .Site.Title }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="{{ $socialImage }}">
+<meta property="og:image:secure_url" content="{{ $socialImage }}">
+<meta property="og:image:alt" content="{{ if .IsHome }}R.O.B., Orbitus Robotics' tracked humanoid robot{{ else }}{{ .Title }}{{ end }}">
+<meta property="og:type" content="{{ if .IsHome }}website{{ else }}article{{ end }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ $pageTitle }}">
+<meta name="twitter:description" content="{{ $description }}">
+<meta name="twitter:image" content="{{ $socialImage }}">

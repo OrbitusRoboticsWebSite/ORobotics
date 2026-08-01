@@ -1,25 +1,26 @@
 ---
 title: "Maker Faire 2024"
-date: 2022-06-18T11:10:36+08:00
 draft: false
+date: 2024-01-01
 language: en
-featured_image: ../assets/images/pages/Makerfaire_2024.webp
-summary: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed cursus, odio nec venenatis lacinia, lacus lectus varius nisi, in tristique mi purus ut libero.
-description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed cursus, odio nec venenatis lacinia, lacus lectus varius nisi, in tristique mi purus ut libero. Vestibulum vel convallis felis. Ut finibus lorem vestibulum lobortis rhoncus.
+event_year: 2024
+featured_image: images/pages/Makerfaire_2024.webp
+summary: Photos from R.O.B.'s Maker Faire 2024 appearance at Historic Mare Island in Vallejo.
+description: Photos from R.O.B.'s Maker Faire 2024 appearance at Historic Mare Island in Vallejo.
 author: Orbitus
-authorimage: ../assets/images/global/author.webp
+authorimage: images/global/author.webp
 categories: Makerfaire
 tags: Makerfaire_2024
 ---
 
-https://makerfaire.com/maker/entry/76120/
+[View R.O.B.'s Maker Faire project page](https://makerfaire.com/maker/entry/76120/).
 
-# Location
+## Event location
 
 Historic Mare Island
 560 Nimitz Ave, Vallejo, California - 94592
 United States
 
-{{< foldergallery src="2024_MakerFaire" >}}
+{{< foldergallery src="2024_MakerFaire" title="Maker Faire photos" initial="8" >}}
 
-{{< foldergallery src="2024" >}}
+{{< foldergallery src="2024" title="Project photos" initial="4" >}}

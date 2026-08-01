@@ -1,4 +1,6 @@
 node_modules/
+# Local camera originals can contain GPS and device metadata. Keep them out of Git.
+media/gallery-originals/
 # resources/
 public/
 .hugo_build.lock
