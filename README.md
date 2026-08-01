@@ -61,3 +61,13 @@ If originals were previously pushed to a public remote, removing them from the c
 ## Deployment
 
 Pushing `main` runs `.github/workflows/hugo.yml`, builds the site, validates the generated gallery, and deploys the `public` artifact to GitHub Pages. The custom domain is published from `static/CNAME`.
+
+In the repository's GitHub Pages settings, keep **Build and deployment →
+Source** set to **GitHub Actions**. Branch-based Pages deployment invokes
+Jekyll against the Hugo source tree and is not supported by this site.
+
+The TailBliss files used by the build are maintained directly in this
+repository's `assets`, `layouts`, and `static` directories. Do not add a
+`themes/tailbliss` submodule: the production workflow does not use it, and
+upstream example-site symlinks can create recursive paths for generic site
+builders.
