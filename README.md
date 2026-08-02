@@ -60,7 +60,12 @@ If originals were previously pushed to a public remote, removing them from the c
 
 ## Deployment
 
-Pushing `main` runs `.github/workflows/hugo.yml`, builds the site, validates the generated gallery, and deploys the `public` artifact to GitHub Pages. The custom domain is published from `static/CNAME`.
+Pushing `main` runs `.github/workflows/hugo.yml`, builds the site, validates the generated gallery, and deploys the `public` artifact to GitHub Pages. The canonical site URL is `https://www.orbitusrobotics.com/`.
+
+For this custom GitHub Actions deployment, the custom domain configured under
+**Settings → Pages** is authoritative. `static/CNAME` mirrors that value in the
+generated artifact for portability, but GitHub Pages does not use it to set the
+domain for an Actions-based deployment.
 
 In the repository's GitHub Pages settings, keep **Build and deployment →
 Source** set to **GitHub Actions**. Branch-based Pages deployment invokes

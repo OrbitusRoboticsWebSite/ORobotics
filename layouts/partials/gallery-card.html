@@ -1,37 +1,33 @@
 {{ $page := . }}
-<article class="flex flex-col overflow-hidden rounded-xl shadow-lg bg-gray-50 dark:bg-gray-900">
-    <a href="{{ .RelPermalink }}" class="block overflow-hidden" aria-label="Open {{ .Title }}">
-        {{ with .Params.featured_image }}
-            {{ with resources.Get . }}
-                {{ $cover := .Fill "640x400 webp q78" }}
-                <img src="{{ $cover.RelPermalink }}"
-                     class="w-full h-auto transition-transform duration-300 hover:scale-[1.02]"
-                     width="{{ $cover.Width }}"
-                     height="{{ $cover.Height }}"
-                     loading="lazy"
-                     decoding="async"
-                     alt="{{ $page.Title }} gallery cover">
+<article class="gallery-card">
+    <a href="{{ .RelPermalink }}" class="gallery-card__link" aria-label="Open {{ .Title }} archive">
+        <span class="gallery-card__media">
+            {{ with .Params.featured_image }}
+                {{ with resources.Get . }}
+                    {{ $coverSmall := .Fill "360x225 webp q76" }}
+                    {{ $coverLarge := .Fill "640x400 webp q78" }}
+                    <img src="{{ $coverLarge.RelPermalink }}"
+                         srcset="{{ $coverSmall.RelPermalink }} 360w, {{ $coverLarge.RelPermalink }} 640w"
+                         sizes="(min-width: 768px) 33vw, calc(100vw - 3rem)"
+                         class="gallery-card__image"
+                         width="{{ $coverLarge.Width }}"
+                         height="{{ $coverLarge.Height }}"
+                         loading="lazy"
+                         decoding="async"
+                         alt="{{ $page.Title }} gallery cover">
+                {{ end }}
             {{ end }}
-        {{ end }}
-    </a>
-    <div class="flex flex-1 flex-col p-6">
-        <div class="flex-1">
             {{ with .Params.event_year }}
-            <p class="mb-2 text-sm font-extrabold tracking-widest uppercase text-primary-600 dark:text-primary-300">{{ . }} archive</p>
+            <span class="gallery-card__year">{{ . }}</span>
             {{ end }}
-            <h2 class="m-0 text-2xl font-black">
-                <a href="{{ $page.RelPermalink }}" class="text-gray-900 dark:text-gray-100 hover:text-primary-600 dark:hover:text-primary-300 hover:underline">
-                    {{ $page.Title }}
-                </a>
-            </h2>
-            <p class="mt-3 text-base text-gray-700 dark:text-gray-300">{{ .Params.summary }}</p>
-        </div>
-        <div class="flex flex-wrap gap-2 pt-5" aria-label="Tags">
-            {{ range .GetTerms "tags" }}
-            <a href="{{ .RelPermalink }}" class="inline-flex items-center rounded-md bg-gray-200 px-2.5 py-1 text-sm font-medium text-gray-900 hover:bg-primary-200 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-primary-700">
-                {{ .LinkTitle }}
-            </a>
-            {{ end }}
-        </div>
-    </div>
+        </span>
+
+        <span class="flex flex-1 flex-col p-6">
+            <span class="flex-1">
+                <h2 class="gallery-card__title m-0 text-2xl font-black">{{ $page.Title }}</h2>
+                <span class="mt-3 block text-base leading-7 text-gray-600 dark:text-gray-300">{{ .Params.summary }}</span>
+            </span>
+            <span class="text-link mt-6">View archive <span aria-hidden="true">→</span></span>
+        </span>
+    </a>
 </article>

@@ -1,5 +1,5 @@
-baseURL: "https://orbitusrobotics.com/" ##baseURL: ''
-title: "Orbitus Robotics"  ##title: TailBliss
+baseURL: "https://www.orbitusrobotics.com/"
+title: "Orbitus Robotics"
 locale: en-US
 DefaultContentLanguage: en
 enableEmoji: true
@@ -49,25 +49,52 @@ markup:
 params:
   author: Rodolfo Aramayo
   authorimage: ../assets/images/global/author.webp
-  og_image: images/Orbitus_horizontal_logo.png
-  moto: "Leading the A.I. revolution"
-  description: "Meet R.O.B. our world class open source macOSX droid powered with Gemini."
+  og_image: images/og-orbitus-robotics.jpg
+  og_image_alt: "Orbitus Robotics — Apple-native robotics, built in public, featuring R.O.B."
+  moto: "Leading the AI revolution"
+  description: "Meet R.O.B., our world-class open-source humanoid platform combining macOS, spatial computing, and Gemini-powered intelligence."
   disable_theme_toggle: false
   disable_stay_uptodate: false
   gallery_initial_items: 12
+
+  hero:
+    eyebrow: "Apple-native robotics"
+    heading: "Robotics built for the Apple ecosystem."
+    intro: "Meet R.O.B.—an open-source humanoid platform designed to move, perceive, and connect through macOS, spatial computing, and live multimodal AI."
+    primary:
+      label: "Meet R.O.B."
+      url: "orbitus/"
+    secondary:
+      label: "Discuss a project"
+      url: "contact/"
+    stats:
+      - value: "2019–today"
+        label: "Built in public"
+      - value: "7-axis"
+        label: "Articulated arms"
+      - value: "Dual-track"
+        label: "Mobile platform"
+    capabilities:
+      - title: "Perception"
+        text: "Camera and spatial sensing turn the world around R.O.B. into actionable context."
+      - title: "Motion"
+        text: "Tracked mobility and articulated arms bring intelligent decisions into physical space."
+      - title: "Personality"
+        text: "Live multimodal AI gives R.O.B. a voice, awareness, and a more natural presence."
 
   p1:
     heading: "Our mission"
     image: "images/pages/our-mission.png"
     content:
       - text: "We specialize in Apple development technologies and provide solutions on iOS, macOS, visionOS, watchOS, and iPadOS."
-      - text: "Bringing the future of technology to the world through advanced software development solutions in Swift, Swift UI, and Objective-C."
+      - text: "Bringing the future of technology to the world through advanced software development solutions in Swift, SwiftUI, and Objective-C."
       - text: "We carry the flames of innovation in every project we touch."
   p2:
-    heading: "Join the Virtual Revolution"
-    image: "images/pages/hacktoberfest.jpg"
+    heading: "Turn intelligence into action"
+    image: "images/pages/Makerfaire_2024.webp"
     content:
-      - text: "Get ready for the latest AI and Spatial computing transformations to the industry. With our specialized developers, we deliver the next cutting edge experience to your project. Don't let the A.I. revolution pass you by, ask our technical architects to help engineer a solution roadmap today. Our experts have been delivering solutions to the top companies in the tech industry for decades. We are the personnel behind the black curtains guarding the sanctity of the world's beloved technology."
+      - text: "Bring AI and spatial computing into the real world with practical, Apple-native engineering."
+      - text: "Orbitus Robotics helps teams move from ambitious concepts to focused roadmaps across Swift, SwiftUI, visionOS, macOS, and intelligent robotics."
 
   p3:
     heading: "R.O.B. through the years"
@@ -80,34 +107,54 @@ params:
       - identifier: a
         image: "images/pages/Makerfaire_2024.webp"
         alt: "A person and R.O.B. beside the Maker Faire robot at Mare Island"
+        label: "Maker Faire 2024"
+        caption: "Meeting makers at Mare Island"
+        url: "makerfaire/makerfaire_2024/"
       - identifier: b
         image: "images/pages/ROB-comicon.webp"
         alt: "R.O.B. on its tracked base at an outdoor event"
+        label: "In the field"
+        caption: "R.O.B. engaging with the public"
+        url: "makerfaire/"
       - identifier: c
         image: "images/pages/Makerfaire_2022.webp"
         alt: "An early R.O.B. prototype on tracks in a wooded setting"
+        label: "Maker Faire 2022"
+        caption: "A new generation takes shape"
+        url: "makerfaire/rob_2022/"
       - identifier: d
         image: "images/pages/Makerfaire_2019.webp"
         alt: "An early R.O.B. tracked prototype indoors"
+        label: "Maker Faire 2019"
+        caption: "The original tracked prototype"
+        url: "makerfaire/makerfaire_2019/"
       - identifier: e
         image: "images/pages/Mendocino.webp"
         alt: "R.O.B. outside the Mendocino Volunteer Fire Department"
+        label: "Mendocino"
+        caption: "Robotics beyond the workshop"
+        url: "makerfaire/"
       - identifier: f
         image: "images/pages/Beach.webp"
         alt: "Close-up of R.O.B.'s arm and tracked base at the beach"
+        label: "On the move"
+        caption: "Testing mobility in the real world"
+        url: "makerfaire/"
 
   p4:
     heading: "Latest galleries"
     content:
       - text: "Browse recent Maker Faire appearances and R.O.B. development archives."
   p5:
-    heading: "Stay Up to Date"
+    heading: "Build the next robotics experience"
     content:
-      - text: "How can we help your company reach for tomorrow? Stay in touch with our latest news and events."
-    action: "https://formsubmit.co/e521db3489027cfc9d158b4a3d7c147f"
-    label: "Email address"
-    placeholder: "Enter your email"
-    button: "Notify me"
+      - text: "From an ambitious prototype to an Apple-platform roadmap, let’s talk about what your team wants to bring into the world."
+    primary:
+      label: "Start a conversation"
+      url: "contact/"
+    secondary:
+      label: "Explore the source"
+      url: "https://github.com/RudyAramayo"
 
   social_media:
     github:
@@ -128,28 +175,28 @@ menu:
   main:
     - identifier: Makerfaire
       name: Maker Faire
-      url: makerfaire/
+      pageRef: /makerfaire
       weight: 10
     - identifier: about
       name: About
-      url: orbitus/
+      pageRef: /orbitus
       weight: 20
     - identifier: contact
       name: Contact
-      url: contact/
+      pageRef: /contact
       weight: 30
   footer:
     - identifier: Makerfaire
       name: Maker Faire
-      url: makerfaire/
+      pageRef: /makerfaire
       weight: 10
     - identifier: about
       name: About
-      url: orbitus/
+      pageRef: /orbitus
       weight: 20
     - identifier: contact
       name: Contact
-      url: contact/
+      pageRef: /contact
       weight: 50
 
 taxonomies:
