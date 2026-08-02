@@ -6,6 +6,10 @@
 {{- if not $manifest -}}
   {{- errorf "foldergallery requires data/galleries.json in %s" .Page.File.Path -}}
 {{- end -}}
+{{- $metadata := hugo.Data.gallery_metadata -}}
+{{- if not $metadata -}}
+  {{- errorf "foldergallery requires data/gallery_metadata.json in %s" .Page.File.Path -}}
+{{- end -}}
 {{- $media := where $manifest "album" $folder -}}
 {{- $total := len $media -}}
 {{- if eq $total 0 -}}
@@ -25,6 +29,14 @@
 {{- end -}}
 {{- $title := default (replace $folder "_" " ") (.Get "title") -}}
 {{- $galleryID := printf "gallery-%s-%d" ($folder | urlize) .Ordinal -}}
+{{- $hasTranscripts := false -}}
+{{- range $file := $media -}}
+  {{- $mediaKey := printf "%s/%s" $folder $file.name -}}
+  {{- $details := index $metadata $mediaKey -}}
+  {{- if and $details $details.transcript -}}
+    {{- $hasTranscripts = true -}}
+  {{- end -}}
+{{- end -}}
 
 <section class="media-gallery not-prose" data-gallery data-batch-size="12" aria-labelledby="{{ $galleryID }}-title">
   <header class="media-gallery__header">
@@ -40,7 +52,12 @@
   <ul id="{{ $galleryID }}-grid" class="media-gallery__grid" data-gallery-grid role="list">
     {{- range $index, $file := $media -}}
       {{- if lt $index $initial -}}
-        {{- partial "gallery/item.html" (dict "file" $file "folder" $folder "galleryID" $galleryID "index" $index "title" $title "total" $total) -}}
+        {{- $mediaKey := printf "%s/%s" $folder $file.name -}}
+        {{- $details := index $metadata $mediaKey -}}
+        {{- if not $details -}}
+          {{- errorf "foldergallery metadata is missing %q in data/gallery_metadata.json" $mediaKey -}}
+        {{- end -}}
+        {{- partial "gallery/item.html" (dict "file" $file "details" $details "folder" $folder "galleryID" $galleryID "index" $index "title" $title "total" $total) -}}
       {{- end -}}
     {{- end -}}
   </ul>
@@ -49,11 +66,16 @@
   <template data-gallery-template>
     {{- range $index, $file := $media -}}
       {{- if ge $index $initial -}}
-        {{- partial "gallery/item.html" (dict "file" $file "folder" $folder "galleryID" $galleryID "index" $index "title" $title "total" $total) -}}
+        {{- $mediaKey := printf "%s/%s" $folder $file.name -}}
+        {{- $details := index $metadata $mediaKey -}}
+        {{- if not $details -}}
+          {{- errorf "foldergallery metadata is missing %q in data/gallery_metadata.json" $mediaKey -}}
+        {{- end -}}
+        {{- partial "gallery/item.html" (dict "file" $file "details" $details "folder" $folder "galleryID" $galleryID "index" $index "title" $title "total" $total) -}}
       {{- end -}}
     {{- end -}}
   </template>
-  <div class="media-gallery__actions">
+  <div class="media-gallery__actions" data-gallery-actions hidden>
     <button class="media-gallery__more" type="button" data-gallery-more aria-controls="{{ $galleryID }}-grid">
       Show {{ $nextCount }} more
     </button>
@@ -65,14 +87,44 @@
     <ul class="media-gallery__noscript-list">
       {{- range $index, $file := $media -}}
         {{- $base := printf "images/galleries/%s" $folder -}}
+        {{- $mediaKey := printf "%s/%s" $folder $file.name -}}
+        {{- $details := index $metadata $mediaKey -}}
         {{- $target := printf "%s/display/%s.webp" $base $file.name -}}
         {{- if eq $file.kind "video" -}}
           {{- $target = printf "%s/video/%s.mp4" $base $file.name -}}
         {{- end -}}
-        <li><a href="{{ $target | relURL }}">{{ if eq $file.kind "video" }}Video{{ else }}Photo{{ end }} {{ add $index 1 }}</a></li>
+        <li>
+          <a href="{{ $target | relURL }}">{{ if eq $file.kind "video" }}Video{{ else }}Photo{{ end }} {{ add $index 1 }}: {{ $details.alt }}</a>
+        </li>
       {{- end -}}
     </ul>
   </noscript>
+
+  {{- if $hasTranscripts }}
+  <section class="media-gallery__transcripts" aria-labelledby="{{ $galleryID }}-transcripts-title">
+    <h3 id="{{ $galleryID }}-transcripts-title">Video transcripts</h3>
+    <p>Read the spoken content or open the synchronized WebVTT captions without using the lightbox.</p>
+    <div class="media-gallery__transcript-list">
+      {{- range $index, $file := $media -}}
+        {{- $mediaKey := printf "%s/%s" $folder $file.name -}}
+        {{- $details := index $metadata $mediaKey -}}
+        {{- with $details.transcript }}
+          {{- $video := printf "images/galleries/%s/video/%s.mp4" $folder $file.name -}}
+          <details data-gallery-transcript-entry="{{ $mediaKey }}">
+            <summary>Video {{ add $index 1 }}: {{ $details.alt }}</summary>
+            <p data-gallery-transcript-copy="{{ . }}">{{ . }}</p>
+            <p class="media-gallery__transcript-links">
+              <a href="{{ $video | relURL }}" data-gallery-transcript-video>Open video</a>
+              {{- with $details.captions }}
+              <a href="{{ . | relURL }}" data-gallery-transcript-vtt download>Download captions (WebVTT)</a>
+              {{- end }}
+            </p>
+          </details>
+        {{- end }}
+      {{- end -}}
+    </div>
+  </section>
+  {{- end }}
 
   <dialog class="media-lightbox" data-gallery-dialog aria-labelledby="{{ $galleryID }}-dialog-title">
     <div class="media-lightbox__shell">
@@ -84,13 +136,20 @@
       </header>
       <div class="media-lightbox__stage">
         <button class="media-lightbox__nav media-lightbox__nav--previous" type="button" data-gallery-previous aria-label="Previous media item">Previous</button>
-        <img class="media-lightbox__image" data-gallery-image aria-describedby="{{ $galleryID }}-caption {{ $galleryID }}-position" alt="" hidden>
-        <video class="media-lightbox__video" data-gallery-video aria-label="Gallery video" aria-describedby="{{ $galleryID }}-caption {{ $galleryID }}-position" controls playsinline preload="none" hidden></video>
+        <img class="media-lightbox__image" data-gallery-image aria-describedby="{{ $galleryID }}-position" alt="" hidden>
+        <video class="media-lightbox__video" data-gallery-video aria-label="Gallery video" aria-describedby="{{ $galleryID }}-position" controls playsinline preload="none" hidden></video>
         <button class="media-lightbox__nav media-lightbox__nav--next" type="button" data-gallery-next aria-label="Next media item">Next</button>
       </div>
-      <footer class="media-lightbox__footer" role="status" aria-live="polite" aria-atomic="true">
-        <p id="{{ $galleryID }}-caption" data-gallery-caption></p>
+      <footer class="media-lightbox__footer">
+        <div class="media-lightbox__copy">
+          <p id="{{ $galleryID }}-caption" data-gallery-caption-text></p>
+          <details class="media-lightbox__transcript" data-gallery-transcript-container hidden>
+            <summary>Read transcript</summary>
+            <p data-gallery-transcript-text tabindex="0" role="region" aria-label="Video transcript"></p>
+          </details>
+        </div>
         <p id="{{ $galleryID }}-position" class="media-lightbox__position" data-gallery-position></p>
+        <p class="sr-only" data-gallery-announcement aria-live="polite" aria-atomic="true"></p>
       </footer>
     </div>
   </dialog>

@@ -12,12 +12,16 @@ function initializeGallery(gallery) {
   const grid = gallery.querySelector("[data-gallery-grid]");
   const itemTemplate = gallery.querySelector("[data-gallery-template]");
   const moreButton = gallery.querySelector("[data-gallery-more]");
+  const actions = gallery.querySelector("[data-gallery-actions]");
   const shownCount = gallery.querySelector("[data-gallery-shown]");
   const dialog = gallery.querySelector("[data-gallery-dialog]");
   const dialogImage = gallery.querySelector("[data-gallery-image]");
   const dialogVideo = gallery.querySelector("[data-gallery-video]");
-  const caption = gallery.querySelector("[data-gallery-caption]");
+  const caption = gallery.querySelector("[data-gallery-caption-text]");
+  const transcriptContainer = gallery.querySelector("[data-gallery-transcript-container]");
+  const transcriptText = gallery.querySelector("[data-gallery-transcript-text]");
   const position = gallery.querySelector("[data-gallery-position]");
+  const announcement = gallery.querySelector("[data-gallery-announcement]");
   const previousButton = gallery.querySelector("[data-gallery-previous]");
   const nextButton = gallery.querySelector("[data-gallery-next]");
   const batchSize = Number.parseInt(gallery.dataset.batchSize || "12", 10);
@@ -28,6 +32,7 @@ function initializeGallery(gallery) {
 
   let currentIndex = 0;
   let lastOpener = null;
+  let captionsMode = "showing";
 
   const visibleLinks = () => Array.from(grid.querySelectorAll("[data-gallery-open]"));
 
@@ -37,8 +42,13 @@ function initializeGallery(gallery) {
     }
 
     dialogVideo.pause();
+    const managedTrack = dialogVideo.querySelector("[data-gallery-track]");
+    if (managedTrack?.track && ["disabled", "hidden", "showing"].includes(managedTrack.track.mode)) {
+      captionsMode = managedTrack.track.mode;
+    }
     dialogVideo.removeAttribute("src");
     dialogVideo.removeAttribute("poster");
+    dialogVideo.querySelectorAll("[data-gallery-track]").forEach((track) => track.remove());
     dialogVideo.load();
   }
 
@@ -55,28 +65,57 @@ function initializeGallery(gallery) {
 
     currentIndex = requestedIndex;
     const kind = link.dataset.galleryKind;
-    const label = link.dataset.galleryCaption || "";
+    const alt = link.dataset.galleryAlt || "";
+    const editorialCaption = link.dataset.galleryCaption || "";
+    const label = editorialCaption || alt;
+    const captionsURL = link.dataset.galleryCaptions || "";
+    const transcript = link.dataset.galleryTranscript || "";
+    const describedBy = editorialCaption && editorialCaption !== alt
+      ? `${caption.id} ${position.id}`
+      : position.id;
 
     stopVideo();
     dialogImage.hidden = true;
     dialogImage.removeAttribute("src");
     dialogImage.alt = "";
     dialogVideo.hidden = true;
+    dialogImage.setAttribute("aria-describedby", describedBy);
+    dialogVideo.setAttribute("aria-describedby", describedBy);
+
+    if (transcriptContainer && transcriptText) {
+      transcriptContainer.hidden = transcript.length === 0;
+      transcriptContainer.open = false;
+      transcriptText.textContent = transcript;
+    }
 
     if (kind === "video") {
       dialogVideo.poster = link.dataset.galleryPoster || "";
+      if (captionsURL) {
+        const captionsTrack = document.createElement("track");
+        captionsTrack.dataset.galleryTrack = "";
+        captionsTrack.kind = "captions";
+        captionsTrack.label = "English";
+        captionsTrack.srclang = "en";
+        captionsTrack.src = captionsURL;
+        captionsTrack.default = captionsMode === "showing";
+        dialogVideo.appendChild(captionsTrack);
+        captionsTrack.track.mode = captionsMode;
+      }
       dialogVideo.src = link.dataset.gallerySrc;
-      dialogVideo.setAttribute("aria-label", label);
+      dialogVideo.setAttribute("aria-label", alt || label);
       dialogVideo.hidden = false;
       dialogVideo.load();
     } else {
       dialogImage.src = link.dataset.gallerySrc;
-      dialogImage.alt = label;
+      dialogImage.alt = alt || label;
       dialogImage.hidden = false;
     }
 
     caption.textContent = label;
     position.textContent = `${currentIndex + 1} of ${links.length} loaded`;
+    if (announcement) {
+      announcement.textContent = `${label} Item ${currentIndex + 1} of ${links.length} loaded.`;
+    }
     const hasMultipleItems = links.length > 1;
     previousButton.hidden = !hasMultipleItems;
     nextButton.hidden = !hasMultipleItems;
@@ -93,6 +132,9 @@ function initializeGallery(gallery) {
   }
 
   if (moreButton && itemTemplate) {
+    if (actions) {
+      actions.hidden = false;
+    }
     moreButton.addEventListener("click", () => {
       const pendingItems = Array.from(itemTemplate.content.children);
       const nextItems = pendingItems.slice(0, batchSize);
@@ -135,10 +177,10 @@ function initializeGallery(gallery) {
 
     event.preventDefault();
     lastOpener = link;
-    showLink(link);
     if (!dialog.open) {
       dialog.showModal();
     }
+    showLink(link);
   });
 
   if (dialog) {
@@ -149,7 +191,7 @@ function initializeGallery(gallery) {
     });
 
     dialog.addEventListener("keydown", (event) => {
-      if (event.target.closest("video, audio, input, textarea, select, [contenteditable]")) {
+      if (event.target.closest("video, audio, input, textarea, select, [contenteditable], [data-gallery-transcript-container]")) {
         return;
       }
 

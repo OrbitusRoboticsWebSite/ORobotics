@@ -1,4 +1,5 @@
 {{- $file := .file -}}
+{{- $details := .details -}}
 {{- $isVideo := eq $file.kind "video" -}}
 {{- $base := printf "images/galleries/%s" .folder -}}
 {{- $thumb320 := printf "%s/thumb/%s-320.webp" $base $file.name -}}
@@ -13,16 +14,29 @@
   {{- $kindLabel = "Video" -}}
 {{- end -}}
 {{- $number := add .index 1 -}}
-{{- $caption := printf "%s %d of %d — %s" $kindLabel $number .total .title -}}
+{{- $alt := $details.alt -}}
+{{- $caption := default "" $details.caption -}}
+{{- $captions := default "" $details.captions -}}
+{{- $transcript := default "" $details.transcript -}}
 <li class="media-gallery__item" data-gallery-item>
   <a class="media-gallery__link"
      href="{{ $source | relURL }}"
      data-gallery-open
+     data-gallery-key="{{ .folder }}/{{ $file.name }}"
      data-gallery-kind="{{ $kind }}"
      data-gallery-src="{{ $source | absURL }}"
      data-gallery-poster="{{ $display | absURL }}"
+     data-gallery-alt="{{ $alt }}"
+     {{ with $caption }}
      data-gallery-caption="{{ $caption }}"
-     aria-label="Open {{ lower $kindLabel }} {{ $number }} of {{ .total }} in {{ .title }}">
+     {{ end }}
+     {{ with $captions }}
+     data-gallery-captions="{{ . | absURL }}"
+     {{ end }}
+     {{ with $transcript }}
+     data-gallery-transcript="{{ . }}"
+     {{ end }}
+     aria-label="Open {{ lower $kindLabel }} {{ $number }} of {{ .total }} in {{ .title }}: {{ $alt }}">
     <img class="media-gallery__thumbnail"
          src="{{ $thumb320 | relURL }}"
          srcset="{{ $thumb320 | relURL }} 320w, {{ $thumb640 | relURL }} 640w"
@@ -31,7 +45,7 @@
          height="240"
          loading="lazy"
          decoding="async"
-         alt="">
+         alt="{{ $alt }}">
     {{- if $isVideo -}}
     <span class="media-gallery__play" aria-hidden="true">
       <svg viewBox="0 0 24 24" focusable="false"><path d="M8 5v14l11-7z"></path></svg>

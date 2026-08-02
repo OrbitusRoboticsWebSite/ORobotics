@@ -46,32 +46,60 @@ try {
 
   for (const htmlFile of htmlFiles) {
     const html = await readFile(htmlFile, "utf8");
-    const attributes = html.matchAll(/(?:href|src|srcset|data-gallery-src|data-gallery-poster)=(?:"([^"]*)"|'([^']*)')/gi);
+    const htmlRelativePath = path.relative(destination, htmlFile).split(path.sep).join("/");
+    const pagePath = htmlRelativePath === "index.html"
+      ? basePath
+      : htmlRelativePath.endsWith("/index.html")
+        ? `${basePath}${htmlRelativePath.slice(0, -"index.html".length)}`
+        : `${basePath}${htmlRelativePath}`;
+    const pageURL = new URL(pagePath, testOrigin);
+    const attributes = html.matchAll(
+      /\b(href|src|srcset|data-gallery-src|data-gallery-poster|data-gallery-captions)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>\x60]+))/gi,
+    );
 
     for (const match of attributes) {
-      const value = match[1] ?? match[2] ?? "";
-      const urls = value.split(",").map((candidate) => candidate.trim().split(/\s+/)[0]);
+      const attributeName = match[1].toLowerCase();
+      const value = match[2] ?? match[3] ?? match[4] ?? "";
+      const urls = attributeName === "srcset"
+        ? value.split(",").map((candidate) => candidate.trim().split(/\s+/)[0])
+        : [value.trim()];
 
       for (const url of urls) {
-        if (url.startsWith(`${testOrigin}/`)) {
-          const parsedURL = new URL(url);
-          if (!parsedURL.pathname.startsWith(basePath)) {
-            failures.push(`${path.relative(destination, htmlFile)} escapes the project base path: ${url}`);
-            continue;
-          }
-
-          const relativeURL = decodeURIComponent(parsedURL.pathname.slice(basePath.length));
-          const target = relativeURL === ""
-            ? path.join(destination, "index.html")
-            : relativeURL.endsWith("/")
-              ? path.join(destination, relativeURL, "index.html")
-              : path.join(destination, relativeURL);
-          referencedFiles.add(target);
+        if (url === "" || url.startsWith("#")) {
+          continue;
         }
 
-        if (url.startsWith("/") && !url.startsWith(basePath) && !url.startsWith("//")) {
-          failures.push(`${path.relative(destination, htmlFile)} has a host-root URL: ${url}`);
+        let parsedURL;
+        try {
+          parsedURL = new URL(url, pageURL);
+        } catch {
+          failures.push(`${htmlRelativePath} contains an invalid URL in ${attributeName}: ${url}`);
+          continue;
         }
+        if (parsedURL.protocol !== "http:" && parsedURL.protocol !== "https:") {
+          continue;
+        }
+        if (parsedURL.origin !== testOrigin) {
+          continue;
+        }
+        if (!parsedURL.pathname.startsWith(basePath)) {
+          failures.push(`${htmlRelativePath} escapes the project base path: ${url}`);
+          continue;
+        }
+
+        let relativeURL;
+        try {
+          relativeURL = decodeURIComponent(parsedURL.pathname.slice(basePath.length));
+        } catch {
+          failures.push(`${htmlRelativePath} contains malformed URL escaping: ${url}`);
+          continue;
+        }
+        const target = relativeURL === ""
+          ? path.join(destination, "index.html")
+          : relativeURL.endsWith("/")
+            ? path.join(destination, relativeURL, "index.html")
+            : path.join(destination, relativeURL);
+        referencedFiles.add(target);
       }
     }
   }

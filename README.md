@@ -27,11 +27,14 @@ Camera originals live locally under the Git-ignored `media/gallery-originals/<al
 
 The committed `data/galleries.json` manifest is the sanitized inventory Hugo uses at build time. It contains only album names, filenames, and media kinds—never EXIF metadata. The media script refreshes it whenever originals are converted and prunes orphaned derivatives from each processed album.
 
+Human-authored accessibility content lives separately in `data/gallery_metadata.json`, keyed by the stable `album/filename` identity from the manifest. Every media item has concise, visually grounded alt text. Optional editorial captions can override the lightbox copy, while videos can also reference an English WebVTT file and include the matching plain-text transcript. Keeping this content separate ensures that rebuilding generated media never overwrites the descriptions.
+
 Browser-ready derivatives are committed under `static/images/galleries/<album>/`:
 
 - 320 px and 640 px cropped WebP thumbnails for the gallery grid
 - WebP display images capped at 1440 px for the lightbox
 - H.264/AAC MP4 video plus WebP posters for MOV sources
+- WebVTT captions under `static/captions/galleries/<album>/` when a video contains meaningful audio
 
 The conversion applies image orientation before stripping metadata. Videos are remuxed from HEVC MOV to broadly supported H.264 MP4 and are not requested until a visitor opens one.
 
@@ -41,6 +44,19 @@ After adding or changing local originals, install Node.js 20, ImageMagick 7, and
 scripts/build_gallery_media.sh
 npm test
 ```
+
+After adding media, add the matching `album/filename` entry to `data/gallery_metadata.json`. Describe the visible subject or action rather than the filename or a generic phrase such as "Photo 1." For a video with speech or meaningful sound, add both fields below and keep their wording synchronized:
+
+```json
+{
+  "captions": "captions/galleries/2019/example.vtt",
+  "transcript": "Complete plain-text transcript for visitors who prefer to read it."
+}
+```
+
+If verified transcription is not yet available, the video entry must carry `"captionStatus": "pending-transcription"`. This is an explicit temporary exception: remove it as soon as the synchronized `captions` and `transcript` fields are added. Gallery WebVTT files intentionally support a `WEBVTT` header followed by ordered timed cues; `STYLE` and `REGION` blocks are rejected so the published caption contract stays simple and consistently testable.
+
+The lightbox enables the WebVTT track by default and reveals the transcript in a reader-controlled disclosure. Each gallery with captioned video also publishes an always-available transcript archive for visitors without JavaScript or dialog support. Gallery validation rejects missing metadata, generic or duplicate alt text, unmatched caption/transcript fields, reused or orphaned caption files, out-of-sync transcript text, unsafe caption paths, and malformed WebVTT cues.
 
 Pass one or more album folder names to rebuild only those albums:
 

@@ -806,6 +806,10 @@
     margin-top: 1.5rem;
 }
 
+.media-gallery__actions[hidden] {
+    display: none;
+}
+
 .media-gallery__more {
     min-height: 2.75rem;
     padding: 0.7rem 1.25rem;
@@ -833,6 +837,81 @@
 
 .media-gallery__noscript-list {
     columns: 2;
+}
+
+.media-gallery__transcripts {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    border: 1px solid #dbe3ef;
+    border-radius: 1rem;
+    background: #f8fafc;
+}
+
+.dark .media-gallery__transcripts {
+    border-color: #374151;
+    background: #111827;
+}
+
+.media-gallery__transcripts h3 {
+    margin: 0;
+    color: inherit;
+    font-size: 1.15rem;
+    font-weight: 900;
+}
+
+.media-gallery__transcripts > p {
+    margin: 0.4rem 0 0;
+    color: #4b5563;
+}
+
+.dark .media-gallery__transcripts > p {
+    color: #d1d5db;
+}
+
+.media-gallery__transcript-list {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.media-gallery__transcript-list details {
+    padding: 0.8rem 0.9rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.75rem;
+    background: #fff;
+}
+
+.dark .media-gallery__transcript-list details {
+    border-color: #4b5563;
+    background: #1f2937;
+}
+
+.media-gallery__transcript-list summary {
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.media-gallery__transcript-list p {
+    margin: 0.75rem 0 0;
+    line-height: 1.65;
+    white-space: pre-line;
+}
+
+.media-gallery__transcript-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.media-gallery__transcript-links a {
+    color: #4338ca;
+    font-weight: 800;
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+}
+
+.dark .media-gallery__transcript-links a {
+    color: #a5b4fc;
 }
 
 .media-lightbox {
@@ -880,6 +959,45 @@
     border-top: 1px solid rgb(255 255 255 / 0.14);
     color: #e5e7eb;
     font-size: 0.875rem;
+}
+
+.media-lightbox__copy {
+    display: grid;
+    min-width: 0;
+    gap: 0.55rem;
+}
+
+.media-lightbox__transcript {
+    color: #d1d5db;
+}
+
+.media-lightbox__transcript summary {
+    width: fit-content;
+    color: #c7d2fe;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.media-lightbox__transcript summary:hover {
+    color: #fff;
+}
+
+.media-lightbox__transcript p {
+    max-height: 10rem;
+    margin-top: 0.55rem;
+    padding-right: 0.5rem;
+    overflow-y: auto;
+    line-height: 1.55;
+    white-space: pre-line;
+}
+
+.media-lightbox__transcript p:focus-visible {
+    outline: 3px solid #818cf8;
+    outline-offset: 3px;
+}
+
+.media-lightbox__position {
+    flex: none;
 }
 
 .media-lightbox__title,
@@ -987,6 +1105,10 @@
         align-items: start;
         flex-direction: column;
         gap: 0.25rem;
+    }
+
+    .media-lightbox__copy {
+        width: 100%;
     }
 }
 
