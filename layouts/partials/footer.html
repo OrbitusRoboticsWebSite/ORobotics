@@ -2,6 +2,16 @@
 {{ $js := resources.Get "js/site.js" | js.Build $jsOptions | fingerprint }}
 <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" crossorigin="anonymous" defer></script>
 
+{{ if .Params.Compact_footer }}
+<footer class="border-t border-white/10 bg-gray-950 text-gray-300" data-qr3d-footer>
+    <div class="mx-auto flex max-w-5xl flex-col gap-3 px-6 py-7 text-xs text-gray-400 sm:flex-row sm:items-center sm:justify-between">
+        <p>&copy; {{ now.Format "2006" }} {{ .Site.Title }}. All rights reserved.</p>
+        <a href="{{ "" | relLangURL }}" class="footer-social">
+            Visit the Orbitus Robotics home page <span aria-hidden="true">→</span>
+        </a>
+    </div>
+</footer>
+{{ else }}
 <footer class="border-t border-white/10 bg-gray-950 text-gray-300">
     <div class="mx-auto max-w-7xl px-6 py-14 lg:px-8">
         <div class="grid gap-10 md:grid-cols-[1.4fr_0.8fr_1fr]">
@@ -55,3 +65,4 @@
         </div>
     </div>
 </footer>
+{{ end }}

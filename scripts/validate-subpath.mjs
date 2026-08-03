@@ -12,6 +12,15 @@ const destination = await mkdtemp(path.join(os.tmpdir(), "orobotics-subpath-"));
 const failures = [];
 const referencedFiles = new Set();
 
+function attributeValue(tag, attributeName) {
+  const pattern = new RegExp(
+    `\\b${attributeName}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s"'=<>\\x60]+))`,
+    "i",
+  );
+  const match = tag.match(pattern);
+  return match?.[1] ?? match?.[2] ?? match?.[3] ?? null;
+}
+
 async function walk(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
   const files = [];
@@ -29,6 +38,43 @@ async function walk(directory) {
 }
 
 try {
+  const configResult = spawnSync("hugo", ["config", "--format", "json"], {
+    cwd: repoRoot,
+    encoding: "utf8",
+  });
+  if (configResult.status !== 0) {
+    process.stderr.write(configResult.stdout || "");
+    process.stderr.write(configResult.stderr || "");
+    throw new Error(`Hugo config inspection exited with status ${configResult.status ?? "unknown"}.`);
+  }
+
+  let projectConfig;
+  try {
+    projectConfig = JSON.parse(configResult.stdout);
+  } catch {
+    throw new Error("Hugo config inspection did not return valid JSON.");
+  }
+
+  const configuredSocialURLs = new Map();
+  for (const [configKey, social] of Object.entries(projectConfig.params?.social_media ?? {})) {
+    if (social.enabled !== true) {
+      continue;
+    }
+    if (typeof social.slug !== "string" || social.slug === "") {
+      failures.push(`Enabled social configuration ${configKey} is missing a QR3D slug.`);
+      continue;
+    }
+    if (typeof social.url !== "string" || social.url === "") {
+      failures.push(`Enabled social configuration ${configKey} is missing a URL.`);
+      continue;
+    }
+    if (configuredSocialURLs.has(social.slug)) {
+      failures.push(`Enabled social configuration reuses the QR3D slug ${social.slug}.`);
+      continue;
+    }
+    configuredSocialURLs.set(social.slug, social.url);
+  }
+
   const build = spawnSync(
     "hugo",
     ["--gc", "--minify", "--destination", destination, "--baseURL", `${testOrigin}${basePath}`],
@@ -137,6 +183,86 @@ try {
   for (const expectedPath of ["makerfaire/", "orbitus/", "contact/", "images/site-logo.svg"]) {
     if (!home.includes(`${basePath}${expectedPath}`)) {
       failures.push(`Homepage is missing subpath-safe URL: ${basePath}${expectedPath}`);
+    }
+  }
+
+  const qr3dFile = path.join(destination, "QR3D", "index.html");
+  let qr3d = "";
+  try {
+    qr3d = await readFile(qr3dFile, "utf8");
+  } catch {
+    failures.push("The case-sensitive QR landing route QR3D/index.html was not generated.");
+  }
+
+  if (qr3d !== "") {
+    const qrMainCount = (qr3d.match(/<main\b/gi) ?? []).length;
+    const qrHeadingCount = (qr3d.match(/<h1\b/gi) ?? []).length;
+    if (qrMainCount !== 1) {
+      failures.push(`QR3D should contain exactly one main element; found ${qrMainCount}.`);
+    }
+    if (qrHeadingCount !== 1) {
+      failures.push(`QR3D should contain exactly one h1 element; found ${qrHeadingCount}.`);
+    }
+    const primaryLink = qr3d.match(/<a\b(?=[^>]*\bdata-qr3d-primary\b)[^>]*>/i)?.[0];
+    if (!primaryLink) {
+      failures.push("QR3D is missing its primary main-site link.");
+    } else {
+      const primaryHref = attributeValue(primaryLink, "href");
+      try {
+        const primaryURL = new URL(primaryHref ?? "", testOrigin);
+        if (primaryURL.origin !== testOrigin || primaryURL.pathname !== basePath) {
+          failures.push(`QR3D primary link should target ${basePath}; found ${primaryHref ?? "no href"}.`);
+        }
+      } catch {
+        failures.push(`QR3D primary link is invalid: ${primaryHref ?? "no href"}.`);
+      }
+    }
+    if (!qr3d.includes(`${basePath}images/Orbitusrobotics_AR3D.png`)) {
+      failures.push("QR3D is missing its subpath-safe QR artwork URL.");
+    }
+    const renderedSocials = [...qr3d.matchAll(
+      /\bdata-qr3d-social\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>\x60]+))/gi,
+    )].map((match) => match[1] ?? match[2] ?? match[3] ?? "");
+    for (const network of new Set(renderedSocials)) {
+      const count = renderedSocials.filter((candidate) => candidate === network).length;
+      if (count !== 1) {
+        failures.push(`QR3D should render ${network} once; found ${count} links.`);
+      }
+      if (!configuredSocialURLs.has(network)) {
+        failures.push(`QR3D renders disabled or unknown social link: ${network}.`);
+      }
+    }
+
+    for (const [network, expectedSocialURL] of configuredSocialURLs) {
+      const marker = `data-qr3d-social=(?:["']${network}["']|${network}(?=\\s|>))`;
+      const socialLink = qr3d.match(new RegExp(`<a\\b(?=[^>]*${marker})[^>]*>`, "i"))?.[0];
+      if (!socialLink) {
+        failures.push(`QR3D is missing the enabled ${network} social link.`);
+        continue;
+      }
+      const socialHref = attributeValue(socialLink, "href");
+      try {
+        const socialURL = new URL(socialHref ?? "");
+        if (socialURL.href !== expectedSocialURL) {
+          failures.push(`QR3D ${network} link should target ${expectedSocialURL}; found ${socialHref ?? "no href"}.`);
+        }
+      } catch {
+        failures.push(`QR3D ${network} link is invalid: ${socialHref ?? "no href"}.`);
+      }
+    }
+
+    if (/\bid=(?:["']theme-toggle["']|theme-toggle)(?:\s|>)/i.test(qr3d)) {
+      failures.push("QR3D should not render a theme toggle for its fixed dark presentation.");
+    }
+    if (!/<footer\b(?=[^>]*\bdata-qr3d-footer\b)[^>]*>/i.test(qr3d)) {
+      failures.push("QR3D is missing its compact landing-page footer.");
+    }
+
+    const canonicalTag = qr3d.match(/<link\b[^>]*\brel=(?:"canonical"|'canonical'|canonical)[^>]*>/i)?.[0];
+    const canonicalHref = canonicalTag === undefined ? null : attributeValue(canonicalTag, "href");
+    const expectedCanonical = `${testOrigin}${basePath}QR3D/`;
+    if (canonicalHref !== expectedCanonical) {
+      failures.push(`QR3D canonical URL should be ${expectedCanonical}; found ${canonicalHref ?? "none"}.`);
     }
   }
 

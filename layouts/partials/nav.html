@@ -38,7 +38,7 @@
                 </a>
             {{ end }}
 
-            {{ if not .Site.Params.Disable_theme_toggle }}
+            {{ if and (not .Site.Params.Disable_theme_toggle) (not .Params.Hide_theme_toggle) }}
             <button id="theme-toggle" type="button" class="site-nav__theme" aria-label="Toggle color theme" aria-pressed="false">
                 <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                     <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>

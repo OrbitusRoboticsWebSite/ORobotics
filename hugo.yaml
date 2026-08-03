@@ -160,15 +160,39 @@ params:
     github:
       enabled: true
       url: 'https://github.com/RudyAramayo'
+      slug: github
+      label: GitHub
+      badge: GH
+      handle: '@RudyAramayo'
+      description: Source and experiments
+      aria_label: 'Explore Orbitus Robotics projects on GitHub; opens in a new tab'
     facebook:
       enabled: true
       url: 'https://facebook.com/orbitus.robotica/'
+      slug: facebook
+      label: Facebook
+      badge: FB
+      handle: Orbitus Robotica
+      description: Community updates
+      aria_label: 'Follow Orbitus Robotics on Facebook; opens in a new tab'
     instagram:
       enabled: true
       url: 'https://instagram.com/orbitus2019/'
+      slug: instagram
+      label: Instagram
+      badge: IG
+      handle: '@orbitus2019'
+      description: Photos and field updates
+      aria_label: 'Follow Orbitus Robotics on Instagram; opens in a new tab'
     twitter:
       enabled: true
       url: 'https://x.com/orbitusrobotics'
+      slug: x
+      label: X
+      badge: X
+      handle: '@orbitusrobotics'
+      description: Development updates
+      aria_label: 'Follow Orbitus Robotics on X; opens in a new tab'
 
 
 menu:

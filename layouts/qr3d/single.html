@@ -1,0 +1,86 @@
+{{ define "main" }}
+<main id="main" class="qr-landing">
+    <div class="qr-landing__grid" aria-hidden="true"></div>
+    <div class="qr-landing__shell">
+        <section class="qr-landing__hero" aria-labelledby="qr3d-title">
+            <div class="qr-landing__mark">
+                <div class="qr-landing__code">
+                    <img src="{{ "images/Orbitusrobotics_AR3D.png" | relURL }}"
+                         width="176"
+                         height="175"
+                         alt="QR code for www.orbitusrobotics.com/QR3D, featuring R.O.B."
+                         decoding="async" />
+                </div>
+                <div class="qr-landing__mark-copy">
+                    <span>Orbitus Robotics</span>
+                    <strong>You found R.O.B.</strong>
+                </div>
+            </div>
+
+            <p class="qr-landing__eyebrow">
+                <span class="status-dot" aria-hidden="true"></span>
+                {{ .Params.eyebrow }}
+            </p>
+            <h1 id="qr3d-title" class="qr-landing__title">{{ .Title }}</h1>
+            <p class="qr-landing__lead">{{ .Params.lead }}</p>
+
+            <div class="qr-landing__actions">
+                <a href="{{ "" | relLangURL }}" class="qr-landing__primary" data-qr3d-primary>
+                    {{ .Params.primary_label }}
+                    <span aria-hidden="true">→</span>
+                </a>
+                <a href="{{ "makerfaire/" | relLangURL }}" class="qr-landing__secondary">
+                    {{ .Params.secondary_label }}
+                </a>
+            </div>
+
+            <ul class="qr-landing__traits" aria-label="Orbitus Robotics highlights">
+                <li>Open source</li>
+                <li>Apple-native</li>
+                <li>Built in public</li>
+            </ul>
+        </section>
+
+        <section class="qr-landing__social" aria-labelledby="qr3d-social-title">
+            <div class="qr-landing__section-heading">
+                <div>
+                    <p>Stay connected</p>
+                    <h2 id="qr3d-social-title">Follow the build</h2>
+                </div>
+                <span>Field tests, events, and source code</span>
+            </div>
+
+            <div class="qr-landing__links">
+                {{ $socialOrder := slice "instagram" "facebook" "twitter" "github" }}
+                {{ range $socialOrder }}
+                    {{ with index $.Site.Params.Social_media . }}
+                        {{ if .Enabled }}
+                <a href="{{ .Url }}"
+                   class="qr-landing__social-link"
+                   data-qr3d-social="{{ .Slug }}"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="{{ .Aria_label }}">
+                    <span class="qr-landing__social-badge" aria-hidden="true">{{ .Badge }}</span>
+                    <span class="qr-landing__social-copy">
+                        <strong>{{ .Label }}</strong>
+                        <small>{{ .Handle }} · {{ .Description }}</small>
+                    </span>
+                    <span class="qr-landing__external" aria-hidden="true">↗</span>
+                </a>
+                        {{ end }}
+                    {{ end }}
+                {{ end }}
+            </div>
+        </section>
+
+        <aside class="qr-landing__contact" aria-label="Contact Orbitus Robotics">
+            <div>
+                <p>Bring R.O.B. into the conversation</p>
+                <h2>Have a project or event in mind?</h2>
+            </div>
+            <a href="mailto:orbitus@orbitusrobotics.com">Contact Orbitus <span aria-hidden="true">→</span></a>
+        </aside>
+    </div>
+</main>
+{{ end }}
