@@ -4,89 +4,60 @@ const root = document.querySelector('[data-rob-simulator]');
 if (root) {
   const canvas = root.querySelector('[data-sim-canvas]');
   const viewport = root.querySelector('[data-sim-viewport]');
+  const shell = root.querySelector('[data-sim-shell]');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-  renderer.shadowMap.enabled = true;
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x07111b);
-  scene.fog = new THREE.Fog(0x07111b, 18, 34);
-  const camera = new THREE.PerspectiveCamera(52, 1, 0.1, 60);
-  const clock = new THREE.Clock();
-  const controls = { left: 0, right: 0 };
-  const touch = { left: 0, right: 0 };
-  const keys = new Set();
-  const obstacles = [];
-  const cells = [];
-  const room = { width: 22, depth: 16 };
-  let running = false, complete = false, elapsed = 0, score = 0, gateDone = false, cellCount = 0;
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75)); renderer.shadowMap.enabled = true;
+  const scene = new THREE.Scene(); scene.background = new THREE.Color(0x07111b); scene.fog = new THREE.Fog(0x07111b, 19, 35);
+  const camera = new THREE.PerspectiveCamera(55, 1, .1, 70); const clock = new THREE.Clock();
+  const controls = { left: 0, right: 0 }, touch = { left: 0, right: 0 }; const keys = new Set();
+  const obstacles = [], cells = [], bolts = [], enemies = []; let running = false, complete = false, elapsed = 0, score = 0, gateDone = false, cellCount = 0, lastShot = 0;
+  const isTouch = matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+  root.classList.toggle('is-touch', isTouch);
 
-  scene.add(new THREE.HemisphereLight(0xa5edff, 0x101820, 2.3));
-  const light = new THREE.DirectionalLight(0xffffff, 3.4);
-  light.position.set(5, 12, 7); light.castShadow = true; scene.add(light);
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(22, 16), new THREE.MeshStandardMaterial({ color: 0x172734, roughness: 0.85 }));
-  floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
-  const grid = new THREE.GridHelper(22, 22, 0x2ca4bb, 0x284452); grid.position.y = 0.01; scene.add(grid);
-
-  const material = (color, emissive = 0) => new THREE.MeshStandardMaterial({ color, emissive, emissiveIntensity: emissive ? 1.7 : 0, roughness: 0.55, metalness: 0.2 });
-  const box = (x, z, w, d, h, color = 0x405363, collision = true) => {
-    const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), material(color));
-    mesh.position.set(x, h / 2, z); mesh.castShadow = true; mesh.receiveShadow = true; scene.add(mesh);
-    if (collision) obstacles.push({ x, z, w: w / 2, d: d / 2 });
-    return mesh;
-  };
-  box(0, -8, 22, .3, 2.2, 0x263746, false); box(0, 8, 22, .3, 2.2, 0x263746, false);
-  box(-11, 0, .3, 16, 2.2, 0x263746, false); box(11, 0, .3, 16, 2.2, 0x263746, false);
+  scene.add(new THREE.HemisphereLight(0xa5edff, 0x101820, 2.5)); const sun = new THREE.DirectionalLight(0xffffff, 3.5); sun.position.set(5, 12, 7); sun.castShadow = true; scene.add(sun);
+  const mat = (color, emissive = 0, metalness = .25) => new THREE.MeshStandardMaterial({ color, emissive, emissiveIntensity: emissive ? 1.8 : 0, roughness: .5, metalness });
+  const mesh = (geometry, material, parent, x = 0, y = 0, z = 0) => { const part = new THREE.Mesh(geometry, material); part.position.set(x, y, z); part.castShadow = true; part.receiveShadow = true; parent.add(part); return part; };
+  const floor = mesh(new THREE.PlaneGeometry(22, 16), mat(0x172734), scene); floor.rotation.x = -Math.PI / 2;
+  const grid = new THREE.GridHelper(22, 22, 0x2ca4bb, 0x284452); grid.position.y = .01; scene.add(grid);
+  const box = (x, z, w, d, h, color = 0x405363, collision = true) => { const b = mesh(new THREE.BoxGeometry(w, h, d), mat(color), scene, x, h / 2, z); if (collision) obstacles.push({ x, z, w: w / 2, d: d / 2 }); return b; };
+  box(0, -8, 22, .3, 2.2, 0x263746, false); box(0, 8, 22, .3, 2.2, 0x263746, false); box(-11, 0, .3, 16, 2.2, 0x263746, false); box(11, 0, .3, 16, 2.2, 0x263746, false);
   box(-3.2, -.8, 2.7, 1.3, 1.1); box(3.8, 1.6, 1.5, 3.2, 1.35); box(-1.3, 4.7, 3.1, 1.2, .85); box(6.6, -3.6, 1.2, 2.1, 1.6);
 
-  const gate = new THREE.Group();
-  [-1.45, 1.45].forEach((x) => { const p = new THREE.Mesh(new THREE.BoxGeometry(.18, 2.6, .18), material(0x18d9f3, 0x075b6a)); p.position.set(x, 1.3, 0); gate.add(p); });
-  const lintel = new THREE.Mesh(new THREE.BoxGeometry(3.1, .18, .18), material(0x18d9f3, 0x075b6a)); lintel.position.y = 2.5; gate.add(lintel); gate.position.set(0, 0, -3.6); scene.add(gate);
-  const dock = new THREE.Mesh(new THREE.BoxGeometry(3.2, .08, 2.6), material(0x2bdf8a, 0x09623e)); dock.position.set(7.8, .05, 5.7); scene.add(dock);
-  [[-7.5, -4.8], [.8, 3.3], [7.5, -.8]].forEach(([x, z]) => {
-    const cell = new THREE.Mesh(new THREE.CylinderGeometry(.24, .24, .7, 14), material(0xffc83d, 0x805000));
-    cell.rotation.z = Math.PI / 2; cell.position.set(x, .55, z); cell.castShadow = true; scene.add(cell); cells.push(cell);
-  });
+  const gate = new THREE.Group(); [-1.45, 1.45].forEach((x) => mesh(new THREE.BoxGeometry(.18, 2.6, .18), mat(0x18d9f3, 0x075b6a), gate, x, 1.3)); mesh(new THREE.BoxGeometry(3.1, .18, .18), mat(0x18d9f3, 0x075b6a), gate, 0, 2.5); gate.position.set(0, 0, -3.6); scene.add(gate);
+  const dock = mesh(new THREE.BoxGeometry(3.2, .08, 2.6), mat(0x2bdf8a, 0x09623e), scene, 7.8, .05, 5.7);
+  [[-7.5, -4.8], [.8, 3.3], [7.5, -.8]].forEach(([x, z]) => { const c = mesh(new THREE.CylinderGeometry(.24, .24, .7, 14), mat(0xffc83d, 0x805000), scene, x, .55, z); c.rotation.z = Math.PI / 2; cells.push(c); });
 
-  const robot = new THREE.Group();
-  const body = new THREE.Mesh(new THREE.BoxGeometry(1.25, .92, 1.3), material(0x222c36)); body.position.y = .72; body.castShadow = true; robot.add(body);
-  [-.78, .78].forEach((x) => { const tread = new THREE.Mesh(new THREE.BoxGeometry(.38, .48, 1.8), material(0x080b0e)); tread.position.set(x, .38, 0); tread.castShadow = true; robot.add(tread); });
-  [-.3, .3].forEach((x) => { const eye = new THREE.Mesh(new THREE.CylinderGeometry(.13, .13, .08, 20), material(0x3bdcff, 0x1287a7)); eye.rotation.x = Math.PI / 2; eye.position.set(x, .82, -.69); robot.add(eye); });
-  const mast = new THREE.Mesh(new THREE.CylinderGeometry(.08, .11, .75, 12), material(0x222c36)); mast.position.y = 1.52; robot.add(mast);
-  const head = new THREE.Mesh(new THREE.SphereGeometry(.3, 18, 12), material(0x222c36)); head.position.y = 2; robot.add(head); scene.add(robot);
+  const buildROB = () => {
+    const r = new THREE.Group(), dark = mat(0x111820), steel = mat(0x45515d, 0, .75), cyan = mat(0x38dfff, 0x087995), green = mat(0x4cff76, 0x168c32);
+    mesh(new THREE.BoxGeometry(1.25, 1.25, 1.55), dark, r, 0, .95); [-.83, .83].forEach((x) => { const t = mesh(new THREE.BoxGeometry(.42, .72, 2.15), mat(0x050708), r, x, .48); for (const z of [-.65, 0, .65]) { const wheel = mesh(new THREE.CylinderGeometry(.22, .22, .46, 16), steel, r, x, .48, z); wheel.rotation.z = Math.PI / 2; } });
+    [-.31, .31].forEach((x, i) => { const ring = mesh(new THREE.TorusGeometry(.2, .055, 10, 24), i ? cyan : green, r, x, 1.08, -.79); ring.rotation.x = Math.PI / 2; });
+    const neck = mesh(new THREE.CylinderGeometry(.08, .11, .72, 10), steel, r, 0, 1.87); const head = mesh(new THREE.SphereGeometry(.35, 18, 12), dark, r, 0, 2.3, -.02); head.scale.z = .82;
+    mesh(new THREE.SphereGeometry(.07, 12, 8), green, r, 0, 2.29, -.34); [-.16, .16].forEach((x) => { const eye = mesh(new THREE.CylinderGeometry(.07, .07, .09, 12), cyan, r, x, 2.36, -.31); eye.rotation.x = Math.PI / 2; const antenna = mesh(new THREE.CylinderGeometry(.018, .018, .55, 8), steel, r, x * 1.5, 2.77); antenna.rotation.z = x > 0 ? -.3 : .3; });
+    [-1, 1].forEach((side) => { const upper = mesh(new THREE.BoxGeometry(.18, .72, .18), steel, r, side * .78, 1.22); upper.rotation.z = side * -.35; const fore = mesh(new THREE.BoxGeometry(.16, .72, .16), steel, r, side * 1.02, .73); fore.rotation.z = side * .16; const saber = mesh(new THREE.CylinderGeometry(.035, .035, 1.45, 10), side < 0 ? green : cyan, r, side * 1.1, .05, -.16); saber.rotation.z = side * .08; });
+    return r;
+  };
+  const robot = buildROB(); scene.add(robot);
 
-  const ui = {
-    time: root.querySelector('[data-sim-time]'), score: root.querySelector('[data-sim-score]'), left: root.querySelector('[data-sim-left]'), right: root.querySelector('[data-sim-right]'),
-    message: root.querySelector('[data-sim-message]'), start: root.querySelector('[data-sim-start]'), reset: root.querySelector('[data-sim-reset]'),
-  };
-  const objectives = Object.fromEntries([...root.querySelectorAll('[data-objective]')].map((item) => [item.dataset.objective, item]));
-  const say = (text) => { ui.message.textContent = text; };
-  const mark = (name, text, points) => { if (objectives[name].classList.contains('is-complete')) return; objectives[name].classList.add('is-complete'); score += points; say(text); };
-  const reset = () => {
-    robot.position.set(0, 0, 6.2); robot.rotation.set(0, 0, 0); running = false; complete = false; elapsed = 0; score = 0; gateDone = false; cellCount = 0;
-    touch.left = 0; touch.right = 0;
-    controls.left = 0; controls.right = 0; cells.forEach((cell) => { cell.visible = true; cell.userData.got = false; });
-    Object.values(objectives).forEach((item) => item.classList.remove('is-complete')); ui.start.hidden = false; ui.start.textContent = 'Begin training'; say('Systems ready. Begin when you are ready.');
-  };
-  const collision = (p) => Math.abs(p.x) > 10.25 || Math.abs(p.z) > 7.25 || obstacles.some((o) => Math.abs(p.x - o.x) < o.w + .72 && Math.abs(p.z - o.z) < o.d + .72);
-  const readInput = () => {
-    controls.left = touch.left || ((keys.has('KeyW') ? 1 : 0) - (keys.has('KeyS') ? 1 : 0)); controls.right = touch.right || ((keys.has('ArrowUp') ? 1 : 0) - (keys.has('ArrowDown') ? 1 : 0));
-    const pad = [...(navigator.getGamepads?.() || [])].find(Boolean);
-    if (pad && (Math.abs(pad.axes[1] || 0) > .12 || Math.abs(pad.axes[3] || 0) > .12)) { controls.left = -(pad.axes[1] || 0); controls.right = -(pad.axes[3] || 0); }
-  };
-  const tick = (dt) => {
-    readInput(); if (!running || complete) return; elapsed += dt;
-    const old = robot.position.clone(), left = controls.left * 3.1, right = controls.right * 3.1, linear = (left + right) / 2, yaw = (left - right) / 1.55 * dt, mid = robot.rotation.y + yaw / 2;
-    robot.position.x -= Math.sin(mid) * linear * dt; robot.position.z -= Math.cos(mid) * linear * dt; robot.rotation.y += yaw;
-    if (collision(robot.position)) { robot.position.copy(old); score = Math.max(0, score - 1); say('Obstacle contact—reverse one tread and choose another path.'); }
-    if (!gateDone && robot.position.distanceTo(gate.position) < 1.55) { gateDone = true; mark('gate', 'Calibration complete. Find the three gold energy cells.', 250); }
-    cells.forEach((cell) => { if (!cell.userData.got && robot.position.distanceTo(cell.position) < 1) { cell.userData.got = true; cell.visible = false; cellCount += 1; score += 150; say(`Energy cell ${cellCount} of 3 secured.`); if (cellCount === 3) mark('cells', 'All cells secured. Dock in the green Mission Control bay.', 300); } });
-    if (gateDone && cellCount === 3 && robot.position.distanceTo(dock.position) < 1.15) { mark('dock', 'Mission complete! ROB is charged and safely parked.', 500); complete = true; running = false; ui.start.hidden = false; ui.start.textContent = 'Train again'; }
-  };
-  const resize = () => { const w = viewport.clientWidth, h = Math.max(420, Math.min(720, w * .58)); renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
-  const animate = () => { requestAnimationFrame(animate); const dt = Math.min(clock.getDelta(), .05); tick(dt); cells.forEach((c, i) => { if (c.visible) { c.rotation.y += dt * 1.4; c.position.y = .55 + Math.sin(elapsed * 2 + i) * .08; } }); camera.position.lerp(new THREE.Vector3(robot.position.x, 10.5, robot.position.z + 6.8), .05); camera.lookAt(robot.position.x, .5, robot.position.z - 1.2); ui.time.textContent = new Date(elapsed * 1000).toISOString().slice(14, 22); ui.score.textContent = score; ui.left.textContent = controls.left.toFixed(2); ui.right.textContent = controls.right.toFixed(2); renderer.render(scene, camera); };
+  const buildSpider = () => { const g = new THREE.Group(), bone = mat(0xe6dcb9), steel = mat(0x697178, 0, .7); mesh(new THREE.BoxGeometry(1.5, .45, 1.25), steel, g, 0, .72); const skull = mesh(new THREE.DodecahedronGeometry(.52, 0), bone, g, 0, 1.16, -.45); skull.scale.z = 1.25; [-1, 1].forEach((side) => { for (let row = -1; row <= 1; row += 2) { const z = row * .45; const hip = mesh(new THREE.BoxGeometry(.95, .13, .2), steel, g, side * .75, .65, z); hip.rotation.z = side * -.35; const shin = mesh(new THREE.BoxGeometry(.17, .75, .22), bone, g, side * 1.35, .35, z); shin.rotation.z = side * .3; } }); return g; };
+  const buildDalek = () => { const g = new THREE.Group(), silver = mat(0xaeb9c4, 0, .75), blue = mat(0x279de0, 0x063b61); const skirt = mesh(new THREE.CylinderGeometry(.65, 1.05, 1.55, 8), silver, g, 0, .82); for (let y = .35; y < 1.25; y += .3) for (let a = 0; a < Math.PI * 2; a += Math.PI / 3) mesh(new THREE.SphereGeometry(.11, 10, 8), blue, g, Math.sin(a) * (.78 - y * .08), y, Math.cos(a) * (.78 - y * .08)); mesh(new THREE.CylinderGeometry(.65, .65, .5, 16), mat(0x242b31), g, 0, 1.75); mesh(new THREE.SphereGeometry(.62, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), silver, g, 0, 2); const eye = mesh(new THREE.CylinderGeometry(.055, .085, .9, 10), silver, g, 0, 2.2, -.63); eye.rotation.x = Math.PI / 2; mesh(new THREE.SphereGeometry(.12, 10, 8), blue, g, 0, 2.2, -1.08); [-1, 1].forEach((side) => { const arm = mesh(new THREE.CylinderGeometry(.035, .05, 1, 8), silver, g, side * .48, 1.6, -.65); arm.rotation.x = Math.PI / 2; }); return g; };
+  [[buildSpider(), -7.2, .2, 'Spider robot'], [buildDalek(), 6.8, -5.4, 'Dalek-style fax robot']].forEach(([model, x, z, name]) => { model.position.set(x, 0, z); model.userData = { name, health: 3, alive: true, origin: new THREE.Vector3(x, 0, z) }; scene.add(model); enemies.push(model); });
 
-  addEventListener('keydown', (e) => { if (['KeyW', 'KeyS', 'ArrowUp', 'ArrowDown'].includes(e.code)) { e.preventDefault(); keys.add(e.code); } }); addEventListener('keyup', (e) => keys.delete(e.code)); addEventListener('blur', () => keys.clear());
-  root.querySelectorAll('[data-tread]').forEach((button) => { const side = button.dataset.tread, value = Number(button.dataset.demand); button.addEventListener('pointerdown', (e) => { e.preventDefault(); touch[side] = value; button.setPointerCapture?.(e.pointerId); }); ['pointerup', 'pointercancel', 'lostpointercapture'].forEach((name) => button.addEventListener(name, () => { touch[side] = 0; })); });
-  ui.start.addEventListener('click', () => { if (complete) reset(); running = true; ui.start.hidden = true; say('Drive through the cyan calibration gate.'); viewport.focus(); }); ui.reset.addEventListener('click', reset);
-  document.addEventListener('visibilitychange', () => { if (document.hidden) { keys.clear(); controls.left = 0; controls.right = 0; } }); new ResizeObserver(resize).observe(viewport); reset(); resize(); animate();
+  const ui = { time: root.querySelector('[data-sim-time]'), score: root.querySelector('[data-sim-score]'), left: root.querySelector('[data-sim-left]'), right: root.querySelector('[data-sim-right]'), enemies: root.querySelector('[data-sim-enemies]'), message: root.querySelector('[data-sim-message]'), start: root.querySelector('[data-sim-start]'), reset: root.querySelector('[data-sim-reset]'), fullscreen: root.querySelector('[data-sim-fullscreen]') };
+  const objectives = Object.fromEntries([...root.querySelectorAll('[data-objective]')].map((item) => [item.dataset.objective, item])); const say = (t) => { ui.message.textContent = t; }; const mark = (n, t, p) => { if (objectives[n].classList.contains('is-complete')) return; objectives[n].classList.add('is-complete'); score += p; say(t); };
+  const reset = () => { robot.position.set(0, 0, 6.2); robot.rotation.set(0, 0, 0); running = false; complete = false; elapsed = score = cellCount = 0; gateDone = false; touch.left = touch.right = controls.left = controls.right = 0; bolts.splice(0).forEach((b) => scene.remove(b)); cells.forEach((c) => { c.visible = true; c.userData.got = false; }); enemies.forEach((e) => { e.visible = true; e.userData.alive = true; e.userData.health = 3; e.position.copy(e.userData.origin); }); Object.values(objectives).forEach((o) => o.classList.remove('is-complete')); ui.start.hidden = false; ui.start.textContent = 'Begin mission'; say(isTouch ? 'Turn your phone sideways, then use both thumb sticks.' : 'Systems ready. Begin when you are ready.'); };
+  const collision = (p) => Math.abs(p.x) > 10.25 || Math.abs(p.z) > 7.25 || obstacles.some((o) => Math.abs(p.x - o.x) < o.w + .72 && Math.abs(p.z - o.z) < o.d + .72) || enemies.some((e) => e.userData.alive && p.distanceTo(e.position) < 1.45);
+  const fire = () => { if (!running || complete || elapsed - lastShot < .32) return; lastShot = elapsed; const bolt = mesh(new THREE.CylinderGeometry(.035, .035, .9, 8), mat(0x4cff76, 0x1ca841), scene); bolt.rotation.x = Math.PI / 2; bolt.position.copy(robot.position).add(new THREE.Vector3(0, 1.25, 0)); bolt.userData.velocity = new THREE.Vector3(-Math.sin(robot.rotation.y), 0, -Math.cos(robot.rotation.y)).multiplyScalar(12); bolts.push(bolt); };
+  const readInput = () => { controls.left = touch.left || ((keys.has('KeyW') ? 1 : 0) - (keys.has('KeyS') ? 1 : 0)); controls.right = touch.right || ((keys.has('ArrowUp') ? 1 : 0) - (keys.has('ArrowDown') ? 1 : 0)); const pad = [...(navigator.getGamepads?.() || [])].find(Boolean); if (pad) { if (Math.abs(pad.axes[1] || 0) > .12 || Math.abs(pad.axes[3] || 0) > .12) { controls.left = -(pad.axes[1] || 0); controls.right = -(pad.axes[3] || 0); } if (pad.buttons.some((b, i) => (i === 0 || i === 6 || i === 7) && b.pressed)) fire(); } };
+  const tick = (dt) => { readInput(); if (!running || complete) return; elapsed += dt; const old = robot.position.clone(), left = controls.left * 3.2, right = controls.right * 3.2, linear = (left + right) / 2, yaw = (left - right) / 1.55 * dt, mid = robot.rotation.y + yaw / 2; robot.position.x -= Math.sin(mid) * linear * dt; robot.position.z -= Math.cos(mid) * linear * dt; robot.rotation.y += yaw; if (collision(robot.position)) { robot.position.copy(old); score = Math.max(0, score - 1); say('Blocked—disable the enemy or steer around the obstacle.'); }
+    enemies.forEach((e, i) => { if (!e.userData.alive) return; e.rotation.y = Math.atan2(robot.position.x - e.position.x, robot.position.z - e.position.z); e.position.y = Math.sin(elapsed * 2 + i) * .035; });
+    for (let i = bolts.length - 1; i >= 0; i -= 1) { const b = bolts[i]; b.position.addScaledVector(b.userData.velocity, dt); const hit = enemies.find((e) => e.userData.alive && b.position.distanceTo(e.position.clone().add(new THREE.Vector3(0, 1, 0))) < 1.15); if (hit) { hit.userData.health -= 1; score += 50; say(`${hit.userData.name} hit — ${hit.userData.health} shields remain.`); scene.remove(b); bolts.splice(i, 1); if (hit.userData.health <= 0) { hit.userData.alive = false; hit.visible = false; score += 300; say(`${hit.userData.name} disabled. Route reopened.`); if (enemies.every((e) => !e.userData.alive)) mark('enemies', 'Training-room defense complete.', 400); } } else if (b.position.length() > 30) { scene.remove(b); bolts.splice(i, 1); } }
+    if (!gateDone && robot.position.distanceTo(gate.position) < 1.55) { gateDone = true; mark('gate', 'Calibration complete. Disable both hostile robots.', 250); } cells.forEach((c) => { if (!c.userData.got && robot.position.distanceTo(c.position) < 1) { c.userData.got = true; c.visible = false; cellCount += 1; score += 150; say(`Energy cell ${cellCount} of 3 secured.`); if (cellCount === 3) mark('cells', 'All cells secured. Dock after the room is safe.', 300); } }); if (gateDone && cellCount === 3 && enemies.every((e) => !e.userData.alive) && robot.position.distanceTo(dock.position) < 1.15) { mark('dock', 'Mission complete! ROB defended the room and docked safely.', 500); complete = true; running = false; ui.start.hidden = false; ui.start.textContent = 'Play again'; } };
+  const resize = () => { const w = viewport.clientWidth, fullscreen = document.fullscreenElement === shell || shell.classList.contains('is-pseudo-fullscreen'); const h = fullscreen ? innerHeight : Math.max(isTouch ? 460 : 420, Math.min(720, w * .58)); renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
+  const animate = () => { requestAnimationFrame(animate); const dt = Math.min(clock.getDelta(), .05); tick(dt); cells.forEach((c, i) => { if (c.visible) { c.rotation.y += dt * 1.4; c.position.y = .55 + Math.sin(elapsed * 2 + i) * .08; } }); camera.position.lerp(new THREE.Vector3(robot.position.x, 9, robot.position.z + 6.5), .06); camera.lookAt(robot.position.x, .65, robot.position.z - 1.3); ui.time.textContent = new Date(elapsed * 1000).toISOString().slice(14, 22); ui.score.textContent = score; ui.left.textContent = controls.left.toFixed(2); ui.right.textContent = controls.right.toFixed(2); ui.enemies.textContent = enemies.filter((e) => e.userData.alive).length; renderer.render(scene, camera); };
+
+  addEventListener('keydown', (e) => { if (['KeyW', 'KeyS', 'ArrowUp', 'ArrowDown', 'Space'].includes(e.code)) e.preventDefault(); keys.add(e.code); if (e.code === 'Space') fire(); }); addEventListener('keyup', (e) => keys.delete(e.code)); addEventListener('blur', () => { keys.clear(); touch.left = touch.right = 0; });
+  root.querySelectorAll('[data-tread]').forEach((button) => { const side = button.dataset.tread, value = Number(button.dataset.demand); button.addEventListener('pointerdown', (e) => { e.preventDefault(); touch[side] = value; button.setPointerCapture?.(e.pointerId); }); ['pointerup', 'pointercancel', 'lostpointercapture'].forEach((n) => button.addEventListener(n, () => { touch[side] = 0; })); });
+  root.querySelectorAll('[data-stick]').forEach((stick) => { const side = stick.dataset.stick, knob = stick.querySelector('i'); const move = (e) => { e.preventDefault(); const rect = stick.getBoundingClientRect(), value = THREE.MathUtils.clamp((rect.top + rect.height / 2 - e.clientY) / (rect.height * .36), -1, 1); touch[side] = Math.abs(value) < .08 ? 0 : value; knob.style.transform = `translate(-50%, calc(-50% + ${-touch[side] * rect.height * .3}px))`; stick.setAttribute('aria-valuenow', Math.round(touch[side] * 100)); }; const release = () => { touch[side] = 0; knob.style.transform = 'translate(-50%,-50%)'; stick.setAttribute('aria-valuenow', '0'); }; stick.addEventListener('pointerdown', (e) => { stick.setPointerCapture(e.pointerId); move(e); }); stick.addEventListener('pointermove', (e) => { if (stick.hasPointerCapture(e.pointerId)) move(e); }); ['pointerup', 'pointercancel', 'lostpointercapture'].forEach((n) => stick.addEventListener(n, release)); });
+  root.querySelectorAll('[data-sim-fire]').forEach((b) => b.addEventListener('pointerdown', (e) => { e.preventDefault(); fire(); })); ui.fullscreen.addEventListener('click', async () => { try { if (document.fullscreenElement) await document.exitFullscreen(); else if (shell.classList.contains('is-pseudo-fullscreen')) { shell.classList.remove('is-pseudo-fullscreen'); document.body.classList.remove('rob-game-open'); ui.fullscreen.textContent = '⛶ Fullscreen'; } else if (shell.requestFullscreen) await shell.requestFullscreen({ navigationUI: 'hide' }); else { shell.classList.add('is-pseudo-fullscreen'); document.body.classList.add('rob-game-open'); ui.fullscreen.textContent = '× Exit'; } screen.orientation?.lock?.('landscape').catch(() => {}); resize(); } catch { shell.classList.add('is-pseudo-fullscreen'); document.body.classList.add('rob-game-open'); ui.fullscreen.textContent = '× Exit'; resize(); } }); document.addEventListener('fullscreenchange', () => { ui.fullscreen.textContent = document.fullscreenElement ? '× Exit' : '⛶ Fullscreen'; resize(); });
+  ui.start.addEventListener('click', () => { if (complete) reset(); running = true; ui.start.hidden = true; say('Drive through the cyan gate. Fire to disable enemies.'); viewport.focus(); }); ui.reset.addEventListener('click', reset); document.addEventListener('visibilitychange', () => { if (document.hidden) { keys.clear(); touch.left = touch.right = controls.left = controls.right = 0; } }); new ResizeObserver(resize).observe(viewport); reset(); resize(); animate();
 }
