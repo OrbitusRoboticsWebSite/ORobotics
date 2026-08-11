@@ -197,6 +197,10 @@ params:
 
 menu:
   main:
+    - identifier: simulator
+      name: Drive ROB
+      pageRef: /rob-simulator
+      weight: 4
     - identifier: learn
       name: Learn Robotics
       pageRef: /robot-lab

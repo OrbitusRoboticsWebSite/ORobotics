@@ -40,5 +40,8 @@
   "bugs": {
     "url": "https://github.com/OrbitusRoboticsWebSite/ORobotics/issues"
   },
-  "homepage": "https://www.orbitusrobotics.com/"
+  "homepage": "https://www.orbitusrobotics.com/",
+  "dependencies": {
+    "three": "^0.180.0"
+  }
 }
