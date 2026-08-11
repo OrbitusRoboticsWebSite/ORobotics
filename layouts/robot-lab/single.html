@@ -1,0 +1,73 @@
+{{ define "main" }}
+<main id="main" class="robot-lab" data-robot-lab>
+  <header class="robot-lab__hero">
+    <div class="robot-lab__hero-copy">
+      <p class="robot-lab__eyebrow">Maker Faire learning mission · Ages 8–16</p>
+      <h1>ROB’s Systems Lab</h1>
+      <p>Repair eight imaginary robot missions—including a four-part USB Power Lab—by reasoning about systems, signals, motion, circuits, and safe control. No login, tracking, or robot connection—everything stays in this browser.</p>
+      <button type="button" class="robot-lab__start" data-lab-start>Start the first mission <span aria-hidden="true">→</span></button>
+    </div>
+    <figure class="robot-lab__hero-art">
+      <img src="{{ "images/education/rob-systems-feedback-lab.png" | relURL }}" width="1448" height="1086" alt="Illustration of ROB with symbolic structure, energy, sensing, computing, motion, and feedback pathways." />
+      <figcaption>Concept illustration—not ROB’s wiring diagram or construction plan.</figcaption>
+    </figure>
+  </header>
+
+  <section class="robot-lab__lesson" aria-labelledby="lab-loop-title">
+    <div><span>1</span><strong>Observe</strong><small>What evidence is available?</small></div>
+    <div><span>2</span><strong>Model</strong><small>How do the parts connect?</small></div>
+    <div><span>3</span><strong>Predict</strong><small>What should happen next?</small></div>
+    <div><span>4</span><strong>Test</strong><small>Does evidence match?</small></div>
+    <div><span>5</span><strong>Revise</strong><small>What would you change?</small></div>
+    <h2 id="lab-loop-title" class="sr-only">The engineering learning loop</h2>
+  </section>
+
+  <section class="robot-lab__usb" aria-labelledby="usb-lab-title">
+    <figure>
+      <img src="{{ "images/education/usb-5v-toy-power-lab.webp" | relURL }}" width="1400" height="933" alt="An adult mentor prepares an unplugged USB cable while a child in safety glasses observes; the red and black power conductors lead toward a protected toy motor while the green and white data conductors are capped." loading="lazy" />
+      <figcaption>A typical USB 2.0 cable can expose a 5 V energy path, but a meter—not insulation color—proves conductor identity.</figcaption>
+    </figure>
+    <div>
+      <p class="robot-lab__eyebrow">Missions 5–8 · USB Power Lab</p>
+      <h2 id="usb-lab-title">Turn an old battery toy into a circuit lesson</h2>
+      <p>Practice the whole reasoning chain before touching a real cable: unplug, let a mentor prepare it, isolate unused wires, verify voltage and polarity, match the load, connect while unpowered, and run one bounded test.</p>
+      <div class="robot-lab__usb-warning"><strong>Children do not cut live cables.</strong> In the real Maker Faire activity, only a mentor cuts and strips a sacrificial, unplugged USB-A cable. Use an approved current-limited 5 V source and toy, remove its batteries, cover every connection, and stop for heat, odor, noise, or damaged insulation.</div>
+    </div>
+  </section>
+
+  <section class="robot-lab__game" aria-labelledby="lab-game-title">
+    <div class="robot-lab__status">
+      <div><span>Mission</span><strong data-lab-progress>1 / 8</strong></div>
+      <div><span>Evidence points</span><strong data-lab-score>0</strong></div>
+      <button type="button" data-lab-reset>Reset lab</button>
+    </div>
+    <div class="robot-lab__panel" aria-live="polite">
+      <p class="robot-lab__kicker" data-lab-kicker>Systems detective</p>
+      <h2 id="lab-game-title" data-lab-title>Loading mission…</h2>
+      <p class="robot-lab__prompt" data-lab-prompt></p>
+      <div class="robot-lab__diagram" data-lab-diagram aria-hidden="true"></div>
+      <div class="robot-lab__choices" data-lab-choices></div>
+      <div class="robot-lab__feedback" data-lab-feedback hidden></div>
+      <button type="button" class="robot-lab__next" data-lab-next hidden>Next mission <span aria-hidden="true">→</span></button>
+    </div>
+  </section>
+
+  <section class="robot-lab__mentor" aria-labelledby="mentor-title">
+    <div>
+      <p class="robot-lab__eyebrow">For families and educators</p>
+      <h2 id="mentor-title">Ask for a claim, evidence, and a limit</h2>
+      <p>After each answer, ask: “What do you predict?”, “What observation supports that?”, and “When might your model stop working?” The goal is not guessing quickly. It is learning to explain.</p>
+    </div>
+    <ul>
+      <li>Keep activities on paper, in simulation, or in approved current-limited classroom kits.</li>
+      <li>USB cable preparation is an unplugged, adult-only tool task; learners predict, identify, measure, connect prepared leads, and explain.</li>
+      <li>Never open ROB’s battery, power, drivetrain, actuator, or machine-tool systems.</li>
+      <li>An authenticated green connection means identity was proven—not that motion is automatically safe.</li>
+    </ul>
+  </section>
+
+  <noscript><p class="robot-lab__noscript">The interactive missions require JavaScript. The lesson remains: observe, model, predict, test, explain, and revise.</p></noscript>
+</main>
+{{ $game := resources.Get "js/robot-lab.js" | minify | fingerprint }}
+<script src="{{ $game.RelPermalink }}" integrity="{{ $game.Data.Integrity }}" defer></script>
+{{ end }}

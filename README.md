@@ -78,6 +78,10 @@ If originals were previously pushed to a public remote, removing them from the c
 
 Pushing `main` runs `.github/workflows/hugo.yml`, builds the site, validates the generated gallery, and deploys the `public` artifact to GitHub Pages. The canonical site URL is `https://www.orbitusrobotics.com/`.
 
+## Robotics learning lab
+
+`/robot-lab/` is a static four-mission learning game built from `content/robot-lab.md`, `layouts/robot-lab/single.html`, and `assets/js/robot-lab.js`. It teaches feedback systems, PWM duty cycle, differential-drive prediction, and authenticated-but-stale command rejection. The game uses no backend, accounts, analytics, robot connection, or persistent learner data and remains keyboard accessible.
+
 For this custom GitHub Actions deployment, the custom domain configured under
 **Settings → Pages** is authoritative. `static/CNAME` mirrors that value in the
 generated artifact for portability, but GitHub Pages does not use it to set the

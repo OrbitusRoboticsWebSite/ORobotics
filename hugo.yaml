@@ -68,7 +68,7 @@ params:
       label: "Discuss a project"
       url: "contact/"
     stats:
-      - value: "2019–today"
+      - value: "2019–2026"
         label: "Built in public"
       - value: "7-axis"
         label: "Articulated arms"
@@ -99,17 +99,17 @@ params:
   p3:
     heading: "R.O.B. through the years"
     content:
-      - text: "Explore Maker Faire appearances, development updates, and field photos from 2019 through 2025."
+      - text: "Explore Maker Faire appearances, development updates, and field photos from 2019 through 2026."
     links:
       - text: Browse the photo archive
         url: "makerfaire/"
     logos:
       - identifier: a
-        image: "images/pages/Makerfaire_2024.webp"
-        alt: "A person and R.O.B. beside the Maker Faire robot at Mare Island"
-        label: "Maker Faire 2024"
-        caption: "Meeting makers at Mare Island"
-        url: "makerfaire/makerfaire_2024/"
+        image: "images/pages/ROB_2026_lightsabers.webp"
+        alt: "R.O.B. facing forward with one glowing green lightsaber and one glowing blue lightsaber"
+        label: "R.O.B. 2026"
+        caption: "A brighter new chapter in robot learning"
+        url: "makerfaire/rob_2026/"
       - identifier: b
         image: "images/pages/ROB-comicon.webp"
         alt: "R.O.B. on its tracked base at an outdoor event"
@@ -197,6 +197,10 @@ params:
 
 menu:
   main:
+    - identifier: learn
+      name: Learn Robotics
+      pageRef: /robot-lab
+      weight: 5
     - identifier: Makerfaire
       name: Maker Faire
       pageRef: /makerfaire
