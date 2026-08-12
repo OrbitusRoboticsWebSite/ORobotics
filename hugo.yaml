@@ -197,6 +197,10 @@ params:
 
 menu:
   main:
+    - identifier: training-apps
+      name: Training Apps
+      pageRef: /rob-training-apps
+      weight: 3
     - identifier: simulator
       name: Drive ROB
       pageRef: /rob-simulator

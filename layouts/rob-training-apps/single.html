@@ -1,0 +1,32 @@
+{{ define "main" }}
+<main id="main" class="training-apps">
+  <header class="training-apps__hero">
+    <div>
+      <p class="training-apps__eyebrow">Native ROB learning · iPhone · iPad · Apple Vision Pro</p>
+      <h1>Take ROB Training into your world</h1>
+      <p>Drive a detailed ROB, solve ten increasingly logical missions, inspect its systems, talk to its on-device guide, and enter a spatial workshop built for Apple platforms.</p>
+      <div class="training-apps__actions"><a href="https://github.com/RudyAramayo/ROBTrainingGames">View the open-source app</a><a href="{{ "rob-simulator/" | relURL }}">Play in your browser</a></div>
+    </div>
+    <img src="{{ "images/rob-training-apps/vision-dashboard.webp" | relURL }}" width="3840" height="2160" alt="ROB Training running in the Apple Vision Pro simulator, with its ten-level campaign and Spatial Workshop dashboard floating in a furnished room.">
+  </header>
+
+  <section class="training-apps__features" aria-label="ROB Training features">
+    <article><span>10</span><h2>Connected missions</h2><p>Calibration, keys, locked doors, route planning, guarded cells, and Mission Control form one escalating campaign.</p></article>
+    <article><span>2×7</span><h2>AMBER-style arms</h2><p>ROB’s model shows two segmented seven-joint arms, hand-height horizontal lightsabers, sword slashes, and visible laser fire.</p></article>
+    <article><span>♫</span><h2>Generated techno</h2><p>The beat, bass, hats, and synth sequence are generated locally at runtime and intensify as the campaign advances.</p></article>
+    <article><span>⌨</span><h2>Matching controls</h2><p>Use WASD or arrow keys to drive, Space to slash, and Q to fire the laser. Touch and spatial buttons remain available.</p></article>
+  </section>
+
+  <section class="training-apps__platform training-apps__platform--ios">
+    <figure><img src="{{ "images/rob-training-apps/ios-mission-control.webp" | relURL }}" width="1206" height="2622" loading="lazy" alt="ROB Training iPhone mission screen showing level one of ten, score, key state, keyboard controls, ROB Voice, tread controls, laser and saber actions."><figcaption>Actual iPhone simulator capture of the native mission interface.</figcaption></figure>
+    <div><p class="training-apps__eyebrow">iPhone and iPad</p><h2>Mission control, AR Lab, and ROB Voice</h2><p>The iOS app combines a RealityKit campaign with an AR Lab and a component explorer. Place ROB on a detected surface, inspect its base, power, Cerebro, sensors, safety systems, and dual arms, then ask the on-device ROB guide questions about the mission.</p><ul><li>Automatic differential-tread mixing</li><li>Keys, doors, cells, damaging enemies, lasers, and saber slashes</li><li>Local high score and procedural soundtrack</li><li>No physical-robot control connection</li></ul></div>
+  </section>
+
+  <section class="training-apps__platform training-apps__platform--vision">
+    <div><p class="training-apps__eyebrow">Apple Vision Pro</p><h2>A spatial robotics workshop</h2><p>The visionOS app presents the complete campaign in a glass mission window, then opens an immersive workshop where ROB can be placed, scaled, driven, inspected, and operated with spatial controls or a connected keyboard.</p><ul><li>Ten-level campaign visible at a glance</li><li>Full-scale RealityKit ROB model</li><li>Spatial movement, weapons, objectives, and component learning</li><li>Speech questions and local generated techno</li></ul></div>
+    <figure><img src="{{ "images/rob-training-apps/vision-dashboard.webp" | relURL }}" width="3840" height="2160" loading="lazy" alt="Wide Apple Vision Pro simulator view of the ROB Training campaign dashboard floating in a room, listing levels from Calibration Deck through Mission Control."><figcaption>Actual Apple Vision Pro simulator capture of the native campaign dashboard.</figcaption></figure>
+  </section>
+
+  <section class="training-apps__opensource"><p class="training-apps__eyebrow">Build it and learn from it</p><h2>The source is part of the lesson</h2><p>Swift and RealityKit developers can follow the shared campaign model, native rendering, spatial interface, speech features, procedural audio, and separate iOS and visionOS entry points in the public repository.</p><a href="https://github.com/RudyAramayo/ROBTrainingGames">github.com/RudyAramayo/ROBTrainingGames</a><small>These are simulated educational games. They do not connect to or command the physical robot.</small></section>
+</main>
+{{ end }}
