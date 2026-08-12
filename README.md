@@ -82,7 +82,7 @@ Pushing `main` runs `.github/workflows/hugo.yml`, builds the site, validates the
 
 `/robot-lab/` is a static four-mission learning game built from `content/robot-lab.md`, `layouts/robot-lab/single.html`, and `assets/js/robot-lab.js`. It teaches feedback systems, PWM duty cycle, differential-drive prediction, and authenticated-but-stale command rejection. The game uses no backend, accounts, analytics, robot connection, or persistent learner data and remains keyboard accessible.
 
-`/rob-simulator/` is a locally bundled Three.js tank-driving game. It models ROB with simple geometry, independent left/right tread input, collision-safe room navigation, collectible energy cells, and a final docking objective. It supports keyboard, pointer/touch, and dual-stick gamepad input and never connects to a physical robot.
+`/rob-simulator/` is a locally bundled Three.js tank-driving game. Its ten-level campaign models ROB with dual seven-joint AMBER-style arms, horizontal lightsabers, coordinated arrow-key tread mixing, forgiving sliding collision, keys and locked doors, damaging enemies, collectible energy cells, and a final docking objective. It supports keyboard, pointer/touch, and gamepad input and never connects to a physical robot.
 
 For this custom GitHub Actions deployment, the custom domain configured under
 **Settings → Pages** is authoritative. `static/CNAME` mirrors that value in the
