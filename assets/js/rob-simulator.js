@@ -14,15 +14,30 @@ if (root) {
   const levels = [
     { name: 'Calibration Deck', floor: 0x172734, grid: 0x2ca4bb, gate: [0, -3.6], dock: [7.8, 5.7], cells: [[-7.5, -4.8], [.8, 3.3], [7.5, -.8]], enemies: [['spider', -7.2, .2], ['dalek', 6.8, -5.4]], health: 2, speed: 0, bonus: 900, obstacles: [[-3.2, -.8, 2.7, 1.3, 1.1], [3.8, 1.6, 1.5, 3.2, 1.35], [-1.3, 4.7, 3.1, 1.2, .85], [6.6, -3.6, 1.2, 2.1, 1.6]] },
     { name: 'Key Workshop', floor: 0x241b32, grid: 0xc548e8, gate: [-7.8, 1.7], dock: [7.7, -5.7], key: [-7.7, -5.5], door: [2.8, 0, .5, 5], cells: [[-1.3, -2.3], [7.2, 1.5]], enemies: [['spider', -4.8, 3.8]], health: 1, speed: .18, bonus: 1100, obstacles: [[-5.5, -.5, 1.1, 5.8, 1.5], [-.4, 2.1, 5.2, 1, 1.1]] },
-    { name: 'Crossroads', floor: 0x1c2924, grid: 0x55dd88, gate: [7.5, 3.8], dock: [-7.8, -5.8], key: [8, -2.2], door: [-2, 1.5, 5, .5], cells: [[-8, 4.7], [-3.7, -.8], [0, -5.8]], enemies: [['spider', -6.8, 1.1], ['dalek', -1.5, -4.6]], health: 1, speed: .24, bonus: 1300, obstacles: [[-6.2, -2.4, 5.5, .9, 1.2], [0, -.8, 4.8, .9, 1.1], [6.2, .1, 4.8, .9, 1.3]] },
+    { name: 'Crossroads', floor: 0x1c2924, grid: 0x55dd88, gate: [7.5, 3.8], dock: [-7.8, -5.8], key: [8, 5], door: [-2, 1.5, 5, .5], cells: [[-8, 4.7], [-3.7, -.8], [0, -5.8]], enemies: [['spider', -6.8, 1.1], ['dalek', -1.5, -4.6]], health: 1, speed: .24, bonus: 1300, obstacles: [[-6.2, -2.4, 5.5, .9, 1.2], [0, -.8, 4.8, .9, 1.1], [6.2, .1, 4.8, .9, 1.3]] },
     { name: 'Sensor Hall', floor: 0x152b35, grid: 0x38dfff, gate: [-7, -4], dock: [8, 5.5], cells: [[-7, 5], [-1, -4], [4, 4]], enemies: [['spider', -4, 1], ['dalek', 5, -2]], health: 2, speed: .25, bonus: 1500, obstacles: [[-4, -2, 1, 6, 1], [0, 2, 1, 6, 1], [4, -2, 1, 6, 1]] },
-    { name: 'Amber Armory', floor: 0x30251a, grid: 0xf1b93a, gate: [0, -5], dock: [8, 5], key: [-8, -5], door: [0, 1, 4, .5], cells: [[-6, 4], [2, -4], [7, 2]], enemies: [['dalek', -3, 3], ['spider', 5, -3]], health: 2, speed: .3, bonus: 1700, obstacles: [[-4, 0, 1, 5, 1], [4, 1, 1, 5, 1]] },
+    { name: 'Amber Armory', floor: 0x30251a, grid: 0xf1b93a, gate: [0, -5], dock: [8, -5], key: [-8, 5], door: [0, 1, 4, .5], cells: [[-6, 4], [2, -4], [7, -2]], enemies: [['dalek', -3, 3], ['spider', 5, -3]], health: 2, speed: .3, bonus: 1700, obstacles: [[-4, 0, 1, 5, 1], [4, -2, 1, 3, 1]] },
     { name: 'Switchback Foundry', floor: 0x2b1830, grid: 0xd65cff, gate: [-8, 0], dock: [8, -5], key: [0, 5], door: [5, -2, .5, 5], cells: [[-7, -5], [-3, 3], [3, -4], [7, 4]], enemies: [['spider', -4, 0], ['dalek', 2, 2], ['spider', 6, -4]], health: 2, speed: .35, bonus: 1900, obstacles: [[-5, -2, 5, .7, 1], [-1, 2, 5, .7, 1], [3, -2, 5, .7, 1]] },
     { name: 'Twin Sentinel Bay', floor: 0x17282a, grid: 0x55dd88, gate: [0, -5], dock: [0, 5.5], cells: [[-7, -4], [7, -4], [-7, 4], [7, 4]], enemies: [['dalek', -5, 0], ['dalek', 5, 0], ['spider', 0, -3]], health: 3, speed: .4, bonus: 2100, obstacles: [[-2.5, 0, .7, 5, 1], [2.5, 0, .7, 5, 1]] },
-    { name: 'Power Relay', floor: 0x2e2614, grid: 0xffc83d, gate: [-8, 5], dock: [8, 5], key: [-8, -5], door: [0, 0, .5, 5], cells: [[-5, 2], [2, -4], [5, 0], [7, -4]], enemies: [['spider', -3, -2], ['dalek', 3, 3], ['spider', 7, 0]], health: 3, speed: .42, bonus: 2300, obstacles: [[-4, 0, .8, 5, 1], [4, 0, .8, 5, 1]] },
-    { name: 'Guardian Maze', floor: 0x1a2430, grid: 0x5aa8ff, gate: [8, -5], dock: [-8, 5], key: [8, 5], door: [-5, 1, 4, .5], cells: [[-8, -5], [-3, -3], [0, 4], [4, -2], [7, 2]], enemies: [['spider', -6, 0], ['dalek', -1, -4], ['spider', 3, 3], ['dalek', 7, -3]], health: 3, speed: .46, bonus: 2600, obstacles: [[-5, -2, 5, .7, 1], [-1, 2, 5, .7, 1], [3, -2, 5, .7, 1], [6, 2, .7, 4, 1]] },
-    { name: 'Mission Control', floor: 0x132a25, grid: 0x2bdf8a, gate: [0, -5], dock: [0, 5.5], key: [-8, 5], door: [0, 2, 5, .5], cells: [[-8, -5], [-5, 1], [0, -3], [5, 1], [8, -5]], enemies: [['dalek', -6, -2], ['spider', -2, 3], ['dalek', 3, -2], ['spider', 7, 3]], health: 4, speed: .5, bonus: 3000, obstacles: [[-5, 0, .8, 5, 1], [0, -1, .8, 4, 1], [5, 0, .8, 5, 1]] },
+    { name: 'Power Relay', floor: 0x2e2614, grid: 0xffc83d, gate: [-8, 5], dock: [8, -5], key: [-8, -5], door: [1, 0, .5, 5], cells: [[-5, 2], [2, -4], [5, 0], [7, -4]], enemies: [['spider', -3, -2], ['dalek', 3, 3], ['spider', 7, 0]], health: 3, speed: .42, bonus: 2300, obstacles: [[-4, 0, .8, 5, 1], [4, 2.5, .8, 2, 1]] },
+    { name: 'Guardian Maze', floor: 0x1a2430, grid: 0x5aa8ff, gate: [8, -5], dock: [-8, -5], key: [8, 5], door: [-5, 1, 4, .5], cells: [[-8, -5], [-3, -3], [0, 4], [4, -2], [7, 2]], enemies: [['spider', -6, 0], ['dalek', -1, -4], ['spider', 3, 3], ['dalek', 7, -3]], health: 3, speed: .46, bonus: 2600, obstacles: [[-5, -2, 5, .7, 1], [-1, -2, .7, 4, 1], [3, -2, 5, .7, 1], [6, 3.5, .7, 2, 1]] },
+    { name: 'Mission Control', floor: 0x132a25, grid: 0x2bdf8a, gate: [0, -5], dock: [0, -5.5], key: [-8, 5], door: [0, 2, 5, .5], cells: [[-8, 5], [-5, -2], [0, -3], [5, -2], [8, -5]], enemies: [['dalek', -6, -2], ['spider', -2, 3], ['dalek', 3, -2], ['spider', 7, 3]], health: 4, speed: .5, bonus: 3000, obstacles: [[-5, -2, .8, 4, 1], [0, -1, .8, 4, 1], [5, -2, .8, 4, 1]] },
   ];
+  // A locked door is a real partition, not a decorative panel that can be driven around.
+  // Complete the wall on both sides of every doorway while leaving the door-sized opening.
+  levels.forEach((level) => {
+    if (!level.door) return;
+    const [x, z, w, d] = level.door;
+    if (w > d) {
+      const leftWidth = x - w / 2 + 11, rightWidth = 11 - (x + w / 2);
+      if (leftWidth > .05) level.obstacles.push([-11 + leftWidth / 2, z, leftWidth, d, 1.8]);
+      if (rightWidth > .05) level.obstacles.push([x + w / 2 + rightWidth / 2, z, rightWidth, d, 1.8]);
+    } else {
+      const nearDepth = z - d / 2 + 8, farDepth = 8 - (z + d / 2);
+      if (nearDepth > .05) level.obstacles.push([x, -8 + nearDepth / 2, w, nearDepth, 1.8]);
+      if (farDepth > .05) level.obstacles.push([x, z + d / 2 + farDepth / 2, w, farDepth, 1.8]);
+    }
+  });
   const isTouch = matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
   root.classList.toggle('is-touch', isTouch);
   let soundEnabled = true;
