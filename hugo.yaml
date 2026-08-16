@@ -49,8 +49,8 @@ markup:
 params:
   author: Rodolfo Aramayo
   authorimage: ../assets/images/global/author.webp
-  og_image: images/og-orbitus-robotics.jpg
-  og_image_alt: "Orbitus Robotics — Apple-native robotics, built in public, featuring R.O.B."
+  og_image: og.png
+  og_image_alt: "The ROB Operating Stack — Cerebro, ROBController, and VisionProController by Orbitus Robotics"
   moto: "Leading the AI revolution"
   description: "Meet R.O.B., our world-class open-source humanoid platform combining macOS, spatial computing, and Gemini-powered intelligence."
   disable_theme_toggle: false
@@ -197,6 +197,10 @@ params:
 
 menu:
   main:
+    - identifier: products
+      name: Products
+      pageRef: /products
+      weight: 2
     - identifier: training-apps
       name: Training Apps
       pageRef: /rob-training-apps
@@ -222,6 +226,10 @@ menu:
       pageRef: /contact
       weight: 30
   footer:
+    - identifier: products
+      name: Products
+      pageRef: /products
+      weight: 5
     - identifier: Makerfaire
       name: Maker Faire
       pageRef: /makerfaire

@@ -10,7 +10,7 @@
 {{- with .Params.featured_image -}}
   {{- with resources.Get . -}}
     {{- $socialResource := .Fill "1200x630 webp q82" -}}
-    {{- $socialImage = $socialResource.Permalink -}}
+    {{- $socialImage = $socialResource.RelPermalink | absURL -}}
   {{- end -}}
 {{- end -}}
 <title>{{ $pageTitle }}</title>

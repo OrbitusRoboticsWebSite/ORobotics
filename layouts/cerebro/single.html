@@ -1,0 +1,233 @@
+{{ define "main" }}
+<main id="main" class="product-detail product-detail--cerebro">
+  {{ partial "product-subnav.html" . }}
+
+  <header class="product-detail__hero">
+    <div class="product-detail__hero-grid" aria-hidden="true"></div>
+    <div class="product-detail__hero-copy">
+      <p class="product-detail__eyebrow"><span>01</span> macOS · perception · intelligence</p>
+      <h1>Cerebro</h1>
+      <p class="product-detail__statement">The nervous system<br>behind a real robot.</p>
+      <p class="product-detail__lede">Cerebro is R.O.B.'s always-on Mac brain and engineering console: synchronized RGB-D and panoramic vision, private Swift MLX intelligence, optional Gemini Live conversation, authenticated Lidar and controller links, deterministic autonomy, supervised arm motion, show control, and deep hardware diagnostics.</p>
+      <div class="product-detail__actions">
+        <a class="product-detail__primary" href="https://github.com/RudyAramayo/Cerebro" target="_blank" rel="noopener noreferrer">Explore the source <span aria-hidden="true">↗</span></a>
+        <a href="#cerebro-perception">Tour every subsystem <span aria-hidden="true">↓</span></a>
+      </div>
+    </div>
+    <figure class="product-detail__hero-media product-detail__hero-media--console">
+      {{ $console := resources.Get "images/products/cerebro-console.webp" }}
+      <img src="{{ $console.RelPermalink }}" width="{{ $console.Width }}" height="{{ $console.Height }}" alt="Actual Cerebro macOS engineering console showing hardware terminals, manual controls, a camera view, and servo controls" fetchpriority="high" decoding="async">
+      <figcaption><span><i></i> Cerebro engineering console</span><span>Actual application capture</span></figcaption>
+      <div class="product-detail__telemetry" aria-hidden="true">
+        <span>CAMERA / RGB-D</span>
+        <b>STREAMING</b>
+        <span>CONTROL / ROBCTL2</span>
+        <b>ARMED BY OPERATOR</b>
+      </div>
+    </figure>
+  </header>
+
+  <section class="product-proof" aria-label="Cerebro technical proof points">
+    <div><strong>30 FPS</strong><span>Synchronized OAK RGB-D</span></div>
+    <div><strong>3 models</strong><span>Local LLM · VLM · embeddings</span></div>
+    <div><strong>0.2 sec</strong><span>Deterministic autonomy tick</span></div>
+    <div><strong>5 Hz</strong><span>Controller freshness heartbeat</span></div>
+    <div><strong>TLS 1.3</strong><span>Pinned controller and video links</span></div>
+  </section>
+
+  <section id="cerebro-perception" class="product-chapter product-chapter--split">
+    <div class="product-chapter__intro">
+      <p class="product-detail__eyebrow"><span>01</span> Perception fabric</p>
+      <h2>See in color, depth, stereo, and 360°.</h2>
+      <p>Cerebro treats perception as a supervised, backpressure-aware service—not a camera window. Each generation of synchronized frames can feed Apple Vision, local MLX, Gemini sampling, calibration, remote video, show context, SceneKit diagnostics, and hologram export without allowing slow consumers to pile up behind live capture.</p>
+    </div>
+    <div class="camera-stack" aria-label="Cerebro camera processing architecture">
+      <div class="camera-stack__source"><span>OAK / DEPTHAI 3.8</span><b>RGB + depth + stereo</b><small>640×400 · 30 FPS · 20 ms synchronization</small></div>
+      <div class="camera-stack__bus"><span>CameraFrameSet</span><i></i></div>
+      <div class="camera-stack__outputs">
+        <span>APPLE VISION</span><span>SWIFT MLX VLM</span><span>GEMINI LIVE</span><span>H.264 VIDEO</span><span>HOLOGRAM</span><span>SCENE SNAPSHOT</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature-grid feature-grid--cerebro" aria-label="Cerebro perception features">
+    <article>
+      <span class="feature-grid__number">01.1</span>
+      <h3>A crash-isolated RGB-D camera service</h3>
+      <p>A supervised DepthAI helper owns the Luxonis device outside Cerebro's process and returns a single timestamp-aligned frame set over a user-only Unix socket. RGB arrives as a native sample buffer; depth arrives aligned to RGB as little-endian millimeters; rectified left and right mono images and calibrated intrinsics travel in the same bounded packet.</p>
+      <ul><li>DepthAI robotics preset, LR check, subpixel depth, undistorted RGB</li><li>Nonblocking queue depth of one and newest-frame admission</li><li>Disconnect, malformed packet, SDK failure, or helper exit becomes recoverable camera state</li><li>AVFoundation remains available as an ordinary-webcam RGB fallback</li></ul>
+    </article>
+    <article>
+      <span class="feature-grid__number">01.2</span>
+      <h3>Native Apple Vision overlays</h3>
+      <p>The live camera interface runs active 2D human-body and hand-pose requests, configurable 3D human pose, and QR/barcode calibration on gated cadences. A native overlay draws skeletons, hands, projected 3D pose, sword geometry, custom detections, depth color, confidence, and status without blocking capture.</p>
+      <ul><li>Configurable 3D pose sampling from 0.1–2 FPS</li><li>Depth overlay spans 150 mm–10 m at up to 10 Hz</li><li>Training-sword tracker uses contour geometry, wrist anchoring, temporal continuity, and smoothing</li><li>QR + RGB-D reverse-pose calibration estimates camera-to-robot transform and RMS confidence</li></ul>
+    </article>
+    <article>
+      <span class="feature-grid__number">01.3</span>
+      <h3>A second, panoramic perception lane</h3>
+      <p>The Insta360 service maintains an OSC session and heartbeat, requests a 1920×960 stitched H.264 panorama, optionally applies gyro stabilization, and starts its local frame decoder only when diagnostics or analysis demand it. Whole-panorama analysis or six local sectors can be sampled independently.</p>
+      <ul><li>30 FPS stitched source with demand-driven 15 FPS MJPEG analysis decode</li><li>Live preview, bytes, frames, FPS, session and gyro diagnostics</li><li>Independent MLX, body-pose, object/scene, and custom-model toggles</li><li>Newest-frame-only advisory perception, never the motor loop</li></ul>
+    </article>
+    <article>
+      <span class="feature-grid__number">01.4</span>
+      <h3>Detectors you can add at runtime</h3>
+      <p>The detector registry gives every source its own enable state and rate. Built-in classification and saliency can be combined with hot-imported Core ML models whose recognized regions and centers become bounded scene observations. Main-camera body pose stays on its dedicated low-latency path.</p>
+      <ul><li>Per-source processing rates from 0–30 FPS</li><li>Hot-added <code>.mlmodel</code> and <code>.mlmodelc</code> packages</li><li>Source-generation checks discard results from replaced camera sessions</li><li>Scene snapshots label sensor JSON as untrusted observation, never instruction</li></ul>
+    </article>
+  </section>
+
+  <section id="cerebro-intelligence" class="product-chapter product-chapter--dark">
+    <div class="product-chapter__intro">
+      <p class="product-detail__eyebrow"><span>02</span> Hybrid intelligence</p>
+      <h2>Private on the Mac.<br>Live when the moment needs more.</h2>
+      <p>Operators can choose a real in-process Swift MLX stack, an isolated loopback llama.cpp server, or Gemini Live. All three sit outside deterministic motor control. Their output must cross strict schemas, timeouts, authorization, and human-visible state before it can influence the physical machine.</p>
+    </div>
+
+    <div class="ai-lanes">
+      <article class="ai-lane ai-lane--mlx">
+        <div class="ai-lane__top"><span>LOCAL / PRIVATE</span><b>Swift MLX</b><i>Metal</i></div>
+        <h3>Three local models. One guarded runtime.</h3>
+        <p><code>ROBMLXEngine</code> is an actor-isolated native Swift inference runtime with pinned packages, first-use Hugging Face downloads, offline reuse, cancellation, and complete diagnostics.</p>
+        <dl>
+          <div><dt>Dialogue LLM</dt><dd>Llama 3.2 1B Instruct · 4-bit</dd></div>
+          <div><dt>Camera VLM</dt><dd>Qwen2-VL 2B Instruct · 4-bit</dd></div>
+          <div><dt>Embeddings</dt><dd>TaylorAI gte-tiny</dd></div>
+        </dl>
+        <ul><li>Schema-validated local stage plans; attempted model tool calls throw</li><li>Per-source sampled VLM frames with only one inference in flight</li><li>Fresh, high-confidence stage observations only; explicitly uncertain and non-executable</li><li>Process-local semantic memory capped at 200 entries with cosine retrieval</li><li>Live load/generation latency, tokens/sec, frame count, download, and Metal memory telemetry</li></ul>
+      </article>
+      <article class="ai-lane ai-lane--gemini">
+        <div class="ai-lane__top"><span>OPTIONAL / MULTIMODAL</span><b>Gemini Live</b><i>Realtime</i></div>
+        <h3>Camera, microphone, dialogue, and supervised tools.</h3>
+        <p>The default Robotics streaming model receives independently enabled audio and sampled video, supports response text or audio, maintains resumable WebSocket sessions, and can optionally use server-side Google Search.</p>
+        <dl>
+          <div><dt>Microphone</dt><dd>Mono PCM16 · 16 kHz</dd></div>
+          <div><dt>Camera</dt><dd>JPEG · ≤1 FPS · ≤768 px</dd></div>
+          <div><dt>Deadlines</dt><dd>15 sec start · 120 sec turn</dd></div>
+        </dl>
+        <ul><li>Raw mic, sampled camera, connection, Search, and response mode are separate switches</li><li>Jittered reconnect, sliding-window compression, session resumption, barge-in, input/output transcription</li><li>Bounded high-level tools: look, gesture, request pick, relative navigation, and priority stop</li><li>Idempotent tool ledger and fresh-controller approval gate</li><li>Diagnostics retain counters and redacted state—not media, transcripts, credentials, tool arguments, or raw responses</li></ul>
+      </article>
+    </div>
+
+    <div class="ai-support-grid">
+      <article><span>LOCAL ALTERNATIVE</span><h3>Loopback llama.cpp</h3><p>A second local provider can run out of process for crash isolation. Cerebro accepts literal-loopback endpoints only, rejects redirects and non-loopback final URLs, bounds health and response bodies, supports cancellation, and applies the same five-key dialogue schema and fallbacks as MLX.</p></article>
+      <article><span>APPLE-NATIVE REASONING</span><h3>Foundation Models</h3><p>On macOS 26 where Apple Intelligence is available, a structured scene interpreter can answer, clarify, describe, suggest navigation, inspect, stop, or choose no action. It has no motor or servo tool; navigation and inspection remain suggestions requiring human confirmation.</p></article>
+      <article><span>VOICE PIPELINE</span><h3>Listen locally. Speak naturally.</h3><p>One audio-engine tap serves on-device Apple Speech and optional Gemini raw audio. Local recognition requires on-device processing, supports partial results and English/Japanese output, and pauses while R.O.B. speaks to avoid feedback. Conversation history stays local, capped at 300 messages and seven days.</p></article>
+    </div>
+  </section>
+
+  <section id="cerebro-lidar" class="product-chapter product-chapter--split product-chapter--lidar">
+    <div class="product-chapter__intro">
+      <p class="product-detail__eyebrow"><span>03</span> Lidar + autonomy</p>
+      <h2>Cloud intelligence talks. Local code owns the treads.</h2>
+      <p>A separately paired RPLidar publisher can send authenticated scans into Cerebro. The robot derives four directional free-space sectors and exposes only fresh, bounded geometry to the scene model and autonomy coordinator. A stale scan does not become optimistic clearance—it stops movement and waits.</p>
+      <div class="product-callout">AI supplies conversation and social timing. The deterministic planner is the only component that produces left and right tread values.</div>
+    </div>
+    <div class="lidar-visual" aria-label="Illustration of RPLidar free-space sectors around ROB">
+      <div class="lidar-visual__sweep"></div><div class="lidar-visual__robot">ROB</div>
+      <span class="lidar-visual__point lidar-visual__point--1"></span><span class="lidar-visual__point lidar-visual__point--2"></span><span class="lidar-visual__point lidar-visual__point--3"></span><span class="lidar-visual__point lidar-visual__point--4"></span><span class="lidar-visual__point lidar-visual__point--5"></span>
+      <b class="lidar-visual__label lidar-visual__label--front">FORWARD<br><small>1.42 m</small></b><b class="lidar-visual__label lidar-visual__label--left">LEFT<br><small>2.08 m</small></b><b class="lidar-visual__label lidar-visual__label--right">RIGHT<br><small>0.96 m</small></b>
+    </div>
+  </section>
+
+  <section class="spec-band">
+    <article><b>10 Hz / 1 MiB</b><span>Maximum authenticated scan rate and payload</span></article>
+    <article><b>0.75 sec</b><span>Autonomy scan-freshness requirement</span></article>
+    <article><b>0.8 m</b><span>Forward obstacle threshold</span></article>
+    <article><b>0.09–0.14</b><span>Deliberately small social-roam tread values</span></article>
+    <article><b>82%</b><span>Zone-radius return threshold</span></article>
+  </section>
+
+  <section class="product-chapter">
+    <div class="product-chapter__intro product-chapter__intro--wide">
+      <p class="product-detail__eyebrow"><span>04</span> Authenticated robot network</p>
+      <h2>Pair the role. Pin the robot. Reject the downgrade.</h2>
+      <p>Cerebro's modern control plane is a reliable ordered QUIC stream over UDP with TLS 1.3, exact leaf-certificate pinning, a fresh reciprocal HMAC proof, and per-device secrets stored in Keychain. Bonjour advertises routing hints, never identity. Controller and Lidar publishers receive different server-owned roles and cannot promote themselves by editing a pairing payload.</p>
+    </div>
+    <div class="protocol-diagram" aria-label="Cerebro control and video protocols">
+      <div><span>ROBController / Vision Pro</span><b>operatorController</b><small>drive · voice · approval · autonomy</small></div>
+      <i>_robctl._udp<br><strong>robctl/2</strong><br>TLS 1.3 QUIC</i>
+      <div class="protocol-diagram__core"><span>CEREBRO</span><b>identity + authority</b><small>session · sequence · lease · watchdog</small></div>
+      <i>_robvideo._udp<br><strong>robvideo/1</strong><br>independent media</i>
+      <div><span>Vision camera client</span><b>session-bound video</b><small>H.264 · feedback · recovery IDR</small></div>
+    </div>
+    <div class="security-grid">
+      <article><h3>Independent identities</h3><p>Every device receives its own controller UUID, 256-bit secret, role, and revocation record. Revoking one tombstones it and disconnects its live session without disturbing the others.</p></article>
+      <article><h3>Fresh authority</h3><p>Frames carry protocol version, live UUID, message UUID, monotonic sequence, and bounded length. Cloned credentials, replayed sequences, stale sessions, oversized payloads, and role mismatches fail closed.</p></article>
+      <article><h3>No automatic downgrade</h3><p>The historical plaintext transport is an explicit legacy adapter, disabled by default. A failure in modern discovery or authentication never silently falls back to it.</p></article>
+      <article><h3>Video cannot delay control</h3><p>The H.264 sender uses its own service, connection, queue, framing, proof domain, and bounded newest-frame state. Media congestion cannot queue a stop behind video frames.</p></article>
+    </div>
+  </section>
+
+  <section id="cerebro-motion" class="product-chapter product-chapter--industrial">
+    <div class="product-chapter__intro">
+      <p class="product-detail__eyebrow"><span>05</span> Embodied control</p>
+      <h2>Every actuator has a gate.</h2>
+      <p>Cerebro bridges high-level operator intent to the physical base, servos, rotating torso, and dual seven-joint Amber arms. Freshness, acknowledged modes, bounded values, measured telemetry, and explicit authority live between a button—or a model—and motion.</p>
+    </div>
+    <div class="motion-modules">
+      <article><span>BASE</span><h3>Passive Arduino discovery</h3><p>USB callout devices are opened at 250,000 baud, reset, and observed for the exact Base startup line. Cerebro sends no probe bytes to unidentified boards. At 5 Hz it forwards independent treads, brakes, flipper, and linear-actuator state; three missed snapshots produce one neutral/braked frame, then USB writes stop so the Arduino watchdog can de-energize the base.</p></article>
+      <article><span>NECK + GRIPPERS</span><h3>Maestro servo control</h3><p>VID/product discovery reconnects the Pololu Maestro. Normalized head demands become bounded, slew-limited pan, tilt, and upper-tilt commands. Arm and gripper channels retain calibration controls; remote gripper changes are edge-triggered rather than resent forever.</p></article>
+      <article><span>ROTATING TORSO</span><h3>Tic safe-start ownership</h3><p>Vision head yaw can request a normalized half-turn around a stored baseline; the local UI has a full-turn range. Position conversion and slew limits remain on the robot Mac. Releasing control enters safe start and de-energizes; a missing <code>ticcmd</code> disables only that feature.</p></article>
+      <article><span>AMBER B1</span><h3>Measured arm gateway</h3><p>An SSH-tunneled, token-authenticated gateway exposes seven-joint position, velocity, current, and status telemetry; verified mode transitions; and trajectories bounded by B1 limits and duration. Named gestures are immutable approved snapshots and settle against multiple measured position/velocity samples before completion.</p></article>
+    </div>
+    <div class="amber-detail">
+      <div><span>2 × 7</span><b>Measured arm joints</b></div>
+      <p>Short-lived Gemini or controller authority can be granted for named gestures, but it still requires a healthy tunnel, fresh telemetry, position mode, bounded steps and speeds, acknowledged commands, and a calibrated executor. Revocation, timeout, disconnect, or cancellation holds the current position. Vision Pro target intents already have a complete authentication and safety-validation protocol, but protocol v1 deliberately keeps physical execution disabled.</p>
+    </div>
+  </section>
+
+  <section id="cerebro-shows" class="product-chapter product-chapter--shows">
+    <div class="product-chapter__intro">
+      <p class="product-detail__eyebrow"><span>06</span> Performance engine</p>
+      <h2>Rehearsed reliability.<br>Room for improvisation.</h2>
+      <p>The stage runner validates an authored show before it speaks or moves. Offline, local-model, and adaptive modes share one cue engine, one cancellation path, mandatory fallbacks, and hard content boundaries that keep show files from smuggling in raw joints, hosts, ports, shell commands, or model-authored motion.</p>
+    </div>
+    <div class="show-timeline">
+      <article><span>01</span><h3>Validate</h3><p>Strict v1 JSON, 256 KiB, 256 cues, four-hour ceiling, unknown fields rejected.</p></article>
+      <article><span>02</span><h3>Direct locally</h3><p>Swift MLX or llama.cpp chooses only an allow-listed beat and delivery, plus a short offline line.</p></article>
+      <article><span>03</span><h3>Adapt live</h3><p>Cerebro writes the trusted Gemini brief and can add current camera/audio awareness.</p></article>
+      <article><span>04</span><h3>Fall back</h3><p>Gemini line → validated local line → mandatory authored line, all within the cue deadline.</p></article>
+      <article><span>05</span><h3>Stop cleanly</h3><p>Cancellation, timeout, spoken stop, and priority model stop close the active lane without waiting behind ordinary work.</p></article>
+    </div>
+    <div class="show-library" aria-label="Bundled Cerebro shows">
+      <span>Maker Faire</span><span>Comedy Acts</span><span>Junior Maker Comedy</span><span>Galactic Saber Battle</span><span>Progressive Saber Training</span>
+    </div>
+  </section>
+
+  <section class="product-chapter product-chapter--capture">
+    <div class="product-chapter__intro">
+      <p class="product-detail__eyebrow"><span>07</span> RGB-D hologram capture</p>
+      <h2>Turn a synchronized moment into a portable 3D artifact.</h2>
+      <p>Development Mode can capture a depth-textured still or up to fifteen seconds of animated RGB-D with optional audio, then export a self-contained web viewer and USDZ package. The same capture can orbit in a browser, open in Apple AR Quick Look on iPhone, iPad, or Vision Pro, and be shared through a temporary ten-minute local link.</p>
+    </div>
+    <div class="capture-pipeline"><span>RGB + DEPTH</span><i>→</i><span>VOXEL BUDGET</span><i>→</i><span>COLOR BUCKETS</span><i>→</i><span>WEBXR / USDZ</span><i>→</i><span>AIRDROP</span></div>
+    <p class="product-note"><b>Advanced capability.</b> Hologram export is implemented and intentionally exposed through Cerebro's Development menu rather than the default show-operator workflow.</p>
+  </section>
+
+  <section id="cerebro-operations" class="product-chapter product-chapter--ops">
+    <div class="product-chapter__intro product-chapter__intro--wide">
+      <p class="product-detail__eyebrow"><span>08</span> Robot-grade operations</p>
+      <h2>An always-on app has to fail differently.</h2>
+      <p>Cerebro isolates optional dependencies and repairs the smallest failed subsystem instead of taking robot control down with it.</p>
+    </div>
+    <div class="ops-grid">
+      <article><b>Single owner</b><p>An atomic per-user process lock prevents an installed copy and an Xcode copy from initializing the same hardware or listeners.</p></article>
+      <article><b>Supervised restart</b><p>A LaunchAgent restarts a crash in two seconds, opens its circuit after ten consecutive failures, and resets the count after five healthy minutes.</p></article>
+      <article><b>Wake recovery</b><p>macOS wake immediately triggers camera, dependency, Lidar, and Insta360 health passes.</p></article>
+      <article><b>Managed Python</b><p>Choose Python 3.9+, autodetect, select venv/Conda, or create an app-owned environment; package installation happens only after operator action.</p></article>
+      <article><b>Dependency preflight</b><p>Every compiled subprocess path must be absolute, present, executable, and not a directory immediately before launch.</p></article>
+      <article><b>Least privilege</b><p>Package-manager workflows never ingest an administrator password; Keychain secrets never appear in diagnostics or process arguments.</p></article>
+    </div>
+  </section>
+
+  <section class="truth-matrix" aria-labelledby="cerebro-status-title">
+    <div><p class="product-detail__eyebrow">Implementation status</p><h2 id="cerebro-status-title">Built, bounded, and explicit about the frontier.</h2></div>
+    <article class="truth-matrix__ready"><span>IMPLEMENTED</span><p>OAK RGB-D + stereo; Insta360 panorama; Apple Vision overlays; native Swift MLX LLM/VLM/embeddings; Gemini Live; Foundation Models scene interpreter; RPLidar scans; bounded Social Roam; authenticated controller network; base/servo/Tic I/O; measured Amber gateway; stage runner; diagnostics; Development-mode holograms.</p></article>
+    <article class="truth-matrix__preview"><span>PREVIEW / FOUNDATION</span><p>Cerebro's secure Vision Pro H.264 sender and media plane are implemented; the receiving adapter is a separate product boundary. Vision Pro arm intents receive full validation and measured feedback but cannot execute hardware in protocol v1.</p></article>
+    <article class="truth-matrix__lab"><span>LEGACY / LAB</span><p>Kinect/NiTE/PCL, RealSense, ReSpeaker task controllers, Leap, and historical RTSP sources remain in the codebase but are not presented as supported production sensors. Lidar maps are authenticated and bounded but the main controller currently ignores them.</p></article>
+  </section>
+
+  {{ partial "product-footer-cta.html" . }}
+</main>
+{{ end }}

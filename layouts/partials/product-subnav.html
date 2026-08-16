@@ -1,0 +1,8 @@
+<nav class="product-subnav" aria-label="ROB software products">
+  <a href="{{ "products/" | relURL }}" class="product-subnav__brand">ROB / SOFTWARE</a>
+  <div>
+    <a href="{{ "products/cerebro/" | relURL }}"{{ if eq .Type "cerebro" }} aria-current="page"{{ end }}>Cerebro</a>
+    <a href="{{ "products/robcontroller/" | relURL }}"{{ if eq .Type "robcontroller-product" }} aria-current="page"{{ end }}>ROBController</a>
+    <a href="{{ "products/visionprocontroller/" | relURL }}"{{ if eq .Type "visionprocontroller" }} aria-current="page"{{ end }}>VisionProController</a>
+  </div>
+</nav>

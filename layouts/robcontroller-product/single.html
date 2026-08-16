@@ -1,0 +1,167 @@
+{{ define "main" }}
+<main id="main" class="product-detail product-detail--controller">
+  {{ partial "product-subnav.html" . }}
+
+  <header class="product-detail__hero">
+    <div class="product-detail__hero-grid" aria-hidden="true"></div>
+    <div class="product-detail__hero-copy">
+      <p class="product-detail__eyebrow"><span>02</span> iPhone · Apple Watch · human authority</p>
+      <h1>ROBController</h1>
+      <p class="product-detail__statement">Command R.O.B.<br>with intent.</p>
+      <p class="product-detail__lede">A native human command, telemetry, and safety console that turns touch, device motion, voice, and Lidar data into authenticated, bounded robot control—then keeps AI proposals and autonomy visibly under operator authority.</p>
+      <div class="product-detail__actions">
+        <a class="product-detail__primary" href="https://github.com/RudyAramayo/ROBController" target="_blank" rel="noopener noreferrer">Explore the source <span aria-hidden="true">↗</span></a>
+        <a href="#controller-manual">Tour the controls <span aria-hidden="true">↓</span></a>
+      </div>
+    </div>
+    <figure class="product-detail__hero-media product-detail__hero-media--console">
+      {{ $controller := resources.Get "images/products/robcontroller-console.webp" }}
+      <img src="{{ $controller.RelPermalink }}" width="{{ $controller.Width }}" height="{{ $controller.Height }}" alt="Actual ROBController iPhone interface showing dual touch control zones, motion telemetry, and direct robot controls" fetchpriority="high" decoding="async">
+      <figcaption><span><i></i> ROBController command deck</span><span>Actual iPhone capture</span></figcaption>
+      <div class="product-detail__telemetry" aria-hidden="true"><span>CONTROL / REQUEST</span><b>HUMAN IN LOOP</b><span>HEARTBEAT</span><b>5 HZ</b></div>
+    </figure>
+  </header>
+
+  <section class="product-proof" aria-label="ROBController technical proof points">
+    <div><strong>5 Hz</strong><span>Full controller snapshot</span></div>
+    <div><strong>450 ms</strong><span>Watch relay watchdog</span></div>
+    <div><strong>35%</strong><span>Watch drive ceiling</span></div>
+    <div><strong>50+</strong><span>Speech locales</span></div>
+    <div><strong>TLS 1.3</strong><span>Pinned Cerebro connection</span></div>
+  </section>
+
+  <section id="controller-manual" class="product-chapter product-chapter--split">
+    <div class="product-chapter__intro">
+      <p class="product-detail__eyebrow"><span>01</span> Manual command deck</p>
+      <h2>Every control state, transmitted as one fresh intent.</h2>
+      <p>ROBController does not send disconnected button events and hope the robot reconstructs operator intent. Five times per second it emits a complete controller snapshot: independent left and right touch demands, a full device-attitude matrix, yaw/pitch/roll, base and mechanism states, speed, direction, playback state, location, and the current speech transcript.</p>
+      <p>That snapshot becomes stale as a unit. Cerebro can stop using it without guessing which button-up packet went missing.</p>
+    </div>
+    <div class="controller-map" aria-label="ROBController touch and hardware controls">
+      <div class="controller-map__stick controller-map__stick--left"><span>L</span><b>LEFT TREAD</b><i></i></div>
+      <div class="controller-map__stick controller-map__stick--right"><span>R</span><b>RIGHT TREAD</b><i></i></div>
+      <div class="controller-map__controls"><span>FLIPPER</span><span>LACT</span><span>BRAKES</span><span>SPEED</span><span>VOICE</span><span>MASTER</span></div>
+    </div>
+  </section>
+
+  <section class="feature-grid feature-grid--controller" aria-label="ROBController manual features">
+    <article><span class="feature-grid__number">01.1</span><h3>Independent dual-touch tank control</h3><p>Two circular pads track separate touches, clamp each touch to its half of the display, normalize each side to approximately ±1, and return both to an explicit neutral sentinel on release. The operator can drive each tread directly instead of collapsing tank motion into a single generic joystick.</p></article>
+    <article><span class="feature-grid__number">01.2</span><h3>A full mechanism command sheet</h3><p>Speed spans 0–100% with ±10 steps, a 10% preset, and Max. Dedicated controls cover forward/reverse, play/pause, tread lock, flipper forward/relax-brake/back/lock, and linear-actuator front/gravity/back. A separate master-control request prevents silent competition between controllers.</p></article>
+    <article><span class="feature-grid__number">01.3</span><h3>Motion and location context</h3><p>Core Motion supplies the 3×3 rotation matrix plus yaw, pitch, and roll at the same 5 Hz cadence. Core Location contributes latitude and longitude when authorized. These values travel with the command state so Cerebro can interpret them in the same freshness window.</p></article>
+    <article><span class="feature-grid__number">01.4</span><h3>Immediate operator actions</h3><p>Reconnect clears in-flight AI proposal state before establishing a new link. Request Control explicitly asks Cerebro for authority. Shut Up sends a direct speech-stop command. The app disables the idle timer so a live operator console does not disappear mid-session.</p></article>
+  </section>
+
+  <section id="controller-network" class="product-chapter product-chapter--dark">
+    <div class="product-chapter__intro product-chapter__intro--wide">
+      <p class="product-detail__eyebrow"><span>02</span> Cerebro control plane</p>
+      <h2>A green indicator means the robot proved who it is.</h2>
+      <p>ROBController becomes connected only after encrypted transport, exact certificate pinning, a fresh reciprocal proof, and application-level session acceptance all succeed. Discovery is convenient; it is never trusted as identity.</p>
+    </div>
+    <div class="secure-link">
+      <div><span>iPHONE KEYCHAIN</span><b>ROBCTL2 credential</b><small>robot UUID · controller UUID · 256-bit secret · SHA-256 pin</small></div>
+      <i><span>QUIC / UDP</span><b>TLS 1.3</b><small>robctl/2 · ordered reliable stream</small></i>
+      <div><span>CEREBRO KEYCHAIN</span><b>Persistent robot identity</b><small>challenge · session UUID · reciprocal HMAC</small></div>
+    </div>
+    <div class="security-grid">
+      <article><h3>Exact robot selection</h3><p>Bonjour browsing filters paired robot UUID and protocol metadata. A manual host/port v2 path exists for controlled networks, but both routes still require the same certificate pin and reciprocal proof.</p></article>
+      <article><h3>Replay-resistant framing</h3><p>Every <code>RCTL</code> v2 frame carries type, bounded payload length, increasing sequence, and message UUID. Malformed headers, repeated or decreasing sequences, and payloads above 4 MiB are rejected.</p></article>
+      <article><h3>Device-only secrets</h3><p>The pairing profile is stored in iOS Keychain as AfterFirstUnlockThisDeviceOnly—not UserDefaults—and a secure pairing field handles replacement. Cerebro can revoke this controller without affecting another operator device.</p></article>
+      <article><h3>Resilient reconnection</h3><p>Failed links reconnect with jittered exponential backoff from one to thirty seconds. The retired plaintext transport is available only through an explicit engineering flag and never becomes an automatic downgrade.</p></article>
+    </div>
+  </section>
+
+  <section id="controller-ai" class="product-chapter product-chapter--approval">
+    <div class="product-chapter__intro">
+      <p class="product-detail__eyebrow"><span>03</span> Human-gated AI actions</p>
+      <h2>A proposal is not motion.</h2>
+      <p>ROBController is the visible approval and outcome console for high-level Gemini-originated proposals created by Cerebro. It runs no Gemini model itself, and pressing Approve never calls a motor API. Approval records operator intent; completion, failure, cancellation, rejection, and expiry remain distinct states.</p>
+    </div>
+    <figure class="approval-console">
+      {{ $aiConsole := resources.Get "images/products/robcontroller-ai-console.webp" }}
+      <img src="{{ $aiConsole.RelPermalink }}" width="{{ $aiConsole.Width }}" height="{{ $aiConsole.Height }}" loading="lazy" decoding="async" alt="Actual ROBController simulator showing the AI action safety banner, approval controls, bounded autonomy status, language menu, and manual command deck">
+      <figcaption>Actual simulator capture. The safety banner makes the boundary explicit: per-action buttons do not actuate.</figcaption>
+    </figure>
+    <div class="approval-flow" aria-label="ROBController action approval states">
+      <span>PROPOSED</span><i>→</i><span>OPERATOR APPROVED</span><i>→</i><span>PHYSICAL OUTCOME PENDING</span><i>→</i><span>COMPLETE / FAILED / CANCELLED</span>
+    </div>
+    <div class="feature-grid feature-grid--compact">
+      <article><h3>Five high-level intents</h3><p><code>look_at</code>, <code>play_gesture</code>, <code>request_pick</code>, <code>navigate_relative</code>, and <code>stop_motion</code>. Exact argument keys are enforced; raw joint arrays and extra model prose are rejected.</p></article>
+      <article><h3>Bounded navigation</h3><p>Relative travel is capped at ±1 meter, yaw at ±π, and speed scale at 0.35. Requests expire within 120 seconds; detail text is capped at 2,048 characters and the entire proposal at 64 KiB.</p></article>
+      <article><h3>Idempotent coordination</h3><p>A sender-plus-call-ID ledger replays the last known status, absorbs UDP reordering, keeps cancellation tombstones, admits one open proposal, and stays bounded to 128 entries.</p></article>
+    </div>
+  </section>
+
+  <section id="controller-autonomy" class="product-chapter product-chapter--split product-chapter--autonomy">
+    <div class="product-chapter__intro">
+      <p class="product-detail__eyebrow"><span>04</span> Bounded Social Roam</p>
+      <h2>One operator tap authorizes one constrained session.</h2>
+      <p>Start Social Roam creates a unique autonomy session centered on the activation pose with a five-meter radius, a 0.20 maximum speed scale, an eight-hour expiry, and an allow-list of talk, look-at-person, idle gesture, roam, and stop behavior. Cerebro owns the fresh-Lidar planner and Gemini conversation; ROBController owns authorization and stop.</p>
+      <ul class="product-list"><li>Protocol ceiling: 12 hours, 0.5–50 m radius, 0.05–0.35 speed scale</li><li>Positive monotonic sequence and ≤16 KiB versioned payload</li><li>Stop is immutable, retransmitted every second while disconnected, and never creates a second session</li><li>Cerebro status can restore the live session ID after an app restart so Stop remains available</li></ul>
+    </div>
+    <div class="autonomy-card">
+      <span>SESSION / SOCIAL_ROAM</span><b>HUMAN AUTHORIZED</b>
+      <dl><div><dt>Zone</dt><dd>5.0 m</dd></div><div><dt>Speed</dt><dd>0.20 max</dd></div><div><dt>Planner</dt><dd>Cerebro local</dd></div><div><dt>Geometry</dt><dd>Fresh RPLidar</dd></div></dl>
+      <button type="button" disabled>STOP AUTONOMY</button><small>Illustrative status surface</small>
+    </div>
+  </section>
+
+  <section id="controller-lidar" class="product-chapter product-chapter--lidar-map">
+    <div class="product-chapter__intro product-chapter__intro--wide">
+      <p class="product-detail__eyebrow"><span>05</span> Live RPLidar views</p>
+      <h2>Read the room from the operator's hand.</h2>
+      <p>ROBController consumes both polar scan returns and grayscale occupancy-map frames. The live scan view draws the robot at center, plots each distance/angle return, shows the publisher's pose and IMU yaw/pitch/roll, and gives the operator a 1–1000 zoom scale. Map bytes are converted into an 8-bit image and published on the main queue.</p>
+    </div>
+    <div class="lidar-panels">
+      <article class="lidar-panel lidar-panel--polar"><span>POLAR SCAN</span><div><i></i><b>ROB</b><em></em></div><small>distance : angle · live scale · publisher pose</small></article>
+      <article class="lidar-panel lidar-panel--map"><span>OCCUPANCY MAP</span><div></div><small>raw grayscale bytes · width × height · main-thread image</small></article>
+    </div>
+  </section>
+
+  <section id="controller-watch" class="product-chapter product-chapter--watch">
+    <div class="watch-visual">
+      {{ $watch := resources.Get "images/products/robcontroller-watch.webp" }}
+      <div class="watch-visual__case"><img src="{{ $watch.RelPermalink }}" width="{{ $watch.Width }}" height="{{ $watch.Height }}" loading="lazy" decoding="async" alt="Actual ROBController Apple Watch companion home showing Dictate, Drive, and phone reachability"></div>
+      <div class="watch-visual__pulse" aria-hidden="true"></div>
+    </div>
+    <div class="product-chapter__intro">
+      <p class="product-detail__eyebrow"><span>06</span> R.O.B. on your wrist</p>
+      <h2>Dictate. Drive. Release to stop.</h2>
+      <p>The SwiftUI Watch companion never stores a Cerebro credential. It sends versioned, bounded commands through the paired iPhone, and the phone relays drive only while its app is active and its Cerebro connection is fully authenticated.</p>
+      <div class="watch-specs">
+        <article><b>5 Hz</b><span>Drive updates</span></article><article><b>0.12</b><span>Radial dead zone</span></article><article><b>35%</b><span>Hard drive cap</span></article><article><b>400 ms</b><span>Command freshness</span></article><article><b>450 ms</b><span>Phone watchdog</span></article><article><b>4 KiB</b><span>Wire limit</span></article>
+      </div>
+      <p>Touch begin requests master authority; a radial mixer turns the one-finger vector into normalized differential treads. Touch end sends braked neutral, then releases control. Leaving the view, lowering the wrist, losing reachability, backgrounding the phone, deactivating WatchConnectivity, or missing the heartbeat triggers the same stop path. Motion is never queued for replay.</p>
+    </div>
+  </section>
+
+  <section id="controller-voice" class="product-chapter product-chapter--split">
+    <div class="product-chapter__intro">
+      <p class="product-detail__eyebrow"><span>07</span> Voice and language</p>
+      <h2>Hold to speak. Keep the transcript inside the live snapshot.</h2>
+      <p>Touch-down creates an Apple Speech request in record/measurement mode, streams microphone buffers, and shows the best transcription live. Touch-up cancels. The current transcript rides with the controller state rather than becoming a separate unbounded command channel.</p>
+      <p>More than fifty locale choices span major English, Spanish, French, Chinese, Portuguese, German, Dutch, Danish, Italian, and many single-locale languages. Choosing one sends an explicit output-language command to Cerebro.</p>
+    </div>
+    <div class="language-cloud" aria-label="Examples of ROBController speech locales"><span>en-US</span><span>ja-JP</span><span>es-MX</span><span>fr-FR</span><span>zh-CN</span><span>pt-BR</span><span>de-DE</span><span>it-IT</span><span>nl-NL</span><span>da-DK</span><span>en-ZA</span><span>en-IN</span></div>
+  </section>
+
+  <section class="product-chapter product-chapter--ops">
+    <div class="product-chapter__intro product-chapter__intro--wide">
+      <p class="product-detail__eyebrow"><span>08</span> Internal architecture</p>
+      <h2>A mature UIKit cockpit with modern Swift safety boundaries.</h2>
+      <p>The app combines Objective-C++ orchestration and established storyboards with Swift networking, pairing, action/autonomy protocols, Lidar rendering, and Watch relay logic. The Watch target is pure SwiftUI. Each boundary has a small, versioned wire contract instead of sharing UI state across devices.</p>
+    </div>
+    <div class="architecture-stack">
+      <div><b>UIKit / Objective-C++</b><span>command deck · Core Motion · Speech · manual mechanisms</span></div><i>→</i><div><b>Swift protocol layer</b><span>pairing · auth · framing · proposals · autonomy · Lidar</span></div><i>→</i><div><b>QUIC / robctl/2</b><span>pinned TLS · reciprocal proof · ordered snapshots</span></div><i>→</i><div><b>Cerebro</b><span>authority · watchdog · planner · physical bridges</span></div>
+    </div>
+  </section>
+
+  <section class="truth-matrix" aria-labelledby="controller-status-title">
+    <div><p class="product-detail__eyebrow">Implementation status</p><h2 id="controller-status-title">Human control is the product boundary.</h2></div>
+    <article class="truth-matrix__ready"><span>IMPLEMENTED</span><p>iPhone dual-touch/manual control; Core Motion and location snapshots; Apple Speech and locale selection; QUIC/TLS pairing; replay-resistant framing; Gemini-proposal approval and status; bounded Social Roam authorization; polar scan and grayscale Lidar maps; SwiftUI Watch dictation and drive relay.</p></article>
+    <article class="truth-matrix__preview"><span>INTENTIONALLY NOT LOCAL</span><p>ROBController does not run Gemini, MLX, Core ML inference, a camera feed, or robot autonomy. It forwards operator intent and shows upstream proposals; Cerebro remains the intelligence, planning, and physical-execution boundary.</p></article>
+    <article class="truth-matrix__lab"><span>ENGINEERING NOTES</span><p>Dormant AurioTouch waveform/FFT sources and an unimplemented automation-script message remain in the repository and are not product features. The current iPhone + Watch surfaces are the demonstrated path; the separate iPad storyboard still needs runtime repair before it should be presented as ready.</p></article>
+  </section>
+
+  {{ partial "product-footer-cta.html" . }}
+</main>
+{{ end }}
