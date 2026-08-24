@@ -1624,3 +1624,1208 @@
 @media(max-width:900px){.product-subnav{align-items:flex-start;flex-direction:column}.product-subnav>div{max-width:100%;overflow-x:auto}.product-detail__hero{padding-top:3rem}.product-detail__statement{font-size:4.2rem}.product-chapter--split,.product-chapter--watch{grid-template-columns:1fr}.feature-grid,.feature-grid--compact{grid-template-columns:1fr}.feature-grid article,.feature-grid article:nth-child(even),.feature-grid--compact article{min-height:auto;border:1px solid var(--pd-line);border-bottom:0}.feature-grid article:last-child,.feature-grid--compact article:last-child{border-bottom:1px solid var(--pd-line)}.feature-grid h3{margin-top:2.7rem}.ai-lanes,.ai-support-grid,.lidar-panels,.arm-telemetry{grid-template-columns:1fr}.protocol-diagram{grid-template-columns:1fr}.protocol-diagram>i{min-height:6rem;border-block:1px solid var(--pd-line);border-inline:0}.secure-link,.dual-plane{grid-template-columns:1fr}.secure-link>i,.dual-plane>i{min-height:6rem;border-block:1px solid var(--pd-line);border-inline:0}.show-timeline{grid-template-columns:1fr 1fr}.capture-pipeline{align-items:flex-start;flex-direction:column}.capture-pipeline i{transform:rotate(90deg)}.truth-matrix{grid-template-columns:1fr}.truth-matrix>div,.truth-matrix>article{min-height:20rem}.cockpit-anatomy{grid-template-columns:1fr}.cockpit-anatomy__wing:first-child,.cockpit-anatomy__wing:last-child{transform:none}.cockpit-anatomy>div{min-height:13rem}.watch-visual{min-height:32rem}.sim-stats{grid-template-columns:repeat(3,1fr)} }
 @media(max-width:680px){.product-subnav{top:4.5rem}.product-subnav>div a{padding:.5rem .6rem;font-size:.65rem}.product-detail__hero{padding-inline:1rem}.product-detail__statement{font-size:3.55rem}.product-detail__hero-media{border-radius:.8rem;padding:.25rem}.product-detail__hero-media>img{border-radius:.6rem}.product-detail__hero-media figcaption{align-items:flex-start;flex-direction:column}.product-detail__telemetry{display:none}.product-proof,.spec-band{grid-template-columns:1fr 1fr}.product-proof>div,.product-proof>div:nth-child(3),.spec-band article{border-right:1px solid var(--pd-line);border-bottom:1px solid var(--pd-line)}.product-proof>div:nth-child(even),.spec-band article:nth-child(even){border-right:0}.product-proof>div:last-child,.spec-band article:last-child{grid-column:1/-1;border-right:0}.product-chapter,.product-chapter--dark,.product-chapter--industrial,.product-chapter--shows,.product-chapter--ops,.product-chapter--video,.product-chapter--safety,.product-chapter--simulator{padding-inline:1rem}.product-chapter__intro h2{font-size:3rem}.camera-stack__outputs{grid-template-columns:1fr}.ai-lane{padding:1.2rem}.ai-lane h3{margin-top:2.5rem;font-size:2.7rem}.ai-lane dl div{grid-template-columns:1fr}.security-grid,.motion-modules,.ops-grid,.watch-specs,.video-specs,.sim-stats{grid-template-columns:1fr}.amber-detail{grid-template-columns:1fr}.amber-detail>div{border-right:0;border-bottom:1px solid var(--pd-line);padding-bottom:1rem}.show-timeline{grid-template-columns:1fr}.show-timeline article{min-height:16rem}.controller-map{padding:.7rem}.controller-map__controls{grid-template-columns:1fr 1fr}.approval-flow,.safety-chain{align-items:stretch;flex-direction:column}.approval-flow i{transform:rotate(90deg);text-align:center}.watch-visual__case{width:min(18rem,75vw);border-radius:4.7rem}.watch-visual__case img{border-radius:3.1rem}.watch-visual__pulse{width:20rem;height:20rem}.language-cloud{min-height:22rem;padding:2rem}.architecture-stack{display:flex;flex-direction:column}.architecture-stack>i{transform:rotate(90deg);min-height:2rem}.lidar-visual{width:88vw}.product-closing{padding-inline:1rem}.product-closing h2{font-size:3.5rem}}
 @media(prefers-reduced-motion:reduce){.product-detail *{scroll-behavior:auto!important}.product-detail__hero-media{transform:none!important}}
+
+/* Musimotion product ---------------------------------------------------- */
+.musimotion {
+    --mm-bg: #061313;
+    --mm-panel: #0b2221;
+    --mm-panel-soft: #102a28;
+    --mm-ink: #f5fbf7;
+    --mm-muted: #9db8b2;
+    --mm-line: rgb(182 238 222 / 0.16);
+    --mm-mint: #7bf0ce;
+    --mm-teal: #17b9aa;
+    --mm-coral: #ff5e76;
+    --mm-gold: #ffd55f;
+    min-height: 100vh;
+    overflow: hidden;
+    background: var(--mm-bg);
+    color: var(--mm-ink);
+}
+
+.musimotion a:focus-visible,
+.musimotion button:focus-visible,
+.musimotion video:focus-visible,
+.musimotion [tabindex="0"]:focus-visible {
+    outline: 3px solid var(--mm-gold);
+    outline-offset: 4px;
+}
+
+.musimotion-nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    min-height: 4.25rem;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--mm-line);
+    background: rgb(6 19 19 / 0.88);
+    padding: 0.7rem clamp(1rem, 4vw, 4rem);
+    backdrop-filter: blur(20px);
+}
+
+.musimotion-nav__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: var(--mm-ink);
+    font-size: 0.88rem;
+    font-weight: 900;
+}
+
+.musimotion-nav__brand img {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.7rem;
+    box-shadow: 0 6px 20px rgb(0 0 0 / 0.4);
+}
+
+.musimotion-nav > div {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.25rem, 2vw, 1.6rem);
+}
+
+.musimotion-nav > div a {
+    border-radius: 999px;
+    padding: 0.5rem 0.65rem;
+    color: var(--mm-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+.musimotion-nav > div a:hover {
+    color: var(--mm-ink);
+}
+
+.musimotion-hero {
+    position: relative;
+    display: grid;
+    min-height: min(58rem, calc(100vh - 4.25rem));
+    grid-template-columns: minmax(20rem, 0.84fr) minmax(28rem, 1.16fr);
+    gap: clamp(2rem, 5vw, 7rem);
+    align-items: center;
+    max-width: 96rem;
+    margin: auto;
+    padding: clamp(4rem, 8vw, 8rem) clamp(1.2rem, 5vw, 5rem);
+}
+
+.musimotion-hero__glow {
+    position: absolute;
+    top: -15rem;
+    left: 42%;
+    width: 50rem;
+    height: 50rem;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgb(23 185 170 / 0.2), transparent 68%);
+    pointer-events: none;
+}
+
+.musimotion-hero__copy {
+    position: relative;
+    z-index: 2;
+}
+
+.musimotion-kicker {
+    color: var(--mm-muted);
+    font-size: 0.68rem;
+    font-weight: 850;
+    letter-spacing: 0.13em;
+    line-height: 1.5;
+    text-transform: uppercase;
+}
+
+.musimotion-kicker span {
+    margin-right: 0.6rem;
+    color: var(--mm-mint);
+}
+
+.musimotion-hero h1 {
+    margin: 1.1rem 0 1.6rem;
+    color: var(--mm-mint);
+    font-size: 0.88rem;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+.musimotion-hero__statement {
+    margin: 0;
+    font-size: clamp(4.3rem, 8.3vw, 8.8rem);
+    font-weight: 950;
+    letter-spacing: -0.07em;
+    line-height: 0.78;
+}
+
+.musimotion-hero__statement em {
+    color: var(--mm-coral);
+    font-style: normal;
+}
+
+.musimotion-hero__lede {
+    max-width: 36rem;
+    margin: 2.2rem 0 0;
+    color: #b8cec9;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    line-height: 1.7;
+}
+
+.musimotion-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-top: 2rem;
+}
+
+.musimotion-button {
+    display: inline-flex;
+    min-height: 3.2rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    border: 1px solid var(--mm-line);
+    border-radius: 999px;
+    padding: 0.8rem 1.2rem;
+    color: var(--mm-ink);
+    font-size: 0.8rem;
+    font-weight: 900;
+    transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.musimotion-button:hover {
+    border-color: rgb(123 240 206 / 0.6);
+    background: rgb(123 240 206 / 0.08);
+    transform: translateY(-2px);
+}
+
+.musimotion-button--primary {
+    border-color: var(--mm-mint);
+    background: var(--mm-mint);
+    color: #04211b;
+}
+
+.musimotion-button--primary:hover {
+    background: #a4f7df;
+    color: #04211b;
+}
+
+.musimotion-status {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-top: 1.5rem;
+    color: #7e9e97;
+    font-size: 0.72rem;
+}
+
+.musimotion-status span {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--mm-gold);
+    box-shadow: 0 0 16px rgb(255 213 95 / 0.75);
+}
+
+.musimotion-hero__stage {
+    position: relative;
+    min-height: 46rem;
+    perspective: 1200px;
+}
+
+.musimotion-device {
+    position: absolute;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid rgb(193 255 237 / 0.28);
+    border-radius: 2rem;
+    background: #020808;
+    padding: 0.55rem;
+    box-shadow: 0 40px 100px rgb(0 0 0 / 0.75);
+}
+
+.musimotion-device img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 1.5rem;
+}
+
+.musimotion-device--main {
+    z-index: 2;
+    top: 3%;
+    left: 7%;
+    width: min(34rem, 80%);
+    transform: rotateY(-7deg) rotateZ(-2deg);
+}
+
+.musimotion-device--back {
+    top: 11%;
+    right: -4%;
+    width: min(27rem, 67%);
+    opacity: 0.52;
+    transform: rotateY(-10deg) rotateZ(7deg) translateZ(-3rem);
+}
+
+.musimotion-hero__note {
+    position: absolute;
+    z-index: 4;
+    right: 2%;
+    bottom: 10%;
+    display: grid;
+    width: 7rem;
+    height: 7rem;
+    border: 1px solid rgb(255 255 255 / 0.4);
+    border-radius: 50%;
+    background: linear-gradient(145deg, var(--mm-coral), #ff9f55);
+    color: white;
+    font-size: 3.4rem;
+    font-weight: 900;
+    place-items: center;
+    box-shadow: 0 20px 50px rgb(255 94 118 / 0.32);
+}
+
+.musimotion-hero__note i {
+    position: absolute;
+    inset: -1.5rem;
+    border: 1px solid rgb(255 94 118 / 0.3);
+    border-radius: 50%;
+}
+
+.musimotion-proof {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border-block: 1px solid var(--mm-line);
+    background: #081a1a;
+}
+
+.musimotion-proof > div {
+    min-width: 0;
+    border-right: 1px solid var(--mm-line);
+    padding: 1.3rem clamp(0.7rem, 2vw, 1.8rem);
+}
+
+.musimotion-proof > div:last-child {
+    border-right: 0;
+}
+
+.musimotion-proof strong,
+.musimotion-proof span {
+    display: block;
+}
+
+.musimotion-proof strong {
+    color: var(--mm-mint);
+    font-size: clamp(1rem, 2vw, 1.35rem);
+}
+
+.musimotion-proof span {
+    margin-top: 0.25rem;
+    color: #799690;
+    font-size: 0.66rem;
+    text-transform: uppercase;
+}
+
+.musimotion-showreel,
+.musimotion-create,
+.musimotion-perform,
+.musimotion-community,
+.musimotion-plans,
+.musimotion-fairness,
+.musimotion-closing {
+    max-width: 96rem;
+    margin: auto;
+    padding: clamp(5rem, 10vw, 10rem) clamp(1.2rem, 5vw, 5rem);
+}
+
+.musimotion-showreel {
+    display: grid;
+    grid-template-columns: minmax(18rem, 0.64fr) minmax(24rem, 1.36fr);
+    gap: clamp(2.5rem, 7vw, 8rem);
+    align-items: center;
+}
+
+.musimotion-section-head {
+    max-width: 43rem;
+}
+
+.musimotion-section-head--wide {
+    max-width: 64rem;
+}
+
+.musimotion-section-head h2,
+.musimotion-perform h2,
+.musimotion-fairness h2,
+.musimotion-closing h2 {
+    margin: 0.65rem 0 1.4rem;
+    font-size: clamp(3rem, 6.6vw, 6.5rem);
+    font-weight: 950;
+    letter-spacing: -0.065em;
+    line-height: 0.9;
+}
+
+.musimotion-section-head > p:last-child,
+.musimotion-perform__copy > p:not(.musimotion-kicker),
+.musimotion-community__empty p,
+.musimotion-closing > p:not(.musimotion-kicker) {
+    color: var(--mm-muted);
+    font-size: 1.05rem;
+    line-height: 1.75;
+}
+
+.musimotion-video-frame {
+    max-width: 48rem;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid rgb(123 240 206 / 0.24);
+    border-radius: 1.7rem;
+    background: #020707;
+    padding: 0.5rem;
+    box-shadow: 0 40px 100px rgb(0 0 0 / 0.55);
+}
+
+.musimotion-video-frame video {
+    display: block;
+    width: 100%;
+    max-height: 75vh;
+    border-radius: 1.25rem;
+    background: #000;
+    object-fit: contain;
+}
+
+.musimotion-video-frame figcaption {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 0.7rem 0.5rem;
+    color: #728f89;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.musimotion-video-frame figcaption span:first-child {
+    color: #b8d3cc;
+}
+
+.musimotion-video-frame figcaption i {
+    display: inline-block;
+    width: 0.45rem;
+    height: 0.45rem;
+    margin-right: 0.35rem;
+    border-radius: 50%;
+    background: var(--mm-coral);
+}
+
+.musimotion-create {
+    max-width: none;
+    border-block: 1px solid var(--mm-line);
+    background: radial-gradient(circle at 80% 10%, rgb(255 94 118 / 0.12), transparent 30rem), #091b1a;
+}
+
+.musimotion-create > * {
+    max-width: 86rem;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.musimotion-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    margin-top: 5rem;
+    border: 1px solid var(--mm-line);
+    background: var(--mm-line);
+}
+
+.musimotion-feature-grid article {
+    display: flex;
+    min-height: 30rem;
+    flex-direction: column;
+    background: #071615;
+    padding: clamp(1.3rem, 2.5vw, 2rem);
+}
+
+.musimotion-feature-grid article > span,
+.musimotion-community__empty > div:last-child > span {
+    color: var(--mm-mint);
+    font-size: 0.62rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+}
+
+.musimotion-feature-grid h3 {
+    margin: auto 0 1rem;
+    font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+}
+
+.musimotion-feature-grid p {
+    color: #86a39c;
+    font-size: 0.86rem;
+    line-height: 1.65;
+}
+
+.musimotion-gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-top: 5rem;
+}
+
+.musimotion-gallery figure {
+    min-width: 0;
+    margin: 0;
+}
+
+.musimotion-gallery img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--mm-line);
+    border-radius: 1.25rem;
+    box-shadow: 0 20px 55px rgb(0 0 0 / 0.35);
+}
+
+.musimotion-gallery figcaption,
+.musimotion-perform__images figcaption {
+    padding: 0.75rem 0.4rem;
+    color: #77968e;
+    font-size: 0.68rem;
+    font-weight: 750;
+    text-transform: uppercase;
+}
+
+.musimotion-perform {
+    display: grid;
+    grid-template-columns: minmax(19rem, 0.75fr) minmax(28rem, 1.25fr);
+    gap: clamp(3rem, 7vw, 8rem);
+    align-items: center;
+}
+
+.musimotion-perform__copy ul {
+    display: grid;
+    gap: 0.75rem;
+    margin: 2rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.musimotion-perform__copy li {
+    border-top: 1px solid var(--mm-line);
+    padding: 0.85rem 0 0 1.3rem;
+    color: #b3cbc5;
+    font-size: 0.86rem;
+    line-height: 1.5;
+}
+
+.musimotion-perform__copy li::before {
+    margin-left: -1.3rem;
+    margin-right: 0.55rem;
+    color: var(--mm-coral);
+    content: "◆";
+}
+
+.musimotion-perform__images {
+    display: grid;
+    gap: 1.4rem;
+}
+
+.musimotion-perform__images figure {
+    margin: 0;
+}
+
+.musimotion-perform__images figure:last-child {
+    width: 82%;
+    margin-left: auto;
+}
+
+.musimotion-perform__images img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 0.45rem solid #020707;
+    border-radius: 1.5rem;
+    box-shadow: 0 28px 80px rgb(0 0 0 / 0.55);
+}
+
+.musimotion-community {
+    max-width: none;
+    border-block: 1px solid var(--mm-line);
+    background: #071615;
+}
+
+.musimotion-community > * {
+    max-width: 86rem;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.musimotion-community__empty {
+    display: grid;
+    grid-template-columns: minmax(17rem, 0.72fr) minmax(20rem, 1.28fr);
+    gap: clamp(2rem, 7vw, 7rem);
+    align-items: center;
+    margin-top: 5rem;
+    border: 1px solid var(--mm-line);
+    border-radius: 1.5rem;
+    background: linear-gradient(140deg, rgb(23 185 170 / 0.11), rgb(255 94 118 / 0.08));
+    padding: clamp(2rem, 6vw, 6rem);
+}
+
+.musimotion-community__mark {
+    position: relative;
+    display: grid;
+    width: min(22rem, 70vw);
+    aspect-ratio: 1;
+    margin: auto;
+    border: 1px solid rgb(123 240 206 / 0.3);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgb(123 240 206 / 0.16), transparent 65%);
+    color: var(--mm-mint);
+    font-size: 7rem;
+    place-items: center;
+}
+
+.musimotion-community__mark i,
+.musimotion-community__mark b {
+    position: absolute;
+    border: 1px solid rgb(255 94 118 / 0.32);
+    border-radius: 50%;
+}
+
+.musimotion-community__mark i {
+    inset: 13%;
+}
+
+.musimotion-community__mark b {
+    inset: -10%;
+}
+
+.musimotion-community__empty h3 {
+    margin: 0.8rem 0 1rem;
+    font-size: clamp(2.3rem, 5vw, 4.6rem);
+    letter-spacing: -0.055em;
+    line-height: 0.95;
+}
+
+.musimotion-plans {
+    max-width: 96rem;
+}
+
+.musimotion-price-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 5rem;
+}
+
+.musimotion-price-grid article {
+    display: flex;
+    min-width: 0;
+    min-height: 39rem;
+    flex-direction: column;
+    border: 1px solid var(--mm-line);
+    border-radius: 1.4rem;
+    background: #0a1d1c;
+    padding: clamp(1.4rem, 3vw, 2.2rem);
+}
+
+.musimotion-price-grid .musimotion-price-card--featured {
+    border-color: rgb(123 240 206 / 0.55);
+    background: radial-gradient(circle at 80% 0, rgb(123 240 206 / 0.16), transparent 18rem), #0b211f;
+    box-shadow: 0 30px 80px rgb(0 0 0 / 0.3);
+}
+
+.musimotion-price-grid article > div {
+    display: grid;
+    min-height: 8rem;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    border-bottom: 1px solid var(--mm-line);
+    padding-bottom: 1.3rem;
+}
+
+.musimotion-price-grid article > div span {
+    align-self: start;
+    color: var(--mm-mint);
+    font-size: 0.65rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+}
+
+.musimotion-price-grid article > div strong {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    font-size: clamp(2.1rem, 3.5vw, 3.6rem);
+    letter-spacing: -0.06em;
+}
+
+.musimotion-price-grid article > div small {
+    color: #78968e;
+    font-size: 0.68rem;
+}
+
+.musimotion-price-grid h3 {
+    margin: 2rem 0 1rem;
+    font-size: 1.75rem;
+    letter-spacing: -0.035em;
+}
+
+.musimotion-price-grid ul {
+    display: grid;
+    gap: 0.75rem;
+    margin: 1rem 0 2rem;
+    padding: 0;
+    color: #a9c2bc;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    list-style: none;
+}
+
+.musimotion-price-grid li {
+    padding-left: 1.25rem;
+}
+
+.musimotion-price-grid li::before {
+    margin-left: -1.25rem;
+    margin-right: 0.55rem;
+    color: var(--mm-mint);
+    content: "✓";
+}
+
+.musimotion-price-grid article > a {
+    display: grid;
+    min-height: 3rem;
+    margin-top: auto;
+    border: 1px solid rgb(123 240 206 / 0.4);
+    border-radius: 999px;
+    color: var(--mm-ink);
+    font-size: 0.78rem;
+    font-weight: 900;
+    place-items: center;
+}
+
+.musimotion-price-grid article > a:hover {
+    background: var(--mm-mint);
+    color: #04211b;
+}
+
+.musimotion-price-card__annual {
+    margin: 0 0 1.5rem;
+    color: #78968e;
+    font-size: 0.7rem;
+    line-height: 1.45;
+}
+
+.musimotion-price-card__annual b {
+    color: #b9d4cd;
+}
+
+.musimotion-comparison {
+    margin-top: 4rem;
+    overflow-x: auto;
+    border: 1px solid var(--mm-line);
+    border-radius: 1.2rem;
+    background: #081817;
+    -webkit-overflow-scrolling: touch;
+}
+
+.musimotion-comparison table {
+    width: 100%;
+    min-width: 48rem;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+}
+
+.musimotion-comparison caption {
+    padding: 1.4rem;
+    color: #75918a;
+    font-size: 0.65rem;
+    font-weight: 850;
+    letter-spacing: 0.1em;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.musimotion-comparison th,
+.musimotion-comparison td {
+    border-top: 1px solid var(--mm-line);
+    padding: 1rem 1.2rem;
+}
+
+.musimotion-comparison thead th {
+    color: var(--mm-mint);
+    text-align: center;
+}
+
+.musimotion-comparison thead th:first-child,
+.musimotion-comparison tbody th {
+    width: 52%;
+    color: #b8cdc8;
+    font-weight: 700;
+    text-align: left;
+}
+
+.musimotion-comparison td {
+    color: #728e87;
+    text-align: center;
+}
+
+.musimotion-check {
+    display: inline-grid;
+    width: 1.55rem;
+    height: 1.55rem;
+    overflow: hidden;
+    border-radius: 50%;
+    background: rgb(123 240 206 / 0.13);
+    color: transparent;
+    place-items: center;
+}
+
+.musimotion-check::after {
+    color: var(--mm-mint);
+    content: "✓";
+}
+
+.musimotion-pricing-note,
+.musimotion-apple-note {
+    max-width: 62rem;
+    margin: 1.5rem auto 0;
+    color: #718c85;
+    font-size: 0.72rem;
+    line-height: 1.65;
+    text-align: center;
+}
+
+.musimotion-fairness {
+    max-width: none;
+    border-block: 1px solid var(--mm-line);
+    background: linear-gradient(150deg, #0c2422, #071414);
+}
+
+.musimotion-fairness > * {
+    max-width: 86rem;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.musimotion-fairness__rules {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 4rem;
+}
+
+.musimotion-fairness__rules article {
+    border-top: 1px solid rgb(123 240 206 / 0.35);
+    padding: 1.4rem 0.7rem 0;
+}
+
+.musimotion-fairness__rules span {
+    color: var(--mm-coral);
+    font-size: 0.7rem;
+    font-weight: 900;
+}
+
+.musimotion-fairness__rules h3 {
+    margin: 3rem 0 0.8rem;
+    font-size: 1.35rem;
+}
+
+.musimotion-fairness__rules p {
+    color: #89a59e;
+    font-size: 0.82rem;
+    line-height: 1.6;
+}
+
+.musimotion-apple-note a {
+    color: var(--mm-mint);
+    text-decoration: underline;
+    text-underline-offset: 0.18rem;
+}
+
+.musimotion-closing {
+    display: grid;
+    justify-items: center;
+    max-width: 78rem;
+    text-align: center;
+}
+
+.musimotion-closing > img {
+    width: 7rem;
+    height: 7rem;
+    margin-bottom: 1.5rem;
+    border-radius: 1.8rem;
+    box-shadow: 0 22px 65px rgb(23 185 170 / 0.2);
+}
+
+.musimotion-closing h2 {
+    margin-top: 0.8rem;
+}
+
+.musimotion-closing > p:not(.musimotion-kicker) {
+    max-width: 42rem;
+}
+
+.musimotion-closing .musimotion-actions {
+    justify-content: center;
+}
+
+/* Musimotion card on the product hub. */
+.product-hub__creative {
+    border-top: 1px solid var(--ph-line);
+    background: radial-gradient(circle at 80% 20%, rgb(40 216 242 / 0.1), transparent 30rem), #070b0d;
+    padding: clamp(5rem, 9vw, 9rem) clamp(1.2rem, 5vw, 5rem);
+}
+
+.product-hub__creative > * {
+    max-width: 86rem;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.creative-product-card {
+    display: grid;
+    grid-template-columns: minmax(19rem, 0.7fr) minmax(28rem, 1.3fr);
+    min-height: 39rem;
+    margin-top: 3rem;
+    overflow: hidden;
+    border: 1px solid rgb(123 240 206 / 0.25);
+    border-radius: 1.4rem;
+    background: linear-gradient(140deg, #102825, #071312);
+    color: #f5fbf7;
+    box-shadow: 0 35px 90px rgb(0 0 0 / 0.35);
+}
+
+.creative-product-card__copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(2rem, 5vw, 5rem);
+}
+
+.creative-product-card__copy img {
+    width: 5.5rem;
+    height: 5.5rem;
+    margin-bottom: 2rem;
+    border-radius: 1.45rem;
+}
+
+.creative-product-card__copy > span {
+    color: #7bf0ce;
+    font-size: 0.65rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.creative-product-card__copy h3 {
+    margin: 0.6rem 0 1rem;
+    font-size: clamp(3rem, 6vw, 6rem);
+    letter-spacing: -0.065em;
+    line-height: 0.9;
+}
+
+.creative-product-card__copy p {
+    max-width: 33rem;
+    color: #9cb7b0;
+    line-height: 1.7;
+}
+
+.creative-product-card__copy strong {
+    margin-top: 2rem;
+    color: #7bf0ce;
+    font-size: 0.82rem;
+}
+
+.creative-product-card__media {
+    position: relative;
+    display: grid;
+    align-items: end;
+    overflow: hidden;
+    padding: 3rem 3rem 0;
+}
+
+.creative-product-card__media::before {
+    position: absolute;
+    inset: 8% 8% auto auto;
+    width: 24rem;
+    height: 24rem;
+    border-radius: 50%;
+    background: #ff5e76;
+    filter: blur(120px);
+    opacity: 0.22;
+    content: "";
+}
+
+.creative-product-card__media img {
+    position: relative;
+    display: block;
+    width: min(35rem, 100%);
+    margin: 0 auto -8rem;
+    border: 0.5rem solid #020807;
+    border-radius: 2rem;
+    box-shadow: 0 30px 80px rgb(0 0 0 / 0.6);
+    transform: rotate(3deg);
+    transition: transform 300ms ease;
+}
+
+.creative-product-card:hover .creative-product-card__media img {
+    transform: rotate(1deg) translateY(-0.6rem);
+}
+
+@media (max-width: 1100px) {
+    .musimotion-hero,
+    .musimotion-showreel,
+    .musimotion-perform {
+        grid-template-columns: 1fr;
+    }
+
+    .musimotion-hero {
+        padding-bottom: 2rem;
+    }
+
+    .musimotion-hero__copy {
+        max-width: 48rem;
+    }
+
+    .musimotion-hero__stage {
+        min-height: 54rem;
+    }
+
+    .musimotion-device--main {
+        left: 17%;
+        width: min(38rem, 70%);
+    }
+
+    .musimotion-device--back {
+        right: 6%;
+    }
+
+    .musimotion-showreel .musimotion-section-head {
+        max-width: 58rem;
+    }
+
+    .musimotion-video-frame {
+        width: min(48rem, 100%);
+        margin: auto;
+    }
+
+    .musimotion-feature-grid,
+    .musimotion-gallery {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .musimotion-feature-grid article {
+        min-height: 23rem;
+    }
+
+    .musimotion-perform__images {
+        max-width: 54rem;
+    }
+
+    .creative-product-card {
+        grid-template-columns: 1fr;
+    }
+
+    .creative-product-card__media {
+        min-height: 39rem;
+    }
+}
+
+@media (max-width: 800px) {
+    .musimotion-nav {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.55rem;
+    }
+
+    .musimotion-nav > div {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .musimotion-hero__statement {
+        font-size: clamp(4rem, 18vw, 7.2rem);
+    }
+
+    .musimotion-hero__stage {
+        min-height: 42rem;
+    }
+
+    .musimotion-device--main {
+        left: 4%;
+        width: 77%;
+    }
+
+    .musimotion-device--back {
+        right: -9%;
+        width: 62%;
+    }
+
+    .musimotion-hero__note {
+        right: 0;
+        bottom: 4%;
+        width: 5.5rem;
+        height: 5.5rem;
+        font-size: 2.7rem;
+    }
+
+    .musimotion-proof {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .musimotion-proof > div {
+        border-bottom: 1px solid var(--mm-line);
+    }
+
+    .musimotion-proof > div:nth-child(even) {
+        border-right: 0;
+    }
+
+    .musimotion-proof > div:last-child {
+        grid-column: 1 / -1;
+        border-bottom: 0;
+    }
+
+    .musimotion-price-grid,
+    .musimotion-fairness__rules {
+        grid-template-columns: 1fr;
+    }
+
+    .musimotion-price-grid article {
+        min-height: 35rem;
+    }
+
+    .musimotion-community__empty {
+        grid-template-columns: 1fr;
+    }
+
+    .musimotion-fairness__rules h3 {
+        margin-top: 1.8rem;
+    }
+}
+
+@media (max-width: 560px) {
+    .musimotion-nav__brand img {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .musimotion-nav > div a {
+        padding: 0.4rem 0.5rem;
+        font-size: 0.66rem;
+    }
+
+    .musimotion-hero {
+        display: block;
+        padding-top: 3.5rem;
+    }
+
+    .musimotion-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .musimotion-hero__stage {
+        min-height: 33rem;
+        margin-top: 3rem;
+    }
+
+    .musimotion-device {
+        border-radius: 1.2rem;
+        padding: 0.3rem;
+    }
+
+    .musimotion-device img {
+        border-radius: 0.9rem;
+    }
+
+    .musimotion-hero__note {
+        width: 4.5rem;
+        height: 4.5rem;
+        font-size: 2.2rem;
+    }
+
+    .musimotion-section-head h2,
+    .musimotion-perform h2,
+    .musimotion-fairness h2,
+    .musimotion-closing h2 {
+        font-size: clamp(2.7rem, 15vw, 4.2rem);
+    }
+
+    .musimotion-video-frame figcaption {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .musimotion-feature-grid,
+    .musimotion-gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .musimotion-feature-grid article {
+        min-height: 19rem;
+    }
+
+    .musimotion-gallery {
+        gap: 2rem;
+    }
+
+    .musimotion-perform__images figure:last-child {
+        width: 100%;
+    }
+
+    .musimotion-community__empty {
+        padding: 1.3rem;
+    }
+
+    .musimotion-community__mark {
+        font-size: 5rem;
+    }
+
+    .musimotion-price-grid article > div {
+        grid-template-columns: 1fr;
+    }
+
+    .musimotion-price-grid article > div strong {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .musimotion-comparison {
+        margin-inline: -0.4rem;
+    }
+
+    .creative-product-card {
+        min-height: 0;
+    }
+
+    .creative-product-card__copy {
+        padding: 2rem 1.4rem;
+    }
+
+    .creative-product-card__media {
+        min-height: 29rem;
+        padding: 1.5rem 1rem 0;
+    }
+
+    .creative-product-card__media img {
+        margin-bottom: -5rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .musimotion *,
+    .creative-product-card * {
+        scroll-behavior: auto !important;
+    }
+
+    .musimotion-button,
+    .creative-product-card__media img {
+        transform: none !important;
+    }
+}

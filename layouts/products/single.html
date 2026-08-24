@@ -55,5 +55,27 @@
       </a>
     </div>
   </section>
+
+  <section class="product-hub__creative" aria-labelledby="creative-products-title">
+    <div class="product-hub__section-head">
+      <p class="product-kicker">Creative software</p>
+      <h2 id="creative-products-title">Ideas deserve more than slides.</h2>
+      <p>Orbitus also builds expressive native tools for Apple platforms. Musimotion brings animation, painting, physics, and live performance into one visual studio.</p>
+    </div>
+    <a class="creative-product-card" href="{{ "products/musimotion/" | relURL }}">
+      <div class="creative-product-card__copy">
+        {{ $musimotionIcon := resources.Get "images/products/musimotion/app-icon.webp" }}
+        <img src="{{ $musimotionIcon.RelPermalink }}" width="96" height="96" alt="">
+        <span>iPad · Mac · Apple Vision Pro</span>
+        <h3>Musimotion</h3>
+        <p>Compose animated scenes. Paint and add physics. Rehearse on a true timeline, then perform or export the result.</p>
+        <strong>Discover Musimotion <span aria-hidden="true">↗</span></strong>
+      </div>
+      <div class="creative-product-card__media">
+        {{ $musimotionScreen := resources.Get "images/products/musimotion/01-editor.webp" }}
+        <img src="{{ $musimotionScreen.RelPermalink }}" width="{{ $musimotionScreen.Width }}" height="{{ $musimotionScreen.Height }}" alt="Musimotion editor with scene canvas, layers, timeline, and playback controls" loading="lazy" decoding="async">
+      </div>
+    </a>
+  </section>
 </main>
 {{ end }}

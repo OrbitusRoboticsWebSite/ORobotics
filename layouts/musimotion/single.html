@@ -1,0 +1,237 @@
+{{ define "main" }}
+<main id="main" class="musimotion">
+  <nav class="musimotion-nav" aria-label="Musimotion page sections">
+    <a class="musimotion-nav__brand" href="{{ "products/" | relURL }}">
+      {{ $icon := resources.Get "images/products/musimotion/app-icon.webp" }}
+      <img src="{{ $icon.RelPermalink }}" width="36" height="36" alt="">
+      <span>Musimotion</span>
+    </a>
+    <div>
+      <a href="#create">Create</a>
+      <a href="#watch">Watch</a>
+      <a href="#community">Community</a>
+      <a href="#plans">Plans</a>
+    </div>
+  </nav>
+
+  <header class="musimotion-hero">
+    <div class="musimotion-hero__glow" aria-hidden="true"></div>
+    <div class="musimotion-hero__copy">
+      <p class="musimotion-kicker"><span>Native creative studio</span> iPad · Mac · Apple Vision Pro</p>
+      <h1>Musimotion</h1>
+      <p class="musimotion-hero__statement">Animate.<br><em>Paint.</em><br>Perform.</p>
+      <p class="musimotion-hero__lede">Build a scene from text, shapes, symbols, photos, and video. Give it motion and physics. Then step out of slide mode and perform the whole thing live.</p>
+      <div class="musimotion-actions">
+        <a class="musimotion-button musimotion-button--primary" href="#watch">See it in motion <span aria-hidden="true">↓</span></a>
+        <a class="musimotion-button" href="#plans">Explore launch plans</a>
+      </div>
+      <p class="musimotion-status"><span aria-hidden="true"></span> Version 1.0 and StoreKit plans are in development</p>
+    </div>
+    <div class="musimotion-hero__stage" aria-label="Musimotion running on iPad">
+      {{ $editor := resources.Get "images/products/musimotion/01-editor.webp" }}
+      {{ $symbols := resources.Get "images/products/musimotion/03-sf-symbol-shapes.webp" }}
+      <figure class="musimotion-device musimotion-device--main">
+        <img src="{{ $editor.RelPermalink }}" width="{{ $editor.Width }}" height="{{ $editor.Height }}" alt="Musimotion editor with a title, shape, layer timeline, and centered playback controls" fetchpriority="high" decoding="async">
+      </figure>
+      <figure class="musimotion-device musimotion-device--back" aria-hidden="true">
+        <img src="{{ $symbols.RelPermalink }}" width="{{ $symbols.Width }}" height="{{ $symbols.Height }}" alt="">
+      </figure>
+      <div class="musimotion-hero__note" aria-hidden="true"><span>♪</span><i></i></div>
+    </div>
+  </header>
+
+  <section class="musimotion-proof" aria-label="Musimotion highlights">
+    <div><strong>1 canvas</strong><span>Design and performance</span></div>
+    <div><strong>Keyframes</strong><span>Motion on a real timeline</span></div>
+    <div><strong>SpriteKit</strong><span>Live physics and particles</span></div>
+    <div><strong>SharePlay</strong><span>Create together</span></div>
+    <div><strong>3 platforms</strong><span>One native experience</span></div>
+  </section>
+
+  <section id="watch" class="musimotion-showreel" aria-labelledby="musimotion-watch-title">
+    <div class="musimotion-section-head">
+      <p class="musimotion-kicker"><span>Actual app capture</span> 00:08</p>
+      <h2 id="musimotion-watch-title">An idea becomes a performance.</h2>
+      <p>Open the radial tools, style an object, shape its timing, and keep every control close to the canvas. This short capture comes from the working Musimotion app.</p>
+    </div>
+    <figure class="musimotion-video-frame">
+      <video controls playsinline preload="metadata" poster="{{ "images/products/musimotion/demo-poster.webp" | relURL }}" aria-label="Musimotion app demonstration showing the editor, radial tools, and timeline">
+        <source src="{{ "videos/musimotion/musimotion-in-action.mp4" | relURL }}" type="video/mp4">
+        Your browser does not support embedded video. <a href="{{ "videos/musimotion/musimotion-in-action.mp4" | relURL }}">Download the Musimotion demo</a>.
+      </video>
+      <figcaption><span><i></i> Musimotion editor</span><span>Real product footage · no mockup</span></figcaption>
+    </figure>
+  </section>
+
+  <section id="create" class="musimotion-create" aria-labelledby="musimotion-create-title">
+    <div class="musimotion-section-head musimotion-section-head--wide">
+      <p class="musimotion-kicker"><span>Make it yours</span> Direct manipulation</p>
+      <h2 id="musimotion-create-title">Every slide is a living scene.</h2>
+      <p>Musimotion keeps the creative loop immediate. Touch the object you want, bring up its contextual controls, and keep working without losing the stage.</p>
+    </div>
+    <div class="musimotion-feature-grid">
+      <article>
+        <span>01 / COMPOSE</span>
+        <h3>Text, shapes, symbols, photos, and video</h3>
+        <p>Build layered compositions from familiar materials. Scale each axis independently, position precisely, and keep the canvas clean until you need a control.</p>
+      </article>
+      <article>
+        <span>02 / ANIMATE</span>
+        <h3>Motion that belongs to time</h3>
+        <p>Set keyframes, tune layer spans, and play the sequence from a centralized transport designed to make timing feel natural.</p>
+      </article>
+      <article>
+        <span>03 / PAINT</span>
+        <h3>Brushes that can perform live</h3>
+        <p>Draw with raster paint or turn strokes into live particles. Color, motion, and touch become part of the presentation instead of decoration around it.</p>
+      </article>
+      <article>
+        <span>04 / PHYSICS</span>
+        <h3>Let the scene surprise you</h3>
+        <p>Give elements mass, gravity, and collision behavior with SpriteKit-powered physics, then combine authored movement with responsive performance.</p>
+      </article>
+    </div>
+
+    <div class="musimotion-gallery" aria-label="Musimotion feature screenshots">
+      {{ $screens := slice
+        (dict "path" "images/products/musimotion/02-text-formatting.webp" "alt" "Musimotion text formatting controls over the scene editor" "caption" "Type, color, and formatting")
+        (dict "path" "images/products/musimotion/03-sf-symbol-shapes.webp" "alt" "Musimotion shape and SF Symbol browser over the scene editor" "caption" "Shapes and SF Symbols")
+        (dict "path" "images/products/musimotion/04-live-brushes.webp" "alt" "Musimotion live brush picker showing expressive paint styles" "caption" "Live and raster brushes")
+        (dict "path" "images/products/musimotion/05-radial-physics.webp" "alt" "Musimotion radial menu with physics controls around a selected object" "caption" "Radial controls and physics")
+      }}
+      {{ range $screens }}
+        {{ $image := resources.Get .path }}
+        <figure>
+          <img src="{{ $image.RelPermalink }}" width="{{ $image.Width }}" height="{{ $image.Height }}" alt="{{ .alt }}" loading="lazy" decoding="async">
+          <figcaption>{{ .caption }}</figcaption>
+        </figure>
+      {{ end }}
+    </div>
+  </section>
+
+  <section class="musimotion-perform" aria-labelledby="musimotion-perform-title">
+    <div class="musimotion-perform__copy">
+      <p class="musimotion-kicker"><span>Present differently</span> Replay · interact · export</p>
+      <h2 id="musimotion-perform-title">Not a deck.<br>A performance system.</h2>
+      <p>Replay a precisely authored sequence or interact with it in the moment. Musimotion combines a familiar timeline with a responsive stage so creators can design, rehearse, and deliver from the same project.</p>
+      <ul>
+        <li>Centered playback controls keep transport predictable.</li>
+        <li>Layer spans and keyframes make timing visible.</li>
+        <li>Local projects stay editable and replayable on every plan.</li>
+        <li>Preview exports let you verify the result before upgrading.</li>
+      </ul>
+    </div>
+    <div class="musimotion-perform__images">
+      {{ $phoneLibrary := resources.Get "images/products/musimotion/iphone-01-library.webp" }}
+      {{ $phoneEditor := resources.Get "images/products/musimotion/iphone-02-editor.webp" }}
+      <figure><img src="{{ $phoneLibrary.RelPermalink }}" width="{{ $phoneLibrary.Width }}" height="{{ $phoneLibrary.Height }}" alt="Musimotion project library on iPhone" loading="lazy" decoding="async"><figcaption>Your project library</figcaption></figure>
+      <figure><img src="{{ $phoneEditor.RelPermalink }}" width="{{ $phoneEditor.Width }}" height="{{ $phoneEditor.Height }}" alt="Musimotion compact editor on iPhone" loading="lazy" decoding="async"><figcaption>Create wherever inspiration lands</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="community" class="musimotion-community" aria-labelledby="musimotion-community-title">
+    <div class="musimotion-section-head">
+      <p class="musimotion-kicker"><span>Studio preview</span> Community publishing</p>
+      <h2 id="musimotion-community-title">A stage for what creators make next.</h2>
+      <p>Public community publishing is planned for Musimotion Studio. When it opens, this space will feature experiences their authors intentionally publish—not private projects or invitation-only collaborations.</p>
+    </div>
+    <div class="musimotion-community__empty">
+      <div class="musimotion-community__mark" aria-hidden="true"><span>♪</span><i></i><b></b></div>
+      <div>
+        <span>PUBLIC GALLERY / COMING WITH STUDIO</span>
+        <h3>Be among the first featured creators.</h3>
+        <p>Studio members will be able to publish to the community. Full-resolution paid exports can appear without a watermark; preview exports from the free plan remain clearly watermarked.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="plans" class="musimotion-plans" aria-labelledby="musimotion-plans-title">
+    <div class="musimotion-section-head musimotion-section-head--wide">
+      <p class="musimotion-kicker"><span>Planned launch model</span> Clear upgrades, no export credits</p>
+      <h2 id="musimotion-plans-title">Create freely. Pay when your work needs to travel.</h2>
+      <p>The app will remain a free download, and the editor stays useful for everyone. A permanent purchase unlocks professional local export; Studio supports the services that continue over time. These plans are being implemented and are not yet available for purchase.</p>
+    </div>
+
+    <div class="musimotion-price-grid">
+      <article>
+        <div><span>FREE</span><strong>$0</strong><small>Forever</small></div>
+        <h3>Make the whole idea.</h3>
+        <ul>
+          <li>Create, edit, animate, paint, and use physics</li>
+          <li>Save and replay local projects</li>
+          <li>Watermarked 720p preview export</li>
+          <li>Join and view shared experiences</li>
+        </ul>
+        <a href="{{ "contact/" | relURL }}">Get launch updates</a>
+      </article>
+      <article class="musimotion-price-card--featured">
+        <div><span>PRO EXPORT</span><strong>$29.99</strong><small>One-time purchase</small></div>
+        <h3>Own professional export.</h3>
+        <ul>
+          <li>Everything in Free</li>
+          <li>Full-resolution, watermark-free export</li>
+          <li>Export editable <code>.musimotion</code> packages</li>
+          <li>Planned permanent unlock across supported platforms</li>
+        </ul>
+        <a href="{{ "contact/" | relURL }}">Follow the launch</a>
+      </article>
+      <article>
+        <div><span>STUDIO</span><strong>$5.99</strong><small>Per month</small></div>
+        <h3>Create together, continuously.</h3>
+        <ul>
+          <li>Everything in Pro Export while subscribed</li>
+          <li>Host live collaboration</li>
+          <li>Publish experiences to the community</li>
+          <li>Shared editing and version history</li>
+        </ul>
+        <p class="musimotion-price-card__annual"><b>$49.99/year</b> · 14 days free, then $49.99/year unless canceled.</p>
+        <a href="{{ "contact/" | relURL }}">Join the Studio waitlist</a>
+      </article>
+    </div>
+
+    <div class="musimotion-comparison" tabindex="0" role="region" aria-label="Scrollable Musimotion plan comparison">
+      <table>
+        <caption>Planned Musimotion capabilities by plan</caption>
+        <thead><tr><th scope="col">Capability</th><th scope="col">Free</th><th scope="col">Pro Export</th><th scope="col">Studio</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Create, edit, animate, paint, use physics</th><td><span class="musimotion-check">Yes</span></td><td><span class="musimotion-check">Yes</span></td><td><span class="musimotion-check">Yes</span></td></tr>
+          <tr><th scope="row">Save and replay local projects</th><td><span class="musimotion-check">Yes</span></td><td><span class="musimotion-check">Yes</span></td><td><span class="musimotion-check">Yes</span></td></tr>
+          <tr><th scope="row">Watermarked 720p preview export</th><td><span class="musimotion-check">Yes</span></td><td><span class="musimotion-check">Yes</span></td><td><span class="musimotion-check">Yes</span></td></tr>
+          <tr><th scope="row">Full-resolution, watermark-free export</th><td>—</td><td><span class="musimotion-check">Yes</span></td><td><span class="musimotion-check">Yes</span></td></tr>
+          <tr><th scope="row">Export <code>.musimotion</code> packages</th><td>—</td><td><span class="musimotion-check">Yes</span></td><td><span class="musimotion-check">Yes</span></td></tr>
+          <tr><th scope="row">Join or view shared experiences</th><td><span class="musimotion-check">Yes</span></td><td><span class="musimotion-check">Yes</span></td><td><span class="musimotion-check">Yes</span></td></tr>
+          <tr><th scope="row">Host live collaboration</th><td>—</td><td>—</td><td><span class="musimotion-check">Yes</span></td></tr>
+          <tr><th scope="row">Publish to the community</th><td>—</td><td>—</td><td><span class="musimotion-check">Yes</span></td></tr>
+          <tr><th scope="row">Shared editing and version history</th><td>—</td><td>—</td><td><span class="musimotion-check">Yes</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="musimotion-pricing-note">Suggested launch prices in USD and subject to storefront changes. Studio includes professional export while subscribed, so no second purchase is required. The planned universal purchase will cover iPadOS, macOS, and visionOS under one App Store record.</p>
+  </section>
+
+  <section class="musimotion-fairness" aria-labelledby="musimotion-fairness-title">
+    <div>
+      <p class="musimotion-kicker"><span>Designed to feel fair</span> Upgrade at the value boundary</p>
+      <h2 id="musimotion-fairness-title">No timer on creativity.<br>No anxiety at export.</h2>
+    </div>
+    <div class="musimotion-fairness__rules">
+      <article><span>01</span><h3>Upgrade prompts stay predictable</h3><p>The paywall appears only for watermark-free or high-resolution export, editable package export, hosting collaboration, or community publishing.</p></article>
+      <article><span>02</span><h3>Your projects remain yours</h3><p>If Studio ends, every local project remains editable and playable. Preview export remains available; only new premium exports and online hosting or publishing relock.</p></article>
+      <article><span>03</span><h3>One purchase, every supported Apple screen</h3><p>The launch plan is a universal app purchase so a permanent Pro Export unlock or active Studio subscription follows the creator across iPad, Mac, and Apple Vision Pro.</p></article>
+    </div>
+    <p class="musimotion-apple-note">The model follows Apple’s guidance for <a href="https://developer.apple.com/help/app-store-connect/configure-in-app-purchase-settings/overview-for-configuring-in-app-purchases" target="_blank" rel="noopener noreferrer">permanent non-consumable purchases</a>, <a href="https://developer.apple.com/app-store/subscriptions/" target="_blank" rel="noopener noreferrer">ongoing subscription value</a>, and <a href="https://developer.apple.com/help/app-store-connect/create-an-app-record/add-platforms" target="_blank" rel="noopener noreferrer">universal purchase across Apple platforms</a>.</p>
+  </section>
+
+  <section class="musimotion-closing">
+    {{ $closingIcon := resources.Get "images/products/musimotion/app-icon.webp" }}
+    <img src="{{ $closingIcon.RelPermalink }}" width="{{ $closingIcon.Width }}" height="{{ $closingIcon.Height }}" alt="Musimotion app icon" loading="lazy" decoding="async">
+    <p class="musimotion-kicker"><span>Musimotion</span> Coming to Apple platforms</p>
+    <h2>Make the presentation<br>only you can perform.</h2>
+    <p>Musimotion 1.0 and its paid plans are still being prepared. Contact Orbitus Robotics for launch news, product questions, or early collaboration.</p>
+    <div class="musimotion-actions">
+      <a class="musimotion-button musimotion-button--primary" href="{{ "contact/" | relURL }}">Contact Orbitus Robotics <span aria-hidden="true">↗</span></a>
+      <a class="musimotion-button" href="{{ "products/" | relURL }}">Explore every product</a>
+    </div>
+  </section>
+</main>
+{{ end }}

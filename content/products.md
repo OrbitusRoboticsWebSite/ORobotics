@@ -1,9 +1,9 @@
 ---
-title: "ROB Software Stack"
+title: "Products"
 url: "/products/"
 type: "products"
 draft: false
-description: "Explore Cerebro, ROBController, and VisionProController—the native software stack that gives R.O.B. perception, intelligence, motion, and spatial control."
+description: "Explore Orbitus Robotics products: the native ROB operating stack and Musimotion, an expressive animation and presentation studio for Apple platforms."
 featured_image: "images/products/rob-software-stack-og.png"
 ---
 
