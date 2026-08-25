@@ -131,7 +131,7 @@
     setUpCloudKitAuthentication();
   } else {
     sourceLabel.textContent = "Stored on this device";
-    cloudStatus.textContent = "Complete all ten levels to save a score on this device.";
+    cloudStatus.textContent = "Complete all fifteen levels to save a score on this device.";
     authStatus.textContent = "CloudKit publishing is unavailable in this build.";
   }
 
