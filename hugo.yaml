@@ -18,6 +18,7 @@ security:
       - '^HUGO_'
       - '^CI$'
       - '^MUSIMOTION_CLOUDKIT_(API_TOKEN|ENVIRONMENT)$'
+      - '^ROB_CLOUDKIT_LEADERBOARD_ENABLED$'
 
 markup:
   goldmark:

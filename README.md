@@ -80,11 +80,13 @@ Pushing `main` runs `.github/workflows/hugo.yml`, builds the site, validates the
 
 The Musimotion page can read creator-published records from its public CloudKit database. Follow [the Musimotion community gallery setup](docs/musimotion-cloudkit-gallery.md) to create a domain-restricted website token, add preview fields, and connect the production gallery without exposing a server private key.
 
+The ROB Training game uses that same public CloudKit container and website token for a separate, Apple-authenticated leaderboard record type. Follow [the ROB CloudKit leaderboard setup](docs/rob-cloudkit-leaderboard.md) to add its schema, indexes, and narrowly scoped security roles before publishing scores in production.
+
 ## Robotics learning lab
 
 `/robot-lab/` is a static four-mission learning game built from `content/robot-lab.md`, `layouts/robot-lab/single.html`, and `assets/js/robot-lab.js`. It teaches feedback systems, PWM duty cycle, differential-drive prediction, and authenticated-but-stale command rejection. The game uses no backend, accounts, analytics, robot connection, or persistent learner data and remains keyboard accessible.
 
-`/rob-simulator/` is a locally bundled Three.js tank-driving game. Its ten-level campaign models ROB with dual seven-joint AMBER-style arms, horizontal lightsabers, coordinated arrow-key tread mixing, forgiving sliding collision, keys and locked doors, damaging enemies, collectible energy cells, and a final docking objective. It supports keyboard, pointer/touch, and gamepad input and never connects to a physical robot.
+`/rob-simulator/` is a locally bundled Three.js tank-driving game. Its ten-level campaign models ROB with dual seven-joint AMBER-style arms, horizontal lightsabers, coordinated arrow-key tread mixing, forgiving sliding collision, keys and locked doors, damaging enemies, collectible energy cells, and a final docking objective. It supports keyboard, pointer/touch, and gamepad input and never connects to a physical robot. Completed campaigns keep a local top ten and, when CloudKit is configured and the player signs in with Apple, publish one public best score per account.
 
 For this custom GitHub Actions deployment, the custom domain configured under
 **Settings → Pages** is authoritative. `static/CNAME` mirrors that value in the
