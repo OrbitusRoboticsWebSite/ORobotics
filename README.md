@@ -78,6 +78,8 @@ If originals were previously pushed to a public remote, removing them from the c
 
 Pushing `main` runs `.github/workflows/hugo.yml`, builds the site, validates the generated gallery, and deploys the `public` artifact to GitHub Pages. The canonical site URL is `https://www.orbitusrobotics.com/`.
 
+The Musimotion page can read creator-published records from its public CloudKit database. Follow [the Musimotion community gallery setup](docs/musimotion-cloudkit-gallery.md) to create a domain-restricted website token, add preview fields, and connect the production gallery without exposing a server private key.
+
 ## Robotics learning lab
 
 `/robot-lab/` is a static four-mission learning game built from `content/robot-lab.md`, `layouts/robot-lab/single.html`, and `assets/js/robot-lab.js`. It teaches feedback systems, PWM duty cycle, differential-drive prediction, and authenticated-but-stale command rejection. The game uses no backend, accounts, analytics, robot connection, or persistent learner data and remains keyboard accessible.

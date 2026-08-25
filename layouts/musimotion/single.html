@@ -8,6 +8,7 @@
     </a>
     <div>
       <a href="#create">Create</a>
+      <a href="#ai-ink">AI + Ink</a>
       <a href="#watch">Watch</a>
       <a href="#community">Community</a>
       <a href="#plans">Plans</a>
@@ -41,7 +42,7 @@
   </header>
 
   <section class="musimotion-proof" aria-label="Musimotion highlights">
-    <div><strong>1 canvas</strong><span>Design and performance</span></div>
+    <div><strong>On-device AI</strong><span>Prompt to editable scene</span></div>
     <div><strong>Keyframes</strong><span>Motion on a real timeline</span></div>
     <div><strong>SpriteKit</strong><span>Live physics and particles</span></div>
     <div><strong>SharePlay</strong><span>Create together</span></div>
@@ -129,18 +130,69 @@
     </div>
   </section>
 
+  <section id="ai-ink" class="musimotion-ai-ink" aria-labelledby="musimotion-ai-ink-title">
+    <div class="musimotion-section-head musimotion-section-head--wide">
+      <p class="musimotion-kicker"><span>New creative intelligence</span> Private planning · expressive paint</p>
+      <h2 id="musimotion-ai-ink-title">Describe the feeling.<br>Keep control of every frame.</h2>
+      <p>Musimotion’s AI Creation Studio turns a creative direction into native layers and keyframes—not a flattened answer. Pair it with a pressure-aware Sumi ink system for scenes that feel authored, tactile, and completely editable.</p>
+    </div>
+
+    <article class="musimotion-ai-feature">
+      <div class="musimotion-ai-feature__copy">
+        <p class="musimotion-kicker"><span>AI Creation Studio</span> Apple Intelligence</p>
+        <h3>One prompt becomes a production-ready starting point.</h3>
+        <p>Apple’s Foundation Models framework privately plans concise copy, timing, layout, palette, and camera movement on the device. Image Playground lets you review or refine the artwork before it enters the scene. Musimotion then builds the result from ordinary text, image, and animation layers you can move, rewrite, retime, or remove.</p>
+        <ol aria-label="Musimotion AI creation workflow">
+          <li><span>01</span><b>Describe</b><small>Write the presentation, intro, opener, or reveal you want.</small></li>
+          <li><span>02</span><b>Plan privately</b><small>On-device intelligence turns the direction into a bounded motion-design plan.</small></li>
+          <li><span>03</span><b>Review artwork</b><small>Approve the visual in Image Playground before it joins the document.</small></li>
+          <li><span>04</span><b>Edit everything</b><small>Every generated layer and keyframe remains a normal Musimotion object.</small></li>
+        </ol>
+        <p class="musimotion-ai-feature__note">On compatible Apple Intelligence devices running iOS, iPadOS, macOS, or visionOS 26. When the on-device model or Image Playground is unavailable, Musimotion keeps an editable template-planning path available.</p>
+      </div>
+      <figure>
+        {{ $aiStudio := resources.Get "images/products/musimotion/ai-creation-studio.webp" }}
+        <img src="{{ $aiStudio.RelPermalink }}" width="{{ $aiStudio.Width }}" height="{{ $aiStudio.Height }}" alt="Actual Musimotion AI Creation Studio showing a Sumi dojo prompt, creative directions, replace-scene control, and Generate Presentation button" loading="lazy" decoding="async">
+        <figcaption><span><i></i> AI Creation Studio</span><span>Actual iPad application capture</span></figcaption>
+      </figure>
+    </article>
+
+    <article class="musimotion-sumi-feature">
+      <div class="musimotion-sumi-stage" aria-label="Four stylized samples representing Musimotion's Sumi Round, Sumi Flat, Dry Sumi, and Ink Wash brushes">
+        <span class="musimotion-sumi-stage__paper"></span>
+        <i class="musimotion-sumi-stroke musimotion-sumi-stroke--round"><b>Sumi Round</b></i>
+        <i class="musimotion-sumi-stroke musimotion-sumi-stroke--flat"><b>Sumi Flat</b></i>
+        <i class="musimotion-sumi-stroke musimotion-sumi-stroke--dry"><b>Dry Sumi</b></i>
+        <i class="musimotion-sumi-stroke musimotion-sumi-stroke--wash"><b>Ink Wash</b></i>
+      </div>
+      <div class="musimotion-sumi-feature__copy">
+        <p class="musimotion-kicker"><span>Sumi Ink</span> Apple Pencil dynamics</p>
+        <h3>Four brushes. Infinite character.</h3>
+        <p>Round ink blooms with pressure. Flat ink turns and narrows with Pencil angle. Dry Sumi breaks into textured bristles. Ink Wash layers translucent pools. The same deterministic marks appear in the editor, replay, and final export.</p>
+        <dl>
+          <div><dt>Pressure</dt><dd>Controls ink load, opacity, and width</dd></div>
+          <div><dt>Tilt + azimuth</dt><dd>Rotate and flatten chisel-shaped marks</dd></div>
+          <div><dt>Live reveal</dt><dd>Record strokes over time for animated painting</dd></div>
+          <div><dt>Consistent output</dt><dd>Editor preview and flattened export share one engine</dd></div>
+        </dl>
+      </div>
+    </article>
+  </section>
+
   <section id="community" class="musimotion-community" aria-labelledby="musimotion-community-title">
     <div class="musimotion-section-head">
       <p class="musimotion-kicker"><span>Studio preview</span> Community publishing</p>
-      <h2 id="musimotion-community-title">A stage for what creators make next.</h2>
-      <p>Public community publishing is planned for Musimotion Studio. When it opens, this space will feature experiences their authors intentionally publish—not private projects or invitation-only collaborations.</p>
+      <h2 id="musimotion-community-title">The latest work, published by its creators.</h2>
+      <p>This gallery reads only Musimotion’s public community records. When creators intentionally publish an experience, its approved preview can appear here; private projects and invitation-only collaborations never enter the website query.</p>
     </div>
-    <div class="musimotion-community__empty">
+    <p class="musimotion-community__status" role="status" aria-live="polite" data-musimotion-community-status></p>
+    <div class="musimotion-community__grid" data-musimotion-community-grid hidden></div>
+    <div class="musimotion-community__empty" data-musimotion-community-fallback>
       <div class="musimotion-community__mark" aria-hidden="true"><span>♪</span><i></i><b></b></div>
       <div>
-        <span>PUBLIC GALLERY / COMING WITH STUDIO</span>
+        <span>PUBLIC GALLERY / READY FOR CREATORS</span>
         <h3>Be among the first featured creators.</h3>
-        <p>Studio members will be able to publish to the community. Full-resolution paid exports can appear without a watermark; preview exports from the free plan remain clearly watermarked.</p>
+        <p>Studio members can publish to the community. Full-resolution paid exports can appear without a watermark; preview exports from the free plan remain clearly watermarked.</p>
       </div>
     </div>
   </section>
@@ -233,5 +285,14 @@
       <a class="musimotion-button" href="{{ "products/" | relURL }}">Explore every product</a>
     </div>
   </section>
+
+  {{ $cloudKitToken := os.Getenv "MUSIMOTION_CLOUDKIT_API_TOKEN" }}
+  {{ if $cloudKitToken }}
+    {{ $cloudKitEnvironment := os.Getenv "MUSIMOTION_CLOUDKIT_ENVIRONMENT" | default "production" }}
+    <script id="musimotion-cloudkit-config" type="application/json">{{ dict "apiToken" $cloudKitToken "container" "iCloud.com.orbitusrobotics.Musimotion" "environment" $cloudKitEnvironment | jsonify | safeJS }}</script>
+  {{ end }}
+  {{ $communityOptions := dict "targetPath" "js/musimotion-community.js" "minify" true }}
+  {{ $communityScript := resources.Get "js/musimotion-community.js" | js.Build $communityOptions | fingerprint }}
+  <script src="{{ $communityScript.RelPermalink }}" integrity="{{ $communityScript.Data.Integrity }}" defer></script>
 </main>
 {{ end }}

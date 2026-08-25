@@ -12,6 +12,13 @@ darkmode_js:
   - assets/js/darkmode.js
 enableInlineShortcodes: true
 
+security:
+  funcs:
+    getenv:
+      - '^HUGO_'
+      - '^CI$'
+      - '^MUSIMOTION_CLOUDKIT_(API_TOKEN|ENVIRONMENT)$'
+
 markup:
   goldmark:
     extensions:
