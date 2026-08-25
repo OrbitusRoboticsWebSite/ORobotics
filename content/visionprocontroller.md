@@ -1,10 +1,10 @@
 ---
-title: "VisionProController — R.O.B. spatial control deck"
+title: "ROBControllerVision — R.O.B. spatial control deck"
 url: "/products/visionprocontroller/"
 type: "visionprocontroller"
 draft: false
-description: "Explore the native Apple Vision Pro cockpit for R.O.B.: independent treads and grippers, head-relative camera and torso control, authenticated H.264 video, voice, Amber telemetry, and safety-by-freshness."
+description: "Explore the native Apple Vision Pro cockpit for R.O.B.: three independent H.264 feeds, immersive 360° video, robot-confirmed drive control, concurrent measured Amber arm control, action approval, and safety-by-freshness."
 featured_image: "images/products/visionprocontroller-deck.webp"
 ---
 
-VisionProController is the spatially composed visionOS operations deck implemented in the ROBControllerVision codebase.
+ROBControllerVision is the spatially composed native visionOS operations deck for R.O.B.

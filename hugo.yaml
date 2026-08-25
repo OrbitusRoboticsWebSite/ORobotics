@@ -58,7 +58,7 @@ params:
   author: Rodolfo Aramayo
   authorimage: ../assets/images/global/author.webp
   og_image: og.png
-  og_image_alt: "The ROB Operating Stack — Cerebro, ROBController, and VisionProController by Orbitus Robotics"
+  og_image_alt: "The ROB Operating Stack — Cerebro, ROBController, and ROBControllerVision by Orbitus Robotics"
   moto: "Leading the AI revolution"
   description: "Meet R.O.B., our world-class open-source humanoid platform combining macOS, spatial computing, and Gemini-powered intelligence."
   disable_theme_toggle: false

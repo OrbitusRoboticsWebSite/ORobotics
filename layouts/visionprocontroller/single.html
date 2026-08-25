@@ -5,10 +5,10 @@
   <header class="product-detail__hero product-detail__hero--wide">
     <div class="product-detail__hero-grid" aria-hidden="true"></div>
     <div class="product-detail__hero-copy">
-      <p class="product-detail__eyebrow"><span>03</span> visionOS · spatial command · live H.264</p>
-      <h1>VisionProController</h1>
+      <p class="product-detail__eyebrow"><span>03</span> visionOS · spatial command · multi-camera H.264</p>
+      <h1>ROBControllerVision</h1>
       <p class="product-detail__statement">R.O.B.'s spatial<br>control deck.</p>
-      <p class="product-detail__lede">Operate R.O.B. from a native Apple Vision Pro cockpit with independent tread and gripper control, head-relative neck and torso steering, authenticated live video, voice input, measured Amber telemetry, and a safety contract that expires stale intent in 250 milliseconds.</p>
+      <p class="product-detail__lede">Operate R.O.B. from a native Apple Vision Pro cockpit with robot-confirmed drive control, three independently switchable camera feeds, an immersive live 360° sphere, voice, concurrent measured Amber arm control, and a safety contract that expires stale intent in 250 milliseconds.</p>
       <div class="product-detail__actions">
         <a class="product-detail__primary" href="https://github.com/RudyAramayo/ROBControllerVision" target="_blank" rel="noopener noreferrer">Explore ROBControllerVision <span aria-hidden="true">↗</span></a>
         <a href="#vision-cockpit">Enter the control deck <span aria-hidden="true">↓</span></a>
@@ -16,15 +16,15 @@
     </div>
     <figure class="product-detail__hero-media product-detail__hero-media--vision">
       {{ $deck := resources.Get "images/products/visionprocontroller-deck.webp" }}
-      <img src="{{ $deck.RelPermalink }}" width="{{ $deck.Width }}" height="{{ $deck.Height }}" alt="Actual ROBControllerVision app running in Apple Vision Pro Simulator, showing the three-panel ROB Control Deck and active synthetic H.264 stream" fetchpriority="high" decoding="async">
-      <figcaption><span><i></i> ROB Control Deck · video smoke test</span><span>Actual visionOS Simulator capture</span></figcaption>
+      <img src="{{ $deck.RelPermalink }}" width="{{ $deck.Width }}" height="{{ $deck.Height }}" alt="Current ROBControllerVision app in Apple Vision Pro Simulator showing the three-panel control deck, robot-confirmed authority status, voice controls, telemetry, and an active H.264 video smoke test" fetchpriority="high" decoding="async">
+      <figcaption><span><i></i> ROB Control Deck · current video smoke test</span><span>Current visionOS Simulator capture</span></figcaption>
     </figure>
   </header>
 
-  <section class="product-proof" aria-label="VisionProController technical proof points">
+  <section class="product-proof" aria-label="ROBControllerVision technical proof points">
     <div><strong>250 ms</strong><span>Input lease</span></div>
-    <div><strong>10 Hz</strong><span>Safety evaluation</span></div>
-    <div><strong>25 Hz</strong><span>Head orientation</span></div>
+    <div><strong>3 feeds</strong><span>Main · belly · Insta360</span></div>
+    <div><strong>50 ms</strong><span>Physical input polling</span></div>
     <div><strong>2 × 7</strong><span>Measured Amber joints</span></div>
     <div><strong>2 QUIC</strong><span>Independent control + video</span></div>
   </section>
@@ -35,12 +35,12 @@
       <h2>Controls wrap around the camera. Safety stays in front.</h2>
       <p>The 1,760×920 SwiftUI dashboard arranges three purpose-built panels around the forward video surface. The control and telemetry wings rotate eight degrees inward and sit 42 points forward in depth, creating a readable cockpit instead of a flat settings page.</p>
       <p>The center prioritizes the camera. The left wing owns motion and stop state. The right wing owns connection, pairing, voice, telemetry, and the safety legend. The window explicitly claims focus for GameController events and stops/disconnects when it disappears.</p>
-      <p class="product-note"><b>Precise by design.</b> This is a spatially styled native window—not an immersive room-scale scene. The current product contains no ImmersiveSpace, volumetric robot, or RealityKit arm visualization.</p>
+      <p class="product-note"><b>Two presentation modes.</b> The command deck remains a readable native window, while the stitched Insta360 feed can open either in a separate 2:1 panorama window or as a live RealityKit sphere inside an ImmersiveSpace. The product does not claim a volumetric robot, RealityKit arm model, Cartesian targets, or IK puppeteering.</p>
     </div>
-    <div class="cockpit-anatomy" aria-label="Three-panel VisionProController cockpit anatomy">
+    <div class="cockpit-anatomy" aria-label="Three-panel ROBControllerVision cockpit anatomy">
       <div class="cockpit-anatomy__wing"><span>LEFT WING</span><b>Robot Control</b><small>treads · grippers · speed · arm · stop</small></div>
-      <div class="cockpit-anatomy__center"><span>FORWARD</span><b>ROB Wide Camera</b><small>codec · dimensions · FPS · frames · bytes</small></div>
-      <div class="cockpit-anatomy__wing"><span>RIGHT WING</span><b>Session + telemetry</b><small>pairing · voice · battery · arms · safety</small></div>
+      <div class="cockpit-anatomy__center"><span>FORWARD</span><b>Pilot Camera Matrix</b><small>main · belly · Insta360 · window · immersive</small></div>
+      <div class="cockpit-anatomy__wing"><span>RIGHT WING</span><b>Session + telemetry</b><small>authority · voice · battery · actions · safety</small></div>
     </div>
   </section>
 
@@ -74,21 +74,22 @@
     <div class="product-chapter__intro product-chapter__intro--wide">
       <p class="product-detail__eyebrow"><span>04</span> Authenticated live video</p>
       <h2>A camera stream that can never block a stop.</h2>
-      <p>VisionProController authenticates control first, preserves Cerebro's exact live session UUID, then establishes a second domain-separated video connection. A failed or congested camera path can remove video, but it cannot delay motion, dead-man, or stop traffic.</p>
+      <p>ROBControllerVision authenticates control first, preserves Cerebro's exact live session UUID, then establishes a second domain-separated video connection. Main camera, belly camera, and Insta360 subscriptions can be enabled independently. A failed or congested camera path can remove one or every view, but it cannot delay motion, dead-man, or stop traffic.</p>
     </div>
-    <div class="dual-plane" aria-label="Independent VisionProController control and video planes">
+    <div class="dual-plane" aria-label="Independent ROBControllerVision control and video planes">
       <div><span>CONTROL PLANE</span><b>_robctl._udp / robctl/2</b><small>motion · stop · authority · voice · arm protocol</small></div>
       <i>EXACT LIVE<br>SESSION UUID</i>
       <div><span>VIDEO PLANE</span><b>_robvideo._udp / robvideo/1</b><small>capabilities · subscription · feedback · H.264 media</small></div>
     </div>
     <div class="video-specs">
-      <article><b>960 × 540</b><span>Requested maximum dimensions</span></article><article><b>20 FPS</b><span>Requested maximum frame rate</span></article><article><b>1.5 Mbit/s</b><span>Requested maximum bitrate</span></article><article><b>H.264 AVCC</b><span>Ordered reliable stream</span></article>
+      <article><b>960 × 540</b><span>Main + belly maximum</span></article><article><b>960 × 480</b><span>2:1 Insta360 panorama</span></article><article><b>20 FPS</b><span>Per-feed requested maximum</span></article><article><b>1.5 Mbit/s</b><span>Per-feed requested bitrate</span></article>
     </div>
     <div class="feature-grid feature-grid--compact">
       <article><h3>Two proofs, one robot</h3><p>Both services use TLS 1.3 and the exact pinned Cerebro leaf, but video has its own fresh reciprocal HMAC transcript so a control proof cannot be replayed against media. The subscription must carry the control connection's current UUID.</p></article>
       <article><h3>Strict binary receiver</h3><p>32-byte <code>RVID</code> frames wrap fixed 92-byte <code>RBVD</code> media headers, raw SPS/PPS, and complete AVCC access units. Annex-B, invalid dimensions, stream/session mismatch, length conflict, and malformed current-stream media fail closed.</p></article>
       <article><h3>Bounded recovery</h3><p>Configuration is capped at 64 KiB and one access unit at 2 MiB. A sequence gap suppresses predictive frames and rate-limits a keyframe request. Exactly one configuration and one matching decodable keyframe may wait for UI activation.</p></article>
       <article><h3>Frame-rate UI without frame-rate state</h3><p><code>AVSampleBufferVideoRenderer</code> drives a display layer directly. Only throttled statistics reach SwiftUI every 500 ms, preventing per-frame network state from invalidating the entire interface.</p></article>
+      <article><h3>Windowed or immersive 360°</h3><p>The stitched 2:1 panorama can remain in a separate flat window or texture the inside of a live RealityKit sphere. Moving between the command deck, panorama window, and ImmersiveSpace preserves the authenticated subscription instead of dropping the robot session.</p></article>
     </div>
   </section>
 
@@ -104,31 +105,44 @@
 
   <section id="vision-arms" class="product-chapter product-chapter--arms">
     <div class="product-chapter__intro product-chapter__intro--wide">
-      <p class="product-detail__eyebrow"><span>06</span> Amber arm observability</p>
-      <h2>Fourteen measured joints. A preview path that refuses to pretend.</h2>
-      <p>The production observation path receives left and right Amber arm state over <code>rob-arm-control/1</code>. Every sample contains seven positions, seven velocities, seven currents, and seven statuses. Sequence, time, age, shape, finite values, and defensive numerical bounds are validated before the newest sample enters the session snapshot.</p>
+      <p class="product-detail__eyebrow"><span>06</span> Supervised Amber arm control</p>
+      <h2>Fourteen measured joints. Two independent authorities.</h2>
+      <p>The production <code>rob-arm-control/2</code> path receives seven positions, velocities, currents, statuses, and verified modes for each arm. After drive is disarmed, the operator initializes each arm from fresh feedback and requests a separate time-limited Cerebro authority. Either or both arms can then run bounded measured joint targets without letting one side's lease or UI state impersonate the other.</p>
     </div>
     <div class="arm-telemetry">
       <article><span>LEFT ARM</span><div><b>J1</b><i style="--joint:62%"></i><small>+18.4°</small></div><div><b>J2</b><i style="--joint:43%"></i><small>−7.2°</small></div><div><b>J3</b><i style="--joint:71%"></i><small>+24.1°</small></div><em>7 position · 7 velocity · 7 current · 7 status</em></article>
       <article><span>RIGHT ARM</span><div><b>J1</b><i style="--joint:38%"></i><small>−19.0°</small></div><div><b>J2</b><i style="--joint:55%"></i><small>+4.6°</small></div><div><b>J3</b><i style="--joint:29%"></i><small>−27.8°</small></div><em>7 position · 7 velocity · 7 current · 7 status</em></article>
     </div>
-    <div class="product-callout product-callout--blue"><b>Target-intent preview, not live teleoperation.</b> The protocol validates exactly seven targets, B1 joint limits, 0.65–10 second duration, authenticated sender, live session, sequence, issue time, and a 50–1,000 ms lease. It has dispositions for stale telemetry, wrong mode, step/speed limit, busy arm, expired or invalid input—but v1 always forces <code>execution_eligible=false</code>. No current Vision UI submits targets or invokes Amber hardware.</div>
+    <div class="product-callout product-callout--blue"><b>Measured joint jogging, not IK puppeteering.</b> Independent on-screen hold-to-move controls submit bounded seven-joint targets and request an ordinary measured-position hold on release. With both arm authorities active, paired PSVR Sense thumbsticks can jog the matching selected joints simultaneously while both grips form one dead-man. Stale feedback, mode loss, a 250 ms input lapse, scene loss, stop, disarm, or transport failure takes the priority path to hold and locally disarm both arms.</div>
+  </section>
+
+  <section id="vision-actions" class="product-chapter product-chapter--dark">
+    <div class="product-chapter__intro product-chapter__intro--wide">
+      <p class="product-detail__eyebrow"><span>07</span> Authenticated action approval</p>
+      <h2>Off by default. Addressed to this controller. Measured by Cerebro.</h2>
+      <p>The operator must explicitly enable Cerebro Action Approval before the Vision app advertises availability. Immutable, expiring proposals appear only when addressed to this exact authenticated controller. The operator can approve, reject, cancel active work, and observe Cerebro-owned progress without giving a model direct access to arm targets.</p>
+    </div>
+    <div class="feature-grid feature-grid--compact">
+      <article><h3>Catalog gestures only</h3><p><code>play_gesture</code> approval names an approved local Cerebro catalog entry. It never accepts model-supplied joint arrays; completion requires fresh Amber feedback to settle inside the measured tolerances.</p></article>
+      <article><h3>Monitorless startup checkpoint</h3><p>A <code>run_startup_test</code> proposal appears only after Cerebro separately arms one fixed measured two-arm workflow. Approve is the final exclusion-zone and E-stop checkpoint; R.O.B. gives an audible warning before motion.</p></article>
+      <article><h3>Availability is revocable</h3><p>Scene loss, disconnect, the software E-stop, or disabling the console withdraws availability and cancels a pending proposal. Approved work keeps explicit cancel-and-hold and measured terminal states.</p></article>
+    </div>
   </section>
 
   <section id="vision-safety" class="product-chapter product-chapter--safety">
     <div class="product-chapter__intro">
-      <p class="product-detail__eyebrow"><span>07</span> Safety by freshness</p>
+      <p class="product-detail__eyebrow"><span>08</span> Safety by freshness</p>
       <h2>Connected is not armed. Armed is not fresh. Fresh is not forever.</h2>
-      <p>Motion starts inhibited. The app must be connected, explicitly armed, active, receiving current input, and continuously satisfying the dead-man. <code>RobotSession</code> reevaluates the decision every 100 ms; input expires after 250 ms.</p>
+      <p>Motion starts inhibited. The app must be connected, explicitly armed, active, receiving current input, continuously satisfying the dead-man, and confirmed by R.O.B. as the current drive controller. <code>RobotSession</code> reevaluates the decision every 100 ms; physical input is reread every 50 ms and expires after 250 ms.</p>
     </div>
-    <div class="safety-chain" aria-label="VisionProController motion safety requirements"><span>CONNECTED</span><i>+</i><span>ARMED</span><i>+</i><span>ACTIVE SCENE</span><i>+</i><span>FRESH INPUT</span><i>+</i><span>DEAD-MAN HELD</span><i>=</i><b>MOTION</b></div>
+    <div class="safety-chain" aria-label="ROBControllerVision motion safety requirements"><span>VERIFIED LINK</span><i>+</i><span>ROBOT AUTHORITY</span><i>+</i><span>ACTIVE SCENE</span><i>+</i><span>FRESH INPUT</span><i>+</i><span>DEAD-MAN HELD</span><i>=</i><b>MOTION</b></div>
     <div class="safety-stops"><span>dead-man released</span><span>250 ms lease expired</span><span>scene inactive</span><span>controller disconnected</span><span>transport failed</span><span>operator disarmed</span><span>software stop latched</span><span>robot watchdog</span></div>
     <p class="product-note product-note--warning"><b>The red control is a latched software stop.</b> It sends a braked/stopped snapshot and releases authority; resetting it leaves motion disarmed. It supplements—and never claims to trigger, reset, or replace—the physical robot's independently wired emergency stop.</p>
   </section>
 
   <section id="vision-simulator" class="product-chapter product-chapter--simulator">
     <div class="product-chapter__intro product-chapter__intro--wide">
-      <p class="product-detail__eyebrow"><span>08</span> Full offline simulator</p>
+      <p class="product-detail__eyebrow"><span>09</span> Full offline simulator</p>
       <h2>The camera path is synthetic. The codec path is real.</h2>
       <p>The built-in simulator creates a fresh session, integrates differential motion, drains an 84% starting battery, publishes telemetry every 200 ms, and enforces its own 350 ms receiver watchdog. Its animated BGRA grid and robot marker go through VideoToolbox H.264 compression, the bounded newest-frame channel, SPS/PPS generation, the same receiver validator, sample-buffer reconstruction, and the same AVFoundation display surface as production video.</p>
     </div>
@@ -137,7 +151,7 @@
 
   <section class="product-chapter product-chapter--ops">
     <div class="product-chapter__intro product-chapter__intro--wide">
-      <p class="product-detail__eyebrow"><span>09</span> Swift 6 architecture</p>
+      <p class="product-detail__eyebrow"><span>10</span> Swift 6 architecture</p>
       <h2>UI on the main actor. State machines in actors. Media in its own lane.</h2>
       <p><code>ROBControlCore</code> is a pure-Foundation, transport-independent domain package. <code>ROBCerebroTransport</code> contains Network, Security, CryptoKit, Bonjour, Keychain, TLS, HMAC, and the narrow compatibility adapter. <code>ROBVideoPipeline</code> owns Core Video, VideoToolbox, Core Media, and AVFoundation. The package has no third-party dependencies.</p>
     </div>
@@ -146,9 +160,9 @@
 
   <section class="truth-matrix" aria-labelledby="vision-status-title">
     <div><p class="product-detail__eyebrow">Implementation status</p><h2 id="vision-status-title">Spatial control, without inflated claims.</h2></div>
-    <article class="truth-matrix__ready"><span>IMPLEMENTED</span><p>Native three-panel cockpit; Simulator and Cerebro endpoints; Keychain pairing; pinned QUIC/TLS control; independent treads and grippers; gamepad, PSVR Sense buttons/axes, screen controls, and head-relative neck/torso demand; voice command and puppet speech; demand-driven H.264; simulator; measured Amber telemetry; safety latch and 250 ms lease.</p></article>
-    <article class="truth-matrix__preview"><span>PROTOCOL / PREVIEW</span><p>PSVR Sense six-DoF poses require visionOS 26. Spatial controller poses are transported, and seven-joint target intents are fully validated, but there is no current IK, arm-target UI, RealityKit arm, or physical Amber execution. Real Cerebro base battery/pose mapping is not yet populated.</p></article>
-    <article class="truth-matrix__lab"><span>NOT IN THIS PRODUCT</span><p>No local Gemini, MLX, Core ML, object recognition, autonomy, immersive space, depth/stereo/spatial video, recording, or replay. RPLidar framing exists at a low transport layer, but it is intentionally ignored by the adapter and has no decoder, model, map, obstacle overlay, or UI.</p></article>
+    <article class="truth-matrix__ready"><span>IMPLEMENTED</span><p>Native three-panel cockpit; Simulator and Cerebro endpoints; robot-confirmed drive authority; independent treads and grippers; gamepad, PSVR Sense, screen, and head-relative input; voice and puppet speech; independently switchable main, belly, and Insta360 H.264 feeds; flat panorama and live immersive sphere; protocol-v2 measured control of both Amber arms; action and startup approval; safety latch and 250 ms lease.</p></article>
+    <article class="truth-matrix__preview"><span>HARDWARE / MODE GATED</span><p>PSVR Sense six-DoF poses require visionOS 26. Physical arm motion requires fresh measured feedback, verified position mode, independent Cerebro authority, current calibration, and real hardware validation. Tracked poses are diagnostic data; they are not converted into Cartesian targets or IK. Real Cerebro base battery/pose mapping is not yet populated.</p></article>
+    <article class="truth-matrix__lab"><span>NOT IN THIS PRODUCT</span><p>No local Gemini, MLX, Core ML, object recognition, navigation autonomy, depth/stereo/spatial-video recording, or replay. The immersive feature is specifically a live equirectangular video sphere—not a reconstructed room, volumetric robot, collision model, or RealityKit arm.</p></article>
   </section>
 
   {{ partial "product-footer-cta.html" . }}

@@ -6,10 +6,10 @@
       <div class="product-hub__copy">
         <p class="product-kicker"><span></span>The ROB operating stack</p>
         <h1 id="product-hub-title">One robot.<br><em>Three control planes.</em></h1>
-        <p class="product-hub__lede">Perception and intelligence on the Mac. Direct robot command from iPhone and Apple Watch. Head-relative spatial control and authenticated video in Apple Vision Pro. Every layer is native, purpose-built, and connected to the physical machine.</p>
+        <p class="product-hub__lede">Perception, identity, and supervised autonomy on the Mac. Direct robot command, mapping, and secure remote operations from iPhone, iPad, and Apple Watch. Multi-camera spatial control, immersive 360° video, and measured dual-arm operation in Apple Vision Pro. Every layer is native, purpose-built, and connected to the physical machine.</p>
         <a class="product-hub__jump" href="#product-stack">Explore the stack <span aria-hidden="true">↓</span></a>
       </div>
-      <div class="stack-orbit" aria-label="The ROB software stack connects Cerebro, ROBController, and VisionProController to the physical robot">
+      <div class="stack-orbit" aria-label="The ROB software stack connects Cerebro, ROBController, and ROBControllerVision to the physical robot">
         <div class="stack-orbit__ring stack-orbit__ring--outer" aria-hidden="true"></div>
         <div class="stack-orbit__ring stack-orbit__ring--inner" aria-hidden="true"></div>
         {{ $robot := resources.Get "images/pages/ROB_2026_lightsabers.webp" }}
@@ -33,24 +33,24 @@
         <span class="product-card__index">01 / INTELLIGENCE</span>
         <span class="product-card__glyph" aria-hidden="true">C</span>
         <h3>Cerebro</h3>
-        <p>The Mac-native perception and cognition console: cameras, local MLX inference, Gemini Live, LiDAR, audio, telemetry, and robot-task orchestration.</p>
-        <span class="product-card__meta">macOS · Multimodal AI · Sensor fusion</span>
+        <p>The Mac-native robot brain: three-camera perception, private MLX intelligence, consent-based face recall, visually authorized following, secure remote operations, and measured motion.</p>
+        <span class="product-card__meta">macOS · Private AI · Supervised autonomy</span>
         <strong>Enter Cerebro <span aria-hidden="true">↗</span></strong>
       </a>
       <a class="product-card product-card--controller" href="{{ "products/robcontroller/" | relURL }}">
         <span class="product-card__index">02 / COMMAND</span>
         <span class="product-card__glyph" aria-hidden="true">R</span>
         <h3>ROBController</h3>
-        <p>The human command and safety console: independent touch drive, speech, device motion, authenticated pairing, Gemini-action approval, bounded autonomy, live Lidar, and a Watch relay.</p>
-        <span class="product-card__meta">iPhone + Watch · Human authority · Lidar</span>
+        <p>The human command and safety console: robot-confirmed control, saved Lidar missions, visual follow authorization, bounded action approval, secure desktop and terminal access, and a Watch relay.</p>
+        <span class="product-card__meta">iPhone + iPad + Watch · Human authority</span>
         <strong>Open ROBController <span aria-hidden="true">↗</span></strong>
       </a>
       <a class="product-card product-card--vision" href="{{ "products/visionprocontroller/" | relURL }}">
         <span class="product-card__index">03 / SPATIAL</span>
         <span class="product-card__glyph" aria-hidden="true">V</span>
-        <h3>VisionProController</h3>
-        <p>A native visionOS cockpit for independent treads and grippers, head-relative neck and torso control, authenticated H.264 video, voice, and measured arm telemetry.</p>
-        <span class="product-card__meta">visionOS · Spatial cockpit · Live H.264</span>
+        <h3>ROBControllerVision</h3>
+        <p>A native visionOS cockpit for three authenticated camera feeds, an immersive Insta360 sphere, robot-confirmed drive control, concurrent measured Amber arms, voice, and action approval.</p>
+        <span class="product-card__meta">visionOS · Immersive 360° · Dual-arm control</span>
         <strong>Enter spatial control <span aria-hidden="true">↗</span></strong>
       </a>
     </div>

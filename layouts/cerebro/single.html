@@ -8,7 +8,7 @@
       <p class="product-detail__eyebrow"><span>01</span> macOS · perception · intelligence</p>
       <h1>Cerebro</h1>
       <p class="product-detail__statement">The nervous system<br>behind a real robot.</p>
-      <p class="product-detail__lede">Cerebro is R.O.B.'s always-on Mac brain and engineering console: synchronized RGB-D and panoramic vision, private Swift MLX intelligence, optional Gemini Live conversation, authenticated Lidar and controller links, deterministic autonomy, supervised arm motion, show control, and deep hardware diagnostics.</p>
+      <p class="product-detail__lede">Cerebro is R.O.B.'s always-on Mac brain and engineering console: three independently selected camera roles, private Swift MLX intelligence, consent-based face recall, optional Gemini Live conversation, visually authorized person following, authenticated remote operations, measured arm motion, and supervised show startup.</p>
       <div class="product-detail__actions">
         <a class="product-detail__primary" href="https://github.com/RudyAramayo/Cerebro" target="_blank" rel="noopener noreferrer">Explore the source <span aria-hidden="true">↗</span></a>
         <a href="#cerebro-perception">Tour every subsystem <span aria-hidden="true">↓</span></a>
@@ -16,8 +16,8 @@
     </div>
     <figure class="product-detail__hero-media product-detail__hero-media--console">
       {{ $console := resources.Get "images/products/cerebro-console.webp" }}
-      <img src="{{ $console.RelPermalink }}" width="{{ $console.Width }}" height="{{ $console.Height }}" alt="Actual Cerebro macOS engineering console showing hardware terminals, manual controls, a camera view, and servo controls" fetchpriority="high" decoding="async">
-      <figcaption><span><i></i> Cerebro engineering console</span><span>Actual application capture</span></figcaption>
+      <img src="{{ $console.RelPermalink }}" width="{{ $console.Width }}" height="{{ $console.Height }}" alt="Current Cerebro Stage Show console showing supervised wake-up calibration, live startup preflight, private Swift MLX status, and validated show cues" fetchpriority="high" decoding="async">
+      <figcaption><span><i></i> Cerebro · Stage Show + live startup</span><span>Current macOS application capture</span></figcaption>
       <div class="product-detail__telemetry" aria-hidden="true">
         <span>CAMERA / RGB-D</span>
         <b>STREAMING</b>
@@ -30,7 +30,7 @@
   <section class="product-proof" aria-label="Cerebro technical proof points">
     <div><strong>30 FPS</strong><span>Synchronized OAK RGB-D</span></div>
     <div><strong>3 models</strong><span>Local LLM · VLM · embeddings</span></div>
-    <div><strong>0.2 sec</strong><span>Deterministic autonomy tick</span></div>
+    <div><strong>3 cameras</strong><span>Face · belly · Insta360</span></div>
     <div><strong>5 Hz</strong><span>Controller freshness heartbeat</span></div>
     <div><strong>TLS 1.3</strong><span>Pinned controller and video links</span></div>
   </section>
@@ -65,15 +65,21 @@
     </article>
     <article>
       <span class="feature-grid__number">01.3</span>
-      <h3>A second, panoramic perception lane</h3>
-      <p>The Insta360 service maintains an OSC session and heartbeat, requests a 1920×960 stitched H.264 panorama, optionally applies gyro stabilization, and starts its local frame decoder only when diagnostics or analysis demand it. Whole-panorama analysis or six local sectors can be sampled independently.</p>
-      <ul><li>30 FPS stitched source with demand-driven 15 FPS MJPEG analysis decode</li><li>Live preview, bytes, frames, FPS, session and gyro diagnostics</li><li>Independent MLX, body-pose, object/scene, and custom-model toggles</li><li>Newest-frame-only advisory perception, never the motor loop</li></ul>
+      <h3>Three independent camera roles</h3>
+      <p>Face, belly, and Insta360 sources are selected independently instead of sharing one global AVFoundation device. Main and belly cameras can be streamed separately to Vision Pro, while the Insta360 service maintains its own OSC session and stitched 2:1 H.264 panorama.</p>
+      <ul><li>Role-specific AVFoundation selectors prevent one camera choice from replacing another</li><li>Main, belly, and panorama streams advertise as independent authenticated feeds</li><li>30 FPS stitched source with demand-driven local analysis and gyro diagnostics</li><li>Fast local transfer falls back automatically to the network path</li></ul>
     </article>
     <article>
       <span class="feature-grid__number">01.4</span>
       <h3>Detectors you can add at runtime</h3>
       <p>The detector registry gives every source its own enable state and rate. Built-in classification and saliency can be combined with hot-imported Core ML models whose recognized regions and centers become bounded scene observations. Main-camera body pose stays on its dedicated low-latency path.</p>
       <ul><li>Per-source processing rates from 0–30 FPS</li><li>Hot-added <code>.mlmodel</code> and <code>.mlmodelc</code> packages</li><li>Source-generation checks discard results from replaced camera sessions</li><li>Scene snapshots label sensor JSON as untrusted observation, never instruction</li></ul>
+    </article>
+    <article>
+      <span class="feature-grid__number">01.5</span>
+      <h3>Consent-based local face identity</h3>
+      <p>Cerebro can enroll a consenting person from the headless main-camera service, keep encrypted samples locally, and surface a recently recognized name to conversation without turning a face into a robot-control credential. Selectable AdaFace IR-18 backends, live quality guidance, conservative possible-match prompts, and bounded refinement improve recognition across lighting and pose.</p>
+      <ul><li>24 varied enrollment samples plus an explicit eight-sample refinement flow</li><li>Hands-free friend enrollment stores nothing before affirmative consent</li><li>Names enter context for only 15 seconds and remain untrusted personalization</li><li>Administrator profiles use an explicit allowlist of active paired controllers</li></ul>
     </article>
   </section>
 
@@ -121,7 +127,8 @@
       <p class="product-detail__eyebrow"><span>03</span> Lidar + autonomy</p>
       <h2>Cloud intelligence talks. Local code owns the treads.</h2>
       <p>A separately paired RPLidar publisher can send authenticated scans into Cerebro. The robot derives four directional free-space sectors and exposes only fresh, bounded geometry to the scene model and autonomy coordinator. A stale scan does not become optimistic clearance—it stops movement and waits.</p>
-      <div class="product-callout">AI supplies conversation and social timing. The deterministic planner is the only component that produces left and right tread values.</div>
+      <p>Visual Follow Mode adds a human-selected target from a fresh main-camera preview, then combines belly RGB-D, RPLidar clearance, and bounded tread speeds to maintain distance. Target loss, missing depth, stale sensors, or blocked terrain stops the base; delayed Insta360 observations may re-aim the camera and waist but never command the treads.</p>
+      <div class="product-callout">AI supplies conversation and social timing. The authenticated operator selects the follow target. Deterministic local code remains the only component that produces left and right tread values.</div>
     </div>
     <div class="lidar-visual" aria-label="Illustration of RPLidar free-space sectors around ROB">
       <div class="lidar-visual__sweep"></div><div class="lidar-visual__robot">ROB</div>
@@ -156,6 +163,7 @@
       <article><h3>Fresh authority</h3><p>Frames carry protocol version, live UUID, message UUID, monotonic sequence, and bounded length. Cloned credentials, replayed sequences, stale sessions, oversized payloads, and role mismatches fail closed.</p></article>
       <article><h3>No automatic downgrade</h3><p>The historical plaintext transport is an explicit legacy adapter, disabled by default. A failure in modern discovery or authentication never silently falls back to it.</p></article>
       <article><h3>Video cannot delay control</h3><p>The H.264 sender uses its own service, connection, queue, framing, proof domain, and bounded newest-frame state. Media congestion cannot queue a stop behind video frames.</p></article>
+      <article><h3>Administrator access stays two-factor</h3><p>Remote desktop and shell sessions require both a live, non-revoked operator credential and a completed encrypted Administrator profile that explicitly allows that controller. Multiple active controllers can be authorized or revoked independently; face recognition alone never opens either service.</p></article>
     </div>
   </section>
 
@@ -167,13 +175,13 @@
     </div>
     <div class="motion-modules">
       <article><span>BASE</span><h3>Passive Arduino discovery</h3><p>USB callout devices are opened at 250,000 baud, reset, and observed for the exact Base startup line. Cerebro sends no probe bytes to unidentified boards. At 5 Hz it forwards independent treads, brakes, flipper, and linear-actuator state; three missed snapshots produce one neutral/braked frame, then USB writes stop so the Arduino watchdog can de-energize the base.</p></article>
-      <article><span>NECK + GRIPPERS</span><h3>Maestro servo control</h3><p>VID/product discovery reconnects the Pololu Maestro. Normalized head demands become bounded, slew-limited pan, tilt, and upper-tilt commands. Arm and gripper channels retain calibration controls; remote gripper changes are edge-triggered rather than resent forever.</p></article>
+      <article><span>NECK + GRIPPERS</span><h3>Maestro servo control</h3><p>VID/product discovery reconnects the Pololu Maestro. A persisted controller-owned speed and acceleration profile is applied to all 24 channels before normal targets, while the neck gateway enforces full-pan clearance, upright camera coupling, staged lower-tilt motion, and fail-closed limits for unknown poses. Remote gripper changes remain edge-triggered.</p></article>
       <article><span>ROTATING TORSO</span><h3>Tic safe-start ownership</h3><p>Vision head yaw can request a normalized half-turn around a stored baseline; the local UI has a full-turn range. Position conversion and slew limits remain on the robot Mac. Releasing control enters safe start and de-energizes; a missing <code>ticcmd</code> disables only that feature.</p></article>
       <article><span>AMBER B1</span><h3>Measured arm gateway</h3><p>An SSH-tunneled, token-authenticated gateway exposes seven-joint position, velocity, current, and status telemetry; verified mode transitions; and trajectories bounded by B1 limits and duration. Named gestures are immutable approved snapshots and settle against multiple measured position/velocity samples before completion.</p></article>
     </div>
     <div class="amber-detail">
       <div><span>2 × 7</span><b>Measured arm joints</b></div>
-      <p>Short-lived Gemini or controller authority can be granted for named gestures, but it still requires a healthy tunnel, fresh telemetry, position mode, bounded steps and speeds, acknowledged commands, and a calibrated executor. Revocation, timeout, disconnect, or cancellation holds the current position. Vision Pro target intents already have a complete authentication and safety-validation protocol, but protocol v1 deliberately keeps physical execution disabled.</p>
+      <p>Short-lived Gemini or controller authority can be granted for named gestures or independent left/right Vision control, but every command still requires a healthy tunnel, fresh telemetry, position mode, bounded steps and speeds, acknowledged commands, and a calibrated executor. Protocol v2 supports measured seven-joint targets, concurrent per-arm authority, and priority holds; revocation, timeout, disconnect, stale feedback, or cancellation holds and locally disarms both arms.</p>
     </div>
   </section>
 
@@ -181,7 +189,7 @@
     <div class="product-chapter__intro">
       <p class="product-detail__eyebrow"><span>06</span> Performance engine</p>
       <h2>Rehearsed reliability.<br>Room for improvisation.</h2>
-      <p>The stage runner validates an authored show before it speaks or moves. Offline, local-model, and adaptive modes share one cue engine, one cancellation path, mandatory fallbacks, and hard content boundaries that keep show files from smuggling in raw joints, hosts, ports, shell commands, or model-authored motion.</p>
+      <p>The stage runner validates an authored show before it speaks or moves. Offline, local-model, and adaptive modes share one cue engine, one cancellation path, mandatory fallbacks, and hard content boundaries that keep show files from smuggling in raw joints, hosts, ports, shell commands, or model-authored motion. A separate wake-up workflow can run one locally approved, measured two-arm gesture only after live preflight and a final local or authenticated remote approval.</p>
     </div>
     <div class="show-timeline">
       <article><span>01</span><h3>Validate</h3><p>Strict v1 JSON, 256 KiB, 256 cues, four-hour ceiling, unknown fields rejected.</p></article>
@@ -218,14 +226,16 @@
       <article><b>Managed Python</b><p>Choose Python 3.9+, autodetect, select venv/Conda, or create an app-owned environment; package installation happens only after operator action.</p></article>
       <article><b>Dependency preflight</b><p>Every compiled subprocess path must be absolute, present, executable, and not a directory immediately before launch.</p></article>
       <article><b>Least privilege</b><p>Package-manager workflows never ingest an administrator password; Keychain secrets never appear in diagnostics or process arguments.</p></article>
+      <article><b>Authenticated desktop</b><p>Administrator controllers can request a demand-driven Mac desktop at up to 4096×2160 for readable text or a faster 960×540 profile. Screen capture and input use independent bounded channels and explicit macOS permissions.</p></article>
+      <article><b>Remote operator shells</b><p>Each authorized controller can own up to eight independent <code>xterm-256color</code> login shells with bounded output, reconnect backlog, exact-session routing, and immediate teardown on revocation.</p></article>
     </div>
   </section>
 
   <section class="truth-matrix" aria-labelledby="cerebro-status-title">
     <div><p class="product-detail__eyebrow">Implementation status</p><h2 id="cerebro-status-title">Built, bounded, and explicit about the frontier.</h2></div>
-    <article class="truth-matrix__ready"><span>IMPLEMENTED</span><p>OAK RGB-D + stereo; Insta360 panorama; Apple Vision overlays; native Swift MLX LLM/VLM/embeddings; Gemini Live; Foundation Models scene interpreter; RPLidar scans; bounded Social Roam; authenticated controller network; base/servo/Tic I/O; measured Amber gateway; stage runner; diagnostics; Development-mode holograms.</p></article>
-    <article class="truth-matrix__preview"><span>PREVIEW / FOUNDATION</span><p>Cerebro's secure Vision Pro H.264 sender and media plane are implemented; the receiving adapter is a separate product boundary. Vision Pro arm intents receive full validation and measured feedback but cannot execute hardware in protocol v1.</p></article>
-    <article class="truth-matrix__lab"><span>LEGACY / LAB</span><p>Kinect/NiTE/PCL, RealSense, ReSpeaker task controllers, Leap, and historical RTSP sources remain in the codebase but are not presented as supported production sensors. Lidar maps are authenticated and bounded but the main controller currently ignores them.</p></article>
+    <article class="truth-matrix__ready"><span>IMPLEMENTED</span><p>OAK RGB-D + stereo; independent face, belly, and Insta360 feeds; Apple Vision overlays; private Swift MLX LLM/VLM/embeddings; Gemini Live; encrypted consent-based face identity; visually authorized follow mode; RPLidar autonomy; authenticated desktop and terminal access; base/servo/Tic I/O; protocol-v2 measured Amber control; supervised live startup; stage runner; diagnostics; holograms.</p></article>
+    <article class="truth-matrix__preview"><span>SUPERVISED / CALIBRATION-GATED</span><p>Live Amber startup and Vision arm motion require fresh measured telemetry, verified position mode, current commissioned references, bounded targets, a clear workspace, and an operator with the physical E-stop ready. The monitorless startup path consumes one fresh authenticated approval and never turns model output into joint values.</p></article>
+    <article class="truth-matrix__lab"><span>LEGACY / LAB</span><p>Kinect/NiTE/PCL, RealSense, ReSpeaker task controllers, Leap, and historical RTSP sources remain in the codebase but are not presented as supported production sensors. Face identity is local personalization, not authorization; depth/liveness remains a future strengthening signal.</p></article>
   </section>
 
   {{ partial "product-footer-cta.html" . }}
