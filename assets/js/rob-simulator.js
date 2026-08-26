@@ -204,7 +204,7 @@ if (root) {
         speed = .58 + level.speed * 1.25;
         if (elapsed >= enemy.userData.nextAttack && distance < 12) { enemy.userData.nextAttack = elapsed + Math.max(1.85, 3.9 - levelIndex * .09); fireEnemyLaser(enemy); playDalekFax(); speakDalek(); say('Dalek-style fax robot: “Exterminate!” Incoming laser — keep moving.'); }
       }
-      const facing = (aggressive ? robot.position : target).clone().sub(enemy.position); facing.y = 0; if (facing.lengthSq() > .001) enemy.rotation.y = Math.atan2(-facing.x, -facing.z) + (isSpider ? 0 : Math.PI);
+      const facing = (aggressive ? robot.position : target).clone().sub(enemy.position); facing.y = 0; if (facing.lengthSq() > .001) enemy.rotation.y = Math.atan2(-facing.x, -facing.z);
       moveEnemy(enemy, target, speed, dt); enemy.position.y = isSpider ? Math.sin(elapsed * 10 + i) * .055 : Math.sin(elapsed * 2.4 + i) * .028;
       if (robotHitsCircle(robot.position, robot.rotation.y, enemy.position, isSpider ? .78 : .7)) { if (isSpider) playSpiderSound('impact'); else playDalekFax(); restartAfterDamage(isSpider ? 'Spider bot lunge' : 'Dalek-style fax collision'); return; }
     }
