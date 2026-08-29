@@ -82,7 +82,7 @@ if (root) {
       components: [
         { id: 'cell', type: 'battery', label: '9 V battery', x: 13, y: 55, voltage: 9 },
         { id: 'r1', type: 'resistor', label: 'R1 · 1 kΩ', x: 46, y: 28, resistance: 1000 },
-        { id: 'r2', type: 'resistor', label: 'R2 · 1 kΩ', x: 79, y: 55, resistance: 1000 },
+        { id: 'r2', type: 'resistor', label: 'R2 · 1 kΩ', x: 76, y: 55, resistance: 1000, orientation: 'vertical' },
       ],
       required: [edge('cell.pos', 'r1.in'), edge('r1.out', 'r2.in'), edge('r2.out', 'cell.neg')], supply: 9, resistance: 2000,
       objectives: [
@@ -307,7 +307,10 @@ if (root) {
       body = `<div class="part-switch__body"><button type="button" class="part-switch__blade" data-switch-toggle aria-label="Close switch"></button>${port(component.id, 'in', 'IN', 'lab-port--positive port-left-middle')}${port(component.id, 'out', 'OUT', 'lab-port--signal port-right-middle')}</div><button type="button" class="part-switch__toggle" data-switch-toggle>OPEN · TAP TO CLOSE</button>`;
     }
     if (component.type === 'resistor') {
-      body = `<div class="part-resistor__body"><span class="part-resistor__core"><i style="--band:#8a4d26"></i><i style="--band:#242424"></i><i style="--band:#d54733"></i></span><b class="part-resistor__value" data-resistor-label>${formatResistance(component.resistance)}</b>${port(component.id, 'in', 'IN', 'lab-port--signal port-left-middle')}${port(component.id, 'out', 'OUT', 'lab-port--signal port-right-middle')}</div>`;
+      const vertical = component.orientation === 'vertical';
+      const inputPosition = vertical ? 'port-top-middle' : 'port-left-middle';
+      const outputPosition = vertical ? 'port-bottom-middle' : 'port-right-middle';
+      body = `<div class="part-resistor__body"><span class="part-resistor__core"><i style="--band:#8a4d26"></i><i style="--band:#242424"></i><i style="--band:#d54733"></i></span><b class="part-resistor__value" data-resistor-label>${formatResistance(component.resistance)}</b>${port(component.id, 'in', 'IN', `lab-port--signal ${inputPosition}`)}${port(component.id, 'out', 'OUT', `lab-port--signal ${outputPosition}`)}</div>`;
     }
     if (component.type === 'led') {
       body = `<div class="part-led__body"><span class="part-led__dome"></span><span class="part-led__legs"></span>${port(component.id, 'a', 'A+', 'lab-port--positive port-left-top')}${port(component.id, 'k', 'K−', 'lab-port--negative port-left-bottom')}</div>`;
@@ -321,7 +324,8 @@ if (root) {
     if (component.type === 'uno') {
       body = `<div class="part-uno__body"><span class="part-uno__usb"></span><span class="part-uno__brand">ARDUINO<small>UNO</small></span><span class="part-uno__infinity">∞</span><span class="part-uno__chip"></span><span class="part-uno__pins"></span><i class="part-uno__led" data-uno-led></i>${port(component.id, 'd13', 'D13', 'lab-port--signal port-right-top')}${port(component.id, 'gnd', 'GND', 'lab-port--ground port-right-bottom')}</div>`;
     }
-    return `<article class="lab-part part-${component.type}" data-part="${component.id}" style="left:${component.x}%;top:${component.y}%;--lamp-color:${component.color || '#ffe43b'}"><div>${body}</div><span class="lab-part__label">${component.label}</span></article>`;
+    const orientationClass = component.orientation ? ` part-${component.type}--${component.orientation}` : '';
+    return `<article class="lab-part part-${component.type}${orientationClass}" data-part="${component.id}" style="left:${component.x}%;top:${component.y}%;--lamp-color:${component.color || '#ffe43b'}"><div>${body}</div><span class="lab-part__label">${component.label}</span></article>`;
   }
 
   function formatResistance(value) {

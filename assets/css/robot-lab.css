@@ -176,6 +176,7 @@
 .lab-port--positive { background: var(--red); }.lab-port--negative { background: #1f2235; }.lab-port--signal { background: var(--orange); }.lab-port--ground { background: #343748; }.lab-port--solar { background: var(--yellow); color: var(--ink); }
 .port-left-top { left: -14px; top: 26%; }.port-left-bottom { left: -14px; top: 74%; }.port-right-top { right: -14px; top: 26%; }.port-right-bottom { right: -14px; top: 74%; }
 .port-left-middle { left: -14px; top: 50%; }.port-right-middle { right: -14px; top: 50%; }
+.port-top-middle { left: 5px; top: -14px; }.port-bottom-middle { left: 5px; bottom: -14px; }
 .port-top-left { left: 28%; top: -14px; }.port-top-right { right: 28%; top: -14px; }.port-bottom-left { left: 28%; bottom: -14px; }.port-bottom-right { right: 28%; bottom: -14px; }
 
 .part-battery__body { position: relative; width: 104px; height: 134px; border: 6px solid #dfe2ef; border-radius: 15px; color: white; background: linear-gradient(90deg, #333751, #1c203b); box-shadow: 8px 10px 0 #090a1c66; }
@@ -198,6 +199,14 @@
 .part-resistor__core { position: absolute; z-index: 1; left: 29px; top: 5px; display: flex; gap: 7px; width: 61px; height: 34px; justify-content: center; padding: 0 8px; border: 3px solid #856c3c; border-radius: 12px; background: #e8c77f; box-shadow: 0 6px 9px #0006; }
 .part-resistor__core i { width: 5px; background: var(--band); }
 .part-resistor__value { position: absolute; top: 46px; left: 50%; color: var(--yellow); font: 800 .65rem ui-monospace, monospace; transform: translateX(-50%); }
+.part-resistor--vertical .part-resistor__body { width: 44px; height: 118px; }
+.part-resistor--vertical .part-resistor__body::before,
+.part-resistor--vertical .part-resistor__body::after { left: 20px; width: 4px; height: 31px; }
+.part-resistor--vertical .part-resistor__body::before { top: 0; }
+.part-resistor--vertical .part-resistor__body::after { top: auto; right: auto; bottom: 0; }
+.part-resistor--vertical .part-resistor__core { top: 29px; left: 5px; flex-direction: column; gap: 7px; width: 34px; height: 61px; padding: 8px 0; }
+.part-resistor--vertical .part-resistor__core i { width: 100%; height: 5px; }
+.part-resistor--vertical .part-resistor__value { top: 50%; left: 52px; transform: translateY(-50%); }
 .part-led__body { position: relative; width: 70px; height: 110px; }
 .part-led__dome { position: absolute; top: 0; left: 10px; width: 50px; height: 59px; border: 4px solid #ffffff88; border-radius: 28px 28px 12px 12px; background: color-mix(in srgb, var(--lamp-color, var(--red)) 35%, transparent); transition: .2s ease; }
 .part-led__dome::after { content: ""; position: absolute; top: 10px; right: 9px; width: 9px; height: 15px; border-radius: 50%; background: #ffffff70; }
