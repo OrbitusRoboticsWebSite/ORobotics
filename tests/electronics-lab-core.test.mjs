@@ -2,10 +2,16 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   arduinoOutputAt,
+  calculate555Astable,
+  calculate555Monostable,
+  calculateArduinoAdc,
+  calculateArduinoPwm,
   calculateCapacitiveReactance,
   calculateInductiveReactance,
   calculateLedResistor,
   calculateParallelRLC,
+  calculateOpAmpComparator,
+  calculateOpAmpNonInverting,
   calculateRCTransient,
   calculateResonantFrequency,
   calculateRLTransient,
@@ -90,6 +96,47 @@ test('RC and RL transients reveal their one-time-constant behavior', () => {
   const rl = calculateRLTransient({ sourceVoltage: 5, resistance: 10, inductance: 10, elapsedSeconds: 1 });
   assert.ok(Math.abs(rl.current - .5 * (1 - Math.exp(-1))) < 1e-12);
   assert.equal(rl.timeConstantSeconds, 1);
+});
+
+test('Arduino PWM and ADC models match Uno-sized values', () => {
+  const pwm = calculateArduinoPwm({ sourceVoltage: 5, pwmValue: 128, resistance: 220, ledForwardVoltage: 2 });
+  assert.ok(Math.abs(pwm.dutyPercent - 50.196078) < 1e-5);
+  assert.ok(Math.abs(pwm.averageVoltage - 2.509804) < 1e-5);
+  assert.ok(Math.abs(pwm.peakCurrent - 3 / 220) < 1e-12);
+  assert.ok(Math.abs(pwm.averageCurrent - pwm.peakCurrent * pwm.dutyCycle) < 1e-12);
+
+  assert.deepEqual(calculateArduinoAdc({ inputVoltage: 2.5, referenceVoltage: 5, bits: 10 }), {
+    inputVoltage: 2.5, referenceVoltage: 5, bits: 10, maxCode: 1023, code: 512,
+  });
+  assert.equal(calculateArduinoAdc({ inputVoltage: 8, referenceVoltage: 5 }).code, 1023);
+});
+
+test('555 timer models calculate astable frequency and monostable pulse width', () => {
+  const astable = calculate555Astable({ resistanceOne: 10000, resistanceTwo: 47000, capacitance: 10e-6 });
+  assert.equal(astable.valid, true);
+  assert.ok(Math.abs(astable.frequencyHz - 1.3872) < 0.001);
+  assert.ok(astable.dutyCycle > 0.5 && astable.dutyCycle < 0.6);
+  assert.ok(Math.abs(astable.highSeconds + astable.lowSeconds - astable.periodSeconds) < 1e-12);
+
+  const monostable = calculate555Monostable({ resistance: 100000, capacitance: 10e-6 });
+  assert.equal(monostable.valid, true);
+  assert.ok(Math.abs(monostable.pulseSeconds - 1.1) < 1e-12);
+});
+
+test('op-amp models show closed-loop gain, saturation, and comparator polarity', () => {
+  const linear = calculateOpAmpNonInverting({ inputVoltage: 1, feedbackResistance: 10000, groundResistance: 10000, outputMax: 3.8 });
+  assert.equal(linear.gain, 2);
+  assert.equal(linear.outputVoltage, 2);
+  assert.equal(linear.saturated, false);
+
+  const clipped = calculateOpAmpNonInverting({ inputVoltage: 2.5, feedbackResistance: 10000, groundResistance: 10000, outputMax: 3.8 });
+  assert.equal(clipped.idealOutput, 5);
+  assert.equal(clipped.outputVoltage, 3.8);
+  assert.equal(clipped.saturated, true);
+
+  assert.deepEqual(calculateOpAmpComparator({ nonInvertingVoltage: 3, invertingVoltage: 2.5, outputLow: 0.05, outputHigh: 3.8 }), {
+    nonInvertingVoltage: 3, invertingVoltage: 2.5, differentialVoltage: 0.5, high: true, outputVoltage: 3.8,
+  });
 });
 
 test('solar simulation charges in sun and discharges after sunset', () => {

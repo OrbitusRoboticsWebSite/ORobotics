@@ -9,10 +9,10 @@
       </div>
       <p class="circuit-kicker">ROB’s Systems Lab presents</p>
       <h1>Circuit<br><em>Quest</em></h1>
-      <p class="circuit-hero__lede">Snap in colorful wires, compare <strong>DC and AC</strong>, watch electrons and fields move, store sunshine in a battery, master <strong>V = I × R</strong>, program an Arduino Uno, and tune advanced <strong>RLC resonance</strong>.</p>
+      <p class="circuit-hero__lede">Snap in colorful wires, compare <strong>DC and AC</strong>, master <strong>V = I × R</strong>, program an Arduino Uno, tune <strong>RLC resonance</strong>, and refresh essential <strong>555 timer and op-amp</strong> skills.</p>
       <div class="circuit-hero__actions">
         <button type="button" data-lab-start>Power up the lab <span aria-hidden="true">↗</span></button>
-        <a href="#mission-map">See all 16 builds</a>
+        <a href="#mission-map">See all 25 builds</a>
       </div>
       <p class="circuit-hero__privacy"><span aria-hidden="true">●</span> No login, no tracking, no physical robot connection. Progress stays on this device.</p>
     </div>
@@ -31,7 +31,7 @@
   </header>
 
   <section class="circuit-marquee" aria-label="Topics covered">
-    <div><span>COMPLETE THE LOOP</span><i>✦</i><span>DC + AC</span><i>✦</i><span>OHM’S LAW</span><i>✦</i><span>ELECTRIC + MAGNETIC FIELDS</span><i>✦</i><span>RLC RESONANCE</span><i>✦</i><span>MAKE • TEST • LEARN</span><i>✦</i></div>
+    <div><span>COMPLETE THE LOOP</span><i>✦</i><span>ARDUINO I/O</span><i>✦</i><span>555 TIMERS</span><i>✦</i><span>OP-AMP FEEDBACK</span><i>✦</i><span>RLC RESONANCE</span><i>✦</i><span>MAKE • TEST • LEARN</span><i>✦</i></div>
   </section>
 
   <section class="concept-lab" aria-labelledby="concept-lab-title">
@@ -57,7 +57,7 @@
     <div class="mission-map__heading">
       <div>
         <p class="circuit-kicker">Your maker journey</p>
-        <h2 id="mission-map-title">Sixteen builds. One bright idea at a time.</h2>
+        <h2 id="mission-map-title">Twenty-five builds. One bright idea at a time.</h2>
       </div>
       <p>Each mission adds one new idea. Finish a build to unlock the next bench—just like a real engineer earning access to new tools.</p>
     </div>
@@ -78,7 +78,7 @@
       <button type="button" class="lab-hint" data-lab-hint><span aria-hidden="true">?</span> Give me a hint</button>
       <div class="lab-guide__score">
         <span>Maker sparks</span>
-        <strong><b data-lab-score>0</b> / 48</strong>
+        <strong><b data-lab-score>0</b> / 75</strong>
         <div><i data-score-bar></i></div>
       </div>
     </aside>
@@ -134,7 +134,7 @@
 
       <footer class="lab-stage__footer">
         <button type="button" data-previous-mission>← Previous</button>
-        <p data-lab-progress>Build 1 of 16</p>
+        <p data-lab-progress>Build 1 of 25</p>
         <button type="button" class="mission-next" data-next-mission disabled>Next build <span aria-hidden="true">→</span></button>
       </footer>
     </div>
@@ -194,16 +194,35 @@
       <div class="uno-ghost"><span>∞</span><strong>ARDUINO</strong><small>UNO</small><i></i><i></i><i></i><i></i><b>13</b><b>GND</b></div>
     </div>
     <div>
-      <p class="circuit-kicker">Builds 7 &amp; 8 · Tiny computer, big ideas</p>
+      <p class="circuit-kicker">Builds 7, 8 &amp; 17–20 · Tiny computer, big ideas</p>
       <h2 id="arduino-school-title">From electricity to instructions.</h2>
-      <p>An Arduino Uno is a small computer that reads inputs and controls outputs. First you’ll wire pin 13 through a resistor and LED. Then you’ll write a real Arduino-style sketch and run it on our virtual board.</p>
+      <p>An Arduino Uno is a small computer that reads inputs and controls outputs. Start with a compiled blink sketch, then learn pull-up buttons, PWM, 10-bit analog conversion, and the input-process-output loop behind robotics.</p>
       <ol>
-        <li><span>1</span><div><strong>setup()</strong><small>Runs once. Prepare pin 13 as an output.</small></div></li>
-        <li><span>2</span><div><strong>loop()</strong><small>Repeats forever while the board has power.</small></div></li>
-        <li><span>3</span><div><strong>digitalWrite()</strong><small>HIGH turns the pin on. LOW turns it off.</small></div></li>
-        <li><span>4</span><div><strong>delay()</strong><small>Waits a number of milliseconds so our eyes can see the blink.</small></div></li>
+        <li><span>1</span><div><strong>setup()</strong><small>Runs once. Configure pin modes and startup behavior.</small></div></li>
+        <li><span>2</span><div><strong>loop()</strong><small>Repeats while the board has power.</small></div></li>
+        <li><span>3</span><div><strong>digitalRead()</strong><small>Turns a button or logic voltage into HIGH or LOW.</small></div></li>
+        <li><span>4</span><div><strong>analogRead()</strong><small>Quantizes 0–5 V into one of 1,024 ADC codes.</small></div></li>
+        <li><span>5</span><div><strong>analogWrite()</strong><small>Creates PWM on supported ~ pins; it is not a true DAC.</small></div></li>
+        <li><span>6</span><div><strong>map()</strong><small>Rescales a sensor range into a useful output range.</small></div></li>
       </ol>
     </div>
+  </section>
+
+  <section class="chip-refresher" aria-labelledby="chip-refresher-title">
+    <header>
+      <p class="circuit-kicker">Builds 21–25 · Engineer refresher bench</p>
+      <h2 id="chip-refresher-title">Timing, gain, feedback, and thresholds.</h2>
+      <p>These classic building blocks remain useful whether you are meeting them for the first time or reviewing a design before the Maker Faire opens. The ideal equations start the conversation; real-device limits finish it.</p>
+    </header>
+    <div class="chip-refresher__grid">
+      <article><span>555</span><h3>Astable oscillator</h3><p>The capacitor charges through R1 + R2 and discharges through R2. No stable state means the output keeps switching.</p><b>f ≈ 1.44 ÷ ((R1 + 2R2)C)</b></article>
+      <article><span>1×</span><h3>Monostable pulse</h3><p>An active-low trigger starts one timed HIGH pulse. Threshold ends it when the capacitor reaches about two-thirds VCC.</p><b>t ≈ 1.1RC</b></article>
+      <article><span>△</span><h3>Ideal op-amp rules</h3><p>With stable negative feedback, input current is nearly zero and V+ is driven close to V−. Those rules fail when limits are exceeded.</p><b>I+ ≈ I− ≈ 0 · V+ ≈ V−</b></article>
+      <article><span>BUF</span><h3>Voltage follower</h3><p>Unity feedback gives gain 1, high input impedance, and low output impedance—useful for isolating a sensor from its load.</p><b>Vout ≈ Vin</b></article>
+      <article><span>GAIN</span><h3>Non-inverting amplifier</h3><p>Two resistors set closed-loop gain. The supply rails, common-mode range, gain-bandwidth product, and slew rate still set boundaries.</p><b>Av = 1 + Rf ÷ Rg</b></article>
+      <article><span>CMP</span><h3>Comparator behavior</h3><p>Without negative feedback, a tiny difference drives the output high or low. Positive feedback adds hysteresis to reject threshold noise.</p><b>V+ &gt; V− → HIGH</b></article>
+    </div>
+    <aside><strong>Bench checklist</strong><p>Confirm pinout and supply polarity, add local bypass capacitors, calculate worst-case current and power, check input/output range, leave margin for tolerances and temperature, then measure the real circuit.</p></aside>
   </section>
 
   <section class="maker-handbook" aria-labelledby="maker-handbook-title">
@@ -241,6 +260,13 @@
       <div><dt>Reactance</dt><dd>Frequency-dependent opposition from capacitance or inductance. Capacitive reactance falls with frequency; inductive reactance rises.</dd></div>
       <div><dt>Impedance</dt><dd>The total AC opposition made from resistance and reactance. Like resistance, it is measured in ohms.</dd></div>
       <div><dt>Resonance</dt><dd>The frequency where inductive and capacitive reactance balance, allowing strong energy exchange between electric and magnetic fields.</dd></div>
+      <div><dt>ADC</dt><dd>An analog-to-digital converter maps a voltage range into numbered steps. More bits provide more possible codes, not automatically more accuracy.</dd></div>
+      <div><dt>PWM</dt><dd>Pulse-width modulation changes average delivered energy by changing how long a digital output stays on during each fast cycle.</dd></div>
+      <div><dt>555 timer</dt><dd>A classic timing IC with trigger and threshold comparators, an internal divider, latch, discharge transistor, and output driver.</dd></div>
+      <div><dt>Operational amplifier</dt><dd>A high-gain differential amplifier normally used with feedback to create predictable buffers, gains, filters, and control circuits.</dd></div>
+      <div><dt>Negative feedback</dt><dd>Returning part of an output to oppose the input error. It trades open-loop gain for stable, predictable closed-loop behavior.</dd></div>
+      <div><dt>Saturation</dt><dd>The condition where an amplifier’s requested output exceeds what its supply rails and output stage can provide, causing clipping.</dd></div>
+      <div><dt>Comparator</dt><dd>A circuit that reports which of two input voltages is greater by driving its output toward a high or low state.</dd></div>
     </dl>
   </section>
 

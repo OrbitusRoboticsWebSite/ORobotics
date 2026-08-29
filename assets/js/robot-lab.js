@@ -1,9 +1,15 @@
 import {
   arduinoOutputAt,
+  calculate555Astable,
+  calculate555Monostable,
+  calculateArduinoAdc,
+  calculateArduinoPwm,
   calculateCapacitiveReactance,
   calculateInductiveReactance,
   calculateLedResistor,
   calculateParallelRLC,
+  calculateOpAmpComparator,
+  calculateOpAmpNonInverting,
   calculateRCTransient,
   calculateResonantFrequency,
   calculateRLTransient,
@@ -339,6 +345,190 @@ if (root) {
       ],
       noteTitle: 'Parallel resonance creates an energy tank', note: 'The source mainly replaces energy lost in resistance. This frequency-selective behavior helps radios, filters, oscillators, and wireless systems choose one signal from many.'
     },
+    {
+      icon: '🔘', tier: 'Arduino input', difficulty: 'Coder', kicker: 'Build 17 · Read a button', title: 'Give the Arduino a digital input',
+      intro: 'Wire a pushbutton from D2 to GND and use the Uno’s internal pull-up resistor to create a reliable input.',
+      guide: 'INPUT_PULLUP holds D2 HIGH when the button is open. Pressing the button creates a path to GND, so digitalRead() reports LOW.',
+      success: 'The Uno detected both states. Inputs turn physical events into information software can use.',
+      hints: ['Connect D2 to one side of the button.', 'Connect the other side to GND.', 'With INPUT_PULLUP, released means HIGH and pressed means LOW.'],
+      components: [
+        { id: 'uno', type: 'uno', variant: 'input', label: 'Arduino Uno · INPUT_PULLUP', x: 24, y: 52 },
+        { id: 'button', type: 'button', label: 'Momentary pushbutton', x: 76, y: 51 },
+      ],
+      required: [edge('uno.d2', 'button.out'), edge('button.in', 'uno.gnd')], supply: 5, resistance: 10000, action: 'arduino-input',
+      objectives: [
+        ['Wire D2 through the button to GND', (s) => s.exact],
+        ['Observe released = HIGH', (s) => s.highSeen],
+        ['Press and observe LOW', (s) => s.lowSeen],
+      ],
+      noteTitle: 'Pull-ups prevent floating inputs', note: 'An unconnected input can pick up noise and randomly change state. INPUT_PULLUP connects a weak resistor to 5 V inside the Uno. The switch overrides it by connecting the pin to GND.'
+    },
+    {
+      icon: '🌗', tier: 'Arduino PWM', difficulty: 'Coder', kicker: 'Build 18 · Shape a pulse', title: 'Dim an LED with PWM',
+      intro: 'Move the LED to PWM pin D9, then vary the duty cycle from nearly off to fully on.',
+      guide: 'analogWrite() does not create a true analog voltage on an Uno. It switches rapidly between 0 V and 5 V; duty cycle controls average energy.',
+      success: 'You swept the full PWM range and watched pulse width control brightness and average current.',
+      hints: ['Wire D9 → 220 Ω resistor → LED A.', 'Return LED K to GND.', 'Try PWM values near 0 and 255 while watching the square-wave scope.'],
+      components: [
+        { id: 'uno', type: 'uno', variant: 'pwm', label: 'Arduino Uno · PWM D9', x: 18, y: 53 },
+        { id: 'r', type: 'resistor', label: '220 Ω current limiter', x: 57, y: 27, resistance: 220 },
+        { id: 'led', type: 'led', label: 'PWM LED', x: 84, y: 57, color: '#2ee5eb' },
+      ],
+      required: [edge('uno.d9', 'r.in'), edge('r.out', 'led.a'), edge('led.k', 'uno.gnd')], supply: 5, resistance: 220, ledForward: 2, action: 'arduino-pwm',
+      objectives: [
+        ['Build the protected D9 output path', (s) => s.exact],
+        ['Test a low duty cycle', (s) => s.lowSeen],
+        ['Test a high duty cycle', (s) => s.highSeen],
+      ],
+      noteTitle: 'PWM controls average energy', note: 'The LED still receives full-amplitude pulses. At 25% duty it is on one quarter of the time. Motors, heaters, and lights often use PWM because switching wastes less power than a series control element.'
+    },
+    {
+      icon: '🎚️', tier: 'Arduino analog', difficulty: 'Maker', kicker: 'Build 19 · Measure a voltage', title: 'Turn a knob into a number',
+      intro: 'Wire a potentiometer as a voltage divider and let analog input A0 measure its wiper voltage.',
+      guide: 'The Uno’s 10-bit ADC maps 0–5 V into integer codes 0–1023. The reading is a measured ratio to the reference voltage.',
+      success: 'You converted a real voltage range into digital numbers the program can compare, display, and control.',
+      hints: ['Connect the potentiometer ends to 5 V and GND.', 'Connect its center wiper to A0.', 'Sweep below 1 V and above 4 V to explore the ADC range.'],
+      components: [
+        { id: 'uno', type: 'uno', variant: 'analog', label: 'Arduino Uno · analog A0', x: 22, y: 52 },
+        { id: 'pot', type: 'potentiometer', label: '10 kΩ potentiometer', x: 75, y: 50 },
+      ],
+      required: [edge('uno.v5', 'pot.high'), edge('pot.low', 'uno.gnd'), edge('pot.wiper', 'uno.a0')], supply: 5, resistance: 10000, action: 'arduino-analog',
+      objectives: [
+        ['Build the three-wire voltage divider', (s) => s.exact],
+        ['Measure near the bottom of the range', (s) => s.lowSeen],
+        ['Measure near the top of the range', (s) => s.highSeen],
+      ],
+      noteTitle: 'An ADC quantizes voltage', note: 'With a 5 V reference, one 10-bit count is about 4.89 mV. Resolution is not the same as accuracy: reference tolerance, noise, source impedance, and calibration still matter.'
+    },
+    {
+      icon: '🤖', tier: 'Arduino control', difficulty: 'Inventor', kicker: 'Build 20 · Sense and respond', title: 'Map a sensor into LED brightness',
+      intro: 'Combine A0 sensing with D9 PWM so one knob controls an output continuously.',
+      guide: 'Read 0–1023, map it to 0–255, then write that PWM value to D9. This input-process-output loop is the core of robotics.',
+      success: 'Your virtual controller turned a sensor voltage into a proportional actuator command.',
+      hints: ['Wire the potentiometer to 5 V, GND, and A0.', 'Wire D9 to the protected LED module.', 'Sweep the sensor from low to high and compare ADC, PWM, and brightness.'],
+      components: [
+        { id: 'uno', type: 'uno', variant: 'control', label: 'Arduino Uno · A0 + D9', x: 16, y: 52 },
+        { id: 'pot', type: 'potentiometer', label: 'Sensor potentiometer', x: 56, y: 27 },
+        { id: 'led', type: 'led', label: 'LED module · 220 Ω built in', x: 84, y: 65, color: '#ff4fa3' },
+      ],
+      required: [edge('uno.v5', 'pot.high'), edge('pot.low', 'uno.gnd'), edge('pot.wiper', 'uno.a0'), edge('uno.d9', 'led.a'), edge('led.k', 'uno.gnd')], supply: 5, resistance: 220, ledForward: 2, action: 'arduino-control',
+      objectives: [
+        ['Wire both input and output paths', (s) => s.exact],
+        ['Command a low output', (s) => s.lowSeen],
+        ['Command a high output', (s) => s.highSeen],
+      ],
+      noteTitle: 'Robots repeat input → decision → output', note: 'The simple map is open-loop control: brightness follows the command but is not measured. Closed-loop control adds feedback, compares actual behavior with a target, and corrects the error.'
+    },
+    {
+      icon: '⏱️', tier: '555 timer', difficulty: 'Engineer', kicker: 'Build 21 · Free-running timer', title: 'Make a 555 oscillator blink',
+      intro: 'Wire the classic astable 555 circuit and tune its resistor-capacitor timing network.',
+      guide: 'The capacitor repeatedly charges through R1 + R2 and discharges through R2 between one-third and two-thirds of the supply.',
+      success: 'The 555 is oscillating without software. Its RC network sets frequency and duty cycle.',
+      hints: ['Power pin 8 and RESET pin 4 from +5 V; return pin 1 to GND.', 'R1 feeds DISCHARGE pin 7; R2 continues to the combined 2/6 timing node.', 'Connect the capacitor to GND and the output to the LED module.'],
+      components: [
+        { id: 'cell', type: 'battery', label: '5 V regulated supply', x: 7, y: 55, voltage: 5 },
+        { id: 'timer', type: 'timer555', label: 'NE555 timer', x: 36, y: 50 },
+        { id: 'r1', type: 'resistor', label: 'R1 · 10 kΩ', x: 65, y: 16, resistance: 10000 },
+        { id: 'r2', type: 'resistor', label: 'R2 · variable', x: 67, y: 48, resistance: 47000, orientation: 'vertical' },
+        { id: 'c', type: 'capacitor', label: 'C · 10 µF', x: 68, y: 82, capacitance: .00001 },
+        { id: 'led', type: 'led', label: 'Output LED module', x: 90, y: 51, color: '#ffe43b' },
+      ],
+      required: [edge('cell.pos', 'timer.vcc'), edge('cell.pos', 'timer.reset'), edge('cell.neg', 'timer.gnd'), edge('cell.pos', 'r1.in'), edge('r1.out', 'timer.discharge'), edge('timer.discharge', 'r2.in'), edge('r2.out', 'timer.timing'), edge('r2.out', 'c.in'), edge('c.out', 'cell.neg'), edge('timer.out', 'led.a'), edge('led.k', 'cell.neg')],
+      supply: 5, resistanceOne: 10000, resistanceTwo: 47000, capacitance: .00001, action: 'timer-astable',
+      objectives: [
+        ['Wire power, reset, timing, and output', (s) => s.exact],
+        ['Tune a faster oscillation', (s) => s.highSeen],
+        ['Tune a slower oscillation', (s) => s.lowSeen],
+      ],
+      noteTitle: '555 astable refresher', note: 'tHIGH = 0.693(R1 + R2)C and tLOW = 0.693R2C. The bipolar 555’s output is not perfectly rail-to-rail, and a 100 nF supply bypass capacitor belongs close to the real chip.'
+    },
+    {
+      icon: '💥', tier: '555 timer', difficulty: 'Engineer', kicker: 'Build 22 · One-shot timer', title: 'Trigger a precise 555 pulse',
+      intro: 'Build a monostable one-shot. Each active-low trigger produces one output pulse set by R and C.',
+      guide: 'The trigger drops below one-third of the supply. Output rises while the capacitor charges, then falls when threshold reaches two-thirds.',
+      success: 'You triggered short and long one-shots and connected pulse width directly to the RC values.',
+      hints: ['Power the 555 and hold RESET high.', 'Wire the timing resistor to +5 V and the timing capacitor to GND.', 'Connect the active-low trigger button and output LED, then try two timing values.'],
+      components: [
+        { id: 'cell', type: 'battery', label: '5 V regulated supply', x: 7, y: 55, voltage: 5 },
+        { id: 'timer', type: 'timer555', variant: 'mono', label: 'NE555 one-shot', x: 37, y: 50 },
+        { id: 'button', type: 'button', label: 'Active-low trigger', x: 66, y: 17 },
+        { id: 'r', type: 'resistor', label: 'Timing R · variable', x: 68, y: 48, resistance: 100000, orientation: 'vertical' },
+        { id: 'c', type: 'capacitor', label: 'Timing C · 10 µF', x: 68, y: 82, capacitance: .00001 },
+        { id: 'led', type: 'led', label: 'Pulse LED module', x: 90, y: 51, color: '#35d985' },
+      ],
+      required: [edge('cell.pos', 'timer.vcc'), edge('cell.pos', 'timer.reset'), edge('cell.neg', 'timer.gnd'), edge('cell.pos', 'r.in'), edge('r.out', 'timer.timing'), edge('timer.timing', 'c.in'), edge('c.out', 'cell.neg'), edge('button.out', 'timer.trigger'), edge('button.in', 'cell.neg'), edge('timer.out', 'led.a'), edge('led.k', 'cell.neg')],
+      supply: 5, resistance: 100000, capacitance: .00001, action: 'timer-monostable',
+      objectives: [
+        ['Build the powered one-shot', (s) => s.exact],
+        ['Trigger a short pulse', (s) => s.lowSeen],
+        ['Trigger a long pulse', (s) => s.highSeen],
+      ],
+      noteTitle: '555 monostable refresher', note: 'Pulse width is approximately t = 1.1RC. A real trigger needs a clean edge, supply decoupling, and a pull-up; retriggering behavior depends on the device and surrounding circuit.'
+    },
+    {
+      icon: '▶️', tier: 'Op amp', difficulty: 'Engineer', kicker: 'Build 23 · Voltage follower', title: 'Buffer a sensor with an op amp',
+      intro: 'Power a single-supply op amp, feed its non-inverting input, and connect output directly back to the inverting input.',
+      guide: 'Negative feedback makes the op amp drive its output until V− nearly equals V+. The follower has gain 1 but supplies a low-impedance output.',
+      success: 'The buffer follows within its output range, then reveals what happens near a non-rail-to-rail limit.',
+      hints: ['Connect +5 V and GND to the op amp supply pins.', 'Wire the potentiometer wiper to V+.', 'Close the feedback path from OUT to V− on the same op amp.'],
+      components: [
+        { id: 'cell', type: 'battery', label: '5 V single supply', x: 8, y: 55, voltage: 5 },
+        { id: 'pot', type: 'potentiometer', label: 'Input voltage', x: 39, y: 50 },
+        { id: 'op', type: 'opamp', label: 'LM358-style op amp', x: 75, y: 50 },
+      ],
+      required: [edge('cell.pos', 'op.vcc'), edge('cell.neg', 'op.gnd'), edge('cell.pos', 'pot.high'), edge('cell.neg', 'pot.low'), edge('pot.wiper', 'op.plus'), edge('op.out', 'op.minus')],
+      supply: 5, action: 'opamp-follower', gain: 1, outputMax: 3.8,
+      objectives: [
+        ['Wire power, signal, and negative feedback', (s) => s.exact],
+        ['Observe accurate linear following', (s) => s.linearSeen],
+        ['Find an output saturation limit', (s) => s.saturationSeen],
+      ],
+      noteTitle: 'Follower refresher', note: 'A follower provides no voltage gain, but it isolates a high-impedance source from a heavier load. Always check input common-mode range, output swing, output current, bandwidth, stability, and supply decoupling.'
+    },
+    {
+      icon: '📈', tier: 'Op amp', difficulty: 'Engineer', kicker: 'Build 24 · Closed-loop gain', title: 'Build a non-inverting amplifier',
+      intro: 'Use two feedback resistors to set a predictable gain, then find where the output clips against its supply limit.',
+      guide: 'For a non-inverting amplifier, gain is 1 + Rf/Rg. Negative feedback holds V− close to V+ while the output has room to move.',
+      success: 'You observed both the linear gain equation and saturation when the ideal output asked for more voltage than the supply could provide.',
+      hints: ['Power the op amp and wire the potentiometer to V+.', 'Connect Rf from OUT to V−.', 'Connect Rg from V− to GND, then sweep the input.'],
+      components: [
+        { id: 'cell', type: 'battery', label: '5 V single supply', x: 7, y: 55, voltage: 5 },
+        { id: 'pot', type: 'potentiometer', label: 'Input voltage', x: 32, y: 52 },
+        { id: 'op', type: 'opamp', label: 'LM358-style op amp', x: 61, y: 50 },
+        { id: 'rf', type: 'resistor', label: 'Rf · 20 kΩ', x: 84, y: 22, resistance: 20000 },
+        { id: 'rg', type: 'resistor', label: 'Rg · 10 kΩ', x: 84, y: 76, resistance: 10000, orientation: 'vertical' },
+      ],
+      required: [edge('cell.pos', 'op.vcc'), edge('cell.neg', 'op.gnd'), edge('cell.pos', 'pot.high'), edge('cell.neg', 'pot.low'), edge('pot.wiper', 'op.plus'), edge('op.out', 'rf.in'), edge('rf.out', 'op.minus'), edge('op.minus', 'rg.in'), edge('rg.out', 'cell.neg')],
+      supply: 5, action: 'opamp-gain', feedbackResistance: 20000, groundResistance: 10000, outputMax: 3.8,
+      objectives: [
+        ['Build the complete feedback network', (s) => s.exact],
+        ['Measure the linear ×3 region', (s) => s.linearSeen],
+        ['Drive the amplifier into saturation', (s) => s.saturationSeen],
+      ],
+      noteTitle: 'Closed-loop gain refresher', note: 'The resistor ratio sets ideal gain, but gain-bandwidth product limits high-frequency gain. Input offset, bias current, noise, slew rate, and resistor tolerance all appear in precision designs.'
+    },
+    {
+      icon: '⚖️', tier: 'Op amp', difficulty: 'Engineer', kicker: 'Build 25 · Threshold detector', title: 'Use an op amp as a comparator',
+      intro: 'Compare an adjustable signal with a 2.5 V reference and watch the output snap between low and high.',
+      guide: 'Without negative feedback, even a small differential input drives the output toward a rail. V+ above V− means HIGH.',
+      success: 'You crossed the threshold in both directions and turned an analog difference into a digital-like decision.',
+      hints: ['Power the op amp from +5 V and GND.', 'Wire the signal wiper to V+ and the reference wiper to V−.', 'Connect OUT to the LED module, then sweep through 2.5 V.'],
+      components: [
+        { id: 'cell', type: 'battery', label: '5 V single supply', x: 6, y: 55, voltage: 5 },
+        { id: 'signal', type: 'potentiometer', label: 'Signal input', x: 31, y: 23 },
+        { id: 'ref', type: 'potentiometer', label: 'Fixed 2.5 V reference', x: 31, y: 78 },
+        { id: 'op', type: 'opamp', label: 'Op amp comparator', x: 64, y: 50 },
+        { id: 'led', type: 'led', label: 'Threshold LED module', x: 90, y: 54, color: '#ff4967' },
+      ],
+      required: [edge('cell.pos', 'op.vcc'), edge('cell.neg', 'op.gnd'), edge('cell.pos', 'signal.high'), edge('cell.neg', 'signal.low'), edge('signal.wiper', 'op.plus'), edge('cell.pos', 'ref.high'), edge('cell.neg', 'ref.low'), edge('ref.wiper', 'op.minus'), edge('op.out', 'led.a'), edge('led.k', 'cell.neg')],
+      supply: 5, action: 'opamp-comparator', referenceVoltage: 2.5, outputMax: 3.8,
+      objectives: [
+        ['Wire signal, reference, power, and output', (s) => s.exact],
+        ['Observe output LOW below reference', (s) => s.lowSeen],
+        ['Observe output HIGH above reference', (s) => s.highSeen],
+      ],
+      noteTitle: 'Comparator refresher', note: 'A dedicated comparator usually switches faster and tolerates saturation better than a general-purpose op amp. Add positive feedback for hysteresis when a noisy input would chatter near the threshold.'
+    },
   ];
 
   // White particles show electron drift: negative-to-positive in DC metal paths and
@@ -428,6 +618,42 @@ if (root) {
       ],
       inside: [edge('r.out', 'r.in'), edge('coil.out', 'coil.in'), edge('source.a', 'source.b')],
     },
+    {
+      wires: [edge('uno.gnd', 'button.in'), edge('button.out', 'uno.d2')],
+      inside: [edge('button.in', 'button.out'), edge('uno.d2', 'uno.gnd')],
+    },
+    {
+      wires: [edge('uno.gnd', 'led.k'), edge('led.a', 'r.out'), edge('r.in', 'uno.d9')],
+      inside: [edge('led.k', 'led.a'), edge('r.out', 'r.in'), edge('uno.d9', 'uno.gnd')],
+    },
+    {
+      wires: [edge('uno.gnd', 'pot.low'), edge('pot.high', 'uno.v5')],
+      inside: [edge('pot.low', 'pot.high'), edge('uno.v5', 'uno.gnd')],
+    },
+    {
+      wires: [edge('uno.gnd', 'pot.low'), edge('pot.high', 'uno.v5'), edge('uno.gnd', 'led.k'), edge('led.a', 'uno.d9')],
+      inside: [edge('pot.low', 'pot.high'), edge('led.k', 'led.a'), edge('uno.d9', 'uno.gnd'), edge('uno.v5', 'uno.gnd')],
+    },
+    {
+      wires: [edge('cell.neg', 'led.k'), edge('led.a', 'timer.out'), edge('timer.vcc', 'cell.pos')],
+      inside: [edge('led.k', 'led.a'), edge('timer.out', 'timer.vcc'), edge('cell.pos', 'cell.neg')],
+    },
+    {
+      wires: [edge('cell.neg', 'led.k'), edge('led.a', 'timer.out'), edge('timer.vcc', 'cell.pos')],
+      inside: [edge('led.k', 'led.a'), edge('timer.out', 'timer.vcc'), edge('cell.pos', 'cell.neg')],
+    },
+    {
+      wires: [edge('cell.neg', 'pot.low'), edge('pot.high', 'cell.pos'), edge('cell.neg', 'op.gnd'), edge('op.vcc', 'cell.pos')],
+      inside: [edge('pot.low', 'pot.high'), edge('op.gnd', 'op.vcc'), edge('cell.pos', 'cell.neg')],
+    },
+    {
+      wires: [edge('cell.neg', 'pot.low'), edge('pot.high', 'cell.pos'), edge('cell.neg', 'op.gnd'), edge('op.vcc', 'cell.pos')],
+      inside: [edge('pot.low', 'pot.high'), edge('op.gnd', 'op.vcc'), edge('cell.pos', 'cell.neg')],
+    },
+    {
+      wires: [edge('cell.neg', 'led.k'), edge('led.a', 'op.out'), edge('op.vcc', 'cell.pos')],
+      inside: [edge('led.k', 'led.a'), edge('op.out', 'op.vcc'), edge('cell.pos', 'cell.neg')],
+    },
   ];
 
   const wireColors = ['#ff4fa3', '#2ee5eb', '#ffe43b', '#35d985', '#ff8a32', '#a27cff', '#ff4967', '#5bb6ff'];
@@ -435,6 +661,17 @@ if (root) {
   function defaultExperiment(mission) {
     return {
       frequency: mission.frequency || 60,
+      pwmValue: 128,
+      inputVoltage: mission.action === 'opamp-gain' ? .8 : 2.5,
+      inputPressed: false,
+      timingResistance: mission.resistanceTwo || mission.resistance || 47000,
+      timerHigh: false,
+      timerStartedAt: performance.now(),
+      pulseUntil: 0,
+      triggerActiveUntil: 0,
+      triggerSeen: false,
+      linearSeen: false,
+      saturationSeen: false,
       capacitorCharge: 0,
       capacitorMode: 'charge',
       inductorField: 0,
@@ -562,7 +799,31 @@ if (root) {
       body = `<div class="part-controller__body"><strong>CONTROLLER</strong>${port(component.id, 'pvPos', 'PV+', 'lab-port--solar port-left-top')}${port(component.id, 'pvNeg', 'PV−', 'lab-port--negative port-left-bottom')}${port(component.id, 'battPos', 'B+', 'lab-port--positive port-right-top')}${port(component.id, 'battNeg', 'B−', 'lab-port--negative port-right-bottom')}${port(component.id, 'loadPos', 'L+', 'lab-port--signal port-bottom-left')}${port(component.id, 'loadNeg', 'L−', 'lab-port--negative port-bottom-right')}</div>`;
     }
     if (component.type === 'uno') {
-      body = `<div class="part-uno__body"><span class="part-uno__usb"></span><span class="part-uno__brand">ARDUINO<small>UNO</small></span><span class="part-uno__infinity">∞</span><span class="part-uno__chip"></span><span class="part-uno__pins"></span><i class="part-uno__led" data-uno-led></i>${port(component.id, 'd13', 'D13', 'lab-port--signal port-right-top')}${port(component.id, 'gnd', 'GND', 'lab-port--ground port-right-bottom')}</div>`;
+      const unoPorts = component.variant === 'input'
+        ? `${port(component.id, 'd2', 'D2', 'lab-port--signal port-right-top')}${port(component.id, 'gnd', 'GND', 'lab-port--ground port-right-bottom')}`
+        : component.variant === 'pwm'
+          ? `${port(component.id, 'd9', '~9', 'lab-port--signal port-right-top')}${port(component.id, 'gnd', 'GND', 'lab-port--ground port-right-bottom')}`
+          : component.variant === 'analog'
+            ? `${port(component.id, 'v5', '5V', 'lab-port--positive port-top-right')}${port(component.id, 'a0', 'A0', 'lab-port--signal port-right-middle')}${port(component.id, 'gnd', 'GND', 'lab-port--ground port-bottom-right')}`
+            : component.variant === 'control'
+              ? `${port(component.id, 'v5', '5V', 'lab-port--positive port-top-right')}${port(component.id, 'a0', 'A0', 'lab-port--signal port-right-top')}${port(component.id, 'd9', '~9', 'lab-port--signal port-right-bottom')}${port(component.id, 'gnd', 'GND', 'lab-port--ground port-bottom-right')}`
+              : `${port(component.id, 'd13', 'D13', 'lab-port--signal port-right-top')}${port(component.id, 'gnd', 'GND', 'lab-port--ground port-right-bottom')}`;
+      body = `<div class="part-uno__body"><span class="part-uno__usb"></span><span class="part-uno__brand">ARDUINO<small>UNO</small></span><span class="part-uno__infinity">∞</span><span class="part-uno__chip"></span><span class="part-uno__pins"></span><i class="part-uno__led" data-uno-led></i>${unoPorts}</div>`;
+    }
+    if (component.type === 'button') {
+      body = `<div class="part-button__body"><button type="button" class="part-button__cap" data-input-button aria-label="Press virtual pushbutton"><i></i><strong>PUSH</strong></button>${port(component.id, 'in', 'IN', 'lab-port--ground port-left-middle')}${port(component.id, 'out', 'OUT', 'lab-port--signal port-right-middle')}</div>`;
+    }
+    if (component.type === 'potentiometer') {
+      body = `<div class="part-potentiometer__body" style="--knob-angle:0deg"><span class="part-potentiometer__track"></span><i class="part-potentiometer__knob"></i><b>${component.id === 'ref' ? '2.5 V' : 'KNOB'}</b>${port(component.id, 'high', '5V', 'lab-port--positive port-left-top')}${port(component.id, 'wiper', 'W', 'lab-port--signal port-right-middle')}${port(component.id, 'low', '0V', 'lab-port--ground port-left-bottom')}</div>`;
+    }
+    if (component.type === 'timer555') {
+      const timingPorts = component.variant === 'mono'
+        ? `${port(component.id, 'trigger', '2', 'lab-port--signal port-left-top')}${port(component.id, 'timing', '6/7', 'lab-port--signal port-left-bottom')}`
+        : `${port(component.id, 'discharge', '7', 'lab-port--signal port-left-top')}${port(component.id, 'timing', '2/6', 'lab-port--signal port-left-bottom')}`;
+      body = `<div class="part-timer555__body"><span class="part-chip__notch"></span><strong>NE555</strong><small>${component.variant === 'mono' ? 'ONE-SHOT' : 'TIMER'}</small>${timingPorts}${port(component.id, 'reset', '4', 'lab-port--positive port-top-right')}${port(component.id, 'vcc', '8', 'lab-port--positive port-right-top')}${port(component.id, 'out', '3', 'lab-port--signal port-right-middle')}${port(component.id, 'gnd', '1', 'lab-port--ground port-right-bottom')}</div>`;
+    }
+    if (component.type === 'opamp') {
+      body = `<div class="part-opamp__body"><span class="part-opamp__triangle"><b>−</b><b>+</b><strong>OP<br>AMP</strong></span>${port(component.id, 'minus', 'V−', 'lab-port--signal port-left-top')}${port(component.id, 'plus', 'V+', 'lab-port--signal port-left-bottom')}${port(component.id, 'out', 'OUT', 'lab-port--signal port-right-middle')}${port(component.id, 'vcc', '+5', 'lab-port--positive port-top-middle')}${port(component.id, 'gnd', '0V', 'lab-port--ground port-bottom-middle')}</div>`;
     }
     const orientationClass = component.orientation ? ` part-${component.type}--${component.orientation}` : '';
     return `<article class="lab-part part-${component.type}${orientationClass}" data-part="${component.id}" style="left:${component.x}%;top:${component.y}%;--lamp-color:${component.color || '#ffe43b'}"><div>${body}</div><span class="lab-part__label">${component.label}</span></article>`;
@@ -607,11 +868,27 @@ if (root) {
     els.success.hidden = true;
     els.workbench.classList.toggle('is-solar', mission.action === 'solar');
     els.workbench.classList.toggle('is-ac', mission.mode === 'ac');
+    els.workbench.classList.toggle('is-pulsed', ['arduino-pwm', 'arduino-control', 'timer-astable', 'timer-monostable'].includes(mission.action));
     els.workbench.style.setProperty('--sun', String(state.solar.sun));
     if (els.directionLabel) els.directionLabel.textContent = mission.mode === 'ac' ? 'AC ELECTRON OSCILLATION' : 'EXTERNAL ELECTRON DRIFT';
     if (els.directionPath) els.directionPath.innerHTML = mission.mode === 'ac' ? '<b>←</b> back and forth every cycle <b>→</b>' : '<b>−</b> → around the complete loop → <b>+</b>';
     if (els.directionNote) els.directionNote.textContent = mission.mode === 'ac' ? 'The source reverses the electric field; electrons do not race from the generator to the lamp.' : 'Battery chemistry keeps the charges separated.';
-    if (els.scopeLabel) els.scopeLabel.textContent = mission.mode === 'ac' ? 'AC WAVEFORM SCOPE' : mission.action === 'solar' ? 'SOLAR OUTPUT SCOPE' : 'DC ENERGY SCOPE';
+    if (mission.action?.startsWith('arduino-')) {
+      if (els.directionLabel) els.directionLabel.textContent = 'MICROCONTROLLER SIGNAL + RETURN';
+      if (els.directionPath) els.directionPath.innerHTML = '<b>GND</b> → complete load path → <b>I/O PIN</b>';
+      if (els.directionNote) els.directionNote.textContent = 'The I/O pin controls or measures voltage relative to GND.';
+    }
+    if (mission.action?.startsWith('timer-')) {
+      if (els.directionLabel) els.directionLabel.textContent = 'CHIP OUTPUT + RC TIMING';
+      if (els.directionPath) els.directionPath.innerHTML = '<b>GND</b> → load → OUT · RC sets time';
+      if (els.directionNote) els.directionNote.textContent = 'The supply provides output energy; the timing network tells the chip when to switch.';
+    }
+    if (mission.action?.startsWith('opamp-')) {
+      if (els.directionLabel) els.directionLabel.textContent = 'SIGNAL CONTROLS SUPPLY ENERGY';
+      if (els.directionPath) els.directionPath.innerHTML = '<b>INPUTS</b> sense voltage · <b>SUPPLY</b> powers output';
+      if (els.directionNote) els.directionNote.textContent = 'Ideal op-amp inputs draw almost no current; output energy comes from the supply rails.';
+    }
+    if (els.scopeLabel) els.scopeLabel.textContent = mission.mode === 'ac' ? 'AC WAVEFORM SCOPE' : mission.action === 'solar' ? 'SOLAR OUTPUT SCOPE' : ['arduino-pwm', 'arduino-control'].includes(mission.action) ? 'PWM PULSE SCOPE' : ['arduino-input', 'arduino-analog'].includes(mission.action) ? 'ARDUINO INPUT SCOPE' : mission.action?.startsWith('timer-') ? '555 OUTPUT SCOPE' : mission.action?.startsWith('opamp-') ? 'OP-AMP OUTPUT SCOPE' : 'DC ENERGY SCOPE';
     els.previous.disabled = index === 0;
     els.next.disabled = !state.achieved;
     els.next.innerHTML = index === missions.length - 1 ? 'Finish quest <span aria-hidden="true">✦</span>' : 'Next build <span aria-hidden="true">→</span>';
@@ -634,6 +911,11 @@ if (root) {
       button.addEventListener('pointerdown', (event) => beginWireDrag(event, button.dataset.node));
     });
     els.components.querySelectorAll('[data-switch-toggle]').forEach((button) => button.addEventListener('click', toggleSwitch));
+    els.components.querySelectorAll('[data-input-button]').forEach((button) => button.addEventListener('click', () => {
+      const action = missions[state.missionIndex].action;
+      if (action === 'arduino-input') toggleArduinoInput();
+      if (action === 'timer-monostable') triggerMonostable();
+    }));
   }
 
   function beginWireDrag(event, node) {
@@ -683,7 +965,9 @@ if (root) {
   }
 
   function connectPorts(a, b) {
-    if (a.split('.')[0] === b.split('.')[0]) {
+    const sameComponent = a.split('.')[0] === b.split('.')[0];
+    const componentType = missions[state.missionIndex].components.find((component) => component.id === a.split('.')[0])?.type;
+    if (sameComponent && componentType !== 'opamp') {
       showToast('Use wires between components. Internal connections are already built in.', true);
       updatePortClasses();
       return;
@@ -734,6 +1018,9 @@ if (root) {
     state.programRunning = false;
     state.experiment.capacitorCharge = 0;
     state.experiment.inductorField = 0;
+    state.experiment.timerHigh = false;
+    state.experiment.pulseUntil = 0;
+    state.experiment.triggerActiveUntil = 0;
     els.wireStatus.textContent = 'Workbench cleared — choose a terminal';
     evaluate();
   }
@@ -750,6 +1037,7 @@ if (root) {
       chargeSeen: state.experiment.chargeSeen, dischargeSeen: state.experiment.dischargeSeen,
       fieldSeen: state.experiment.fieldSeen, decaySeen: state.experiment.decaySeen,
       lowSeen: state.experiment.lowSeen, highSeen: state.experiment.highSeen,
+      triggerSeen: state.experiment.triggerSeen, linearSeen: state.experiment.linearSeen, saturationSeen: state.experiment.saturationSeen,
       resonanceSeen: state.experiment.resonanceSeen, tuned,
       has: (a, b) => set.has([a, b].sort().join('::')),
     };
@@ -767,9 +1055,42 @@ if (root) {
       const resonantFrequency = calculateResonantFrequency(mission.inductance, mission.capacitance);
       if (Math.abs(state.experiment.frequency - resonantFrequency) <= 2.5) state.experiment.resonanceSeen = true;
     }
+    if (state.exact && mission.action === 'arduino-input') {
+      if (state.experiment.inputPressed) state.experiment.lowSeen = true;
+      else state.experiment.highSeen = true;
+    }
+    if (state.exact && mission.action === 'arduino-control') advancedMetrics(mission);
+    if (state.exact && ['arduino-pwm', 'arduino-control'].includes(mission.action)) {
+      if (state.experiment.pwmValue <= 32) state.experiment.lowSeen = true;
+      if (state.experiment.pwmValue >= 224) state.experiment.highSeen = true;
+    }
+    if (state.exact && mission.action === 'arduino-analog') {
+      if (state.experiment.inputVoltage <= 1) state.experiment.lowSeen = true;
+      if (state.experiment.inputVoltage >= 4) state.experiment.highSeen = true;
+    }
+    if (state.exact && mission.action === 'timer-astable') {
+      if (state.experiment.timingResistance <= 20000) state.experiment.highSeen = true;
+      if (state.experiment.timingResistance >= 80000) state.experiment.lowSeen = true;
+    }
+    if (state.exact && ['opamp-follower', 'opamp-gain'].includes(mission.action)) {
+      const metrics = advancedMetrics(mission);
+      if (metrics.saturated) state.experiment.saturationSeen = true;
+      else state.experiment.linearSeen = true;
+    }
+    if (state.exact && mission.action === 'opamp-comparator') {
+      if (advancedMetrics(mission).high) state.experiment.highSeen = true;
+      else state.experiment.lowSeen = true;
+    }
     const safeLed = !mission.ledForward || state.resistance >= calculateLedResistor(mission.supply, mission.ledForward, 20);
     if (mission.action === 'capacitor') state.powered = state.exact && state.experiment.capacitorMode === 'charge';
     else if (mission.hasSwitch) state.powered = state.exact && state.switchClosed;
+    else if (mission.action === 'arduino-input') state.powered = state.exact;
+    else if (['arduino-pwm', 'arduino-control'].includes(mission.action)) state.powered = state.exact && state.experiment.pwmValue > 0;
+    else if (mission.action === 'arduino-analog') state.powered = state.exact;
+    else if (mission.action === 'timer-astable') state.powered = state.exact && state.experiment.timerHigh;
+    else if (mission.action === 'timer-monostable') state.powered = state.exact && performance.now() < state.experiment.pulseUntil;
+    else if (['opamp-follower', 'opamp-gain'].includes(mission.action)) state.powered = state.exact;
+    else if (mission.action === 'opamp-comparator') state.powered = state.exact && advancedMetrics(mission).high;
     else if (mission.action === 'resistor') state.powered = state.exact && safeLed;
     else if (mission.action === 'solar') state.powered = state.exact && state.solar.loadOn && Boolean(state.solar.result?.loadPowered);
     else if (mission.action === 'code') state.powered = state.exact && state.programRunning && state.arduinoHigh;
@@ -806,6 +1127,12 @@ if (root) {
       setGuide('Sweep from low to high frequency and compare the reactance, RMS current, and lamp brightness.', 'SWEEP Hz');
     } else if (state.exact && ['resonance', 'tank'].includes(mission.action) && !completionCondition()) {
       setGuide('Tune the frequency until XL and Xc match. The resonance marker will lock when you are close.', 'TUNE f₀');
+    } else if (state.exact && mission.action?.startsWith('arduino-') && !completionCondition()) {
+      setGuide('The wiring is ready. Use the experiment controls and watch the code, meters, and hardware respond together.', 'RUN CODE');
+    } else if (state.exact && mission.action?.startsWith('timer-') && !completionCondition()) {
+      setGuide('The 555 is powered. Change the RC timing value and compare the pulse measurements on the scope.', 'TUNE RC');
+    } else if (state.exact && mission.action?.startsWith('opamp-') && !completionCondition()) {
+      setGuide('The amplifier is powered. Sweep the input and compare ideal output with the real supply-limited result.', 'MEASURE');
     } else if (state.exact && state.missionIndex === 6) {
       setGuide('The hardware signal path is ready. Build 08 will turn that path on and off with code.', 'WIRED');
     } else if (!complete && !state.achieved) {
@@ -824,6 +1151,9 @@ if (root) {
     if (['capacitive-ac', 'inductive-ac'].includes(missions[state.missionIndex].action)) return state.exact && state.experiment.lowSeen && state.experiment.highSeen;
     if (missions[state.missionIndex].action === 'phase') return state.exact && state.answerCorrect;
     if (['resonance', 'tank'].includes(missions[state.missionIndex].action)) return state.exact && state.experiment.resonanceSeen;
+    if (['arduino-input', 'arduino-pwm', 'arduino-analog', 'arduino-control', 'timer-astable', 'opamp-comparator'].includes(missions[state.missionIndex].action)) return state.exact && state.experiment.lowSeen && state.experiment.highSeen;
+    if (missions[state.missionIndex].action === 'timer-monostable') return state.exact && state.experiment.triggerSeen && state.experiment.lowSeen && state.experiment.highSeen;
+    if (['opamp-follower', 'opamp-gain'].includes(missions[state.missionIndex].action)) return state.exact && state.experiment.linearSeen && state.experiment.saturationSeen;
     return state.exact;
   }
 
@@ -900,7 +1230,28 @@ if (root) {
       if (status) status.textContent = state.solar.sun <= 0 ? 'DARK · 0.0 W' : `LIGHT ${state.solar.sun}% · ${panelWatts.toFixed(1)} W`;
     }
     const unoLed = els.components.querySelector('[data-uno-led]');
-    unoLed?.classList.toggle('is-on', state.programRunning && state.arduinoHigh);
+    const unoIndicator = state.programRunning && state.arduinoHigh
+      || mission.action === 'arduino-input' && !state.experiment.inputPressed
+      || ['arduino-pwm', 'arduino-control'].includes(mission.action) && state.experiment.pwmValue >= 128;
+    unoLed?.classList.toggle('is-on', Boolean(unoIndicator));
+    const buttonPart = els.components.querySelector('[data-part="button"]');
+    const buttonPressed = state.experiment.inputPressed || mission.action === 'timer-monostable' && performance.now() < state.experiment.triggerActiveUntil;
+    buttonPart?.classList.toggle('is-pressed', buttonPressed);
+    buttonPart?.querySelector('[data-input-button]')?.setAttribute('aria-pressed', String(buttonPressed));
+    els.components.querySelectorAll('.part-potentiometer').forEach((part) => {
+      const fraction = part.dataset.part === 'ref' ? .5 : state.experiment.inputVoltage / Math.max(1, mission.supply || 5);
+      part.querySelector('.part-potentiometer__body')?.style.setProperty('--knob-angle', `${-135 + Math.min(1, Math.max(0, fraction)) * 270}deg`);
+    });
+    if (['arduino-pwm', 'arduino-control'].includes(mission.action)) {
+      const lampLevel = state.experiment.pwmValue / 255;
+      els.components.querySelectorAll('.part-led').forEach((part) => part.style.setProperty('--lamp-level', lampLevel.toFixed(3)));
+    }
+    els.components.querySelector('[data-part="timer"]')?.classList.toggle('is-high', Boolean(state.experiment.timerHigh));
+    if (mission.action?.startsWith('opamp-')) {
+      const opampPart = els.components.querySelector('[data-part="op"]');
+      opampPart?.classList.toggle('is-saturated', Boolean(advancedMetrics(mission).saturated));
+      opampPart?.classList.toggle('is-output-high', mission.action === 'opamp-comparator' && advancedMetrics(mission).high);
+    }
     const wavePhase = state.experiment.wavePhase || 0;
     const capacitorCharge = mission.mode === 'ac' ? (Math.sin(wavePhase) + 1) / 2 : state.experiment.capacitorCharge;
     els.components.querySelectorAll('.part-capacitor__body').forEach((part) => {
@@ -952,6 +1303,37 @@ if (root) {
     return { frequencyHz: frequency, impedance, currentRms: voltageRms / impedance, phaseRadians: 0, capacitiveReactance: 0, inductiveReactance: 0 };
   }
 
+  function advancedMetrics(mission) {
+    if (mission.action === 'arduino-pwm') {
+      return calculateArduinoPwm({ sourceVoltage: mission.supply, pwmValue: state.experiment.pwmValue, resistance: mission.resistance, ledForwardVoltage: mission.ledForward });
+    }
+    if (mission.action === 'arduino-analog') {
+      return calculateArduinoAdc({ inputVoltage: state.experiment.inputVoltage, referenceVoltage: mission.supply });
+    }
+    if (mission.action === 'arduino-control') {
+      const adc = calculateArduinoAdc({ inputVoltage: state.experiment.inputVoltage, referenceVoltage: mission.supply });
+      const pwmValue = Math.round(adc.code / adc.maxCode * 255);
+      state.experiment.pwmValue = pwmValue;
+      return { ...adc, ...calculateArduinoPwm({ sourceVoltage: mission.supply, pwmValue, resistance: mission.resistance, ledForwardVoltage: mission.ledForward }) };
+    }
+    if (mission.action === 'timer-astable') {
+      return calculate555Astable({ resistanceOne: mission.resistanceOne, resistanceTwo: state.experiment.timingResistance, capacitance: mission.capacitance });
+    }
+    if (mission.action === 'timer-monostable') {
+      return calculate555Monostable({ resistance: state.experiment.timingResistance, capacitance: mission.capacitance });
+    }
+    if (mission.action === 'opamp-follower') {
+      return calculateOpAmpNonInverting({ inputVoltage: state.experiment.inputVoltage, outputMax: mission.outputMax });
+    }
+    if (mission.action === 'opamp-gain') {
+      return calculateOpAmpNonInverting({ inputVoltage: state.experiment.inputVoltage, feedbackResistance: mission.feedbackResistance, groundResistance: mission.groundResistance, outputMax: mission.outputMax });
+    }
+    if (mission.action === 'opamp-comparator') {
+      return calculateOpAmpComparator({ nonInvertingVoltage: state.experiment.inputVoltage, invertingVoltage: mission.referenceVoltage, outputHigh: mission.outputMax });
+    }
+    return {};
+  }
+
   function updateMeters() {
     const mission = missions[state.missionIndex];
     let voltage = mission.supply || 0;
@@ -962,7 +1344,69 @@ if (root) {
     if (els.voltageLabel) els.voltageLabel.textContent = mission.mode === 'ac' ? 'AC RMS' : mission.action === 'solar' ? 'PANEL V' : 'SUPPLY';
     if (els.currentLabel) els.currentLabel.textContent = mission.mode === 'ac' ? 'RMS FLOW' : mission.action === 'solar' ? 'PANEL FLOW' : 'FLOW';
     if (els.resistanceLabel) els.resistanceLabel.textContent = mission.mode === 'ac' ? 'IMPEDANCE' : mission.action === 'solar' ? 'LAMP LOAD' : 'LOAD';
-    if (mission.mode === 'ac') {
+    if (mission.action?.startsWith('arduino-')) {
+      if (els.voltageLabel) els.voltageLabel.textContent = mission.action === 'arduino-input' ? 'D2 PIN' : mission.action === 'arduino-analog' ? 'A0 INPUT' : 'AVG OUTPUT';
+      if (els.currentLabel) els.currentLabel.textContent = mission.action === 'arduino-input' ? 'PULL-UP FLOW' : mission.action === 'arduino-analog' ? 'ADC INPUT' : 'AVG FLOW';
+      if (els.resistanceLabel) els.resistanceLabel.textContent = mission.action === 'arduino-input' ? 'PULL-UP' : 'LOAD';
+    }
+    if (mission.action?.startsWith('timer-')) {
+      if (els.voltageLabel) els.voltageLabel.textContent = 'OUTPUT';
+      if (els.currentLabel) els.currentLabel.textContent = 'LED FLOW';
+      if (els.resistanceLabel) els.resistanceLabel.textContent = 'TIMING R';
+    }
+    if (mission.action?.startsWith('opamp-')) {
+      if (els.voltageLabel) els.voltageLabel.textContent = 'OUTPUT';
+      if (els.currentLabel) els.currentLabel.textContent = 'LOAD FLOW';
+      if (els.resistanceLabel) els.resistanceLabel.textContent = mission.action === 'opamp-comparator' ? 'LED LOAD' : 'FEEDBACK';
+    }
+    if (mission.action === 'arduino-input') {
+      voltage = state.experiment.inputPressed ? 0 : 5;
+      current = state.exact && state.experiment.inputPressed ? .5 : 0;
+      resistance = 10000;
+      label = state.exact ? `D2 ${state.experiment.inputPressed ? 'LOW · BUTTON PRESSED' : 'HIGH · PULL-UP ACTIVE'}` : 'D2 · INPUT NOT WIRED';
+    } else if (mission.action === 'arduino-pwm') {
+      const metrics = advancedMetrics(mission);
+      voltage = state.exact ? metrics.averageVoltage : 0;
+      current = state.exact ? metrics.averageCurrent * 1000 : 0;
+      resistance = mission.resistance;
+      label = state.exact ? `PWM ${metrics.pwmValue.toFixed(0)} · ${metrics.dutyPercent.toFixed(1)}% DUTY` : 'D9 PWM · OPEN LOOP';
+    } else if (mission.action === 'arduino-analog') {
+      const metrics = advancedMetrics(mission);
+      voltage = state.exact ? metrics.inputVoltage : 0;
+      current = 0;
+      resistance = mission.resistance;
+      label = state.exact ? `A0 = ${metrics.code} OF ${metrics.maxCode} · 10-BIT ADC` : 'A0 · SENSOR NOT WIRED';
+    } else if (mission.action === 'arduino-control') {
+      const metrics = advancedMetrics(mission);
+      voltage = state.exact ? metrics.averageVoltage : 0;
+      current = state.exact ? metrics.averageCurrent * 1000 : 0;
+      resistance = mission.resistance;
+      label = state.exact ? `ADC ${metrics.code} → PWM ${metrics.pwmValue.toFixed(0)}` : 'INPUT + OUTPUT · OPEN';
+    } else if (mission.action === 'timer-astable') {
+      const metrics = advancedMetrics(mission);
+      voltage = state.exact && state.experiment.timerHigh ? 5 : 0;
+      current = state.exact ? (5 - 2) / 330 * metrics.dutyCycle * 1000 : 0;
+      resistance = state.experiment.timingResistance;
+      label = state.exact ? `${metrics.frequencyHz.toFixed(2)} Hz · ${(metrics.dutyCycle * 100).toFixed(1)}% HIGH` : '555 ASTABLE · OPEN';
+    } else if (mission.action === 'timer-monostable') {
+      const metrics = advancedMetrics(mission);
+      voltage = state.powered ? 5 : 0;
+      current = state.powered ? (5 - 2) / 330 * 1000 : 0;
+      resistance = state.experiment.timingResistance;
+      label = state.exact ? `${(metrics.pulseSeconds * 1000).toFixed(0)} ms ONE-SHOT · ${state.powered ? 'HIGH' : 'READY'}` : '555 ONE-SHOT · OPEN';
+    } else if (['opamp-follower', 'opamp-gain'].includes(mission.action)) {
+      const metrics = advancedMetrics(mission);
+      voltage = state.exact ? metrics.outputVoltage : 0;
+      current = 0;
+      resistance = mission.feedbackResistance || .001;
+      label = state.exact ? `GAIN ×${metrics.gain.toFixed(1)} · ${metrics.saturated ? 'OUTPUT SATURATED' : 'LINEAR FEEDBACK'}` : 'OP AMP · POWER OR FEEDBACK OPEN';
+    } else if (mission.action === 'opamp-comparator') {
+      const metrics = advancedMetrics(mission);
+      voltage = state.exact ? metrics.outputVoltage : 0;
+      current = state.powered ? Math.max(0, voltage - 2) / 330 * 1000 : 0;
+      resistance = 330;
+      label = state.exact ? `V+ ${metrics.nonInvertingVoltage.toFixed(2)} V ${metrics.high ? '>' : '≤'} V− ${metrics.invertingVoltage.toFixed(2)} V · ${metrics.high ? 'HIGH' : 'LOW'}` : 'COMPARATOR · INPUTS OPEN';
+    } else if (mission.mode === 'ac') {
       const metrics = reactiveMetrics(mission);
       voltage = mission.supplyRms || 0;
       current = state.exact ? metrics.currentRms * 1000 : 0;
@@ -1015,6 +1459,7 @@ if (root) {
     els.powerState.classList.toggle('is-danger', danger);
     els.meterCurrent.closest('div')?.classList.toggle('has-danger', danger);
     updateCurrentAlert(current, danger);
+    updateAdvancedReadout();
   }
 
   function updateCurrentAlert(current, danger) {
@@ -1128,6 +1573,98 @@ if (root) {
     write('[data-reactive-explain]', explanation);
   }
 
+  function advancedConsoleMarkup({ control, labels, code }) {
+    return `<div class="chip-console">
+      <div class="chip-console__controls">${control}<pre><code>${code}</code></pre></div>
+      <div class="chip-console__readout" aria-live="polite">
+        ${labels.map((label, index) => `<div><small>${label}</small><strong data-advanced-${String.fromCharCode(97 + index)}>—</strong></div>`).join('')}
+        <p data-advanced-explain>Complete the wiring to start the experiment.</p>
+      </div>
+    </div>`;
+  }
+
+  function toggleArduinoInput() {
+    if (missions[state.missionIndex].action !== 'arduino-input') return;
+    state.experiment.inputPressed = !state.experiment.inputPressed;
+    evaluate();
+  }
+
+  function triggerMonostable() {
+    const mission = missions[state.missionIndex];
+    if (mission.action !== 'timer-monostable') return;
+    if (!state.exact) { showToast('Finish the one-shot wiring before triggering it.'); return; }
+    const metrics = advancedMetrics(mission);
+    state.experiment.triggerSeen = true;
+    if (metrics.pulseSeconds <= .7) state.experiment.lowSeen = true;
+    if (metrics.pulseSeconds >= 1.5) state.experiment.highSeen = true;
+    state.experiment.pulseUntil = performance.now() + metrics.pulseSeconds * 1000;
+    state.experiment.triggerActiveUntil = performance.now() + 140;
+    state.experiment.timerHigh = true;
+    evaluate();
+    window.setTimeout(() => {
+      if (missions[state.missionIndex].action === 'timer-monostable') updateParts();
+    }, 160);
+  }
+
+  function updateAdvancedReadout() {
+    const mission = missions[state.missionIndex];
+    if (!mission.action || !/^(arduino-|timer-|opamp-)/.test(mission.action)) return;
+    const write = (suffix, value) => { const target = els.action.querySelector(`[data-advanced-${suffix}]`); if (target) target.textContent = value; };
+    const explain = els.action.querySelector('[data-advanced-explain]');
+    const controlOutput = els.action.querySelector('[data-control-output]');
+    const metrics = advancedMetrics(mission);
+    let explanation = state.exact ? 'Circuit ready.' : 'Complete the wiring to start the experiment.';
+
+    if (mission.action === 'arduino-input') {
+      write('a', state.experiment.inputPressed ? 'LOW' : 'HIGH');
+      write('b', state.experiment.inputPressed ? '0.00 V' : '5.00 V');
+      write('c', state.experiment.inputPressed ? 'PRESSED' : 'RELEASED');
+      els.action.querySelectorAll('[data-input-toggle]').forEach((button) => {
+        button.textContent = state.experiment.inputPressed ? 'Release virtual button' : 'Press virtual button';
+        button.setAttribute('aria-pressed', String(state.experiment.inputPressed));
+      });
+      explanation = state.exact ? `digitalRead(2) returns ${state.experiment.inputPressed ? 'LOW because the switch overrides the pull-up' : 'HIGH because the internal pull-up prevents a floating pin'}.` : explanation;
+    }
+    if (mission.action === 'arduino-pwm') {
+      write('a', metrics.pwmValue.toFixed(0)); write('b', `${metrics.dutyPercent.toFixed(1)}%`); write('c', `${(metrics.averageCurrent * 1000).toFixed(1)} mA`);
+      if (controlOutput) controlOutput.textContent = `${metrics.pwmValue.toFixed(0)} / 255`;
+      explanation = state.exact ? `D9 switches between 0 V and 5 V. The LED receives ${metrics.dutyPercent.toFixed(1)}% of the maximum average energy.` : explanation;
+    }
+    if (mission.action === 'arduino-analog') {
+      write('a', `${metrics.code}`); write('b', `${metrics.inputVoltage.toFixed(2)} V`); write('c', `${(metrics.referenceVoltage / metrics.maxCode * 1000).toFixed(2)} mV`);
+      if (controlOutput) controlOutput.textContent = `${metrics.inputVoltage.toFixed(1)} V`;
+      explanation = state.exact ? `analogRead(A0) returns ${metrics.code}. Quantization rounds the continuous input to the nearest available code.` : explanation;
+    }
+    if (mission.action === 'arduino-control') {
+      write('a', `${metrics.code}`); write('b', `${metrics.pwmValue.toFixed(0)}`); write('c', `${metrics.averageVoltage.toFixed(2)} V`);
+      if (controlOutput) controlOutput.textContent = `${metrics.inputVoltage.toFixed(1)} V sensor`;
+      explanation = state.exact ? `map(${metrics.code}, 0, 1023, 0, 255) produces PWM ${metrics.pwmValue.toFixed(0)}. Input became a proportional output command.` : explanation;
+    }
+    if (mission.action === 'timer-astable') {
+      write('a', `${metrics.frequencyHz.toFixed(2)} Hz`); write('b', `${(metrics.highSeconds * 1000).toFixed(0)} ms`); write('c', `${(metrics.lowSeconds * 1000).toFixed(0)} ms`);
+      if (controlOutput) controlOutput.textContent = `${(state.experiment.timingResistance / 1000).toFixed(0)} kΩ`;
+      explanation = state.exact ? `R2 changes both charge and discharge time. Duty cycle is ${(metrics.dutyCycle * 100).toFixed(1)}%; the basic circuit cannot reach exactly 50% without steering diodes or another topology.` : explanation;
+    }
+    if (mission.action === 'timer-monostable') {
+      write('a', `${(metrics.pulseSeconds * 1000).toFixed(0)} ms`); write('b', state.experiment.timerHigh ? 'HIGH' : 'READY'); write('c', '⅓ → ⅔ VCC');
+      if (controlOutput) controlOutput.textContent = `${(state.experiment.timingResistance / 1000).toFixed(0)} kΩ`;
+      explanation = state.exact ? `Each trigger produces one ${(metrics.pulseSeconds * 1000).toFixed(0)} ms pulse. Try ≤ 63 kΩ for a short pulse and ≥ 137 kΩ for a long one.` : explanation;
+    }
+    if (['opamp-follower', 'opamp-gain'].includes(mission.action)) {
+      write('a', `${metrics.inputVoltage.toFixed(2)} V`); write('b', `${metrics.idealOutput.toFixed(2)} V`); write('c', `${metrics.outputVoltage.toFixed(2)} V`);
+      if (controlOutput) controlOutput.textContent = `${metrics.inputVoltage.toFixed(2)} V`;
+      explanation = state.exact ? metrics.saturated
+        ? `The gain equation asks for ${metrics.idealOutput.toFixed(2)} V, but this model can only swing to ${mission.outputMax.toFixed(1)} V. The output clips.`
+        : `Negative feedback holds the circuit in its linear region: ${metrics.inputVoltage.toFixed(2)} V × ${metrics.gain.toFixed(1)} = ${metrics.outputVoltage.toFixed(2)} V.` : explanation;
+    }
+    if (mission.action === 'opamp-comparator') {
+      write('a', `${metrics.nonInvertingVoltage.toFixed(2)} V`); write('b', `${metrics.invertingVoltage.toFixed(2)} V`); write('c', metrics.high ? 'HIGH' : 'LOW');
+      if (controlOutput) controlOutput.textContent = `${metrics.nonInvertingVoltage.toFixed(2)} V`;
+      explanation = state.exact ? `The differential input is ${metrics.differentialVoltage >= 0 ? '+' : ''}${metrics.differentialVoltage.toFixed(2)} V, so the output drives ${metrics.high ? 'high' : 'low'}. A real design can add hysteresis to prevent noise chatter near the threshold.` : explanation;
+    }
+    if (explain) explain.textContent = explanation;
+  }
+
   function renderMissionAction(mission) {
     const note = `<div class="lesson-note"><span aria-hidden="true">⚡</span><div><h3>${mission.noteTitle}</h3><p>${mission.note}</p></div></div>`;
     if (mission.action === 'resistor') {
@@ -1213,6 +1750,49 @@ if (root) {
         els.action.querySelector('[data-phase-output]').textContent = state.answerCorrect ? 'Correct—current leads source voltage in a capacitive circuit.' : 'Look at which trace reaches each crest first, then try again.';
         evaluate();
       }));
+      return;
+    }
+    if (mission.action === 'arduino-input') {
+      els.action.innerHTML = `${note}${advancedConsoleMarkup({ control: '<strong>Digital input experiment</strong><button type="button" data-input-toggle aria-pressed="false">Press virtual button</button>', labels: ['D2 LOGIC', 'PIN VOLTAGE', 'SWITCH'], code: 'pinMode(2, INPUT_PULLUP);\nint pressed = digitalRead(2) == LOW;' })}`;
+      els.action.querySelector('[data-input-toggle]').addEventListener('click', toggleArduinoInput);
+      updateAdvancedReadout();
+      return;
+    }
+    if (['arduino-pwm', 'arduino-analog', 'arduino-control'].includes(mission.action)) {
+      const pwm = mission.action === 'arduino-pwm';
+      const code = pwm ? 'analogWrite(9, pwmValue);' : mission.action === 'arduino-analog' ? 'int sensor = analogRead(A0);' : 'int sensor = analogRead(A0);\nint pwm = map(sensor, 0, 1023, 0, 255);\nanalogWrite(9, pwm);';
+      const labels = pwm ? ['PWM VALUE', 'DUTY CYCLE', 'AVG CURRENT'] : mission.action === 'arduino-analog' ? ['ADC CODE', 'A0 VOLTAGE', '1 LSB'] : ['ADC CODE', 'PWM VALUE', 'AVG OUTPUT'];
+      const min = pwm ? 0 : 0; const max = pwm ? 255 : 5; const step = pwm ? 1 : .1; const value = pwm ? state.experiment.pwmValue : state.experiment.inputVoltage;
+      els.action.innerHTML = `${note}${advancedConsoleMarkup({ control: `<label><span>${pwm ? 'PWM command' : 'Sensor voltage'} <output data-control-output>—</output></span><input type="range" min="${min}" max="${max}" step="${step}" value="${value}" data-advanced-slider></label>`, labels, code })}`;
+      els.action.querySelector('[data-advanced-slider]').addEventListener('input', (event) => {
+        if (pwm) state.experiment.pwmValue = Number(event.currentTarget.value);
+        else state.experiment.inputVoltage = Number(event.currentTarget.value);
+        evaluate();
+      });
+      updateAdvancedReadout();
+      return;
+    }
+    if (mission.action === 'timer-astable') {
+      els.action.innerHTML = `${note}${advancedConsoleMarkup({ control: `<label><span>R2 timing resistance <output data-control-output>—</output></span><input type="range" min="10000" max="100000" step="1000" value="${state.experiment.timingResistance}" data-advanced-slider></label>`, labels: ['FREQUENCY', 'HIGH TIME', 'LOW TIME'], code: 'tHIGH = 0.693 × (R1 + R2) × C\ntLOW  = 0.693 × R2 × C' })}`;
+      els.action.querySelector('[data-advanced-slider]').addEventListener('input', (event) => { state.experiment.timingResistance = Number(event.currentTarget.value); state.experiment.timerStartedAt = performance.now(); evaluate(); });
+      updateAdvancedReadout();
+      return;
+    }
+    if (mission.action === 'timer-monostable') {
+      els.action.innerHTML = `${note}${advancedConsoleMarkup({ control: `<label><span>Timing resistance <output data-control-output>—</output></span><input type="range" min="47000" max="220000" step="1000" value="${state.experiment.timingResistance}" data-advanced-slider></label><button type="button" data-trigger-timer>Trigger one-shot</button>`, labels: ['PULSE WIDTH', 'OUTPUT', 'CAP THRESHOLDS'], code: 'pulse = 1.1 × R × C\ntrigger(); // active LOW' })}`;
+      els.action.querySelector('[data-advanced-slider]').addEventListener('input', (event) => { state.experiment.timingResistance = Number(event.currentTarget.value); evaluate(); });
+      els.action.querySelector('[data-trigger-timer]').addEventListener('click', triggerMonostable);
+      updateAdvancedReadout();
+      return;
+    }
+    if (['opamp-follower', 'opamp-gain', 'opamp-comparator'].includes(mission.action)) {
+      const follower = mission.action === 'opamp-follower'; const comparator = mission.action === 'opamp-comparator';
+      const max = mission.action === 'opamp-gain' ? 2 : 5;
+      const labels = comparator ? ['V+ SIGNAL', 'V− REFERENCE', 'OUTPUT'] : ['INPUT', 'IDEAL OUTPUT', 'ACTUAL OUTPUT'];
+      const code = comparator ? 'if (Vplus > Vminus) output = HIGH;\nelse output = LOW;' : follower ? 'gain = 1;\nVout follows Vin;' : 'gain = 1 + Rf / Rg; // ×3';
+      els.action.innerHTML = `${note}${advancedConsoleMarkup({ control: `<label><span>${comparator ? 'Signal voltage' : 'Input voltage'} <output data-control-output>—</output></span><input type="range" min="0" max="${max}" step="0.05" value="${state.experiment.inputVoltage}" data-advanced-slider></label>`, labels, code })}`;
+      els.action.querySelector('[data-advanced-slider]').addEventListener('input', (event) => { state.experiment.inputVoltage = Number(event.currentTarget.value); evaluate(); });
+      updateAdvancedReadout();
       return;
     }
     if (mission.action === 'code') {
@@ -1371,6 +1951,12 @@ if (root) {
     if (mission.action === 'inductor') return state.experiment.inductorField > .01;
     if (mission.hasSwitch) return state.switchClosed;
     if (mission.action === 'solar') return state.exact && (Boolean(state.solar.result?.loadPowered && state.solar.loadOn) || Math.abs(state.solar.result?.batteryWatts || 0) > .01);
+    if (mission.action === 'arduino-input') return state.experiment.inputPressed;
+    if (['arduino-pwm', 'arduino-control'].includes(mission.action)) return state.experiment.pwmValue > 0;
+    if (mission.action === 'arduino-analog') return true;
+    if (mission.action?.startsWith('timer-')) return state.experiment.timerHigh;
+    if (['opamp-follower', 'opamp-gain'].includes(mission.action)) return true;
+    if (mission.action === 'opamp-comparator') return state.powered;
     if (state.missionIndex === 6) return false;
     if (mission.action === 'code') return state.powered;
     return true;
@@ -1525,6 +2111,39 @@ if (root) {
     for (let x = 0; x < rect.width; x += 20) { context.beginPath(); context.moveTo(x, 0); context.lineTo(x, rect.height); context.stroke(); }
     for (let y = 0; y < rect.height; y += 18) { context.beginPath(); context.moveTo(0, y); context.lineTo(rect.width, y); context.stroke(); }
     const mission = missions[state.missionIndex];
+    if (['arduino-pwm', 'arduino-control', 'timer-astable', 'timer-monostable'].includes(mission.action)) {
+      const highY = rect.height * .25;
+      const lowY = rect.height * .75;
+      context.fillStyle = '#a8acd1'; context.font = '700 8px ui-monospace, monospace';
+      context.fillText('5 V', 4, highY - 5); context.fillText('0 V', 4, lowY + 11);
+      context.strokeStyle = '#ffffff25'; context.lineWidth = 1;
+      context.beginPath(); context.moveTo(0, highY); context.lineTo(rect.width, highY); context.moveTo(0, lowY); context.lineTo(rect.width, lowY); context.stroke();
+      if (!state.exact) {
+        context.strokeStyle = '#666a90'; context.lineWidth = 2.5; context.beginPath(); context.moveTo(0, lowY); context.lineTo(rect.width, lowY); context.stroke();
+        return;
+      }
+      const metrics = advancedMetrics(mission);
+      const isOneShot = mission.action === 'timer-monostable';
+      const duty = isOneShot ? .38 : mission.action === 'timer-astable' ? metrics.dutyCycle : state.experiment.pwmValue / 255;
+      const cycles = isOneShot ? 1 : 4;
+      const cycleWidth = rect.width / cycles;
+      const offset = state.reducedMotion || isOneShot ? 0 : (time / 18) % cycleWidth;
+      context.beginPath();
+      context.moveTo(-cycleWidth - offset, lowY);
+      for (let cycle = -1; cycle <= cycles + 1; cycle += 1) {
+        const start = cycle * cycleWidth - offset;
+        const highStart = isOneShot ? rect.width * .25 : start;
+        const highEnd = isOneShot ? rect.width * .25 + rect.width * duty : start + cycleWidth * duty;
+        if (isOneShot && cycle !== 0) continue;
+        context.lineTo(highStart, lowY); context.lineTo(highStart, highY); context.lineTo(highEnd, highY); context.lineTo(highEnd, lowY);
+      }
+      context.lineTo(rect.width, lowY);
+      context.strokeStyle = isOneShot && !state.experiment.triggerSeen ? '#666a90' : '#35d985';
+      context.lineWidth = 3; context.shadowColor = context.strokeStyle; context.shadowBlur = 9; context.stroke(); context.shadowBlur = 0;
+      context.fillStyle = '#ffe43b';
+      context.fillText(isOneShot ? `${(metrics.pulseSeconds * 1000).toFixed(0)} ms ONE-SHOT` : mission.action === 'timer-astable' ? `${metrics.frequencyHz.toFixed(2)} Hz` : `${(duty * 100).toFixed(1)}% DUTY`, rect.width - 92, 12);
+      return;
+    }
     if (mission.mode === 'ac') {
       const centerY = rect.height / 2;
       const amplitude = Math.max(10, rect.height * .3);
@@ -1571,7 +2190,13 @@ if (root) {
     const danger = state.missionIndex === 2 && state.exact && state.resistance < 150;
     const highY = rect.height * .3;
     const zeroY = rect.height * .72;
-    const reactiveLevel = mission.action === 'capacitor' ? state.experiment.capacitorCharge : mission.action === 'inductor' ? state.experiment.inductorField : mission.action === 'solar' ? Math.min(1, (state.solar.result?.generatedWatts || 0) / 6) : flowing ? 1 : 0;
+    const reactiveLevel = mission.action === 'capacitor' ? state.experiment.capacitorCharge
+      : mission.action === 'inductor' ? state.experiment.inductorField
+        : mission.action === 'solar' ? Math.min(1, (state.solar.result?.generatedWatts || 0) / 6)
+          : mission.action === 'arduino-input' ? state.exact ? state.experiment.inputPressed ? 0 : 1 : 0
+            : mission.action === 'arduino-analog' ? state.exact ? state.experiment.inputVoltage / 5 : 0
+              : mission.action?.startsWith('opamp-') ? state.exact ? (advancedMetrics(mission).outputVoltage || 0) / Math.max(1, mission.supply || 5) : 0
+                : flowing ? 1 : 0;
     const traceY = zeroY - (zeroY - highY) * reactiveLevel;
     const activeTrace = mission.action === 'solar' ? reactiveLevel > .01 : flowing || reactiveLevel > .01;
     const traceColor = danger ? '#ff4967' : activeTrace ? '#35d985' : '#666a90';
@@ -1584,7 +2209,7 @@ if (root) {
     context.moveTo(0, zeroY);
     if (activeTrace) {
       context.lineTo(14, zeroY);
-      context.lineTo(14, highY);
+      context.lineTo(14, traceY);
     }
     context.lineTo(rect.width, traceY);
     context.stroke();
@@ -1749,6 +2374,25 @@ if (root) {
 
   function animationFrame(time) {
     updateReactiveExperiment(time);
+    const mission = missions[state.missionIndex];
+    if (mission.action === 'timer-astable' && state.exact) {
+      const metrics = advancedMetrics(mission);
+      const elapsedSeconds = Math.max(0, (time - state.experiment.timerStartedAt) / 1000);
+      const nextHigh = elapsedSeconds % metrics.periodSeconds < metrics.highSeconds;
+      if (nextHigh !== state.experiment.timerHigh) {
+        state.experiment.timerHigh = nextHigh;
+        state.powered = nextHigh;
+        updateParts(); updateMeters(); updateAdvancedReadout();
+      }
+    }
+    if (mission.action === 'timer-monostable' && state.exact) {
+      const nextHigh = time < state.experiment.pulseUntil;
+      if (nextHigh !== state.experiment.timerHigh) {
+        state.experiment.timerHigh = nextHigh;
+        state.powered = nextHigh;
+        updateParts(); updateMeters(); updateAdvancedReadout();
+      }
+    }
     if (state.programRunning && state.program?.valid) {
       const nextHigh = arduinoOutputAt(time - state.programStartedAt, state.program);
       if (nextHigh !== state.arduinoHigh) {

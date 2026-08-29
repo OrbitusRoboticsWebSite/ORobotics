@@ -181,6 +181,75 @@ export function calculateRLTransient({ sourceVoltage, resistance, inductance, el
   return { current, inductorVoltage, timeConstantSeconds };
 }
 
+export function calculateArduinoPwm({ sourceVoltage = 5, pwmValue, resistance = 220, ledForwardVoltage = 2 }) {
+  const source = Math.max(0, Number(sourceVoltage) || 0);
+  const pwm = Math.min(255, Math.max(0, Number(pwmValue) || 0));
+  const dutyCycle = pwm / 255;
+  const safeResistance = Math.max(0, Number(resistance) || 0);
+  const forward = Math.max(0, Number(ledForwardVoltage) || 0);
+  const peakCurrent = safeResistance > 0 ? Math.max(0, source - forward) / safeResistance : 0;
+  return {
+    pwmValue: pwm,
+    dutyCycle,
+    dutyPercent: dutyCycle * 100,
+    averageVoltage: source * dutyCycle,
+    peakCurrent,
+    averageCurrent: peakCurrent * dutyCycle,
+  };
+}
+
+export function calculateArduinoAdc({ inputVoltage, referenceVoltage = 5, bits = 10 }) {
+  const reference = Math.max(0.001, Number(referenceVoltage) || 5);
+  const safeBits = Math.min(24, Math.max(1, Math.round(Number(bits) || 10)));
+  const maxCode = 2 ** safeBits - 1;
+  const voltage = Math.min(reference, Math.max(0, Number(inputVoltage) || 0));
+  const code = Math.round(voltage / reference * maxCode);
+  return { inputVoltage: voltage, referenceVoltage: reference, bits: safeBits, maxCode, code };
+}
+
+export function calculate555Astable({ resistanceOne, resistanceTwo, capacitance }) {
+  const r1 = Math.max(0, Number(resistanceOne) || 0);
+  const r2 = Math.max(0, Number(resistanceTwo) || 0);
+  const c = Math.max(0, Number(capacitance) || 0);
+  if (r1 + r2 === 0 || r2 === 0 || c === 0) return { valid: false, highSeconds: Infinity, lowSeconds: Infinity, periodSeconds: Infinity, frequencyHz: 0, dutyCycle: 0 };
+  const highSeconds = Math.log(2) * (r1 + r2) * c;
+  const lowSeconds = Math.log(2) * r2 * c;
+  const periodSeconds = highSeconds + lowSeconds;
+  return { valid: true, highSeconds, lowSeconds, periodSeconds, frequencyHz: 1 / periodSeconds, dutyCycle: highSeconds / periodSeconds };
+}
+
+export function calculate555Monostable({ resistance, capacitance }) {
+  const safeResistance = Math.max(0, Number(resistance) || 0);
+  const safeCapacitance = Math.max(0, Number(capacitance) || 0);
+  const pulseSeconds = 1.1 * safeResistance * safeCapacitance;
+  return { valid: pulseSeconds > 0, pulseSeconds };
+}
+
+export function calculateOpAmpNonInverting({ inputVoltage, feedbackResistance = 0, groundResistance = Infinity, outputMin = 0.05, outputMax = 3.8 }) {
+  const input = Number(inputVoltage) || 0;
+  const feedback = Math.max(0, Number(feedbackResistance) || 0);
+  const ground = Number(groundResistance);
+  const gain = Number.isFinite(ground) && ground > 0 ? 1 + feedback / ground : 1;
+  const idealOutput = input * gain;
+  const low = Number(outputMin) || 0;
+  const high = Math.max(low, Number(outputMax) || 0);
+  const outputVoltage = Math.min(high, Math.max(low, idealOutput));
+  return { inputVoltage: input, gain, idealOutput, outputVoltage, saturated: Math.abs(outputVoltage - idealOutput) > 1e-9 };
+}
+
+export function calculateOpAmpComparator({ nonInvertingVoltage, invertingVoltage, outputLow = 0.05, outputHigh = 3.8 }) {
+  const plus = Number(nonInvertingVoltage) || 0;
+  const minus = Number(invertingVoltage) || 0;
+  const high = plus > minus;
+  return {
+    nonInvertingVoltage: plus,
+    invertingVoltage: minus,
+    differentialVoltage: plus - minus,
+    high,
+    outputVoltage: high ? Number(outputHigh) || 0 : Number(outputLow) || 0,
+  };
+}
+
 export function simulateSolar({
   sunPercent,
   panelWatts,
