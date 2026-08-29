@@ -1,4 +1,4 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.08.30';
+export const GAMEPLAY_RULESET_VERSION = '2026.08.31';
 export const MAX_ROB_HEALTH = 100;
 export const BASE_ROB_ENERGY = 100;
 
@@ -68,6 +68,15 @@ export const finishes = [
   { id: 'arcticWhite', name: 'Arctic White', color: 0xe5edf2 },
   { id: 'cobaltBlue', name: 'Cobalt Blue', color: 0x2769ba },
   { id: 'tacticalGreen', name: 'Tactical Green', color: 0x4d7151 },
+];
+
+export const faceColors = [
+  { id: 'lime', name: 'Lime', color: 0x5cff6b },
+  { id: 'cyan', name: 'Cyan', color: 0x52e8ff },
+  { id: 'amber', name: 'Amber', color: 0xffb43b },
+  { id: 'magenta', name: 'Magenta', color: 0xff62d0 },
+  { id: 'white', name: 'White', color: 0xf2f7ff },
+  { id: 'red', name: 'Red', color: 0xff5268 },
 ];
 
 export const rangedWeapons = [

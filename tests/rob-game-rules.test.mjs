@@ -7,6 +7,7 @@ import {
   bossStats,
   conveyorDisplacement,
   driveSpeedMultiplier,
+  faceColors,
   firstProjectileImpact,
   isUnlocked,
   maximumEnergy,
@@ -21,6 +22,12 @@ import {
   unlockReward,
   weaponDamage,
 } from '../assets/js/rob-game-rules.mjs';
+
+test('ROB smile colors stay synchronized with the Apple workshop palette', () => {
+  assert.deepEqual(faceColors.map(({ id }) => id), ['lime', 'cyan', 'amber', 'magenta', 'white', 'red']);
+  assert.equal(faceColors[0].color, 0x5cff6b);
+  assert.equal(new Set(faceColors.map(({ color }) => color)).size, faceColors.length);
+});
 
 test('a wall wins when it is between a projectile and its target', () => {
   const impact = firstProjectileImpact({
