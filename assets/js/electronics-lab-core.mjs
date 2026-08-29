@@ -197,10 +197,19 @@ export function simulateSolar({
   const startWh = capacity * Math.min(100, Math.max(0, Number(batteryPercent) || 0)) / 100;
   const generatedWatts = panel * sun / 100;
   const surplusWatts = generatedWatts - load;
-  const batteryWatts = surplusWatts >= 0 ? surplusWatts * chargeEfficiency : surplusWatts;
-  const nextWh = Math.min(capacity, Math.max(0, startWh + batteryWatts * Math.max(0, Number(elapsedSeconds) || 0) / 3600));
+  const requestedBatteryWatts = surplusWatts >= 0 ? surplusWatts * chargeEfficiency : surplusWatts;
+  const elapsed = Math.max(0, Number(elapsedSeconds) || 0);
+  const nextWh = Math.min(capacity, Math.max(0, startWh + requestedBatteryWatts * elapsed / 3600));
   const nextPercent = nextWh / capacity * 100;
-  const loadPowered = load === 0 || generatedWatts > 0 || nextWh > 0;
+  let batteryWatts = requestedBatteryWatts;
+  if (elapsed > 0) batteryWatts = (nextWh - startWh) * 3600 / elapsed;
+  else if ((requestedBatteryWatts < 0 && startWh <= 0) || (requestedBatteryWatts > 0 && startWh >= capacity)) batteryWatts = 0;
+  const loadPowered = load === 0 || generatedWatts >= load || nextWh > 0;
+  let powerSource = 'off';
+  if (load === 0) powerSource = 'no-load';
+  else if (loadPowered && generatedWatts >= load) powerSource = 'panel';
+  else if (loadPowered && generatedWatts > 0) powerSource = 'panel+battery';
+  else if (loadPowered) powerSource = 'battery';
   let state = 'balanced';
   if (batteryWatts > 0.01 && nextWh < capacity) state = 'charging';
   if (batteryWatts < -0.01 && nextWh > 0) state = 'discharging';
@@ -215,6 +224,7 @@ export function simulateSolar({
     batteryPercent: nextPercent,
     batteryWh: nextWh,
     loadPowered,
+    powerSource,
     state,
     runtimeHours: load > generatedWatts ? nextWh / (load - generatedWatts) : Infinity,
     hoursToFull: batteryWatts > 0 ? (capacity - nextWh) / batteryWatts : Infinity,

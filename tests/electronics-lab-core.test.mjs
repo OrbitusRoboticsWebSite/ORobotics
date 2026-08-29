@@ -96,13 +96,28 @@ test('solar simulation charges in sun and discharges after sunset', () => {
   const day = simulateSolar({ sunPercent: 100, panelWatts: 6, batteryPercent: 50, batteryCapacityWh: 10, loadWatts: 1, elapsedSeconds: 3600 });
   assert.equal(day.state, 'charging');
   assert.equal(day.generatedWatts, 6);
+  assert.equal(day.powerSource, 'panel');
   assert.ok(day.batteryPercent > 50);
 
   const night = simulateSolar({ sunPercent: 0, panelWatts: 6, batteryPercent: 50, batteryCapacityWh: 10, loadWatts: 1, elapsedSeconds: 3600 });
   assert.equal(night.state, 'discharging');
   assert.equal(night.generatedWatts, 0);
+  assert.equal(night.powerSource, 'battery');
+  assert.equal(night.loadPowered, true);
   assert.equal(night.batteryPercent, 40);
   assert.equal(night.runtimeHours, 4);
+
+  const emptyNight = simulateSolar({ sunPercent: 0, panelWatts: 6, batteryPercent: 0, batteryCapacityWh: 10, loadWatts: 1, elapsedSeconds: 300 });
+  assert.equal(emptyNight.generatedWatts, 0);
+  assert.equal(emptyNight.batteryWatts, 0);
+  assert.equal(emptyNight.powerSource, 'off');
+  assert.equal(emptyNight.loadPowered, false);
+  assert.equal(emptyNight.state, 'empty');
+
+  const weakSunEmptyBattery = simulateSolar({ sunPercent: 10, panelWatts: 6, batteryPercent: 0, batteryCapacityWh: 10, loadWatts: 1, elapsedSeconds: 300 });
+  assert.equal(weakSunEmptyBattery.generatedWatts, 0.6);
+  assert.equal(weakSunEmptyBattery.powerSource, 'off');
+  assert.equal(weakSunEmptyBattery.loadPowered, false);
 });
 
 test('Arduino parser accepts a standard named-pin blink sketch', () => {

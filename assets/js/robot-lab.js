@@ -556,7 +556,7 @@ if (root) {
       body = `<div class="part-led__body"><span class="part-led__dome"></span><span class="part-led__legs"></span>${port(component.id, 'a', 'A+', 'lab-port--positive port-left-top')}${port(component.id, 'k', 'K−', 'lab-port--negative port-left-bottom')}</div>`;
     }
     if (component.type === 'solar') {
-      body = `<div class="part-solar__body"><i></i><i></i><i></i><i></i><i></i><i></i>${port(component.id, 'pos', '+', 'lab-port--solar port-right-top')}${port(component.id, 'neg', '−', 'lab-port--negative port-right-bottom')}</div>`;
+      body = `<div class="part-solar__body"><i></i><i></i><i></i><i></i><i></i><i></i><span class="part-solar__status" data-solar-part-status>LIGHT 80% · 4.8 W</span>${port(component.id, 'pos', '+', 'lab-port--solar port-right-top')}${port(component.id, 'neg', '−', 'lab-port--negative port-right-bottom')}</div>`;
     }
     if (component.type === 'controller') {
       body = `<div class="part-controller__body"><strong>CONTROLLER</strong>${port(component.id, 'pvPos', 'PV+', 'lab-port--solar port-left-top')}${port(component.id, 'pvNeg', 'PV−', 'lab-port--negative port-left-bottom')}${port(component.id, 'battPos', 'B+', 'lab-port--positive port-right-top')}${port(component.id, 'battNeg', 'B−', 'lab-port--negative port-right-bottom')}${port(component.id, 'loadPos', 'L+', 'lab-port--signal port-bottom-left')}${port(component.id, 'loadNeg', 'L−', 'lab-port--negative port-bottom-right')}</div>`;
@@ -611,7 +611,7 @@ if (root) {
     if (els.directionLabel) els.directionLabel.textContent = mission.mode === 'ac' ? 'AC ELECTRON OSCILLATION' : 'EXTERNAL ELECTRON DRIFT';
     if (els.directionPath) els.directionPath.innerHTML = mission.mode === 'ac' ? '<b>←</b> back and forth every cycle <b>→</b>' : '<b>−</b> → around the complete loop → <b>+</b>';
     if (els.directionNote) els.directionNote.textContent = mission.mode === 'ac' ? 'The source reverses the electric field; electrons do not race from the generator to the lamp.' : 'Battery chemistry keeps the charges separated.';
-    if (els.scopeLabel) els.scopeLabel.textContent = mission.mode === 'ac' ? 'AC WAVEFORM SCOPE' : 'DC ENERGY SCOPE';
+    if (els.scopeLabel) els.scopeLabel.textContent = mission.mode === 'ac' ? 'AC WAVEFORM SCOPE' : mission.action === 'solar' ? 'SOLAR OUTPUT SCOPE' : 'DC ENERGY SCOPE';
     els.previous.disabled = index === 0;
     els.next.disabled = !state.achieved;
     els.next.innerHTML = index === missions.length - 1 ? 'Finish quest <span aria-hidden="true">✦</span>' : 'Next build <span aria-hidden="true">→</span>';
@@ -771,7 +771,7 @@ if (root) {
     if (mission.action === 'capacitor') state.powered = state.exact && state.experiment.capacitorMode === 'charge';
     else if (mission.hasSwitch) state.powered = state.exact && state.switchClosed;
     else if (mission.action === 'resistor') state.powered = state.exact && safeLed;
-    else if (mission.action === 'solar') state.powered = state.exact && state.solar.loadOn && (state.solar.sun > 0 || state.solar.battery > 0);
+    else if (mission.action === 'solar') state.powered = state.exact && state.solar.loadOn && Boolean(state.solar.result?.loadPowered);
     else if (mission.action === 'code') state.powered = state.exact && state.programRunning && state.arduinoHigh;
     else if (state.missionIndex === 6) state.powered = false;
     else state.powered = state.exact;
@@ -889,6 +889,16 @@ if (root) {
     switchPart?.classList.toggle('is-closed', state.switchClosed);
     const charge = els.components.querySelector('[data-part="battery"] .part-battery__body');
     if (charge) charge.style.setProperty('--charge', `${state.solar.battery}%`);
+    const solarPart = els.components.querySelector('[data-part="panel"]');
+    if (solarPart) {
+      const panelWatts = state.solar.result?.generatedWatts || 0;
+      const panelGenerating = state.exact && panelWatts > .01;
+      solarPart.style.setProperty('--panel-light', (state.solar.sun / 100).toFixed(2));
+      solarPart.classList.toggle('is-generating', panelGenerating);
+      solarPart.classList.toggle('is-dark', state.solar.sun <= 0);
+      const status = solarPart.querySelector('[data-solar-part-status]');
+      if (status) status.textContent = state.solar.sun <= 0 ? 'DARK · 0.0 W' : `LIGHT ${state.solar.sun}% · ${panelWatts.toFixed(1)} W`;
+    }
     const unoLed = els.components.querySelector('[data-uno-led]');
     unoLed?.classList.toggle('is-on', state.programRunning && state.arduinoHigh);
     const wavePhase = state.experiment.wavePhase || 0;
@@ -949,9 +959,9 @@ if (root) {
     let current = 0;
     let label = `${voltage.toFixed(1)} V DC · OPEN LOOP`;
     let danger = false;
-    if (els.voltageLabel) els.voltageLabel.textContent = mission.mode === 'ac' ? 'AC RMS' : 'SUPPLY';
-    if (els.currentLabel) els.currentLabel.textContent = mission.mode === 'ac' ? 'RMS FLOW' : 'FLOW';
-    if (els.resistanceLabel) els.resistanceLabel.textContent = mission.mode === 'ac' ? 'IMPEDANCE' : 'LOAD';
+    if (els.voltageLabel) els.voltageLabel.textContent = mission.mode === 'ac' ? 'AC RMS' : mission.action === 'solar' ? 'PANEL V' : 'SUPPLY';
+    if (els.currentLabel) els.currentLabel.textContent = mission.mode === 'ac' ? 'RMS FLOW' : mission.action === 'solar' ? 'PANEL FLOW' : 'FLOW';
+    if (els.resistanceLabel) els.resistanceLabel.textContent = mission.mode === 'ac' ? 'IMPEDANCE' : mission.action === 'solar' ? 'LAMP LOAD' : 'LOAD';
     if (mission.mode === 'ac') {
       const metrics = reactiveMetrics(mission);
       voltage = mission.supplyRms || 0;
@@ -970,10 +980,18 @@ if (root) {
       resistance = mission.resistance;
       label = state.exact ? `${voltage.toFixed(1)} V DC · FIELD ${state.switchClosed ? 'GROWING' : 'DECAYING'}` : `${voltage.toFixed(1)} V DC · OPEN LOOP`;
     } else if (mission.action === 'solar') {
-      voltage = state.exact ? 3.7 : 0;
-      current = state.exact && state.solar.loadOn ? 270 : 0;
-      resistance = state.solar.loadOn ? 3.7 : 0;
-      label = state.exact ? `DC · ${state.solar.result?.state?.toUpperCase() || 'ENERGY READY'}` : '0 V DC · OPEN LOOP';
+      const result = state.solar.result;
+      const panelWatts = state.exact ? result?.generatedWatts || 0 : 0;
+      voltage = panelWatts > 0 ? 5 : 0;
+      current = voltage > 0 ? panelWatts / voltage * 1000 : 0;
+      resistance = state.solar.loadOn ? 13.7 : 0;
+      if (!state.exact) label = 'PANEL 0.0 W · OPEN LOOP';
+      else if (result?.powerSource === 'battery') label = 'PANEL 0.0 W · BATTERY POWERS LAMP';
+      else if (result?.powerSource === 'panel+battery') label = `PANEL ${panelWatts.toFixed(1)} W · BATTERY HELPS`;
+      else if (result?.powerSource === 'panel') label = `PANEL ${panelWatts.toFixed(1)} W · POWERS LAMP`;
+      else if (result?.state === 'charging') label = `PANEL ${panelWatts.toFixed(1)} W · CHARGING BATTERY`;
+      else if (result?.state === 'empty') label = 'PANEL 0.0 W · LAMP OFF';
+      else label = `PANEL ${panelWatts.toFixed(1)} W · NO LOAD`;
     } else if (mission.ledForward) {
       resistance = state.resistance;
       current = state.exact ? Math.max(0, (mission.supply - mission.ledForward) / state.resistance * 1000) : 0;
@@ -1232,7 +1250,9 @@ if (root) {
     els.action.querySelector('[data-solar-state]').textContent = state.exact ? result.state.toUpperCase() : 'WAITING';
     let explanation = 'Finish the wiring to begin the energy simulation.';
     if (state.exact && result.state === 'charging') explanation = `Panel covers the ${result.loadWatts.toFixed(1)} W load and sends ${result.batteryWatts.toFixed(1)} W into storage. About ${result.hoursToFull.toFixed(1)} h to full.`;
-    if (state.exact && result.state === 'discharging') explanation = `The panel is short by ${Math.abs(result.batteryWatts).toFixed(1)} W, so the battery fills the gap. About ${result.runtimeHours.toFixed(1)} h remain.`;
+    if (state.exact && result.state === 'discharging') explanation = result.generatedWatts <= .01
+      ? `Darkness means the panel makes 0.0 W. The battery supplies the ${result.loadWatts.toFixed(1)} W lamp; about ${result.runtimeHours.toFixed(1)} h remain.`
+      : `The panel is short by ${Math.abs(result.batteryWatts).toFixed(1)} W, so the battery fills the gap. About ${result.runtimeHours.toFixed(1)} h remain.`;
     if (state.exact && result.state === 'balanced') explanation = 'Panel power and load are balanced, so battery charge stays nearly steady.';
     if (state.exact && result.state === 'full') explanation = 'The battery is full. The controller prevents unsafe overcharging while the panel carries the load.';
     if (state.exact && result.state === 'empty') explanation = 'No sunlight and no stored energy: the lamp turns off until energy returns.';
@@ -1326,7 +1346,7 @@ if (root) {
   function activeElectronFlow() {
     const configured = electronFlows[state.missionIndex];
     if (missions[state.missionIndex].action !== 'solar') return configured;
-    return state.solar.result?.batteryWatts < 0 ? configured.night : configured.day;
+    return state.solar.result?.powerSource?.includes('battery') ? configured.night : configured.day;
   }
 
   function electronFlowIsActive() {
@@ -1335,7 +1355,7 @@ if (root) {
     if (mission.action === 'capacitor') return state.experiment.capacitorCharge > .01 && state.experiment.capacitorCharge < .99;
     if (mission.action === 'inductor') return state.experiment.inductorField > .01;
     if (mission.hasSwitch) return state.switchClosed;
-    if (mission.action === 'solar') return state.exact && (state.powered || Math.abs(state.solar.result?.batteryWatts || 0) > .01);
+    if (mission.action === 'solar') return state.exact && (Boolean(state.solar.result?.loadPowered && state.solar.loadOn) || Math.abs(state.solar.result?.batteryWatts || 0) > .01);
     if (state.missionIndex === 6) return false;
     if (mission.action === 'code') return state.powered;
     return true;
@@ -1536,9 +1556,9 @@ if (root) {
     const danger = state.missionIndex === 2 && state.exact && state.resistance < 150;
     const highY = rect.height * .3;
     const zeroY = rect.height * .72;
-    const reactiveLevel = mission.action === 'capacitor' ? state.experiment.capacitorCharge : mission.action === 'inductor' ? state.experiment.inductorField : flowing ? 1 : 0;
+    const reactiveLevel = mission.action === 'capacitor' ? state.experiment.capacitorCharge : mission.action === 'inductor' ? state.experiment.inductorField : mission.action === 'solar' ? Math.min(1, (state.solar.result?.generatedWatts || 0) / 6) : flowing ? 1 : 0;
     const traceY = zeroY - (zeroY - highY) * reactiveLevel;
-    const activeTrace = flowing || reactiveLevel > .01;
+    const activeTrace = mission.action === 'solar' ? reactiveLevel > .01 : flowing || reactiveLevel > .01;
     const traceColor = danger ? '#ff4967' : activeTrace ? '#35d985' : '#666a90';
 
     context.strokeStyle = traceColor;
