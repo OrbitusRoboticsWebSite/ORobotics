@@ -6,7 +6,9 @@ import {
   BASE_ROB_ENERGY,
   applyROBDamage,
   applyROBHealthDamage,
+  battleUpgradePoints,
   bossStats,
+  conveyorArrowOffset,
   conveyorDisplacement,
   consumeLaserEnergy,
   driveSpeedMultiplier,
@@ -22,6 +24,7 @@ import {
   replenishROBShields,
   resolveAxisSlidingMotion,
   securityCameraSees,
+  securityCameraVisionDistances,
   securityMiniBossStats,
   updateDriveEnergy,
   upgradeCost,
@@ -167,13 +170,40 @@ test('conveyors move ROB along their arrow direction only inside the striped zon
   assert.deepEqual(conveyorDisplacement({ point: { x: 0, z: 0 }, conveyors, delta: .5 }), { x: 0, z: 0 });
 });
 
+test('conveyor chevrons animate and wrap in the physical travel direction', () => {
+  assert.equal(conveyorArrowOffset({ baseOffset: 0, elapsed: 1, speed: .5, span: 2, direction: 1 }), .5);
+  assert.equal(conveyorArrowOffset({ baseOffset: 0, elapsed: 1, speed: .5, span: 2, direction: -1 }), -.5);
+  assert.equal(conveyorArrowOffset({ baseOffset: .75, elapsed: 1, speed: .5, span: 2, direction: 1 }), -.75);
+});
+
+test('battle damage and defeats pay into the persistent upgrade economy', () => {
+  assert.equal(battleUpgradePoints({ damage: 1 }), 50);
+  assert.equal(battleUpgradePoints({ damage: 2, defeatReward: 300 }), 400);
+  assert.equal(battleUpgradePoints({ damage: -3, defeatReward: -1 }), 0);
+});
+
 test('security cameras respect their view cone, walls, and shadow cover', () => {
   const camera = { id: 0, x: 0, z: 2, heading: 0, sweep: 0, range: 8 };
   const robot = { x: 0, z: -2 };
   assert.equal(securityCameraSees({ camera, robot, elapsed: 0 }), true);
+  assert.equal(securityCameraSees({ camera, robot: { x: 0, z: 1 }, elapsed: 0, blockers: [{ x: 0, z: 0, w: 1, d: .1 }] }), true);
   assert.equal(securityCameraSees({ camera, robot, elapsed: 0, blockers: [{ x: 0, z: 0, w: 1, d: .1 }] }), false);
   assert.equal(securityCameraSees({ camera, robot, elapsed: 0, shadows: [{ x: 0, z: -2, w: 1, d: 1 }] }), false);
   assert.equal(securityCameraSees({ camera, robot: { x: 5, z: 2 }, elapsed: 0 }), false);
+});
+
+test('camera vision fan stops every red ray at the wall surface', () => {
+  const camera = { id: 0, x: 0, z: 2, heading: 0, sweep: 0, range: 8 };
+  const distances = securityCameraVisionDistances({
+    camera,
+    heading: 0,
+    blockers: [{ x: 0, z: 0, w: 4, d: .1 }],
+    rayCount: 25,
+  });
+
+  assert.equal(distances.length, 25);
+  assert.ok(distances.every((distance) => distance < 2.4));
+  assert.equal(securityCameraVisionDistances({ camera, heading: 0, rayCount: 5 }).every((distance) => distance === 8), true);
 });
 
 test('a camera releases one lightweight mini boss profile', () => {

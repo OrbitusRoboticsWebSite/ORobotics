@@ -4,6 +4,22 @@
   <section class="rob-sim__shell" data-sim-shell aria-label="ROB tank training game">
     <div class="rob-sim__viewport" data-sim-viewport tabindex="0">
       <canvas data-sim-canvas aria-label="3D training room containing ROB, hostile robots, obstacles, energy cells, and a docking station"></canvas>
+      <section class="rob-sim__intermission" data-sim-intermission role="dialog" aria-modal="true" aria-labelledby="rob-upgrade-bay-title" hidden>
+        <div class="rob-sim__intermission-card">
+          <p class="rob-sim__eyebrow" data-sim-intermission-title>Level cleared · Upgrade Bay</p>
+          <h2 id="rob-upgrade-bay-title">Install upgrades before the next battle</h2>
+          <p>Hits and enemy defeats award battle points. Mission objectives and the time bonus add to the same persistent pool.</p>
+          <strong data-sim-intermission-points>0 battle points available</strong>
+          <div class="rob-sim__intermission-upgrades" aria-label="Performance upgrades">
+            <button type="button" data-upgrade="speedBoost">Speed Boost</button>
+            <button type="button" data-upgrade="energyCapacity">Energy Capacity</button>
+            <button type="button" data-upgrade="weaponPower">Weapon Power</button>
+            <button type="button" data-upgrade="targetingComputer">Targeting Computer</button>
+          </div>
+          <p class="rob-sim__intermission-status" data-sim-intermission-status role="status" aria-live="polite">Choose upgrades or save your points for later.</p>
+          <button class="rob-sim__intermission-continue" type="button" data-sim-intermission-continue>Deploy to next level</button>
+        </div>
+      </section>
       <div class="rob-sim__top-actions"><button type="button" data-sim-hack hidden>▣ Hack door</button><button type="button" data-sim-sound aria-pressed="true">♪ Effects</button><button type="button" data-sim-music aria-pressed="true">♫ Techno</button><button type="button" data-sim-fullscreen aria-label="Enter fullscreen">⛶ Fullscreen</button></div>
       <div class="rob-sim__lock" data-sim-lock role="status" aria-live="polite">SCANNING</div>
       <div class="rob-sim__mobile-controls" data-mobile-controls aria-label="Dual tread joysticks and weapon controls"><div class="rob-sim__tread-stick" data-tread-stick="left" role="slider" tabindex="0" aria-label="Left tread joystick" aria-valuemin="-1" aria-valuemax="1" aria-valuenow="0" aria-valuetext="Stopped"><i data-tread-knob></i><span>LEFT TREAD</span></div><div class="rob-sim__mobile-weapons"><button type="button" class="rob-sim__fire" data-sim-saber aria-label="Swing ROB's lightsabers; the third attack spins">SABER COMBO</button><button type="button" class="rob-sim__fire" data-sim-laser aria-label="Hold to charge ROB's shoulder laser">HOLD LASER</button></div><div class="rob-sim__tread-stick" data-tread-stick="right" role="slider" tabindex="0" aria-label="Right tread joystick" aria-valuemin="-1" aria-valuemax="1" aria-valuenow="0" aria-valuetext="Stopped"><i data-tread-knob></i><span>RIGHT TREAD</span></div></div>
@@ -33,6 +49,20 @@
   <section class="rob-sim__learn"><h2>Keep learning with ROB</h2><p>Discover why different tread speeds turn the robot in <a href="{{ "robot-lab/" | relURL }}">ROB’s Systems Lab</a>.</p></section>
   <noscript><p class="rob-sim__noscript">This Three.js simulation requires JavaScript.</p></noscript>
 </main>
+<style>
+  .rob-sim__intermission{position:absolute;z-index:8;inset:0;display:grid;overflow:auto;padding:clamp(1rem,4vw,3rem);background:rgba(3,10,16,.86);place-items:center;backdrop-filter:blur(12px)}
+  .rob-sim__intermission[hidden]{display:none}
+  .rob-sim__intermission-card{width:min(42rem,100%);border:1px solid rgba(92,230,255,.45);border-radius:1.35rem;background:linear-gradient(145deg,rgba(11,32,44,.98),rgba(8,18,28,.98));padding:clamp(1.2rem,4vw,2.4rem);box-shadow:0 28px 90px rgba(0,0,0,.65)}
+  .rob-sim__intermission-card h2{margin:.45rem 0 .75rem;font-size:clamp(1.55rem,4vw,2.6rem);line-height:1}
+  .rob-sim__intermission-card>p:not(.rob-sim__eyebrow){margin:0 0 1rem;color:#bdd2dc;line-height:1.5}
+  .rob-sim__intermission-card>strong{display:block;margin-bottom:1rem;color:#ffd56b;font-variant-numeric:tabular-nums}
+  .rob-sim__intermission-upgrades{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
+  .rob-sim__intermission-upgrades button,.rob-sim__intermission-continue{border:1px solid rgba(117,233,255,.5);border-radius:.7rem;background:#0b2632;color:#fff;padding:.8rem;font-weight:850}
+  .rob-sim__intermission-upgrades button:disabled{opacity:.42}
+  .rob-sim__intermission-status{min-height:1.5rem;margin:1rem 0 0!important;color:#70e8ff!important;font-weight:750}
+  .rob-sim__intermission-continue{width:100%;margin-top:1rem;border-color:#35e6a0;background:#116344}
+  @media(max-width:560px){.rob-sim__intermission{place-items:start center}.rob-sim__intermission-upgrades{grid-template-columns:1fr}.rob-sim__intermission-card{padding:1rem}}
+</style>
 {{ $options := dict "targetPath" "js/rob-simulator.js" "minify" true }}{{ $game := resources.Get "js/rob-simulator.js" | js.Build $options | fingerprint }}<script src="{{ $game.RelPermalink }}" integrity="{{ $game.Data.Integrity }}" defer></script>
 {{ $cloudKitToken := os.Getenv "MUSIMOTION_CLOUDKIT_API_TOKEN" }}
 {{ $cloudKitLeaderboardEnabled := eq (os.Getenv "ROB_CLOUDKIT_LEADERBOARD_ENABLED") "true" }}

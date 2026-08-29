@@ -2,10 +2,13 @@ import * as THREE from 'three';
 import {
   MAX_ROB_HEALTH,
   MAX_ROB_SHIELDS,
+  SECURITY_CAMERA_HALF_ANGLE,
   applyROBDamage,
+  battleUpgradePoints,
   bossStats,
   cameraHeading,
   consumeLaserEnergy,
+  conveyorArrowOffset,
   conveyorDisplacement,
   driveSpeedMultiplier,
   faceColors,
@@ -22,6 +25,7 @@ import {
   replenishROBShields,
   resolveAxisSlidingMotion,
   securityCameraSees,
+  securityCameraVisionDistances,
   securityMiniBossStats,
   unlockReward,
   updateDriveEnergy,
@@ -141,6 +145,35 @@ if (root) {
   scene.add(new THREE.HemisphereLight(0xa5edff, 0x101820, 2.5)); const sun = new THREE.DirectionalLight(0xffffff, 3.5); sun.position.set(5, 12, 7); sun.castShadow = true; scene.add(sun);
   const mat = (color, emissive = 0, metalness = .25) => new THREE.MeshStandardMaterial({ color, emissive, emissiveIntensity: emissive ? 1.8 : 0, roughness: .5, metalness });
   const mesh = (geometry, material, parent, x = 0, y = 0, z = 0) => { const part = new THREE.Mesh(geometry, material); part.position.set(x, y, z); part.castShadow = true; part.receiveShadow = true; parent.add(part); return part; };
+  const SECURITY_CAMERA_VISION_RAYS = 25;
+  const makeSecurityCameraBeam = (cameraData, parent) => {
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array((SECURITY_CAMERA_VISION_RAYS + 1) * 3);
+    const indices = [];
+    for (let index = 0; index < SECURITY_CAMERA_VISION_RAYS; index += 1) {
+      const angle = -SECURITY_CAMERA_HALF_ANGLE + (SECURITY_CAMERA_HALF_ANGLE * 2 * index) / (SECURITY_CAMERA_VISION_RAYS - 1);
+      positions[(index + 1) * 3] = -Math.sin(angle) * cameraData.range;
+      positions[(index + 1) * 3 + 2] = -Math.cos(angle) * cameraData.range;
+      if (index < SECURITY_CAMERA_VISION_RAYS - 1) indices.push(0, index + 1, index + 2);
+    }
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setIndex(indices);
+    geometry.computeVertexNormals();
+    geometry.computeBoundingSphere();
+    const material = new THREE.MeshBasicMaterial({ color: 0xff203c, transparent: true, opacity: .1, depthWrite: false, side: THREE.DoubleSide });
+    const beam = mesh(geometry, material, parent, 0, .04, 0);
+    beam.castShadow = false; beam.receiveShadow = false; beam.renderOrder = 2;
+    return beam;
+  };
+  const updateSecurityCameraBeam = (cameraData, heading, blockers) => {
+    const distances = securityCameraVisionDistances({ camera: cameraData, heading, blockers, rayCount: SECURITY_CAMERA_VISION_RAYS });
+    const positions = cameraData.beam.geometry.getAttribute('position');
+    distances.forEach((distance, index) => {
+      const angle = -SECURITY_CAMERA_HALF_ANGLE + (SECURITY_CAMERA_HALF_ANGLE * 2 * index) / (distances.length - 1);
+      positions.setXYZ(index + 1, -Math.sin(angle) * distance, 0, -Math.cos(angle) * distance);
+    });
+    positions.needsUpdate = true;
+  };
   const floor = mesh(new THREE.PlaneGeometry(ARENA_HALF_WIDTH * 2, ARENA_HALF_DEPTH * 2), mat(0x172734), scene); floor.rotation.x = -Math.PI / 2;
   const grid = new THREE.GridHelper(ARENA_HALF_WIDTH * 2, 32, 0x2ca4bb, 0x284452); grid.position.y = .01; grid.scale.z = ARENA_HALF_DEPTH / ARENA_HALF_WIDTH; scene.add(grid);
   const box = (x, z, w, d, h, color = 0x405363, collision = true, dynamic = false) => { const b = mesh(new THREE.BoxGeometry(w, h, d), mat(color), scene, x, h / 2, z); if (collision) obstacles.push({ x, z, w: w / 2, d: d / 2 }); if (dynamic) levelParts.push(b); return b; };
@@ -216,7 +249,14 @@ if (root) {
       const conveyor = { id: 0, x: center.x, z: center.z, w: width / 2, d: depth / 2, dx, dz, speed: Math.min(1.45, .62 + (index + 1) * .055) }; conveyors.push(conveyor);
       const group = new THREE.Group(); group.position.set(center.x, .03, center.z);
       mesh(new THREE.BoxGeometry(width, .08, depth), mat(0x555d64, 0, .6), group);
-      for (let arrow = -3; arrow <= 3; arrow += 1) [-1, 1].forEach((side) => { const along = arrow * (horizontal ? width : depth) / 7, stripe = mesh(new THREE.BoxGeometry(.92, .035, .16), mat(arrow % 2 ? 0xf6c633 : 0xb9bec2, arrow % 2 ? 0x4b3500 : 0), group, horizontal ? along : side * .3, .07, horizontal ? side * .3 : along); stripe.rotation.y = (horizontal ? 0 : Math.PI / 2) + side * .62; });
+      const span = horizontal ? width : depth, arrows = [];
+      for (let arrow = -3; arrow <= 3; arrow += 1) [-1, 1].forEach((side) => {
+        const baseOffset = arrow * span / 7;
+        const stripe = mesh(new THREE.BoxGeometry(.92, .035, .16), mat(arrow % 2 ? 0xf6c633 : 0xb9bec2, arrow % 2 ? 0x4b3500 : 0), group, horizontal ? baseOffset : side * .3, .07, horizontal ? side * .3 : baseOffset);
+        stripe.rotation.y = (horizontal ? 0 : Math.PI / 2) + side * .62;
+        arrows.push({ stripe, side, baseOffset });
+      });
+      Object.assign(conveyor, { group, arrows, horizontal, span });
       scene.add(group); levelParts.push(group);
     }
     if (index < 2) return;
@@ -224,8 +264,7 @@ if (root) {
     const cameraData = { id: 0, x: cameraX, z: cameraZ, heading, sweep: .7, range: 14.5 };
     const cameraGroup = new THREE.Group(); cameraGroup.position.set(cameraX, 0, cameraZ); cameraGroup.rotation.y = heading;
     mesh(new THREE.CylinderGeometry(.09, .11, 2.2, 10), mat(0x3f484e), cameraGroup, 0, 1.1); mesh(new THREE.BoxGeometry(.7, .45, .9), mat(0xb4bbc0, 0, .7), cameraGroup, 0, 2.05, -.3); const lens = mesh(new THREE.SphereGeometry(.14, 12, 8), mat(0xff243f, 0xa60018), cameraGroup, 0, 2.05, -.82);
-    const beamMaterial = new THREE.MeshBasicMaterial({ color: 0xff203c, transparent: true, opacity: .1, depthWrite: false }); mesh(new THREE.BoxGeometry(2.6, .025, cameraData.range), beamMaterial, cameraGroup, 0, .04, -cameraData.range / 2);
-    cameraData.group = cameraGroup; cameraData.lens = lens; securityCameras.push(cameraData); scene.add(cameraGroup); levelParts.push(cameraGroup);
+    cameraData.group = cameraGroup; cameraData.lens = lens; cameraData.beam = makeSecurityCameraBeam(cameraData, cameraGroup); securityCameras.push(cameraData); scene.add(cameraGroup); levelParts.push(cameraGroup);
     const shadow = { x: -cameraX * .36, z: 5.3, w: 2.4, d: 1.4 }; shadowZones.push(shadow); const shadowFloor = mesh(new THREE.BoxGeometry(shadow.w * 2, .045, shadow.d * 2), new THREE.MeshStandardMaterial({ color: 0x05070c, transparent: true, opacity: .9 }), scene, shadow.x, .025, shadow.z); levelParts.push(shadowFloor);
   };
 
@@ -234,8 +273,15 @@ if (root) {
   for (let i = 0; i < 8; i += 1) { const spider = buildSpider(); spider.userData.type = 'spider'; scene.add(spider); enemies.push(spider); const dalek = buildDalek(); dalek.userData.type = 'dalek'; scene.add(dalek); enemies.push(dalek); }
 
   const ui = { time: root.querySelector('[data-sim-time]'), score: root.querySelector('[data-sim-score]'), points: root.querySelector('[data-sim-points]'), level: root.querySelector('[data-sim-level]'), levelName: root.querySelector('[data-sim-level-name]'), left: root.querySelector('[data-sim-left]'), right: root.querySelector('[data-sim-right]'), enemies: root.querySelector('[data-sim-enemies]'), lock: root.querySelector('[data-sim-lock]'), message: root.querySelector('[data-sim-message]'), start: root.querySelector('[data-sim-start]'), reset: root.querySelector('[data-sim-reset]'), fullscreen: root.querySelector('[data-sim-fullscreen]'), hack: root.querySelector('[data-sim-hack]'), laserButtons: [...root.querySelectorAll('[data-sim-laser]')], saberButtons: [...root.querySelectorAll('[data-sim-saber]')], health: root.querySelector('[data-sim-health]'), healthText: root.querySelector('[data-sim-health-text]'), shields: root.querySelector('[data-sim-shields]'), shieldsText: root.querySelector('[data-sim-shields-text]'), energy: root.querySelector('[data-sim-energy]'), energyText: root.querySelector('[data-sim-energy-text]'), security: root.querySelector('[data-sim-security]'), boss: root.querySelector('[data-sim-boss]'), bossName: root.querySelector('[data-sim-boss-name]'), bossText: root.querySelector('[data-sim-boss-text]'), bossHealth: root.querySelector('[data-sim-boss-health]'), progress: root.querySelector('[data-sim-progress]'), nextUnlock: root.querySelector('[data-sim-next-unlock]'), finish: root.querySelector('[data-sim-finish]'), faceColor: root.querySelector('[data-sim-face-color]'), ranged: root.querySelector('[data-sim-ranged]'), melee: root.querySelector('[data-sim-melee]'), workshopPoints: root.querySelector('[data-sim-workshop-points]'), upgradeButtons: [...root.querySelectorAll('[data-upgrade]')], loadoutStatus: root.querySelector('[data-sim-loadout-status]') };
+  Object.assign(ui, {
+    intermission: root.querySelector('[data-sim-intermission]'),
+    intermissionTitle: root.querySelector('[data-sim-intermission-title]'),
+    intermissionPoints: root.querySelector('[data-sim-intermission-points]'),
+    intermissionStatus: root.querySelector('[data-sim-intermission-status]'),
+    intermissionContinue: root.querySelector('[data-sim-intermission-continue]'),
+  });
   const awardMissionPoints = (points) => { if (points <= 0) return; score += points; upgradePoints += points; saveProgress('robUpgradePoints', upgradePoints); updateWorkshop(); };
-  const objectives = Object.fromEntries([...root.querySelectorAll('[data-objective]')].map((item) => [item.dataset.objective, item])); const say = (t) => { ui.message.textContent = t; }; const mark = (n, t, p) => { if (objectives[n].classList.contains('is-complete')) return; objectives[n].classList.add('is-complete'); awardMissionPoints(p); say(t); };
+  const objectives = Object.fromEntries([...root.querySelectorAll('[data-objective]')].map((item) => [item.dataset.objective, item])); const say = (t) => { ui.message.textContent = t; ui.intermissionStatus.textContent = t; }; const mark = (n, t, p) => { if (objectives[n].classList.contains('is-complete')) return; objectives[n].classList.add('is-complete'); awardMissionPoints(p); say(t); };
   const currentBoss = () => enemies.find((enemy) => enemy.userData.alive && enemy.userData.isBoss);
   const updateWorkshop = () => {
     selectedFinishID = selectedFinish().id; selectedFaceColorID = selectedFaceColor().id; selectedRangedID = selectedRanged().id; selectedMeleeID = selectedMelee().id;
@@ -245,6 +291,7 @@ if (root) {
     [...ui.ranged.options].forEach((option) => { const weapon = rangedWeapons.find(({ id }) => id === option.value); option.disabled = Boolean(weapon && !isUnlocked(weapon, highestCompletedLevel)); });
     [...ui.melee.options].forEach((option) => { const weapon = meleeWeapons.find(({ id }) => id === option.value); option.disabled = Boolean(weapon && !isUnlocked(weapon, highestCompletedLevel)); });
     ui.workshopPoints.textContent = `${upgradePoints.toLocaleString()} points`;
+    ui.intermissionPoints.textContent = `${upgradePoints.toLocaleString()} battle points available`;
     ui.upgradeButtons.forEach((button) => { const upgrade = upgrades.find(({ id }) => id === button.dataset.upgrade), level = upgradeLevels[upgrade.id], cost = upgradeCost(upgrade, level); button.textContent = cost === undefined ? `${upgrade.name} · MAX` : `${upgrade.name} L${level} · ${cost}`; button.disabled = cost === undefined || upgradePoints < cost; });
     ui.loadoutStatus.textContent = `${selectedFinish().name} finish · ${selectedFaceColor().name} smile · ${selectedRanged().name} · ${selectedMelee().name} · Speed L${upgradeLevels.speedBoost} · Energy L${upgradeLevels.energyCapacity} · Power L${upgradeLevels.weaponPower} · Targeting L${upgradeLevels.targetingComputer}`;
   };
@@ -259,6 +306,7 @@ if (root) {
   };
   const loadLevel = (index) => {
     const level = levels[index];
+    ui.intermission.hidden = true;
     levelParts.splice(0).forEach((part) => scene.remove(part)); obstacles.length = 0;
     level.obstacles.forEach((o, i) => box(...o, i % 2 ? 0x465262 : 0x344552, true, true));
     buildEnvironmentalFeatures(index);
@@ -266,6 +314,8 @@ if (root) {
     robot.position.set(0, 0, ARENA_HALF_DEPTH - 1.6); robot.rotation.set(0, 0, 0); robotRig.torso.rotation.set(0, 0, 0); armAssemblies.forEach((arm) => arm.rotation.set(0, 0, 0)); levelElapsed = 0; health = MAX_ROB_HEALTH; shields = MAX_ROB_SHIELDS; energy = maximumEnergy(upgradeLevels.energyCapacity); damageInvulnerableUntil = -Infinity; gateDone = false; cellCount = 0; levelComplete = false; hasKey = false; doorOpen = !level.key; hacking = false; hackingProgress = 0; securityAlertRemaining = 0; securityMiniBossReleased = false; laserLock = undefined; secondaryLaserLock = undefined; laserChargeStarted = undefined; saberCombo = 0; lastSaberAttack = -Infinity; saberAnimation = undefined; gamepadLaserHeld = false;
     releaseAllInput(); keyObject.visible = Boolean(level.key); if (level.key) keyObject.position.set(level.key[0], 0, level.key[1]);
     doorObject.visible = Boolean(level.door); if (level.door) { doorObject.position.set(level.door[0], .9, level.door[1]); doorObject.scale.set(level.door[2] / 4, 1, level.door[3] / .35); }
+    const initialCameraBlockers = projectileBlockers();
+    securityCameras.forEach((securityCamera) => updateSecurityCameraBeam(securityCamera, securityCamera.heading, initialCameraBlockers));
     const hackPosition = hackPositionForLevel(level); hackTerminal.visible = Boolean(hackPosition); if (hackPosition) hackTerminal.position.set(hackPosition[0], 0, hackPosition[1]);
     bolts.splice(0).forEach((bolt) => scene.remove(bolt)); enemyBolts.splice(0).forEach((bolt) => scene.remove(bolt)); window.speechSynthesis?.cancel?.();
     cells.forEach((cell, i) => { const position = level.cells[i]; cell.visible = Boolean(position); cell.userData.got = false; if (position) cell.position.set(position[0], .55, position[1]); });
@@ -311,7 +361,7 @@ if (root) {
     objectives.enemies.classList.remove('is-complete'); objectives.enemies.querySelector('[data-objective-text]').textContent = 'Disable hostile robots and the released mini boss';
     return true;
   };
-  const damageEnemy = (hit, weapon, amount = 1) => { const damage = upgradedWeaponDamage(amount, upgradeLevels.weaponPower); hit.userData.health -= damage; awardMissionPoints(50 * damage); if (hit.userData.type === 'spider') playSpiderSound(hit.userData.health <= 0 ? 'shutdown' : 'impact'); say(`${hit.userData.name} hit by ${weapon} — ${Math.max(0, hit.userData.health)} shields remain.`); if (hit.userData.health <= 0) { hit.userData.alive = false; hit.visible = false; awardMissionPoints(hit.userData.defeatReward ?? (hit.userData.isBoss ? 1000 : 300)); if (laserLock === hit) laserLock = undefined; if (secondaryLaserLock === hit) secondaryLaserLock = undefined; if (hit.userData.type !== 'spider') playDalekSentry(); say(`${hit.userData.name} disabled by ${weapon}. ${enemies.filter((enemy) => enemy.userData.alive).length} targets remain.`); if (enemies.every((e) => !e.userData.alive)) mark('enemies', 'Training-room defense complete.', 400); } };
+  const damageEnemy = (hit, weapon, amount = 1) => { const damage = upgradedWeaponDamage(amount, upgradeLevels.weaponPower); hit.userData.health -= damage; awardMissionPoints(battleUpgradePoints({ damage })); if (hit.userData.type === 'spider') playSpiderSound(hit.userData.health <= 0 ? 'shutdown' : 'impact'); say(`${hit.userData.name} hit by ${weapon} — ${Math.max(0, hit.userData.health)} shields remain.`); if (hit.userData.health <= 0) { hit.userData.alive = false; hit.visible = false; awardMissionPoints(battleUpgradePoints({ defeatReward: hit.userData.defeatReward ?? (hit.userData.isBoss ? 1000 : 300) })); if (laserLock === hit) laserLock = undefined; if (secondaryLaserLock === hit) secondaryLaserLock = undefined; if (hit.userData.type !== 'spider') playDalekSentry(); say(`${hit.userData.name} disabled by ${weapon}. ${enemies.filter((enemy) => enemy.userData.alive).length} targets remain.`); if (enemies.every((e) => !e.userData.alive)) mark('enemies', 'Training-room defense complete.', 400); } };
   const damageROB = (attack, damage) => {
     if (!running || elapsed < damageInvulnerableUntil) return false;
     const result = applyROBDamage({ health, shields, damage }); health = result.health; shields = result.shields; score = Math.max(0, score - result.scorePenalty); damageInvulnerableUntil = elapsed + .75;
@@ -402,10 +452,10 @@ if (root) {
     const conveyorPosition = robot.position.clone(); conveyorPosition.x += conveyorMove.x; conveyorPosition.z += conveyorMove.z; if (!collision(conveyorPosition)) robot.position.copy(conveyorPosition);
     robotRig.treadWheels.forEach(({ wheel, side }) => { wheel.rotation.x -= controls[side] * dt * 7.5; });
     if (motion.collided && Math.abs(linear) > .1) say(robot.position.distanceTo(old) > .001 ? 'Wall assist active — ROB is sliding along the open edge.' : 'Wall contact — reverse or pivot away; ROB will release cleanly.');
-    const robotPoint = { x: robot.position.x, z: robot.position.z }, wasAlerted = securityAlertRemaining > 0;
-    const detectingCamera = securityCameras.find((securityCamera) => securityCameraSees({ camera: securityCamera, robot: robotPoint, elapsed, blockers: projectileBlockers(), shadows: shadowZones }));
+    const robotPoint = { x: robot.position.x, z: robot.position.z }, wasAlerted = securityAlertRemaining > 0, cameraBlockers = projectileBlockers();
+    const detectingCamera = securityCameras.find((securityCamera) => securityCameraSees({ camera: securityCamera, robot: robotPoint, elapsed, blockers: cameraBlockers, shadows: shadowZones }));
     if (detectingCamera) { securityAlertRemaining = 5; if (!wasAlerted) say(releaseSecurityMiniBoss(detectingCamera) ? 'Security camera caught ROB! A three-shield mini boss has been released — disable it or escape into shadow.' : 'Security camera spotted ROB again! Dodge into a dark shadow pad.'); }
-    securityCameras.forEach((securityCamera) => { securityCamera.group.rotation.y = cameraHeading(securityCamera, elapsed); securityCamera.lens.material.emissiveIntensity = securityAlertRemaining > 0 ? 3.2 : 1.8; });
+    securityCameras.forEach((securityCamera) => { const heading = cameraHeading(securityCamera, elapsed); securityCamera.group.rotation.y = heading; updateSecurityCameraBeam(securityCamera, heading, cameraBlockers); securityCamera.lens.material.emissiveIntensity = securityAlertRemaining > 0 ? 3.2 : 1.8; });
     if (hacking) {
       if (robot.position.distanceTo(hackTerminal.position) > 2.25) { hacking = false; hackingProgress = 0; say('Hack interrupted. Move back beside the orange panel.'); }
       else { hackingProgress = Math.min(1, hackingProgress + dt / 2.2); if (hackingProgress >= 1) { hacking = false; doorOpen = true; doorObject.visible = false; hackTerminal.visible = false; awardMissionPoints(300); playSound('pickup'); say('Flipper Zero hack complete. Security lock bypassed and door open.'); } }
@@ -437,7 +487,23 @@ if (root) {
     cells.forEach((c) => { if (c.visible && !c.userData.got && robot.position.distanceTo(c.position) < 1) { c.userData.got = true; c.visible = false; cellCount += 1; energy = Math.min(maximumEnergy(upgradeLevels.energyCapacity), energy + 32); awardMissionPoints(150); playSound('pickup'); say(`Energy cell ${cellCount} of ${level.cells.length} secured. Battery recharged.`); if (cellCount === level.cells.length) mark('cells', 'All cells secured. Dock after the room is safe.', 300); } });
     shieldPickups.forEach((pickup) => { if (pickup.visible && !pickup.userData.got && shields < MAX_ROB_SHIELDS && robot.position.distanceTo(pickup.position) < 1.1) { const before = shields; shields = replenishROBShields(shields); pickup.userData.got = true; pickup.visible = false; awardMissionPoints(100); playSound('pickup'); say(`Shield capacitor restored ${shields - before} points. ROB shields: ${shields}/${MAX_ROB_SHIELDS}.`); } });
     repairPickups.forEach((pickup) => { if (pickup.visible && !pickup.userData.got && health < MAX_ROB_HEALTH && robot.position.distanceTo(pickup.position) < 1.1) { const before = health; health = repairROBHealth(health); pickup.userData.got = true; pickup.visible = false; awardMissionPoints(100); playSound('pickup'); say(`Repair kit restored ${health - before} hull points. ROB health: ${health}/${MAX_ROB_HEALTH}.`); } });
-    if (cellCount === level.cells.length && enemies.every((e) => !e.userData.alive) && doorOpen && robot.position.distanceTo(dock.position) < 1.15) { const timeBonus = Math.max(0, level.bonus - Math.floor(levelElapsed) * 10), completedLevel = levelIndex + 1, earnedProgress = completedLevel > highestCompletedLevel, reward = earnedProgress ? unlockReward(completedLevel) : undefined; highestCompletedLevel = Math.max(highestCompletedLevel, completedLevel); saveProgress('robHighestCompletedLevel', highestCompletedLevel); updateWorkshop(); mark('dock', [reward, `Level cleared! Time bonus: ${timeBonus}.`].filter(Boolean).join(' '), 500 + timeBonus); playSound('level-complete'); running = false; levelComplete = true; ui.start.hidden = false; if (levelIndex < levels.length - 1) ui.start.textContent = `Continue to level ${levelIndex + 2}`; else { complete = true; ui.start.textContent = 'Play campaign again'; root.dispatchEvent(new CustomEvent('rob:campaign-complete', { detail: { score, durationSeconds: Math.round(elapsed), levelsCompleted: levels.length } })); say([reward, `Campaign complete with ${score.toLocaleString()} points. Add your call sign!`].filter(Boolean).join(' ')); } }
+    if (cellCount === level.cells.length && enemies.every((e) => !e.userData.alive) && doorOpen && robot.position.distanceTo(dock.position) < 1.15) {
+      const timeBonus = Math.max(0, level.bonus - Math.floor(levelElapsed) * 10), completedLevel = levelIndex + 1, earnedProgress = completedLevel > highestCompletedLevel, reward = earnedProgress ? unlockReward(completedLevel) : undefined;
+      highestCompletedLevel = Math.max(highestCompletedLevel, completedLevel); saveProgress('robHighestCompletedLevel', highestCompletedLevel); updateWorkshop();
+      mark('dock', [reward, `Level cleared! Time bonus: ${timeBonus}.`].filter(Boolean).join(' '), 500 + timeBonus);
+      playSound('level-complete'); running = false; levelComplete = true; releaseAllInput(); stopMusic();
+      if (levelIndex < levels.length - 1) {
+        ui.start.hidden = true;
+        ui.intermissionTitle.textContent = `Level ${completedLevel} cleared · Upgrade Bay`;
+        ui.intermissionContinue.textContent = `Deploy to level ${completedLevel + 1}`;
+        ui.intermission.hidden = false;
+        updateWorkshop();
+      } else {
+        complete = true; ui.start.hidden = false; ui.start.textContent = 'Play campaign again';
+        root.dispatchEvent(new CustomEvent('rob:campaign-complete', { detail: { score, durationSeconds: Math.round(elapsed), levelsCompleted: levels.length } }));
+        say([reward, `Campaign complete with ${score.toLocaleString()} points. Add your call sign!`].filter(Boolean).join(' '));
+      }
+    }
   };
   const fullscreenElement = () => document.fullscreenElement || document.webkitFullscreenElement;
   const isFullscreen = () => fullscreenElement() === shell || shell.classList.contains('is-pseudo-fullscreen');
@@ -448,6 +514,11 @@ if (root) {
     cells.forEach((c, i) => { if (c.visible) { c.rotation.y += dt * 1.4; c.position.y = .55 + Math.sin(elapsed * 2 + i) * .08; } });
     shieldPickups.forEach((pickup, i) => { if (pickup.visible) { pickup.rotation.y += dt * 1.8; pickup.position.y = Math.sin(elapsed * 2.3 + i) * .1; } });
     repairPickups.forEach((pickup, i) => { if (pickup.visible) { pickup.rotation.y -= dt * .9; pickup.position.y = Math.sin(elapsed * 1.8 + i) * .07; } });
+    conveyors.forEach((conveyor) => conveyor.arrows.forEach(({ stripe, side, baseOffset }) => {
+      const offset = conveyorArrowOffset({ baseOffset, elapsed, speed: conveyor.speed, span: conveyor.span, direction: conveyor.horizontal ? conveyor.dx : conveyor.dz });
+      if (conveyor.horizontal) stripe.position.set(offset, .07, side * .3);
+      else stripe.position.set(side * .3, .07, offset);
+    }));
     robotRig.shieldField.visible = shields > 0; robotRig.shieldField.rotation.y += dt * .35; robotRig.shieldField.material.opacity = .06 + .1 * (shields / MAX_ROB_SHIELDS);
     camera.position.lerp(new THREE.Vector3(robot.position.x + 6.2, 11.2, robot.position.z + 8.2), .06); camera.lookAt(robot.position.x, .65, robot.position.z - 1.8);
     ui.time.textContent = new Date(elapsed * 1000).toISOString().slice(14, 22); ui.score.textContent = score; ui.points.textContent = upgradePoints; ui.left.textContent = controls.left.toFixed(2); ui.right.textContent = controls.right.toFixed(2); ui.enemies.textContent = enemies.filter((e) => e.userData.alive).length;
@@ -474,6 +545,12 @@ if (root) {
   const leavePseudoFullscreen = () => { shell.classList.remove('is-pseudo-fullscreen'); document.body.classList.remove('rob-game-open'); };
   const syncFullscreen = () => { const open = Boolean(fullscreenElement()) || shell.classList.contains('is-pseudo-fullscreen'); shell.classList.toggle('is-fullscreen', open); ui.fullscreen.textContent = open ? '× Exit' : '⛶ Fullscreen'; ui.fullscreen.setAttribute('aria-label', open ? 'Exit fullscreen' : 'Enter fullscreen'); releaseAllInput(); requestAnimationFrame(resize); };
   ui.fullscreen.addEventListener('click', async () => { try { if (fullscreenElement()) await (document.exitFullscreen?.() || document.webkitExitFullscreen?.()); else if (shell.classList.contains('is-pseudo-fullscreen')) leavePseudoFullscreen(); else if (shell.requestFullscreen) await shell.requestFullscreen({ navigationUI: 'hide' }); else if (shell.webkitRequestFullscreen) shell.webkitRequestFullscreen(); else enterPseudoFullscreen(); if (isFullscreen()) screen.orientation?.lock?.('landscape')?.catch?.(() => {}); syncFullscreen(); } catch { enterPseudoFullscreen(); syncFullscreen(); } }); ['fullscreenchange', 'webkitfullscreenchange'].forEach((eventName) => document.addEventListener(eventName, syncFullscreen)); window.visualViewport?.addEventListener('resize', resize); addEventListener('orientationchange', () => requestAnimationFrame(resize));
+  ui.intermissionContinue.addEventListener('click', () => {
+    if (!levelComplete || levelIndex >= levels.length - 1) return;
+    levelIndex += 1; loadLevel(levelIndex); running = true; startMusic(); playSound('mission-start'); ui.start.hidden = true;
+    say(`Level ${levelIndex + 1}: upgrades installed. Clear the targets, collect every cell, solve the key and door when present, then dock.`);
+    viewport.focus();
+  });
   ui.start.addEventListener('click', () => { if (complete) reset(); else if (levelComplete) { levelIndex += 1; loadLevel(levelIndex); } running = true; startMusic(); playSound('mission-start'); ui.start.hidden = true; say(`Level ${levelIndex + 1}: clear the targets, collect every cell, solve the key and door when present, then dock.`); viewport.focus(); }); ui.reset.addEventListener('click', reset); root.querySelector('[data-sim-sound]').addEventListener('click', (event) => { soundEnabled = !soundEnabled; if (!soundEnabled) window.speechSynthesis?.cancel?.(); event.currentTarget.setAttribute('aria-pressed', String(soundEnabled)); event.currentTarget.textContent = soundEnabled ? '♪ Effects' : 'Effects off'; }); root.querySelector('[data-sim-music]').addEventListener('click', (event) => { musicEnabled = !musicEnabled; event.currentTarget.setAttribute('aria-pressed', String(musicEnabled)); event.currentTarget.textContent = musicEnabled ? '♫ Techno' : 'Music off'; if (musicEnabled && running) startMusic(); else stopMusic(); });
   ui.finish.addEventListener('change', () => { selectedFinishID = ui.finish.value; saveProgress('robRobotFinish', selectedFinishID); applyLoadout(); say(`${selectedFinish().name} finish equipped.`); });
   ui.faceColor.addEventListener('change', () => { selectedFaceColorID = ui.faceColor.value; saveProgress('robFaceColor', selectedFaceColorID); applyLoadout(); say(`${selectedFaceColor().name} smile equipped.`); });

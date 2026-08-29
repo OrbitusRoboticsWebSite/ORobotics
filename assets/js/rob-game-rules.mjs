@@ -1,4 +1,4 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.09.04';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.05';
 export const MAX_ROB_HEALTH = 100;
 export const MAX_ROB_SHIELDS = 40;
 export const BASE_ROB_ENERGY = 100;
@@ -54,7 +54,37 @@ export const conveyorDisplacement = ({ point, conveyors, delta }) => {
   return conveyor ? { x: conveyor.dx * conveyor.speed * delta, z: conveyor.dz * conveyor.speed * delta } : { x: 0, z: 0 };
 };
 
+export const conveyorArrowOffset = ({ baseOffset, elapsed, speed, span, direction }) => {
+  if (!(span > 0)) return baseOffset;
+  const shifted = baseOffset + elapsed * speed * direction + span / 2;
+  return ((shifted % span) + span) % span - span / 2;
+};
+
+export const battleUpgradePoints = ({ damage = 0, defeatReward = 0 }) => (
+  Math.max(0, Math.floor(damage)) * 50 + Math.max(0, Math.floor(defeatReward))
+);
+
+export const SECURITY_CAMERA_HALF_ANGLE = Math.PI / 5;
 export const cameraHeading = (camera, elapsed) => camera.heading + Math.sin(elapsed * .72 + camera.id * 1.7) * camera.sweep;
+export const securityCameraSightDistance = ({ camera, heading, angleOffset = 0, blockers = [] }) => {
+  const rayHeading = heading + angleOffset;
+  const end = {
+    x: camera.x - Math.sin(rayHeading) * camera.range,
+    z: camera.z - Math.cos(rayHeading) * camera.range,
+  };
+  const nearestFraction = blockers.reduce((nearest, blocker) => {
+    const fraction = segmentBoxHitFraction(camera, end, blocker, .015);
+    return fraction === undefined ? nearest : Math.min(nearest, fraction);
+  }, 1);
+  return camera.range * nearestFraction;
+};
+export const securityCameraVisionDistances = ({ camera, heading, blockers = [], rayCount = 25 }) => {
+  const count = Math.max(2, Math.floor(rayCount));
+  return Array.from({ length: count }, (_, index) => {
+    const angleOffset = -SECURITY_CAMERA_HALF_ANGLE + (SECURITY_CAMERA_HALF_ANGLE * 2 * index) / (count - 1);
+    return securityCameraSightDistance({ camera, heading, angleOffset, blockers });
+  });
+};
 export const securityCameraSees = ({ camera, robot, elapsed, blockers = [], shadows = [] }) => {
   if (shadows.some((shadow) => pointInBox(robot, shadow))) return false;
   const offset = { x: robot.x - camera.x, z: robot.z - camera.z };
@@ -62,8 +92,9 @@ export const securityCameraSees = ({ camera, robot, elapsed, blockers = [], shad
   if (distance < .001 || distance > camera.range) return false;
   const heading = cameraHeading(camera, elapsed);
   const forward = { x: -Math.sin(heading), z: -Math.cos(heading) };
-  if ((offset.x / distance) * forward.x + (offset.z / distance) * forward.z < Math.cos(Math.PI / 5)) return false;
-  return blockers.every((blocker) => segmentBoxHitFraction(camera, robot, blocker, .015) === undefined);
+  if ((offset.x / distance) * forward.x + (offset.z / distance) * forward.z < Math.cos(SECURITY_CAMERA_HALF_ANGLE)) return false;
+  const targetHeading = Math.atan2(-offset.x, -offset.z);
+  return distance <= securityCameraSightDistance({ camera, heading, angleOffset: targetHeading - heading, blockers }) + .001;
 };
 
 export const finishes = [
