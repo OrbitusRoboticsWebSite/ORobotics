@@ -1,74 +1,197 @@
 {{ define "main" }}
-<main id="main" class="robot-lab" data-robot-lab>
-  <header class="robot-lab__hero">
-    <div class="robot-lab__hero-copy">
-      <p class="robot-lab__eyebrow">Maker Faire learning mission · Ages 8–16</p>
-      <h1>ROB’s Systems Lab</h1>
-      <p>Repair eight imaginary robot missions—including a four-part USB Power Lab—by reasoning about systems, signals, motion, circuits, and safe control. No login, tracking, or robot connection—everything stays in this browser.</p>
-      <button type="button" class="robot-lab__start" data-lab-start>Start the first mission <span aria-hidden="true">→</span></button>
-      <a class="robot-lab__start inline-block" href="{{ "rob-simulator/" | relURL }}">Drive ROB in 3D <span aria-hidden="true">→</span></a>
+<main id="main" class="circuit-lab" data-circuit-lab>
+  <header class="circuit-hero">
+    <div class="circuit-hero__copy">
+      <div class="circuit-hero__flags" aria-label="Activity details">
+        <span><i aria-hidden="true"></i> Maker Faire Lab</span>
+        <span>Ages 8–16</span>
+        <span>100% virtual</span>
+      </div>
+      <p class="circuit-kicker">ROB’s Systems Lab presents</p>
+      <h1>Circuit<br><em>Quest</em></h1>
+      <p class="circuit-hero__lede">Snap in colorful wires, chase electrons, light bulbs with real circuit rules, store sunshine in a battery, master <strong>V = I × R</strong>, and program a virtual Arduino Uno.</p>
+      <div class="circuit-hero__actions">
+        <button type="button" data-lab-start>Power up the lab <span aria-hidden="true">↗</span></button>
+        <a href="#mission-map">See all 8 builds</a>
+      </div>
+      <p class="circuit-hero__privacy"><span aria-hidden="true">●</span> No login, no tracking, no physical robot connection. Progress stays on this device.</p>
     </div>
-    <figure class="robot-lab__hero-art">
-      <img src="{{ "images/education/rob-systems-feedback-lab.png" | relURL }}" width="1448" height="1086" alt="Illustration of ROB with symbolic structure, energy, sensing, computing, motion, and feedback pathways." />
-      <figcaption>Concept illustration—not ROB’s wiring diagram or construction plan.</figcaption>
-    </figure>
+
+    <div class="circuit-hero__machine" aria-label="Animated illustration of solar energy flowing into a battery and lamp">
+      <div class="hero-orbit hero-orbit--one"></div>
+      <div class="hero-orbit hero-orbit--two"></div>
+      <div class="hero-sun"><span>☀</span><b>SUN<br>100%</b></div>
+      <div class="hero-panel"><i></i><i></i><i></i><i></i><b>SOLAR ARRAY</b></div>
+      <div class="hero-battery"><span></span><b>CHARGING</b><strong>84%</strong></div>
+      <div class="hero-bulb"><i></i><b>LOAD</b></div>
+      <div class="hero-wire hero-wire--a"><i></i><i></i><i></i></div>
+      <div class="hero-wire hero-wire--b"><i></i><i></i><i></i></div>
+      <div class="hero-meter"><small>POWER FLOW</small><strong>4.2 W</strong><span>V = I × R</span></div>
+    </div>
   </header>
 
-  <section class="robot-lab__lesson" aria-labelledby="lab-loop-title">
-    <div><span>1</span><strong>Observe</strong><small>What evidence is available?</small></div>
-    <div><span>2</span><strong>Model</strong><small>How do the parts connect?</small></div>
-    <div><span>3</span><strong>Predict</strong><small>What should happen next?</small></div>
-    <div><span>4</span><strong>Test</strong><small>Does evidence match?</small></div>
-    <div><span>5</span><strong>Revise</strong><small>What would you change?</small></div>
-    <h2 id="lab-loop-title" class="sr-only">The engineering learning loop</h2>
+  <section class="circuit-marquee" aria-label="Topics covered">
+    <div><span>COMPLETE THE LOOP</span><i>✦</i><span>LIGHT THE BULB</span><i>✦</i><span>OHM’S LAW</span><i>✦</i><span>HARVEST THE SUN</span><i>✦</i><span>CODE THE ARDUINO</span><i>✦</i><span>MAKE • TEST • LEARN</span><i>✦</i></div>
   </section>
 
-  <section class="robot-lab__usb" aria-labelledby="usb-lab-title">
-    <figure>
-      <img src="{{ "images/education/usb-5v-toy-power-lab.webp" | relURL }}" width="1400" height="933" alt="An adult mentor prepares an unplugged USB cable while a child in safety glasses observes; the red and black power conductors lead toward a protected toy motor while the green and white data conductors are capped." loading="lazy" />
-      <figcaption>A typical USB 2.0 cable can expose a 5 V energy path, but a meter—not insulation color—proves conductor identity.</figcaption>
-    </figure>
+  <section id="mission-map" class="mission-map" aria-labelledby="mission-map-title">
+    <div class="mission-map__heading">
+      <div>
+        <p class="circuit-kicker">Your maker journey</p>
+        <h2 id="mission-map-title">Eight builds. One bright idea at a time.</h2>
+      </div>
+      <p>Each mission adds one new idea. Finish a build to unlock the next bench—just like a real engineer earning access to new tools.</p>
+    </div>
+    <nav class="mission-rail" data-mission-rail aria-label="Circuit Quest missions"></nav>
+  </section>
+
+  <section class="lab-shell" aria-labelledby="lab-title">
+    <aside class="lab-guide">
+      <div class="lab-guide__brand"><span aria-hidden="true">R</span><div><small>YOUR GUIDE</small><strong>ROB</strong></div><i data-guide-status>READY</i></div>
+      <div class="lab-guide__speech">
+        <span aria-hidden="true">“</span>
+        <p data-guide-message>Electricity needs a complete loop. Let’s build one!</p>
+      </div>
+      <div class="lab-guide__objectives">
+        <p>Mission checklist</p>
+        <ul data-objective-list></ul>
+      </div>
+      <button type="button" class="lab-hint" data-lab-hint><span aria-hidden="true">?</span> Give me a hint</button>
+      <div class="lab-guide__score">
+        <span>Maker sparks</span>
+        <strong><b data-lab-score>0</b> / 24</strong>
+        <div><i data-score-bar></i></div>
+      </div>
+    </aside>
+
+    <div class="lab-stage">
+      <header class="lab-stage__header">
+        <div>
+          <p class="circuit-kicker" data-mission-kicker>Build 01 · First circuit</p>
+          <h2 id="lab-title" data-mission-title>Light the workshop lamp</h2>
+          <p data-mission-intro>Connect a battery to a bulb and back again.</p>
+        </div>
+        <div class="lab-stage__chips"><span data-mission-difficulty>Rookie</span><span><i></i> Low-voltage sim</span></div>
+      </header>
+
+      <div class="workbench" data-workbench>
+        <canvas data-wire-canvas aria-hidden="true"></canvas>
+        <div class="workbench__grid" aria-hidden="true"></div>
+        <div class="workbench__components" data-components></div>
+        <div class="workbench__empty" data-workbench-loading><span>⚡</span><p>Preparing your circuit bench…</p></div>
+        <div class="workbench__toast" data-lab-toast role="status" aria-live="polite"></div>
+        <div class="circuit-success" data-success hidden>
+          <span aria-hidden="true">✦</span>
+          <strong>CIRCUIT COMPLETE!</strong>
+          <small data-success-copy>Energy has a path all the way home.</small>
+        </div>
+      </div>
+
+      <div class="wire-dock">
+        <div class="wire-dock__state">
+          <span class="wire-plug" data-plug-indicator></span>
+          <div><small>WIRE TOOL</small><strong data-wire-status>Select a terminal to start a wire</strong></div>
+        </div>
+        <div class="wire-dock__controls">
+          <button type="button" data-undo-wire disabled>↶ <span>Undo wire</span></button>
+          <button type="button" data-clear-wires>Clear</button>
+        </div>
+      </div>
+
+      <div class="lab-instruments" aria-label="Live circuit measurements">
+        <div><small>SUPPLY</small><strong><span data-meter-voltage>0.0</span> V</strong><i>voltage</i></div>
+        <div><small>FLOW</small><strong><span data-meter-current>0.0</span> mA</strong><i>current</i></div>
+        <div><small>LOAD</small><strong><span data-meter-resistance>—</span> Ω</strong><i>resistance</i></div>
+        <div class="lab-instruments__scope"><small>ENERGY SCOPE</small><canvas data-scope-canvas aria-hidden="true"></canvas><strong data-power-state>OPEN LOOP</strong></div>
+      </div>
+
+      <div class="mission-action" data-mission-action></div>
+
+      <footer class="lab-stage__footer">
+        <button type="button" data-previous-mission>← Previous</button>
+        <p data-lab-progress>Build 1 of 8</p>
+        <button type="button" class="mission-next" data-next-mission disabled>Next build <span aria-hidden="true">→</span></button>
+      </footer>
+    </div>
+  </section>
+
+  <section class="ohm-lab" aria-labelledby="ohm-title">
+    <div class="ohm-lab__copy">
+      <p class="circuit-kicker">The engineer’s superpower</p>
+      <h2 id="ohm-title">Ohm’s law makes circuits predictable.</h2>
+      <p>Voltage is the push, current is the flow, and resistance is what slows the flow. Know any two and <strong>V = I × R</strong> reveals the third.</p>
+      <div class="ohm-characters" aria-label="Ohm's law concepts">
+        <article><span>V</span><div><strong>Voltage</strong><small>The electrical push</small></div><b>volts</b></article>
+        <article><span>I</span><div><strong>Current</strong><small>Charge flowing each second</small></div><b>amps</b></article>
+        <article><span>R</span><div><strong>Resistance</strong><small>Opposition to flow</small></div><b>ohms</b></article>
+      </div>
+    </div>
+    <div class="ohm-calculator">
+      <div class="ohm-calculator__top"><span>V = I × R</span><small>OHM-O-MATIC 3000</small></div>
+      <p>Enter two values. Leave the mystery value blank.</p>
+      <div class="ohm-fields">
+        <label><span>V</span><b>Voltage</b><input type="number" min="0" step="any" inputmode="decimal" data-ohm-voltage placeholder="?" aria-label="Voltage in volts"><small>volts</small></label>
+        <i aria-hidden="true">=</i>
+        <label><span>I</span><b>Current</b><input type="number" min="0" step="any" inputmode="decimal" data-ohm-current placeholder="?" aria-label="Current in milliamps"><small>milliamps</small></label>
+        <i aria-hidden="true">×</i>
+        <label><span>R</span><b>Resistance</b><input type="number" min="0" step="any" inputmode="decimal" data-ohm-resistance placeholder="?" aria-label="Resistance in ohms"><small>ohms</small></label>
+      </div>
+      <div class="ohm-presets"><button type="button" data-ohm-preset="led">Try an LED</button><button type="button" data-ohm-preset="divider">Try a divider</button><button type="button" data-ohm-clear>Clear</button></div>
+      <button type="button" class="ohm-calculate" data-ohm-calculate>Calculate the mystery</button>
+      <output data-ohm-result aria-live="polite">Tip: current is entered in milliamps here, so 0.02 A becomes 20 mA.</output>
+    </div>
+  </section>
+
+  <section class="arduino-school" aria-labelledby="arduino-school-title">
+    <div class="arduino-school__board" aria-hidden="true">
+      <div class="uno-ghost"><span>∞</span><strong>ARDUINO</strong><small>UNO</small><i></i><i></i><i></i><i></i><b>13</b><b>GND</b></div>
+    </div>
     <div>
-      <p class="robot-lab__eyebrow">Missions 5–8 · USB Power Lab</p>
-      <h2 id="usb-lab-title">Turn an old battery toy into a circuit lesson</h2>
-      <p>Practice the whole reasoning chain before touching a real cable: unplug, let a mentor prepare it, isolate unused wires, verify voltage and polarity, match the load, connect while unpowered, and run one bounded test.</p>
-      <div class="robot-lab__usb-warning"><strong>Children do not cut live cables.</strong> In the real Maker Faire activity, only a mentor cuts and strips a sacrificial, unplugged USB-A cable. Use an approved current-limited 5 V source and toy, remove its batteries, cover every connection, and stop for heat, odor, noise, or damaged insulation.</div>
+      <p class="circuit-kicker">Builds 7 &amp; 8 · Tiny computer, big ideas</p>
+      <h2 id="arduino-school-title">From electricity to instructions.</h2>
+      <p>An Arduino Uno is a small computer that reads inputs and controls outputs. First you’ll wire pin 13 through a resistor and LED. Then you’ll write a real Arduino-style sketch and run it on our virtual board.</p>
+      <ol>
+        <li><span>1</span><div><strong>setup()</strong><small>Runs once. Prepare pin 13 as an output.</small></div></li>
+        <li><span>2</span><div><strong>loop()</strong><small>Repeats forever while the board has power.</small></div></li>
+        <li><span>3</span><div><strong>digitalWrite()</strong><small>HIGH turns the pin on. LOW turns it off.</small></div></li>
+        <li><span>4</span><div><strong>delay()</strong><small>Waits a number of milliseconds so our eyes can see the blink.</small></div></li>
+      </ol>
     </div>
   </section>
 
-  <section class="robot-lab__game" aria-labelledby="lab-game-title">
-    <div class="robot-lab__status">
-      <div><span>Mission</span><strong data-lab-progress>1 / 8</strong></div>
-      <div><span>Evidence points</span><strong data-lab-score>0</strong></div>
-      <button type="button" data-lab-reset>Reset lab</button>
+  <section class="maker-handbook" aria-labelledby="maker-handbook-title">
+    <header>
+      <p class="circuit-kicker">Maker Faire field guide</p>
+      <h2 id="maker-handbook-title">Make boldly. Test safely. Explain what happened.</h2>
+      <p>This game is a safe place to experiment—even a virtual short only makes ROB shout “stop!” Real circuits deserve slower hands and a mentor.</p>
+    </header>
+    <div class="maker-handbook__cards">
+      <article class="maker-card maker-card--green"><span>01</span><h3>Build unpowered</h3><p>Switch off or disconnect the source before moving real wires. Have a mentor check the circuit first.</p></article>
+      <article class="maker-card maker-card--pink"><span>02</span><h3>Stay low voltage</h3><p>Use protected classroom kits and approved batteries. Never experiment with wall outlets, mains wires, or ROB’s installed power systems.</p></article>
+      <article class="maker-card maker-card--yellow"><span>03</span><h3>Protect the parts</h3><p>LEDs need current-limiting resistors. Rechargeable batteries need the correct charger and protection circuit—never wire a panel straight to a cell.</p></article>
+      <article class="maker-card maker-card--blue"><span>04</span><h3>Stop and observe</h3><p>Disconnect power if anything becomes hot, swollen, damaged, noisy, or smelly. Evidence is useful; smoke is not a goal.</p></article>
     </div>
-    <div class="robot-lab__panel" aria-live="polite">
-      <p class="robot-lab__kicker" data-lab-kicker>Systems detective</p>
-      <h2 id="lab-game-title" data-lab-title>Loading mission…</h2>
-      <p class="robot-lab__prompt" data-lab-prompt></p>
-      <div class="robot-lab__diagram" data-lab-diagram aria-hidden="true"></div>
-      <div class="robot-lab__choices" data-lab-choices></div>
-      <div class="robot-lab__feedback" data-lab-feedback hidden></div>
-      <button type="button" class="robot-lab__next" data-lab-next hidden>Next mission <span aria-hidden="true">→</span></button>
+    <div class="maker-handbook__facilitator">
+      <div><span aria-hidden="true">✦</span><p><strong>For families &amp; educators</strong> Ask learners to make a prediction before every test: “Where will charge flow?”, “What voltage should the meter show?”, and “What changes after sunset?”</p></div>
+      <ol><li>Observe</li><li>Predict</li><li>Build</li><li>Measure</li><li>Explain</li><li>Revise</li></ol>
     </div>
   </section>
 
-  <section class="robot-lab__mentor" aria-labelledby="mentor-title">
-    <div>
-      <p class="robot-lab__eyebrow">For families and educators</p>
-      <h2 id="mentor-title">Ask for a claim, evidence, and a limit</h2>
-      <p>After each answer, ask: “What do you predict?”, “What observation supports that?”, and “When might your model stop working?” The goal is not guessing quickly. It is learning to explain.</p>
-    </div>
-    <ul>
-      <li>Keep activities on paper, in simulation, or in approved current-limited classroom kits.</li>
-      <li>USB cable preparation is an unplugged, adult-only tool task; learners predict, identify, measure, connect prepared leads, and explain.</li>
-      <li>Never open ROB’s battery, power, drivetrain, actuator, or machine-tool systems.</li>
-      <li>An authenticated green connection means identity was proven—not that motion is automatically safe.</li>
-    </ul>
+  <section class="lab-glossary" aria-labelledby="glossary-title">
+    <div><p class="circuit-kicker">Pocket notebook</p><h2 id="glossary-title">Words every circuit maker knows</h2></div>
+    <dl>
+      <div><dt>Closed circuit</dt><dd>An unbroken path from a source, through a load, and back to the source.</dd></div>
+      <div><dt>Voltage drop</dt><dd>Energy transferred across a component. In a series loop, all drops add up to the source voltage.</dd></div>
+      <div><dt>Series</dt><dd>Components share one path and the same current.</dd></div>
+      <div><dt>Parallel</dt><dd>Components have separate branches with the same voltage across each branch.</dd></div>
+      <div><dt>Ground (GND)</dt><dd>The circuit’s shared reference and return path—not a magic place where electricity disappears.</dd></div>
+      <div><dt>Charge controller</dt><dd>Electronics that safely manage energy between a solar panel, rechargeable battery, and load.</dd></div>
+    </dl>
   </section>
 
-  <noscript><p class="robot-lab__noscript">The interactive missions require JavaScript. The lesson remains: observe, model, predict, test, explain, and revise.</p></noscript>
+  <noscript><p class="circuit-noscript">Circuit Quest needs JavaScript for the virtual wires and meters. You can still use the safety guide and remember the core rule: power needs a complete path out and back.</p></noscript>
 </main>
-{{ $game := resources.Get "js/robot-lab.js" | minify | fingerprint }}
-<script src="{{ $game.RelPermalink }}" integrity="{{ $game.Data.Integrity }}" defer></script>
+{{ $options := dict "targetPath" "js/robot-lab.js" "format" "esm" "minify" hugo.IsProduction }}
+{{ $game := resources.Get "js/robot-lab.js" | js.Build $options | fingerprint }}
+<script type="module" src="{{ $game.RelPermalink }}" integrity="{{ $game.Data.Integrity }}"></script>
 {{ end }}

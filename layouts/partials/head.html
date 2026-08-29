@@ -23,3 +23,8 @@
 {{ else }}
   <link rel="stylesheet" href="{{ $styles.RelPermalink }}" />
 {{ end }}
+{{ if eq .Type "robot-lab" }}
+  {{ $labStyles := resources.Get "css/robot-lab.css" }}
+  {{ if hugo.IsProduction }}{{ $labStyles = $labStyles | minify | fingerprint }}{{ end }}
+  <link rel="stylesheet" href="{{ $labStyles.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $labStyles.Data.Integrity }}" crossorigin="anonymous"{{ end }} />
+{{ end }}

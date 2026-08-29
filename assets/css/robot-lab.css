@@ -1,0 +1,314 @@
+.circuit-lab {
+  --ink: #101126;
+  --paper: #fffdf4;
+  --cream: #fff6db;
+  --purple: #5b35f2;
+  --violet: #8c52ff;
+  --pink: #ff4fa3;
+  --orange: #ff8a32;
+  --yellow: #ffe43b;
+  --cyan: #2ee5eb;
+  --blue: #168cff;
+  --green: #35d985;
+  --red: #ff4967;
+  --navy: #151735;
+  --muted: #61627a;
+  color: var(--ink);
+  background: var(--paper);
+  overflow: hidden;
+  min-height: 100vh;
+  font-family: ui-rounded, "Avenir Next", "SF Pro Rounded", system-ui, sans-serif;
+}
+
+.circuit-lab *, .circuit-lab *::before, .circuit-lab *::after { box-sizing: border-box; }
+.circuit-lab [hidden] { display: none !important; }
+.circuit-lab button, .circuit-lab input, .circuit-lab textarea { font: inherit; }
+.circuit-lab button { -webkit-tap-highlight-color: transparent; }
+.circuit-lab .circuit-kicker { margin: 0; color: var(--purple); font-size: .76rem; font-weight: 900; letter-spacing: .15em; text-transform: uppercase; }
+
+.circuit-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(480px, 1.1fr);
+  gap: clamp(2rem, 5vw, 6rem);
+  min-height: min(850px, calc(100vh - 72px));
+  align-items: center;
+  padding: clamp(4rem, 8vw, 7.5rem) max(1.5rem, calc((100vw - 1320px) / 2));
+  color: white;
+  background:
+    radial-gradient(circle at 86% 15%, #b23cff 0 5%, transparent 23%),
+    radial-gradient(circle at 62% 80%, #156bea 0, transparent 32%),
+    linear-gradient(130deg, #17163b 0%, #25215b 48%, #5b35f2 100%);
+}
+
+.circuit-hero::before, .circuit-hero::after { content: ""; position: absolute; pointer-events: none; }
+.circuit-hero::before { inset: 0; opacity: .2; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 25px 25px; mask-image: linear-gradient(to right, #000, transparent 75%); }
+.circuit-hero::after { width: 320px; height: 320px; left: -170px; bottom: -170px; border: 40px solid var(--pink); border-radius: 50%; opacity: .42; }
+.circuit-hero__copy { position: relative; z-index: 2; }
+.circuit-hero__flags { display: flex; flex-wrap: wrap; gap: .55rem; margin-bottom: 2.2rem; }
+.circuit-hero__flags span { padding: .5rem .75rem; border: 1px solid #ffffff3f; border-radius: 999px; background: #ffffff10; color: #e9e7ff; font-size: .7rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; backdrop-filter: blur(10px); }
+.circuit-hero__flags span:first-child { color: var(--ink); background: var(--yellow); border-color: var(--yellow); }
+.circuit-hero__flags i { display: inline-block; width: 7px; height: 7px; margin-right: .35rem; border-radius: 50%; background: var(--red); animation: lab-pulse 1.5s ease-in-out infinite; }
+.circuit-hero .circuit-kicker { color: var(--cyan); }
+.circuit-hero h1 { margin: .7rem 0 1.5rem; font-size: clamp(4.6rem, 10vw, 8.4rem); font-weight: 950; line-height: .72; letter-spacing: -.09em; text-transform: uppercase; }
+.circuit-hero h1 em { position: relative; display: inline-block; color: var(--yellow); font-style: normal; transform: rotate(-3deg) translateX(.08em); text-shadow: 5px 5px 0 var(--pink); }
+.circuit-hero h1 em::after { content: ""; position: absolute; left: 4%; right: 0; bottom: -.13em; height: 9px; border-radius: 50%; background: var(--cyan); transform: rotate(-2deg); }
+.circuit-hero__lede { max-width: 40rem; color: #dddaf5; font-size: clamp(1.05rem, 1.7vw, 1.28rem); line-height: 1.65; }
+.circuit-hero__lede strong { color: white; }
+.circuit-hero__actions { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-top: 2rem; }
+.circuit-hero__actions button, .circuit-hero__actions a { display: inline-flex; align-items: center; justify-content: center; min-height: 3.5rem; padding: 0 1.3rem; border: 0; border-radius: .9rem; font-weight: 900; text-decoration: none; cursor: pointer; transition: transform .2s ease, box-shadow .2s ease; }
+.circuit-hero__actions button { gap: 1rem; color: var(--ink); background: var(--yellow); box-shadow: 6px 6px 0 var(--pink); }
+.circuit-hero__actions button span { font-size: 1.3rem; }
+.circuit-hero__actions a { color: white; border: 1px solid #ffffff55; background: #ffffff0e; }
+.circuit-hero__actions button:hover, .circuit-hero__actions a:hover { transform: translateY(-3px); }
+.circuit-hero__privacy { margin-top: 1.5rem; color: #a9a7cd; font-size: .74rem; }
+.circuit-hero__privacy span { color: var(--green); }
+
+.circuit-hero__machine { position: relative; z-index: 1; min-height: 590px; transform: rotate(2deg); }
+.circuit-hero__machine::before { content: ""; position: absolute; inset: 5% 2% 4% 2%; border: 1px solid #ffffff30; border-radius: 3rem; background: linear-gradient(155deg, #ffffff12, #0c0e2d66); box-shadow: inset 0 0 80px #8d5cff25, 0 50px 100px #0a0a2440; backdrop-filter: blur(10px); }
+.hero-orbit { position: absolute; border: 1px dashed #ffffff34; border-radius: 50%; animation: lab-spin 24s linear infinite; }
+.hero-orbit::before { content: "✦"; position: absolute; top: -10px; left: 50%; color: var(--cyan); }
+.hero-orbit--one { width: 470px; height: 470px; left: 9%; top: 9%; }
+.hero-orbit--two { width: 350px; height: 350px; right: 0; bottom: 0; animation-direction: reverse; animation-duration: 18s; }
+.hero-sun { position: absolute; top: 5%; right: 8%; display: grid; place-items: center; width: 125px; height: 125px; border-radius: 50%; color: var(--ink); background: var(--yellow); box-shadow: 0 0 0 15px #ffe43b21, 0 0 60px #ffe43b99; animation: lab-float 4s ease-in-out infinite; }
+.hero-sun span { font-size: 2.5rem; line-height: 1; }
+.hero-sun b { font-size: .62rem; line-height: 1.2; text-align: center; letter-spacing: .13em; }
+.hero-panel { position: absolute; left: 4%; top: 24%; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; width: 205px; height: 160px; padding: 13px 13px 35px; border: 7px solid #cfd6ff; border-radius: 12px; background: #1a2454; box-shadow: 12px 15px 0 #11142f55; transform: rotate(-8deg); }
+.hero-panel i { background: linear-gradient(135deg, #5946d9, #2ee5eb); border: 1px solid #ffffff77; }
+.hero-panel b { position: absolute; bottom: 8px; left: 0; right: 0; color: white; font-size: .58rem; text-align: center; letter-spacing: .18em; }
+.hero-battery { position: absolute; left: 36%; bottom: 13%; display: grid; align-content: center; width: 175px; height: 220px; padding: 20px; border: 8px solid #d9dbf2; border-radius: 22px; color: white; background: #202447; box-shadow: 12px 16px 0 #0a0c2755; }
+.hero-battery::before { content: ""; position: absolute; top: -23px; left: 55px; width: 50px; height: 18px; border-radius: 7px 7px 0 0; background: #d9dbf2; }
+.hero-battery span { height: 95px; margin-bottom: 1rem; border: 4px solid #ffffff50; border-radius: 12px; background: linear-gradient(to top, var(--green) 84%, transparent 84%); box-shadow: inset 0 0 20px #35d98599; }
+.hero-battery b { color: var(--green); font-size: .58rem; letter-spacing: .16em; }
+.hero-battery strong { font-size: 2rem; }
+.hero-bulb { position: absolute; right: 4%; top: 32%; width: 150px; text-align: center; }
+.hero-bulb i { display: block; width: 105px; height: 105px; margin: auto; border: 6px solid white; border-radius: 50% 50% 44% 44%; background: radial-gradient(circle at 50% 65%, white 0 8%, var(--yellow) 9% 36%, #fff4a7 37% 62%, transparent 63%); box-shadow: 0 0 20px white, 0 0 70px var(--yellow); }
+.hero-bulb i::after { content: ""; display: block; width: 50px; height: 38px; margin: 94px auto 0; border-radius: 4px 4px 12px 12px; background: repeating-linear-gradient(#b8c0d4 0 6px, #69728a 6px 10px); }
+.hero-bulb b { display: block; margin-top: 3rem; color: var(--yellow); font-size: .63rem; letter-spacing: .18em; }
+.hero-meter { position: absolute; right: 3%; bottom: 5%; display: grid; width: 210px; padding: 1rem; border: 4px solid #f1f2ff; border-radius: 15px; color: var(--ink); background: var(--cyan); box-shadow: 9px 10px 0 #11142f55; transform: rotate(4deg); }
+.hero-meter small { font-size: .54rem; font-weight: 900; letter-spacing: .18em; }
+.hero-meter strong { font: 900 2.1rem ui-monospace, monospace; }
+.hero-meter span { border-top: 1px solid #10112635; padding-top: .4rem; font-weight: 900; }
+.hero-wire { position: absolute; z-index: -1; height: 10px; border-radius: 999px; background: var(--pink); transform-origin: left; box-shadow: 0 3px 0 #0004; }
+.hero-wire i { position: absolute; top: 1px; width: 7px; height: 7px; border-radius: 50%; background: white; animation: lab-electron 1.8s linear infinite; }
+.hero-wire i:nth-child(2) { animation-delay: -.6s; }.hero-wire i:nth-child(3) { animation-delay: -1.2s; }
+.hero-wire--a { width: 280px; left: 24%; top: 42%; transform: rotate(18deg); }
+.hero-wire--b { width: 320px; left: 48%; bottom: 27%; background: var(--cyan); transform: rotate(-23deg); }
+
+.circuit-marquee { width: 104%; margin-left: -2%; overflow: hidden; color: var(--ink); background: var(--yellow); border-block: 4px solid var(--ink); transform: rotate(-1deg); }
+.circuit-marquee > div { display: flex; width: max-content; gap: 1.6rem; align-items: center; padding: .8rem 0; font-size: .78rem; font-weight: 950; letter-spacing: .08em; animation: lab-marquee 25s linear infinite; }
+.circuit-marquee i { color: var(--pink); font-style: normal; font-size: 1.1rem; }
+
+.mission-map { max-width: 1320px; margin: auto; padding: clamp(5rem, 8vw, 8rem) 1.5rem 3rem; }
+.mission-map__heading { display: grid; grid-template-columns: 1.15fr .85fr; gap: 4rem; align-items: end; }
+.mission-map__heading h2, .ohm-lab h2, .arduino-school h2, .maker-handbook h2, .lab-glossary h2 { margin: .5rem 0 0; font-size: clamp(2.7rem, 5.4vw, 5rem); font-weight: 950; line-height: .94; letter-spacing: -.055em; }
+.mission-map__heading > p { max-width: 34rem; margin: 0; color: var(--muted); font-size: 1.05rem; line-height: 1.65; }
+.mission-rail { display: grid; grid-template-columns: repeat(8, minmax(135px, 1fr)); gap: .7rem; margin-top: 3rem; overflow-x: auto; padding: .25rem .15rem 1rem; scrollbar-color: var(--purple) #dedbf1; }
+.mission-tab { position: relative; display: grid; min-width: 135px; min-height: 155px; align-content: space-between; padding: 1rem; border: 2px solid #d9d7e6; border-radius: 1.2rem; color: var(--ink); background: white; text-align: left; cursor: pointer; transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.mission-tab:hover:not(:disabled), .mission-tab:focus-visible { transform: translateY(-4px); border-color: var(--purple); box-shadow: 0 12px 30px #2b235f18; outline: none; }
+.mission-tab.is-active { border-color: var(--purple); color: white; background: var(--purple); box-shadow: 7px 8px 0 var(--cyan); }
+.mission-tab.is-complete { border-color: var(--green); }
+.mission-tab:disabled { cursor: not-allowed; opacity: .52; filter: grayscale(.4); }
+.mission-tab__top { display: flex; justify-content: space-between; align-items: center; }
+.mission-tab__number { display: grid; width: 33px; height: 33px; place-items: center; border-radius: 50%; color: white; background: var(--ink); font-size: .72rem; font-weight: 900; }
+.mission-tab.is-active .mission-tab__number { color: var(--ink); background: var(--yellow); }
+.mission-tab__icon { font-size: 1.5rem; }
+.mission-tab strong { font-size: .9rem; line-height: 1.1; }
+.mission-tab small { color: #77788d; font-size: .62rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.mission-tab.is-active small { color: #dcd6ff; }
+
+.lab-shell { display: grid; grid-template-columns: 280px minmax(0, 1fr); max-width: 1450px; margin: 1.5rem auto 7rem; border: 4px solid var(--ink); border-radius: 2rem; background: var(--navy); box-shadow: 14px 16px 0 #4e32c7; overflow: hidden; }
+.lab-guide { position: relative; z-index: 2; padding: 1.25rem; color: white; background: linear-gradient(180deg, #20234b, #13152f); border-right: 2px solid #ffffff16; }
+.lab-guide__brand { display: flex; align-items: center; gap: .8rem; padding-bottom: 1.25rem; border-bottom: 1px solid #ffffff1c; }
+.lab-guide__brand > span { display: grid; width: 52px; height: 52px; place-items: center; border: 3px solid var(--cyan); border-radius: 18px; color: var(--yellow); background: var(--purple); box-shadow: 4px 4px 0 var(--pink); font-size: 1.6rem; font-weight: 950; transform: rotate(-4deg); }
+.lab-guide__brand div { display: grid; }
+.lab-guide__brand small { color: #888cb9; font-size: .55rem; font-weight: 900; letter-spacing: .14em; }
+.lab-guide__brand strong { font-size: 1.4rem; }
+.lab-guide__brand i { margin-left: auto; padding: .35rem .45rem; border: 1px solid #35d98555; border-radius: 999px; color: var(--green); background: #35d98512; font-size: .52rem; font-style: normal; font-weight: 900; letter-spacing: .1em; }
+.lab-guide__speech { position: relative; min-height: 160px; margin-top: 1.5rem; padding: 1.2rem; border: 1px solid #ffffff20; border-radius: 1.2rem 1.2rem 1.2rem .25rem; background: #ffffff0b; }
+.lab-guide__speech > span { position: absolute; top: -.2rem; left: .7rem; color: var(--cyan); font-family: Georgia, serif; font-size: 4rem; line-height: 1; opacity: .35; }
+.lab-guide__speech p { position: relative; margin: 1rem 0 0; font-size: .92rem; font-weight: 700; line-height: 1.55; }
+.lab-guide__objectives { margin-top: 1.8rem; }
+.lab-guide__objectives > p { color: #9497bd; font-size: .62rem; font-weight: 900; letter-spacing: .13em; text-transform: uppercase; }
+.lab-guide__objectives ul { display: grid; gap: .8rem; margin: 1rem 0 0; padding: 0; list-style: none; }
+.lab-guide__objectives li { display: grid; grid-template-columns: 21px 1fr; gap: .65rem; color: #c9cae0; font-size: .78rem; line-height: 1.35; }
+.lab-guide__objectives li::before { content: ""; width: 19px; height: 19px; border: 2px solid #696c96; border-radius: 50%; }
+.lab-guide__objectives li.is-done { color: white; }
+.lab-guide__objectives li.is-done::before { content: "✓"; display: grid; place-items: center; border-color: var(--green); color: var(--ink); background: var(--green); font-size: .68rem; font-weight: 950; }
+.lab-hint { display: flex; width: 100%; gap: .7rem; align-items: center; margin-top: 1.8rem; padding: .8rem; border: 1px solid #ffffff2b; border-radius: .8rem; color: white; background: transparent; font-size: .77rem; font-weight: 800; cursor: pointer; }
+.lab-hint span { display: grid; width: 24px; height: 24px; place-items: center; border-radius: 50%; color: var(--ink); background: var(--yellow); }
+.lab-hint:hover { border-color: var(--yellow); }
+.lab-guide__score { display: grid; gap: .45rem; margin-top: 2rem; padding-top: 1.2rem; border-top: 1px solid #ffffff1c; }
+.lab-guide__score > span { color: #9497bd; font-size: .6rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+.lab-guide__score strong { font-size: 1.15rem; }.lab-guide__score strong b { color: var(--yellow); }
+.lab-guide__score > div { height: 7px; border-radius: 99px; background: #ffffff17; overflow: hidden; }
+.lab-guide__score i { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--pink), var(--yellow)); transition: width .5s ease; }
+
+.lab-stage { min-width: 0; background: #f1f0f7; }
+.lab-stage__header { display: flex; justify-content: space-between; gap: 2rem; padding: 2rem 2.2rem 1.5rem; border-bottom: 2px solid #dedce9; background: white; }
+.lab-stage__header h2 { margin: .25rem 0 .5rem; font-size: clamp(1.8rem, 3vw, 3rem); font-weight: 950; line-height: 1; letter-spacing: -.045em; }
+.lab-stage__header > div > p:last-child { margin: 0; color: var(--muted); }
+.lab-stage__chips { display: flex; flex-wrap: wrap; gap: .5rem; align-content: flex-start; justify-content: flex-end; }
+.lab-stage__chips span { padding: .45rem .65rem; border-radius: 999px; color: var(--purple); background: #eeeafd; font-size: .61rem; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; }
+.lab-stage__chips span:last-child { color: #1a8d58; background: #e2f8ed; }
+.lab-stage__chips i { display: inline-block; width: 6px; height: 6px; margin-right: .3rem; border-radius: 50%; background: var(--green); }
+
+.workbench { position: relative; min-height: 575px; overflow: hidden; background: linear-gradient(160deg, #1d2046, #12142f 75%); touch-action: pan-y; }
+.workbench.is-solar { background: linear-gradient(180deg, #090b29, #18234a 65%); background: linear-gradient(180deg, color-mix(in srgb, #87dfff calc(var(--sun) * 1%), #090b29), #18234a 65%); }
+.workbench__grid { position: absolute; inset: 0; opacity: .28; background-image: linear-gradient(#ffffff10 1px, transparent 1px), linear-gradient(90deg, #ffffff10 1px, transparent 1px), radial-gradient(circle at 50% 45%, #6743ff45, transparent 50%); background-size: 28px 28px, 28px 28px, 100% 100%; }
+.workbench__grid::after { content: "ROB ELECTRONICS WORKBENCH · BUILD WITH POWER OFF"; position: absolute; right: 1rem; bottom: .5rem; color: #ffffff16; font-size: .7rem; font-weight: 900; letter-spacing: .18em; }
+[data-wire-canvas] { position: absolute; z-index: 2; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.workbench__components { position: absolute; z-index: 3; inset: 0; }
+.workbench__empty { position: absolute; z-index: 6; inset: 0; display: grid; place-content: center; color: white; text-align: center; background: #171936; }
+.workbench__empty span { font-size: 3rem; animation: lab-pulse 1s ease-in-out infinite; }.workbench__empty p { color: #bec0dd; }
+.workbench__toast { position: absolute; z-index: 9; top: 1rem; left: 50%; max-width: calc(100% - 2rem); padding: .7rem 1rem; border-radius: 999px; color: var(--ink); background: white; box-shadow: 0 10px 40px #05061599; font-size: .75rem; font-weight: 850; text-align: center; opacity: 0; transform: translate(-50%, -12px); transition: .25s ease; pointer-events: none; }
+.workbench__toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+.workbench__toast.is-alert { color: white; background: var(--red); }
+
+.lab-part { position: absolute; display: grid; place-items: center; width: var(--part-width, 150px); height: var(--part-height, 145px); transform: translate(-50%, -50%); }
+.lab-part__label { position: absolute; top: calc(100% + 9px); left: 50%; width: max-content; max-width: 180px; padding: .32rem .55rem; border: 1px solid #ffffff20; border-radius: 999px; color: #d5d6e9; background: #0c0e24b8; font-size: .57rem; font-weight: 900; letter-spacing: .11em; text-align: center; text-transform: uppercase; transform: translateX(-50%); }
+.lab-port { position: absolute; z-index: 8; display: grid; width: 35px; height: 35px; place-items: center; border: 5px solid #e7e8f4; border-radius: 50%; color: white; background: #62657b; box-shadow: 0 0 0 3px #101126, 0 6px 12px #0008; font-size: .65rem; font-weight: 950; cursor: crosshair; transition: transform .16s ease, box-shadow .16s ease; touch-action: none; }
+.lab-port:hover, .lab-port:focus-visible { z-index: 10; outline: 3px solid var(--yellow); outline-offset: 4px; transform: scale(1.13); }
+.lab-port.is-selected { background: var(--yellow); color: var(--ink); box-shadow: 0 0 0 3px var(--pink), 0 0 25px var(--yellow); animation: lab-pulse .8s ease-in-out infinite; }
+.lab-port.is-connected { border-color: #fff; background: var(--wire-color, var(--pink)); }
+.lab-port--positive { background: var(--red); }.lab-port--negative { background: #1f2235; }.lab-port--signal { background: var(--orange); }.lab-port--ground { background: #343748; }.lab-port--solar { background: var(--yellow); color: var(--ink); }
+.port-left-top { left: -14px; top: 26%; }.port-left-bottom { left: -14px; top: 74%; }.port-right-top { right: -14px; top: 26%; }.port-right-bottom { right: -14px; top: 74%; }
+.port-left-middle { left: -14px; top: 50%; }.port-right-middle { right: -14px; top: 50%; }
+.port-top-left { left: 28%; top: -14px; }.port-top-right { right: 28%; top: -14px; }.port-bottom-left { left: 28%; bottom: -14px; }.port-bottom-right { right: 28%; bottom: -14px; }
+
+.part-battery__body { position: relative; width: 104px; height: 134px; border: 6px solid #dfe2ef; border-radius: 15px; color: white; background: linear-gradient(90deg, #333751, #1c203b); box-shadow: 8px 10px 0 #090a1c66; }
+.part-battery__body::before { content: ""; position: absolute; top: -17px; left: 31px; width: 32px; height: 12px; border-radius: 5px 5px 0 0; background: #dfe2ef; }
+.part-battery__body::after { content: attr(data-voltage) " V"; position: absolute; left: 15px; bottom: 13px; font: 900 1.25rem ui-monospace, monospace; }
+.part-battery__charge { position: absolute; top: 17px; left: 14px; width: 65px; height: 48px; border: 2px solid #ffffff66; border-radius: 7px; background: linear-gradient(90deg, var(--green) var(--charge, 75%), transparent 0); }
+.part-battery__charge::after { content: ""; position: absolute; right: -7px; top: 14px; width: 5px; height: 17px; background: #ffffff66; }
+.part-lamp__body { position: relative; width: 92px; height: 117px; }
+.part-lamp__glass { position: absolute; top: 0; left: 8px; width: 76px; height: 76px; border: 5px solid #d9dcea; border-radius: 50% 50% 45% 45%; background: #ffffff13; box-shadow: inset 0 0 18px #fff1; transition: background .25s ease, box-shadow .25s ease; }
+.part-lamp__glass::before { content: ""; position: absolute; left: 25px; bottom: 7px; width: 16px; height: 30px; border: 3px solid #f0ad4e; border-top: 0; transform: skew(-10deg); }
+.part-lamp__base { position: absolute; bottom: 0; left: 24px; width: 45px; height: 42px; border-radius: 2px 2px 10px 10px; background: repeating-linear-gradient(#b4bacb 0 6px, #555d74 6px 10px); }
+.lab-part.is-powered .part-lamp__glass, .lab-part.is-powered .part-led__dome { background: var(--lamp-color, var(--yellow)); box-shadow: 0 0 18px white, 0 0 50px var(--lamp-color, var(--yellow)), 0 0 100px var(--lamp-color, var(--yellow)); animation: lab-lamp-on .35s ease both; }
+.part-switch__body { position: relative; width: 125px; height: 78px; border: 5px solid #cdd0df; border-radius: 14px; background: #3b405d; box-shadow: 7px 9px 0 #090a1c66; }
+.part-switch__body::before, .part-switch__body::after { content: ""; position: absolute; top: 31px; width: 20px; height: 7px; background: #d8a934; }.part-switch__body::before { left: 15px; }.part-switch__body::after { right: 15px; }
+.part-switch__blade { position: absolute; left: 33px; top: 29px; width: 56px; height: 8px; border: 0; border-radius: 99px; background: var(--yellow); box-shadow: 0 0 8px #0008; transform: rotate(-28deg); transform-origin: left; cursor: pointer; transition: transform .2s ease; }
+.lab-part.is-closed .part-switch__blade { transform: rotate(0); }
+.part-switch__toggle { position: absolute; left: 50%; bottom: -24px; padding: .27rem .48rem; border: 1px solid #ffffff48; border-radius: 999px; color: white; background: #11142f; font-size: .55rem; font-weight: 900; transform: translateX(-50%); cursor: pointer; }
+.part-resistor__body { position: relative; width: 118px; height: 44px; }
+.part-resistor__body::before, .part-resistor__body::after { content: ""; position: absolute; top: 20px; width: 31px; height: 4px; background: #bec4d0; }.part-resistor__body::before { left: 0; }.part-resistor__body::after { right: 0; }
+.part-resistor__core { position: absolute; z-index: 1; left: 29px; top: 5px; display: flex; gap: 7px; width: 61px; height: 34px; justify-content: center; padding: 0 8px; border: 3px solid #856c3c; border-radius: 12px; background: #e8c77f; box-shadow: 0 6px 9px #0006; }
+.part-resistor__core i { width: 5px; background: var(--band); }
+.part-resistor__value { position: absolute; top: 46px; left: 50%; color: var(--yellow); font: 800 .65rem ui-monospace, monospace; transform: translateX(-50%); }
+.part-led__body { position: relative; width: 70px; height: 110px; }
+.part-led__dome { position: absolute; top: 0; left: 10px; width: 50px; height: 59px; border: 4px solid #ffffff88; border-radius: 28px 28px 12px 12px; background: color-mix(in srgb, var(--lamp-color, var(--red)) 35%, transparent); transition: .2s ease; }
+.part-led__dome::after { content: ""; position: absolute; top: 10px; right: 9px; width: 9px; height: 15px; border-radius: 50%; background: #ffffff70; }
+.part-led__legs::before, .part-led__legs::after { content: ""; position: absolute; top: 57px; width: 4px; background: #c8ccd5; }.part-led__legs::before { left: 24px; height: 48px; }.part-led__legs::after { right: 24px; height: 38px; }
+.part-solar__body { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; width: 145px; height: 112px; padding: 8px; border: 6px solid #d8dbe9; border-radius: 10px; background: #282d53; box-shadow: 8px 10px 0 #090a1c66; transform: rotate(-4deg); }
+.part-solar__body i { border: 1px solid #ffffff66; background: linear-gradient(135deg, #3143a8, #168cff 52%, #2ee5eb); }
+.part-controller__body { position: relative; display: grid; width: 165px; height: 160px; align-content: center; padding: 14px; border: 6px solid #d4d7e5; border-radius: 16px; color: white; background: #38405a; box-shadow: 8px 10px 0 #090a1c66; text-align: center; }
+.part-controller__body::before { content: "SAFE CHARGE"; padding: .5rem; border: 2px solid var(--green); border-radius: 6px; color: var(--green); background: #162733; font: 900 .62rem ui-monospace, monospace; }
+.part-controller__body strong { margin-top: .6rem; font-size: .65rem; letter-spacing: .12em; }
+.part-controller .lab-port small { position: absolute; width: max-content; color: #e5e6f1; font-size: .46rem; transform: translateY(-25px); }
+.part-uno { --part-width: 230px; --part-height: 185px; }
+.part-uno__body { position: relative; width: 220px; height: 160px; border: 6px solid #69e9ec; border-radius: 7px 20px 20px 7px; color: white; background: #078c9b; box-shadow: 10px 12px 0 #090a1c66; }
+.part-uno__usb { position: absolute; left: -9px; top: 20px; width: 52px; height: 46px; border: 5px solid #d1d5df; border-radius: 4px; background: #73798a; }
+.part-uno__chip { position: absolute; left: 78px; top: 68px; width: 83px; height: 33px; border-radius: 4px; background: #1a1d28; box-shadow: inset 0 0 0 3px #373a47; }
+.part-uno__brand { position: absolute; left: 54px; top: 20px; display: grid; font-size: 1rem; font-weight: 950; line-height: .9; }.part-uno__brand small { font-size: .6rem; letter-spacing: .2em; }
+.part-uno__infinity { position: absolute; right: 23px; top: 45px; font-size: 2.4rem; font-weight: 900; }
+.part-uno__led { position: absolute; right: 28px; bottom: 27px; width: 13px; height: 13px; border: 2px solid #272b3c; border-radius: 3px; background: #445147; }
+.part-uno__led.is-on { background: var(--yellow); box-shadow: 0 0 8px white, 0 0 20px var(--yellow); }
+.part-uno__pins { position: absolute; left: 48px; right: 13px; bottom: 8px; height: 14px; background: repeating-linear-gradient(90deg, #242834 0 9px, #d9bd52 9px 12px); }
+.part-uno .port-right-top { top: 16%; }.part-uno .port-right-bottom { top: 84%; }
+
+.circuit-success { position: absolute; z-index: 10; top: 50%; left: 50%; display: grid; min-width: min(410px, calc(100% - 2rem)); place-items: center; padding: 1.3rem 2rem; border: 5px solid var(--ink); border-radius: 1.2rem; color: var(--ink); background: var(--yellow); box-shadow: 10px 12px 0 var(--pink); text-align: center; transform: translate(-50%, -50%) rotate(-2deg); animation: lab-pop .5s cubic-bezier(.2, 1.6, .4, 1) both; }
+.circuit-success > span { position: absolute; top: -28px; right: -18px; display: grid; width: 54px; height: 54px; place-items: center; border: 4px solid var(--ink); border-radius: 50%; color: white; background: var(--purple); font-size: 1.5rem; }
+.circuit-success strong { font-size: clamp(1.5rem, 4vw, 2.6rem); font-weight: 950; letter-spacing: -.04em; }.circuit-success small { max-width: 28rem; font-weight: 800; }
+.lab-confetti { position: absolute; z-index: 9; width: 9px; height: 17px; background: var(--confetti); animation: lab-confetti 1.5s ease-out forwards; pointer-events: none; }
+
+.wire-dock { display: flex; justify-content: space-between; gap: 1rem; align-items: center; min-height: 72px; padding: .75rem 1.5rem; border-top: 1px solid #ffffff13; color: white; background: #0d0f28; }
+.wire-dock__state { display: flex; gap: .8rem; align-items: center; }
+.wire-plug { position: relative; width: 47px; height: 14px; border-radius: 99px; background: var(--pink); box-shadow: 0 4px 0 #0008; }.wire-plug::after { content: ""; position: absolute; right: -8px; top: -4px; width: 14px; height: 22px; border-radius: 3px 7px 7px 3px; background: #d9dbea; }
+.wire-plug.is-active { background: var(--yellow); box-shadow: 0 0 18px var(--yellow); }
+.wire-dock__state div { display: grid; }.wire-dock__state small { color: #73779e; font-size: .5rem; font-weight: 900; letter-spacing: .15em; }.wire-dock__state strong { font-size: .72rem; }
+.wire-dock__controls { display: flex; gap: .45rem; }.wire-dock__controls button { padding: .55rem .7rem; border: 1px solid #ffffff25; border-radius: .6rem; color: white; background: #ffffff0b; font-size: .67rem; font-weight: 800; cursor: pointer; }.wire-dock__controls button:disabled { cursor: not-allowed; opacity: .35; }.wire-dock__controls button:not(:disabled):hover { border-color: var(--cyan); }
+
+.lab-instruments { display: grid; grid-template-columns: repeat(3, minmax(95px, .7fr)) minmax(220px, 1.3fr); border-top: 2px solid #d4d2e0; border-bottom: 2px solid #d4d2e0; background: #e4e3ed; }
+.lab-instruments > div { display: grid; min-height: 100px; align-content: center; padding: 1rem 1.2rem; border-right: 1px solid #cbc9d7; }
+.lab-instruments small { color: #85869a; font-size: .53rem; font-weight: 900; letter-spacing: .12em; }.lab-instruments strong { margin-top: .2rem; font: 900 1.35rem ui-monospace, monospace; }.lab-instruments i { color: #85869a; font-size: .58rem; font-style: normal; }
+.lab-instruments__scope { position: relative; grid-template-columns: 1fr auto; align-items: center; background: #171936; overflow: hidden; }.lab-instruments__scope small { position: absolute; top: .8rem; left: 1rem; color: #6d719a; }.lab-instruments__scope canvas { width: 100%; height: 72px; }.lab-instruments__scope strong { position: absolute; right: .8rem; bottom: .55rem; padding: .3rem .45rem; border-radius: 999px; color: #9396b8; background: #0a0b1d; font-size: .53rem; letter-spacing: .08em; }
+.lab-instruments__scope strong.is-live { color: var(--green); }
+
+.mission-action { background: white; }
+.lesson-note { display: grid; grid-template-columns: auto 1fr; gap: 1rem; padding: 1.3rem 1.6rem; border-bottom: 1px solid #e1dfeb; }.lesson-note > span { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 13px; color: var(--ink); background: var(--cyan); font-weight: 950; }.lesson-note h3 { margin: 0; font-size: 1rem; }.lesson-note p { margin: .3rem 0 0; color: var(--muted); font-size: .83rem; line-height: 1.5; }
+.resistor-picker, .divider-test { display: flex; flex-wrap: wrap; gap: .7rem; align-items: center; padding: 1.2rem 1.6rem; border-bottom: 1px solid #e1dfeb; }.resistor-picker > span, .divider-test > span { margin-right: auto; font-size: .75rem; font-weight: 900; }.resistor-picker button { padding: .55rem .8rem; border: 2px solid #dad7e8; border-radius: .6rem; color: var(--ink); background: white; font-weight: 900; cursor: pointer; }.resistor-picker button.is-active { border-color: var(--purple); color: white; background: var(--purple); }.resistor-picker output { min-width: 155px; color: var(--purple); font: 800 .72rem ui-monospace, monospace; }
+.divider-test label { display: flex; gap: .5rem; align-items: center; font-size: .75rem; font-weight: 800; }.divider-test input { width: 90px; padding: .55rem; border: 2px solid #cbc8dd; border-radius: .5rem; }.divider-test button { padding: .6rem .85rem; border: 0; border-radius: .6rem; color: white; background: var(--purple); font-weight: 900; cursor: pointer; }.divider-test output { width: 100%; color: var(--muted); font-size: .74rem; }
+.solar-console { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 1.3rem 1.6rem; }.solar-controls, .solar-readout { border: 2px solid #dddbea; border-radius: 1rem; padding: 1rem; }.solar-controls label { display: grid; grid-template-columns: 1fr auto; gap: .7rem; color: var(--muted); font-size: .7rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }.solar-controls label output { color: var(--orange); font: 900 1rem ui-monospace, monospace; }.solar-controls input { grid-column: 1 / -1; width: 100%; accent-color: var(--orange); }.solar-controls button { margin-top: 1rem; padding: .6rem .8rem; border: 0; border-radius: .55rem; color: white; background: var(--ink); font-size: .72rem; font-weight: 900; cursor: pointer; }.solar-readout { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; align-items: center; text-align: center; }.solar-readout div { display: grid; }.solar-readout small { color: #88899d; font-size: .5rem; font-weight: 900; letter-spacing: .08em; }.solar-readout strong { font: 900 .86rem ui-monospace, monospace; }.solar-readout p { grid-column: 1 / -1; margin: .4rem 0 0; padding-top: .6rem; border-top: 1px solid #e0deea; color: var(--muted); font-size: .7rem; }
+.code-studio { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(260px, .7fr); background: #111329; color: white; }.code-editor { border-right: 1px solid #ffffff18; }.code-editor__bar { display: flex; justify-content: space-between; align-items: center; min-height: 45px; padding: .5rem .8rem; background: #20233f; }.code-editor__bar span { color: #a7aac6; font: 700 .67rem ui-monospace, monospace; }.code-editor__bar div { display: flex; gap: .4rem; }.code-editor__bar button { padding: .4rem .65rem; border: 1px solid #ffffff22; border-radius: .4rem; color: white; background: #ffffff09; font-size: .63rem; font-weight: 800; cursor: pointer; }.code-editor__bar button[data-code-run] { border: 0; color: var(--ink); background: var(--green); }.code-editor textarea { display: block; width: 100%; min-height: 330px; resize: vertical; padding: 1rem 1.2rem; border: 0; outline: 0; color: #f3f2ff; background: #111329; font: 500 .78rem/1.65 ui-monospace, "SFMono-Regular", Consolas, monospace; tab-size: 2; }.code-guide { padding: 1rem; }.code-guide h3 { margin: 0 0 1rem; color: var(--yellow); font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; }.code-guide ol { display: grid; gap: .85rem; margin: 0; padding: 0; list-style: none; counter-reset: code-steps; }.code-guide li { display: grid; grid-template-columns: 24px 1fr; gap: .55rem; color: #b7b9cf; font-size: .7rem; line-height: 1.4; }.code-guide li::before { counter-increment: code-steps; content: counter(code-steps); display: grid; width: 22px; height: 22px; place-items: center; border-radius: 50%; color: var(--ink); background: var(--cyan); font-weight: 950; }.serial-monitor { margin-top: 1rem; padding: .75rem; border: 1px solid #ffffff1b; border-radius: .5rem; color: var(--green); background: #080918; font: 600 .65rem/1.6 ui-monospace, monospace; min-height: 85px; white-space: pre-line; }
+
+.lab-stage__footer { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: center; padding: 1rem 1.5rem; border-top: 1px solid #dddbe7; background: white; }.lab-stage__footer p { margin: 0; color: #818297; font-size: .68rem; font-weight: 900; letter-spacing: .1em; text-align: center; text-transform: uppercase; }.lab-stage__footer button { justify-self: start; padding: .65rem .85rem; border: 0; border-radius: .6rem; color: #5f6074; background: #efedf5; font-size: .7rem; font-weight: 900; cursor: pointer; }.lab-stage__footer button:disabled { cursor: not-allowed; opacity: .38; }.lab-stage__footer .mission-next { justify-self: end; color: white; background: var(--purple); box-shadow: 4px 4px 0 var(--cyan); }
+
+.ohm-lab { display: grid; grid-template-columns: minmax(0, .85fr) minmax(520px, 1.15fr); gap: clamp(3rem, 7vw, 7rem); max-width: 1320px; align-items: center; margin: auto; padding: 2rem 1.5rem 8rem; }
+.ohm-lab__copy > p:not(.circuit-kicker) { max-width: 35rem; color: var(--muted); font-size: 1.05rem; line-height: 1.65; }.ohm-lab__copy > p strong { color: var(--purple); }
+.ohm-characters { display: grid; gap: .65rem; margin-top: 2rem; }.ohm-characters article { display: grid; grid-template-columns: 48px 1fr auto; gap: .8rem; align-items: center; padding: .7rem .8rem; border: 2px solid #e3e1eb; border-radius: .9rem; background: white; }.ohm-characters article > span { display: grid; width: 43px; height: 43px; place-items: center; border-radius: 13px; color: white; background: var(--purple); font-size: 1.4rem; font-weight: 950; }.ohm-characters article:nth-child(2) > span { color: var(--ink); background: var(--cyan); }.ohm-characters article:nth-child(3) > span { color: var(--ink); background: var(--yellow); }.ohm-characters article div { display: grid; }.ohm-characters article small { color: var(--muted); }.ohm-characters article b { color: #9091a1; font-size: .68rem; text-transform: uppercase; }
+.ohm-calculator { position: relative; padding: 1.5rem; border: 5px solid var(--ink); border-radius: 1.7rem; background: #efedf7; box-shadow: 13px 15px 0 var(--yellow); transform: rotate(1deg); }.ohm-calculator::after { content: ""; position: absolute; top: -15px; right: 9%; width: 70px; height: 25px; background: #ff4fa380; transform: rotate(4deg); }.ohm-calculator__top { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-radius: 1rem; color: var(--green); background: #151735; }.ohm-calculator__top span { font: 900 clamp(1.8rem, 4vw, 3.3rem) ui-monospace, monospace; }.ohm-calculator__top small { color: var(--cyan); font-size: .55rem; font-weight: 900; letter-spacing: .14em; }.ohm-calculator > p { color: var(--muted); font-size: .8rem; font-weight: 700; }
+.ohm-fields { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: .6rem; align-items: center; }.ohm-fields > i { font-style: normal; font-size: 1.4rem; font-weight: 950; }.ohm-fields label { display: grid; grid-template-columns: 35px 1fr; border: 2px solid #d2cfdf; border-radius: .8rem; background: white; overflow: hidden; }.ohm-fields label > span { grid-row: 1 / 4; display: grid; place-items: center; color: white; background: var(--purple); font-size: 1.2rem; font-weight: 950; }.ohm-fields label:nth-of-type(2) > span { color: var(--ink); background: var(--cyan); }.ohm-fields label:nth-of-type(3) > span { color: var(--ink); background: var(--yellow); }.ohm-fields b { padding: .35rem .45rem 0; font-size: .57rem; }.ohm-fields input { min-width: 0; width: 100%; padding: .15rem .45rem; border: 0; outline: 0; font: 900 1.25rem ui-monospace, monospace; }.ohm-fields small { padding: 0 .45rem .35rem; color: #8d8e9e; font-size: .53rem; }
+.ohm-presets { display: flex; gap: .45rem; margin-top: 1rem; }.ohm-presets button { padding: .45rem .6rem; border: 1px solid #c6c3d6; border-radius: 999px; color: #5f6071; background: white; font-size: .6rem; font-weight: 850; cursor: pointer; }.ohm-calculate { width: 100%; margin-top: .8rem; padding: .8rem; border: 0; border-radius: .65rem; color: white; background: var(--purple); font-weight: 950; cursor: pointer; }.ohm-calculator output { display: block; min-height: 48px; margin-top: .8rem; padding: .7rem; border-left: 4px solid var(--cyan); color: #45465b; background: white; font-size: .73rem; font-weight: 750; line-height: 1.45; }
+
+.arduino-school { display: grid; grid-template-columns: minmax(400px, .9fr) minmax(0, 1.1fr); gap: clamp(3rem, 7vw, 8rem); align-items: center; padding: clamp(5rem, 8vw, 8rem) max(1.5rem, calc((100vw - 1320px) / 2)); color: white; background: var(--navy); }
+.arduino-school__board { display: grid; min-height: 480px; place-items: center; border: 1px solid #ffffff1a; border-radius: 50%; background: radial-gradient(circle, #2ee5eb30, transparent 60%); }
+.uno-ghost { position: relative; width: 360px; height: 260px; padding: 50px; border: 10px solid #90f8f7; border-radius: 12px 50px 50px 12px; color: white; background: #078c9b; box-shadow: 25px 28px 0 #05061b77; transform: rotate(-6deg); }.uno-ghost::before { content: ""; position: absolute; left: -25px; top: 45px; width: 95px; height: 80px; border: 9px solid #d8dce5; border-radius: 5px; background: #707887; }.uno-ghost > span { position: absolute; right: 45px; top: 32px; font-size: 5rem; font-weight: 900; }.uno-ghost > strong { display: block; margin-left: 55px; font-size: 1.5rem; }.uno-ghost > small { display: block; margin-left: 55px; font-size: .8rem; font-weight: 900; letter-spacing: .3em; }.uno-ghost i { position: relative; display: inline-block; width: 26px; height: 26px; margin: 50px 10px 0 0; border-radius: 4px; background: #242838; box-shadow: inset 0 0 0 3px #4b5061; }.uno-ghost b { position: relative; display: inline-block; margin: 20px 35px 0 0; color: var(--yellow); font: 900 .8rem ui-monospace, monospace; }
+.arduino-school .circuit-kicker { color: var(--cyan); }.arduino-school h2 { max-width: 650px; }.arduino-school > div:last-child > p:not(.circuit-kicker) { color: #c4c5dc; font-size: 1.05rem; line-height: 1.65; }.arduino-school ol { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; margin: 2rem 0 0; padding: 0; list-style: none; }.arduino-school li { display: grid; grid-template-columns: 38px 1fr; gap: .7rem; align-items: center; padding: .8rem; border: 1px solid #ffffff1b; border-radius: .8rem; background: #ffffff08; }.arduino-school li > span { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 10px; color: var(--ink); background: var(--yellow); font-weight: 950; }.arduino-school li div { display: grid; }.arduino-school li strong { color: var(--cyan); font: 800 .76rem ui-monospace, monospace; }.arduino-school li small { color: #a8aac3; font-size: .65rem; line-height: 1.35; }
+
+.maker-handbook { max-width: 1320px; margin: auto; padding: clamp(5rem, 9vw, 9rem) 1.5rem; }.maker-handbook header { display: grid; grid-template-columns: 1.2fr .8fr; gap: 3rem; align-items: end; }.maker-handbook header .circuit-kicker { grid-column: 1 / -1; }.maker-handbook header h2 { margin-top: -2.5rem; }.maker-handbook header > p:last-child { color: var(--muted); line-height: 1.65; }.maker-handbook__cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; margin-top: 3rem; }.maker-card { min-height: 290px; padding: 1.3rem; border: 3px solid var(--ink); border-radius: 1.2rem; box-shadow: 6px 7px 0 var(--ink); transform: rotate(var(--tilt)); }.maker-card:nth-child(1),.maker-card:nth-child(3) { --tilt: -1deg; }.maker-card:nth-child(2),.maker-card:nth-child(4) { --tilt: 1deg; }.maker-card > span { display: grid; width: 42px; height: 42px; place-items: center; border: 2px solid var(--ink); border-radius: 50%; background: white; font-weight: 950; }.maker-card h3 { margin: 3rem 0 .6rem; font-size: 1.4rem; line-height: 1; }.maker-card p { margin: 0; font-size: .8rem; font-weight: 650; line-height: 1.55; }.maker-card--green { background: var(--green); }.maker-card--pink { background: #ff91c7; }.maker-card--yellow { background: var(--yellow); }.maker-card--blue { background: #78c3ff; }
+.maker-handbook__facilitator { margin-top: 3rem; padding: 1.5rem; border-radius: 1.3rem; color: white; background: var(--purple); }.maker-handbook__facilitator > div { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: center; }.maker-handbook__facilitator > div > span { display: grid; width: 48px; height: 48px; place-items: center; border-radius: 15px; color: var(--ink); background: var(--yellow); font-size: 1.5rem; }.maker-handbook__facilitator p { margin: 0; line-height: 1.55; }.maker-handbook__facilitator p strong { display: block; color: var(--cyan); }.maker-handbook__facilitator ol { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.3rem 0 0; padding: 1rem 0 0; border-top: 1px solid #ffffff25; list-style: none; }.maker-handbook__facilitator li { padding: .4rem .65rem; border: 1px solid #ffffff35; border-radius: 999px; font-size: .65rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+
+.lab-glossary { display: grid; grid-template-columns: .7fr 1.3fr; gap: 5rem; padding: 6rem max(1.5rem, calc((100vw - 1320px) / 2)); background: #f0eef7; }.lab-glossary dl { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin: 0; }.lab-glossary dl > div { padding: 1rem; border-radius: .8rem; background: white; }.lab-glossary dt { color: var(--purple); font-weight: 950; }.lab-glossary dd { margin: .35rem 0 0; color: var(--muted); font-size: .76rem; line-height: 1.5; }.circuit-noscript { max-width: 900px; margin: 2rem auto; padding: 1rem; border: 2px solid var(--red); background: white; }
+
+@keyframes lab-pulse { 50% { opacity: .55; transform: scale(.92); } }
+@keyframes lab-spin { to { transform: rotate(360deg); } }
+@keyframes lab-float { 50% { transform: translateY(-12px) rotate(3deg); } }
+@keyframes lab-electron { from { left: 0; } to { left: calc(100% - 7px); } }
+@keyframes lab-marquee { to { transform: translateX(-50%); } }
+@keyframes lab-lamp-on { from { transform: scale(.85); } to { transform: scale(1); } }
+@keyframes lab-pop { from { opacity: 0; transform: translate(-50%, -50%) rotate(-5deg) scale(.5); } }
+@keyframes lab-confetti { to { opacity: 0; transform: translate(var(--fall-x), 230px) rotate(720deg); } }
+
+@media (max-width: 1120px) {
+  .circuit-hero { grid-template-columns: 1fr 1fr; }
+  .circuit-hero__machine { transform: scale(.86); transform-origin: center right; }
+  .lab-shell { margin-inline: 1rem; grid-template-columns: 230px minmax(0, 1fr); }
+  .ohm-lab { grid-template-columns: 1fr; }.ohm-lab__copy { max-width: 750px; }
+  .maker-handbook__cards { grid-template-columns: 1fr 1fr; }.maker-card { min-height: 230px; }
+}
+
+@media (max-width: 860px) {
+  .circuit-hero { grid-template-columns: 1fr; padding-bottom: 1rem; }
+  .circuit-hero__machine { min-height: 520px; transform: scale(.9); transform-origin: top center; }
+  .mission-map__heading, .maker-handbook header, .lab-glossary { grid-template-columns: 1fr; gap: 1.5rem; }.maker-handbook header h2 { margin-top: 0; }
+  .lab-shell { grid-template-columns: 1fr; }.lab-guide { border-right: 0; border-bottom: 2px solid #ffffff16; }.lab-guide__speech { min-height: auto; }.lab-guide__objectives ul { grid-template-columns: 1fr 1fr; }
+  .lab-instruments { grid-template-columns: repeat(3, 1fr); }.lab-instruments__scope { grid-column: 1 / -1; }
+  .solar-console, .code-studio { grid-template-columns: 1fr; }.code-editor { border-right: 0; border-bottom: 1px solid #ffffff18; }
+  .arduino-school { grid-template-columns: 1fr; }.arduino-school__board { min-height: 390px; }.uno-ghost { transform: rotate(-4deg) scale(.8); }
+  .lab-glossary dl { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 620px) {
+  .circuit-hero { min-height: 0; padding-top: 3rem; }
+  .circuit-hero h1 { font-size: clamp(4rem, 23vw, 6.5rem); }
+  .circuit-hero__machine { min-height: 440px; margin-inline: -3rem; transform: scale(.72); transform-origin: top center; }
+  .mission-map { padding-top: 4rem; }.mission-map__heading h2, .ohm-lab h2, .arduino-school h2, .maker-handbook h2, .lab-glossary h2 { font-size: 2.65rem; }
+  .lab-shell { margin: 0 .45rem 5rem; border-width: 3px; border-radius: 1.1rem; box-shadow: 6px 8px 0 #4e32c7; }.lab-guide { padding: 1rem; }.lab-guide__objectives ul { grid-template-columns: 1fr; }
+  .lab-stage__header { display: grid; padding: 1.35rem 1rem; }.lab-stage__chips { justify-content: flex-start; }
+  .workbench { min-height: 620px; }.workbench__components { transform: scale(.9); transform-origin: center; }
+  .wire-dock { align-items: flex-start; padding-inline: 1rem; }.wire-dock__controls span { display: none; }
+  .lab-instruments { grid-template-columns: 1fr 1fr 1fr; }.lab-instruments > div { min-height: 85px; padding: .75rem .55rem; }.lab-instruments strong { font-size: .96rem; }.lab-instruments i { display: none; }
+  .lab-stage__footer { grid-template-columns: 1fr 1fr; padding-inline: 1rem; }.lab-stage__footer p { grid-row: 2; grid-column: 1 / -1; }.lab-stage__footer button { width: 100%; }
+  .lesson-note, .resistor-picker, .divider-test, .solar-console { padding-inline: 1rem; }
+  .solar-readout { grid-template-columns: 1fr; }.solar-readout p { grid-column: 1; }
+  .code-studio { margin: 0; }.code-editor textarea { font-size: .68rem; min-height: 390px; }
+  .ohm-lab { grid-template-columns: 1fr; padding-bottom: 5rem; }.ohm-calculator { padding: 1rem; box-shadow: 7px 8px 0 var(--yellow); }.ohm-calculator__top { align-items: flex-start; flex-direction: column; }.ohm-calculator__top span { font-size: 2.1rem; }.ohm-fields { grid-template-columns: 1fr; }.ohm-fields > i { display: none; }
+  .arduino-school { padding-block: 5rem; }.arduino-school__board { min-height: 300px; margin-inline: -2rem; }.uno-ghost { transform: rotate(-4deg) scale(.62); }.arduino-school ol { grid-template-columns: 1fr; }
+  .maker-handbook__cards, .lab-glossary dl { grid-template-columns: 1fr; }.maker-card { min-height: 220px; }.maker-card h3 { margin-top: 2rem; }
+  .maker-handbook__facilitator ol { gap: .35rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .circuit-lab *, .circuit-lab *::before, .circuit-lab *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}
