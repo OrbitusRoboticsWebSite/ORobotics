@@ -9,10 +9,10 @@
       </div>
       <p class="circuit-kicker">ROB’s Systems Lab presents</p>
       <h1>Circuit<br><em>Quest</em></h1>
-      <p class="circuit-hero__lede">Snap in colorful wires, watch electrons circle the external circuit from <strong>negative (−) toward positive (+)</strong>, store sunshine in a battery, master <strong>V = I × R</strong>, and program a virtual Arduino Uno.</p>
+      <p class="circuit-hero__lede">Snap in colorful wires, compare <strong>DC and AC</strong>, watch electrons and fields move, store sunshine in a battery, master <strong>V = I × R</strong>, program an Arduino Uno, and tune advanced <strong>RLC resonance</strong>.</p>
       <div class="circuit-hero__actions">
         <button type="button" data-lab-start>Power up the lab <span aria-hidden="true">↗</span></button>
-        <a href="#mission-map">See all 8 builds</a>
+        <a href="#mission-map">See all 16 builds</a>
       </div>
       <p class="circuit-hero__privacy"><span aria-hidden="true">●</span> No login, no tracking, no physical robot connection. Progress stays on this device.</p>
     </div>
@@ -31,14 +31,33 @@
   </header>
 
   <section class="circuit-marquee" aria-label="Topics covered">
-    <div><span>COMPLETE THE LOOP</span><i>✦</i><span>LIGHT THE BULB</span><i>✦</i><span>OHM’S LAW</span><i>✦</i><span>HARVEST THE SUN</span><i>✦</i><span>CODE THE ARDUINO</span><i>✦</i><span>MAKE • TEST • LEARN</span><i>✦</i></div>
+    <div><span>COMPLETE THE LOOP</span><i>✦</i><span>DC + AC</span><i>✦</i><span>OHM’S LAW</span><i>✦</i><span>ELECTRIC + MAGNETIC FIELDS</span><i>✦</i><span>RLC RESONANCE</span><i>✦</i><span>MAKE • TEST • LEARN</span><i>✦</i></div>
+  </section>
+
+  <section class="concept-lab" aria-labelledby="concept-lab-title">
+    <header>
+      <div><p class="circuit-kicker">Animated knowledge deck</p><h2 id="concept-lab-title">See the invisible parts of a circuit.</h2></div>
+      <p>Charge moves slowly, but electric and magnetic fields carry changes through a circuit quickly. Switch views to watch DC drift, AC oscillation, stored fields, and resonance before you build them.</p>
+    </header>
+    <div class="concept-lab__stage">
+      <canvas data-concept-canvas role="img" aria-describedby="concept-summary">Animated circuit concept demonstration. Choose a concept below for a detailed visual.</canvas>
+      <div class="concept-lab__hud"><small>ROB FIELD VIEW</small><strong data-concept-status>DC · ONE DIRECTION</strong></div>
+      <p id="concept-summary" data-concept-summary aria-live="polite">A battery maintains one polarity. Electrons drift around the external metal loop from negative toward positive while conventional current points the other way.</p>
+    </div>
+    <div class="concept-lab__controls" aria-label="Choose a circuit concept">
+      <button type="button" data-concept-mode="dc" aria-pressed="true"><span>01</span><strong>DC drift</strong><small>steady polarity</small></button>
+      <button type="button" data-concept-mode="ac" aria-pressed="false"><span>02</span><strong>AC waves</strong><small>reversing field</small></button>
+      <button type="button" data-concept-mode="capacitor" aria-pressed="false"><span>03</span><strong>Capacitor</strong><small>electric field</small></button>
+      <button type="button" data-concept-mode="inductor" aria-pressed="false"><span>04</span><strong>Inductor</strong><small>magnetic field</small></button>
+      <button type="button" data-concept-mode="rlc" aria-pressed="false"><span>05</span><strong>RLC resonance</strong><small>energy exchange</small></button>
+    </div>
   </section>
 
   <section id="mission-map" class="mission-map" aria-labelledby="mission-map-title">
     <div class="mission-map__heading">
       <div>
         <p class="circuit-kicker">Your maker journey</p>
-        <h2 id="mission-map-title">Eight builds. One bright idea at a time.</h2>
+        <h2 id="mission-map-title">Sixteen builds. One bright idea at a time.</h2>
       </div>
       <p>Each mission adds one new idea. Finish a build to unlock the next bench—just like a real engineer earning access to new tools.</p>
     </div>
@@ -59,7 +78,7 @@
       <button type="button" class="lab-hint" data-lab-hint><span aria-hidden="true">?</span> Give me a hint</button>
       <div class="lab-guide__score">
         <span>Maker sparks</span>
-        <strong><b data-lab-score>0</b> / 24</strong>
+        <strong><b data-lab-score>0</b> / 48</strong>
         <div><i data-score-bar></i></div>
       </div>
     </aside>
@@ -94,9 +113,9 @@
           <div><small>WIRE TOOL</small><strong data-wire-status>Select a terminal to start a wire</strong></div>
         </div>
         <div class="electron-direction" aria-label="Electron flow direction">
-          <small>EXTERNAL ELECTRON DRIFT</small>
-          <strong><b>−</b> → around the complete loop → <b>+</b></strong>
-          <span>Battery chemistry keeps the charges separated.</span>
+          <small data-direction-label>EXTERNAL ELECTRON DRIFT</small>
+          <strong data-direction-path><b>−</b> → around the complete loop → <b>+</b></strong>
+          <span data-direction-note>Battery chemistry keeps the charges separated.</span>
         </div>
         <div class="wire-dock__controls">
           <button type="button" data-undo-wire disabled>↶ <span>Undo wire</span></button>
@@ -105,20 +124,38 @@
       </div>
 
       <div class="lab-instruments" aria-label="Live circuit measurements">
-        <div><small>SUPPLY</small><strong><span data-meter-voltage>0.0</span> V</strong><i>voltage</i></div>
-        <div><small>FLOW</small><strong><span data-meter-current>0.0</span> mA</strong><i>current</i></div>
-        <div><small>LOAD</small><strong><span data-meter-resistance>—</span> Ω</strong><i>resistance</i></div>
-        <div class="lab-instruments__scope"><small>DC ENERGY SCOPE</small><canvas data-scope-canvas aria-hidden="true"></canvas><strong data-power-state>0 V DC · OPEN LOOP</strong></div>
+        <div><small data-meter-voltage-label>SUPPLY</small><strong><span data-meter-voltage>0.0</span> V</strong><i>voltage</i></div>
+        <div><small data-meter-current-label>FLOW</small><strong><span data-meter-current>0.0</span> mA</strong><i>current</i></div>
+        <div><small data-meter-resistance-label>LOAD</small><strong><span data-meter-resistance>—</span> Ω</strong><i>resistance or impedance</i></div>
+        <div class="lab-instruments__scope"><small data-scope-label>DC ENERGY SCOPE</small><canvas data-scope-canvas aria-label="Live voltage and current waveform"></canvas><strong data-power-state>0 V DC · OPEN LOOP</strong></div>
       </div>
 
       <div class="mission-action" data-mission-action></div>
 
       <footer class="lab-stage__footer">
         <button type="button" data-previous-mission>← Previous</button>
-        <p data-lab-progress>Build 1 of 8</p>
+        <p data-lab-progress>Build 1 of 16</p>
         <button type="button" class="mission-next" data-next-mission disabled>Next build <span aria-hidden="true">→</span></button>
       </footer>
     </div>
+  </section>
+
+  <section class="ac-field-school" aria-labelledby="ac-field-title">
+    <header>
+      <p class="circuit-kicker">Builds 9–16 · Waves, fields, and frequency</p>
+      <h2 id="ac-field-title">DC holds direction. AC keeps changing.</h2>
+      <p>Voltage is an energy difference created by an electric field. Current is charge moving in response. Any current creates a magnetic field; any changing magnetic field can create an electric field. That field partnership is the heart of generators, motors, transformers, radios, and RLC circuits.</p>
+    </header>
+    <div class="ac-field-school__grid">
+      <article><span>DC</span><h3>Direct current</h3><p>A battery or solar cell maintains a steady polarity. After a circuit settles, voltage and current stay in one direction. The scope shows a flat level above zero.</p><b>Battery · solar · Arduino HIGH</b></article>
+      <article><span>AC</span><h3>Alternating current</h3><p>Polarity and current direction reverse repeatedly. A sine wave crosses zero twice per cycle. Frequency in hertz tells how many full cycles happen each second.</p><b>Generator · audio · radio signals</b></article>
+      <article><span>RMS</span><h3>Useful AC magnitude</h3><p>Because AC is always changing, engineers often use RMS values. A stated 5 V RMS sine wave has the same heating effect in a resistor as 5 V DC.</p><b>Vrms = Vpeak ÷ √2 for a sine</b></article>
+      <article><span>Z</span><h3>Impedance</h3><p>In AC, total opposition is called impedance. It combines resistance with capacitive and inductive reactance and is measured in ohms.</p><b>Z controls RMS current</b></article>
+      <article><span>C</span><h3>Capacitor field</h3><p>Opposite charge gathers on plates separated by an insulator. Energy is stored in the electric field; electrons do not cross the dielectric.</p><b>Xc = 1 ÷ (2πfC)</b></article>
+      <article><span>L</span><h3>Inductor field</h3><p>Current through a coil builds a magnetic field. The coil opposes sudden current changes by producing a counter-voltage.</p><b>XL = 2πfL</b></article>
+      <article class="ac-field-school__rlc"><span>RLC</span><h3>Resonance</h3><p>At f₀, capacitive and inductive reactance are equal. Energy trades between the capacitor’s electric field and the inductor’s magnetic field.</p><b>f₀ = 1 ÷ (2π√LC)</b></article>
+    </div>
+    <aside><strong>AC safety boundary</strong><p>Every AC source in Circuit Quest is virtual and low voltage. Wall outlets and building wiring can kill. Never open, probe, or experiment with mains-powered equipment—learn with approved classroom supplies and a qualified mentor.</p></aside>
   </section>
 
   <section class="ohm-lab" aria-labelledby="ohm-title">
@@ -177,7 +214,7 @@
     </header>
     <div class="maker-handbook__cards">
       <article class="maker-card maker-card--green"><span>01</span><h3>Build unpowered</h3><p>Switch off or disconnect the source before moving real wires. Have a mentor check the circuit first.</p></article>
-      <article class="maker-card maker-card--pink"><span>02</span><h3>Stay low voltage</h3><p>Use protected classroom kits and approved batteries. Never experiment with wall outlets, mains wires, or ROB’s installed power systems.</p></article>
+      <article class="maker-card maker-card--pink"><span>02</span><h3>Stay low voltage</h3><p>Use protected classroom kits and approved batteries. AC lessons here are virtual—never experiment with wall outlets, mains wires, or ROB’s installed power systems.</p></article>
       <article class="maker-card maker-card--yellow"><span>03</span><h3>Protect the parts</h3><p>LEDs need current-limiting resistors. Rechargeable batteries need the correct charger and protection circuit—never wire a panel straight to a cell.</p></article>
       <article class="maker-card maker-card--blue"><span>04</span><h3>Stop and observe</h3><p>Disconnect power if anything becomes hot, swollen, damaged, noisy, or smelly. Evidence is useful; smoke is not a goal.</p></article>
     </div>
@@ -197,6 +234,13 @@
       <div><dt>Ground (GND)</dt><dd>The circuit’s shared reference and return path—not a magic place where electricity disappears.</dd></div>
       <div><dt>Charge controller</dt><dd>Electronics that safely manage energy between a solar panel, rechargeable battery, and load.</dd></div>
       <div><dt>Electron flow</dt><dd>In the external metal wires, electrons drift from a source’s negative terminal through the complete loop toward its positive terminal. Conventional current arrows point the opposite way.</dd></div>
+      <div><dt>Alternating current (AC)</dt><dd>Voltage polarity and current direction reverse periodically. Electrons oscillate locally instead of traveling from a fixed negative terminal to a fixed positive terminal.</dd></div>
+      <div><dt>RMS</dt><dd>A practical measure of an AC waveform’s effective voltage or current. For a sine wave, RMS is peak value divided by √2.</dd></div>
+      <div><dt>Capacitance</dt><dd>The ability to store energy in an electric field between separated conductors. It is measured in farads.</dd></div>
+      <div><dt>Inductance</dt><dd>The ability to store energy in a magnetic field and oppose changes in current. It is measured in henries.</dd></div>
+      <div><dt>Reactance</dt><dd>Frequency-dependent opposition from capacitance or inductance. Capacitive reactance falls with frequency; inductive reactance rises.</dd></div>
+      <div><dt>Impedance</dt><dd>The total AC opposition made from resistance and reactance. Like resistance, it is measured in ohms.</dd></div>
+      <div><dt>Resonance</dt><dd>The frequency where inductive and capacitive reactance balance, allowing strong energy exchange between electric and magnetic fields.</dd></div>
     </dl>
   </section>
 

@@ -2,8 +2,15 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   arduinoOutputAt,
+  calculateCapacitiveReactance,
+  calculateInductiveReactance,
   calculateLedResistor,
+  calculateParallelRLC,
+  calculateRCTransient,
+  calculateResonantFrequency,
+  calculateRLTransient,
   calculateSeries,
+  calculateSeriesRLC,
   calculateVoltageDivider,
   matchesCircuit,
   parseArduinoBlink,
@@ -47,6 +54,42 @@ test('equal-resistor divider splits the source voltage evenly', () => {
   const result = calculateVoltageDivider(9, 1000, 1000);
   assert.equal(result.outputVoltage, 4.5);
   assert.equal(result.drops[0] + result.drops[1], 9);
+});
+
+test('capacitors and inductors respond oppositely as AC frequency rises', () => {
+  assert.ok(calculateCapacitiveReactance(10, 100e-6) > calculateCapacitiveReactance(100, 100e-6));
+  assert.ok(calculateInductiveReactance(100, 0.1) > calculateInductiveReactance(10, 0.1));
+  assert.ok(Math.abs(calculateCapacitiveReactance(100, 100e-6) - 15.915494) < 1e-5);
+  assert.ok(Math.abs(calculateInductiveReactance(100, 0.1) - 62.831853) < 1e-5);
+});
+
+test('series RLC reaches minimum impedance and maximum current at resonance', () => {
+  const inductance = 0.1;
+  const capacitance = 25.330295910584447e-6;
+  const resonantFrequencyHz = calculateResonantFrequency(inductance, capacitance);
+  const resonance = calculateSeriesRLC({ voltageRms: 5, frequencyHz: resonantFrequencyHz, resistance: 100, inductance, capacitance });
+  const offTune = calculateSeriesRLC({ voltageRms: 5, frequencyHz: 40, resistance: 100, inductance, capacitance });
+  assert.ok(Math.abs(resonantFrequencyHz - 100) < 1e-9);
+  assert.ok(Math.abs(resonance.impedance - 100) < 1e-9);
+  assert.ok(Math.abs(resonance.phaseDegrees) < 1e-9);
+  assert.ok(resonance.currentRms > offTune.currentRms);
+});
+
+test('parallel RLC cancels reactive branch current at resonance', () => {
+  const result = calculateParallelRLC({ voltageRms: 5, frequencyHz: 100, resistance: 1000, inductance: 0.1, capacitance: 25.330295910584447e-6 });
+  assert.ok(Math.abs(result.susceptance) < 1e-12);
+  assert.ok(Math.abs(result.impedance - 1000) < 1e-8);
+  assert.ok(Math.abs(result.inductorCurrentRms - result.capacitorCurrentRms) < 1e-12);
+});
+
+test('RC and RL transients reveal their one-time-constant behavior', () => {
+  const rc = calculateRCTransient({ sourceVoltage: 5, resistance: 1000, capacitance: .001, elapsedSeconds: 1 });
+  assert.ok(Math.abs(rc.voltage - 5 * (1 - Math.exp(-1))) < 1e-12);
+  assert.equal(rc.timeConstantSeconds, 1);
+
+  const rl = calculateRLTransient({ sourceVoltage: 5, resistance: 10, inductance: 10, elapsedSeconds: 1 });
+  assert.ok(Math.abs(rl.current - .5 * (1 - Math.exp(-1))) < 1e-12);
+  assert.equal(rl.timeConstantSeconds, 1);
 });
 
 test('solar simulation charges in sun and discharges after sunset', () => {

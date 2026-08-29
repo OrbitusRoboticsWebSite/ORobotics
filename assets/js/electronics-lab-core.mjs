@@ -68,6 +68,119 @@ export function calculateVoltageDivider(sourceVoltage, upperResistance, lowerRes
   };
 }
 
+export function calculateCapacitiveReactance(frequencyHz, capacitanceFarads) {
+  const frequency = Math.max(0, Number(frequencyHz) || 0);
+  const capacitance = Math.max(0, Number(capacitanceFarads) || 0);
+  if (frequency === 0 || capacitance === 0) return Infinity;
+  return 1 / (2 * Math.PI * frequency * capacitance);
+}
+
+export function calculateInductiveReactance(frequencyHz, inductanceHenries) {
+  const frequency = Math.max(0, Number(frequencyHz) || 0);
+  const inductance = Math.max(0, Number(inductanceHenries) || 0);
+  return 2 * Math.PI * frequency * inductance;
+}
+
+export function calculateResonantFrequency(inductanceHenries, capacitanceFarads) {
+  const inductance = Math.max(0, Number(inductanceHenries) || 0);
+  const capacitance = Math.max(0, Number(capacitanceFarads) || 0);
+  if (inductance === 0 || capacitance === 0) return Infinity;
+  return 1 / (2 * Math.PI * Math.sqrt(inductance * capacitance));
+}
+
+export function calculateSeriesRLC({ voltageRms, frequencyHz, resistance, inductance, capacitance }) {
+  const voltage = Math.max(0, Number(voltageRms) || 0);
+  const safeResistance = Math.max(0, Number(resistance) || 0);
+  const capacitiveReactance = calculateCapacitiveReactance(frequencyHz, capacitance);
+  const inductiveReactance = calculateInductiveReactance(frequencyHz, inductance);
+  const reactance = inductiveReactance - capacitiveReactance;
+  const impedance = Math.hypot(safeResistance, reactance);
+  const currentRms = impedance > 0 && Number.isFinite(impedance) ? voltage / impedance : 0;
+  const phaseRadians = Math.atan2(reactance, safeResistance);
+  return {
+    voltageRms: voltage,
+    frequencyHz: Math.max(0, Number(frequencyHz) || 0),
+    resistance: safeResistance,
+    capacitiveReactance,
+    inductiveReactance,
+    reactance,
+    impedance,
+    currentRms,
+    phaseRadians,
+    phaseDegrees: phaseRadians * 180 / Math.PI,
+    resistorVoltageRms: currentRms * safeResistance,
+    capacitorVoltageRms: currentRms * capacitiveReactance,
+    inductorVoltageRms: currentRms * inductiveReactance,
+    resonantFrequencyHz: calculateResonantFrequency(inductance, capacitance),
+  };
+}
+
+export function calculateParallelRLC({ voltageRms, frequencyHz, resistance, inductance, capacitance }) {
+  const voltage = Math.max(0, Number(voltageRms) || 0);
+  const safeResistance = Math.max(0, Number(resistance) || 0);
+  const frequency = Math.max(0, Number(frequencyHz) || 0);
+  const angularFrequency = 2 * Math.PI * frequency;
+  const safeInductance = Math.max(0, Number(inductance) || 0);
+  const safeCapacitance = Math.max(0, Number(capacitance) || 0);
+  const conductance = safeResistance > 0 ? 1 / safeResistance : 0;
+  const inductiveSusceptance = angularFrequency > 0 && safeInductance > 0 ? -1 / (angularFrequency * safeInductance) : 0;
+  const capacitiveSusceptance = angularFrequency * safeCapacitance;
+  const susceptance = inductiveSusceptance + capacitiveSusceptance;
+  const admittance = Math.hypot(conductance, susceptance);
+  const impedance = admittance > 0 ? 1 / admittance : Infinity;
+  const phaseRadians = Math.atan2(susceptance, conductance);
+  return {
+    voltageRms: voltage,
+    frequencyHz: frequency,
+    resistance: safeResistance,
+    conductance,
+    inductiveSusceptance,
+    capacitiveSusceptance,
+    susceptance,
+    admittance,
+    impedance,
+    sourceCurrentRms: voltage * admittance,
+    resistorCurrentRms: voltage * conductance,
+    inductorCurrentRms: Math.abs(voltage * inductiveSusceptance),
+    capacitorCurrentRms: Math.abs(voltage * capacitiveSusceptance),
+    phaseRadians,
+    phaseDegrees: phaseRadians * 180 / Math.PI,
+    resonantFrequencyHz: calculateResonantFrequency(inductance, capacitance),
+  };
+}
+
+export function calculateRCTransient({ sourceVoltage, resistance, capacitance, elapsedSeconds, initialVoltage = 0, charging = true }) {
+  const source = Math.max(0, Number(sourceVoltage) || 0);
+  const safeResistance = Math.max(0, Number(resistance) || 0);
+  const safeCapacitance = Math.max(0, Number(capacitance) || 0);
+  const elapsed = Math.max(0, Number(elapsedSeconds) || 0);
+  const start = Math.max(0, Number(initialVoltage) || 0);
+  const timeConstantSeconds = safeResistance * safeCapacitance;
+  if (timeConstantSeconds === 0) return { voltage: charging ? source : 0, current: 0, timeConstantSeconds };
+  const decay = Math.exp(-elapsed / timeConstantSeconds);
+  const target = charging ? source : 0;
+  const voltage = target + (start - target) * decay;
+  const current = (target - voltage) / safeResistance;
+  return { voltage, current, timeConstantSeconds };
+}
+
+export function calculateRLTransient({ sourceVoltage, resistance, inductance, elapsedSeconds, initialCurrent = 0, energizing = true }) {
+  const source = Math.max(0, Number(sourceVoltage) || 0);
+  const safeResistance = Math.max(0, Number(resistance) || 0);
+  const safeInductance = Math.max(0, Number(inductance) || 0);
+  const elapsed = Math.max(0, Number(elapsedSeconds) || 0);
+  const start = Math.max(0, Number(initialCurrent) || 0);
+  const timeConstantSeconds = safeResistance > 0 ? safeInductance / safeResistance : Infinity;
+  if (!Number.isFinite(timeConstantSeconds) || timeConstantSeconds === 0) {
+    return { current: energizing && safeResistance > 0 ? source / safeResistance : 0, inductorVoltage: 0, timeConstantSeconds };
+  }
+  const decay = Math.exp(-elapsed / timeConstantSeconds);
+  const target = energizing ? source / safeResistance : 0;
+  const current = target + (start - target) * decay;
+  const inductorVoltage = energizing ? source - current * safeResistance : -current * safeResistance;
+  return { current, inductorVoltage, timeConstantSeconds };
+}
+
 export function simulateSolar({
   sunPercent,
   panelWatts,
