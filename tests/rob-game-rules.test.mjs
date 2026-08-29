@@ -12,6 +12,7 @@ import {
   maximumEnergy,
   meleeAnimationIsClear,
   rangedWeapons,
+  resolveAxisSlidingMotion,
   securityCameraSees,
   updateDriveEnergy,
   upgradeCost,
@@ -83,6 +84,17 @@ test('drive energy drains in motion and charges while stopped', () => {
   assert.equal(drained, 93.4);
   assert.equal(updateDriveEnergy({ energy: drained, maximum: BASE_ROB_ENERGY, moving: false, delta: 1 }), 96.60000000000001);
   assert.equal(updateDriveEnergy({ energy: 124, maximum: 125, moving: false, delta: 1, capacityLevel: 1 }), 125);
+});
+
+test('wall assist slides along obstacles and always permits a clear reverse', () => {
+  const canOccupy = ({ z }) => z >= 1;
+  const slide = resolveAxisSlidingMotion({ start: { x: 0, z: 1 }, end: { x: 2, z: 0 }, canOccupy });
+  assert.equal(slide.collided, true);
+  assert.equal(slide.position.x, 2);
+  assert.equal(slide.position.z, 1);
+
+  const reverse = resolveAxisSlidingMotion({ start: slide.position, end: { x: 2, z: 2 }, canOccupy });
+  assert.deepEqual(reverse, { position: { x: 2, z: 2 }, collided: false });
 });
 
 test('conveyors move ROB along their arrow direction only inside the striped zone', () => {

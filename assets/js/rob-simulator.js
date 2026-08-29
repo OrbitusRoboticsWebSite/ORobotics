@@ -13,6 +13,7 @@ import {
   meleeWeapons,
   maximumEnergy,
   rangedWeapons,
+  resolveAxisSlidingMotion,
   securityCameraSees,
   unlockReward,
   updateDriveEnergy,
@@ -308,16 +309,22 @@ if (root) {
   const tick = (dt) => {
     readInput(); if (!running || complete || levelComplete) return;
     elapsed += dt; levelElapsed += dt; securityAlertRemaining = Math.max(0, securityAlertRemaining - dt);
-    const level = levels[levelIndex], old = robot.position.clone(), oldHeading = robot.rotation.y, powered = energy > .05 ? 1 : 0, speedMultiplier = driveSpeedMultiplier(upgradeLevels.speedBoost), left = controls.left * 3.2 * speedMultiplier * powered, right = controls.right * 3.2 * speedMultiplier * powered, linear = (left + right) / 2, yaw = (right - left) / 1.55 * dt, targetHeading = oldHeading + yaw, mid = oldHeading + yaw / 2, full = robot.position.clone();
-    full.x -= Math.sin(mid) * linear * dt; full.z -= Math.cos(mid) * linear * dt;
-    if (!collision(full, targetHeading)) { robot.position.copy(full); robot.rotation.y = targetHeading; }
-    else { const resolvedHeading = collision(old, targetHeading) ? oldHeading : targetHeading, proposedX = robot.position.clone(), proposedZ = robot.position.clone(); robot.rotation.y = resolvedHeading; proposedX.x -= Math.sin(resolvedHeading) * linear * dt; if (!collision(proposedX, resolvedHeading)) robot.position.x = proposedX.x; proposedZ.x = robot.position.x; proposedZ.z -= Math.cos(resolvedHeading) * linear * dt; if (!collision(proposedZ, resolvedHeading)) robot.position.z = proposedZ.z; }
+    const level = levels[levelIndex], old = robot.position.clone(), oldHeading = robot.rotation.y, powered = energy > .05 ? 1 : 0, speedMultiplier = driveSpeedMultiplier(upgradeLevels.speedBoost), left = controls.left * 3.2 * speedMultiplier * powered, right = controls.right * 3.2 * speedMultiplier * powered, linear = (left + right) / 2, yaw = (right - left) / 1.55 * dt, targetHeading = oldHeading + yaw;
+    let resolvedHeading = oldHeading;
+    for (const fraction of [1, .66, .33]) { const candidateHeading = oldHeading + yaw * fraction; if (!collision(old, candidateHeading)) { resolvedHeading = candidateHeading; break; } }
+    const travelHeading = oldHeading + (resolvedHeading - oldHeading) / 2, intended = { x: old.x - Math.sin(travelHeading) * linear * dt, z: old.z - Math.cos(travelHeading) * linear * dt };
+    const motion = resolveAxisSlidingMotion({
+      start: { x: old.x, z: old.z },
+      end: intended,
+      canOccupy: (position) => !collision(new THREE.Vector3(position.x, old.y, position.z), resolvedHeading),
+    });
+    robot.position.set(motion.position.x, old.y, motion.position.z); robot.rotation.y = resolvedHeading;
     const treadsPowered = Boolean(powered && Math.abs(controls.left) + Math.abs(controls.right) > .02);
     energy = updateDriveEnergy({ energy, maximum: maximumEnergy(upgradeLevels.energyCapacity), moving: treadsPowered, delta: dt, capacityLevel: upgradeLevels.energyCapacity });
     const conveyorMove = conveyorDisplacement({ point: { x: robot.position.x, z: robot.position.z }, conveyors, delta: dt });
     const conveyorPosition = robot.position.clone(); conveyorPosition.x += conveyorMove.x; conveyorPosition.z += conveyorMove.z; if (!collision(conveyorPosition)) robot.position.copy(conveyorPosition);
     robotRig.treadWheels.forEach(({ wheel, side }) => { wheel.rotation.x -= controls[side] * dt * 7.5; });
-    if (robot.position.equals(old) && Math.abs(linear) > .1) say('ROB’s treads and chassis are blocked. Pivot toward open space.');
+    if (motion.collided && Math.abs(linear) > .1) say(robot.position.distanceTo(old) > .001 ? 'Wall assist active — ROB is sliding along the open edge.' : 'Wall contact — reverse or pivot away; ROB will release cleanly.');
     const robotPoint = { x: robot.position.x, z: robot.position.z }, wasAlerted = securityAlertRemaining > 0;
     const detected = securityCameras.some((securityCamera) => securityCameraSees({ camera: securityCamera, robot: robotPoint, elapsed, blockers: projectileBlockers(), shadows: shadowZones }));
     if (detected) { securityAlertRemaining = 5; if (!wasAlerted) say('Security camera spotted ROB! Enemy robots are converging. Dodge into a dark shadow pad.'); }

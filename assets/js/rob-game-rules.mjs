@@ -1,4 +1,4 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.08.29';
+export const GAMEPLAY_RULESET_VERSION = '2026.08.30';
 export const MAX_ROB_HEALTH = 100;
 export const BASE_ROB_ENERGY = 100;
 
@@ -16,6 +16,32 @@ export const updateDriveEnergy = ({ energy, maximum, moving, delta, capacityLeve
   maximum,
   energy + delta * (moving ? -6.6 : 3.2 + Math.max(0, capacityLevel) * .8),
 ));
+
+export const resolveAxisSlidingMotion = ({ start, end, canOccupy, iterations = 10 }) => {
+  if (canOccupy(end)) return { position: { x: end.x, z: end.z }, collided: false };
+  const position = { x: start.x, z: start.z };
+  const axes = Math.abs(end.x - start.x) >= Math.abs(end.z - start.z) ? ['x', 'z'] : ['z', 'x'];
+
+  for (const axis of axes) {
+    const axisStart = position[axis];
+    const axisEnd = end[axis];
+    const candidate = { ...position, [axis]: axisEnd };
+    if (canOccupy(candidate)) {
+      position[axis] = axisEnd;
+      continue;
+    }
+    let clearFraction = 0;
+    let blockedFraction = 1;
+    for (let index = 0; index < iterations; index += 1) {
+      const candidateFraction = (clearFraction + blockedFraction) / 2;
+      const partial = { ...position, [axis]: axisStart + (axisEnd - axisStart) * candidateFraction };
+      if (canOccupy(partial)) clearFraction = candidateFraction;
+      else blockedFraction = candidateFraction;
+    }
+    if (clearFraction > .001) position[axis] = axisStart + (axisEnd - axisStart) * clearFraction;
+  }
+  return { position, collided: true };
+};
 
 export const pointInBox = (point, box) => Math.abs(point.x - box.x) <= box.w && Math.abs(point.z - box.z) <= box.d;
 
