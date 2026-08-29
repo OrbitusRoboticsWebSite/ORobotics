@@ -1,4 +1,4 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.09.07';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.08';
 export const MAX_ROB_HEALTH = 100;
 export const MAX_ROB_SHIELDS = 40;
 export const BASE_ROB_ENERGY = 100;
@@ -210,6 +210,10 @@ export const segmentCircleHitFraction = (start, end, center, radius) => {
   return undefined;
 };
 
+export const circularBodiesOverlap = (first, firstRadius, second, secondRadius) => (
+  Math.hypot(first.x - second.x, first.z - second.z) < Math.max(0, firstRadius) + Math.max(0, secondRadius)
+);
+
 export const firstProjectileImpact = ({ start, end, blockers, targets, wallPadding = 0.07 }) => {
   let nearest;
   for (const blocker of blockers) {
@@ -223,14 +227,7 @@ export const firstProjectileImpact = ({ start, end, blockers, targets, wallPaddi
   return nearest;
 };
 
-export const distanceToBox = (point, box) => {
-  const dx = Math.max(box.x - box.w - point.x, 0, point.x - (box.x + box.w));
-  const dz = Math.max(box.z - box.d - point.z, 0, point.z - (box.z + box.d));
-  return Math.hypot(dx, dz);
-};
-
-export const meleeAnimationIsClear = ({ origin, target, blockers, spinRadius, padding = 0.08 }) => {
-  if (spinRadius !== undefined) return blockers.every((box) => distanceToBox(origin, box) > spinRadius);
+export const meleeAnimationIsClear = ({ origin, target, blockers, padding = 0.08 }) => {
   return blockers.every((box) => segmentBoxHitFraction(origin, target, box, padding) === undefined);
 };
 

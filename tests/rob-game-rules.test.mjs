@@ -10,6 +10,7 @@ import {
   battleUpgradePoints,
   bossStats,
   cameraHeading,
+  circularBodiesOverlap,
   conveyorArrowOffset,
   conveyorDisplacement,
   consumeLaserEnergy,
@@ -63,10 +64,16 @@ test('a target is damaged only after the projectile segment reaches it', () => {
   }).kind, 'target');
 });
 
-test('walls block forward melee paths and spin clearance', () => {
+test('walls occlude only melee targets whose actual attack path crosses them', () => {
   const wall = { x: 0, z: 1, w: 2, d: 0.12 };
   assert.equal(meleeAnimationIsClear({ origin: { x: 0, z: 2 }, target: { x: 0, z: 0 }, blockers: [wall] }), false);
-  assert.equal(meleeAnimationIsClear({ origin: { x: 0, z: 2 }, blockers: [wall], spinRadius: 1.1 }), false);
+  assert.equal(meleeAnimationIsClear({ origin: { x: 0, z: 2 }, target: { x: 1, z: 2 }, blockers: [wall] }), true);
+});
+
+test('scaled robot body volumes overlap only inside their combined collision radii', () => {
+  assert.equal(circularBodiesOverlap({ x: 0, z: 0 }, .72, { x: 1, z: 0 }, .64), true);
+  assert.equal(circularBodiesOverlap({ x: 0, z: 0 }, .72, { x: 1.36, z: 0 }, .64), false);
+  assert.equal(circularBodiesOverlap({ x: 0, z: 0 }, .72 * 1.35, { x: 1.5, z: 0 }, .64), true);
 });
 
 test('ROB takes regular damage without forcing a restart at positive health', () => {
