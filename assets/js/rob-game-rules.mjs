@@ -1,4 +1,4 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.09.02';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.03';
 export const MAX_ROB_HEALTH = 100;
 export const MAX_ROB_SHIELDS = 40;
 export const BASE_ROB_ENERGY = 100;
@@ -83,9 +83,9 @@ export const faceColors = [
 ];
 
 export const rangedWeapons = [
-  { id: 'shoulderGatling', name: 'Shoulder Gatling', shortName: 'Gatling', requiredLevel: 0, projectileSpeed: 13, baseDamage: 1, chargeDamage: 2 },
-  { id: 'twinBlasters', name: 'Twin Blasters', shortName: 'Blasters', requiredLevel: 5, projectileSpeed: 18, baseDamage: 1, chargeDamage: 1 },
-  { id: 'arcCannon', name: 'Arc Cannon', shortName: 'Arc Cannon', requiredLevel: 15, projectileSpeed: 11, baseDamage: 2, chargeDamage: 3 },
+  { id: 'shoulderGatling', name: 'Shoulder Gatling', shortName: 'Gatling', requiredLevel: 0, projectileSpeed: 13, baseDamage: 1, chargeDamage: 2, baseEnergy: 4, chargeEnergy: 8 },
+  { id: 'twinBlasters', name: 'Twin Blasters', shortName: 'Blasters', requiredLevel: 5, projectileSpeed: 18, baseDamage: 1, chargeDamage: 1, baseEnergy: 5, chargeEnergy: 9 },
+  { id: 'arcCannon', name: 'Arc Cannon', shortName: 'Arc Cannon', requiredLevel: 15, projectileSpeed: 11, baseDamage: 2, chargeDamage: 3, baseEnergy: 8, chargeEnergy: 14 },
 ];
 
 export const meleeWeapons = [
@@ -94,12 +94,17 @@ export const meleeWeapons = [
 ];
 
 export const weaponDamage = (weapon, charge) => weapon.baseDamage + Math.floor(Math.max(0, Math.min(1, charge)) * weapon.chargeDamage);
+export const laserEnergyCost = (weapon, charge) => weapon.baseEnergy + Math.max(0, Math.min(1, charge)) * weapon.chargeEnergy;
+export const consumeLaserEnergy = ({ energy, weapon, charge }) => {
+  const cost = laserEnergyCost(weapon, charge);
+  return energy >= cost ? { fired: true, cost, energy: energy - cost } : { fired: false, cost, energy };
+};
 
 export const bossStats = (levelNumber, baseShields) => {
   const isBoss = levelNumber % 5 === 0;
   return {
     isBoss,
-    shields: isBoss ? Math.max(10, baseShields * 3) : baseShields,
+    shields: isBoss ? 15 + (levelNumber / 5) * 15 : baseShields,
     contactDamage: isBoss ? 10 : undefined,
     projectileDamage: isBoss ? 10 : undefined,
   };

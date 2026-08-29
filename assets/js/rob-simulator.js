@@ -5,12 +5,14 @@ import {
   applyROBDamage,
   bossStats,
   cameraHeading,
+  consumeLaserEnergy,
   conveyorDisplacement,
   driveSpeedMultiplier,
   faceColors,
   finishes,
   firstProjectileImpact,
   isUnlocked,
+  laserEnergyCost,
   meleeAnimationIsClear,
   meleeWeapons,
   maximumEnergy,
@@ -330,11 +332,14 @@ if (root) {
   const fireLaser = (charge = 0) => {
     scanForLaserTarget(); if (!running || complete || elapsed - lastShot < .25) return;
     const weapon = selectedRanged(); if (!laserLock) { say(`${weapon.name} scanning — no enemy lock yet.`); return; }
+    const discharge = consumeLaserEnergy({ energy, weapon, charge }), energyCost = discharge.cost;
+    if (!discharge.fired) { say(`${weapon.name} needs ${Math.ceil(energyCost)} system energy. Hold position or collect an energy cell.`); return; }
+    energy = discharge.energy;
     lastShot = elapsed; const start = new THREE.Vector3(weapon.id === 'twinBlasters' ? -.62 : .78, weapon.id === 'twinBlasters' ? 1.25 : 1.65, -.58).applyQuaternion(robot.quaternion).add(robot.position), target = laserLock.position.clone().add(new THREE.Vector3(0, 1, 0)), direction = target.sub(start).normalize(), radius = .04 + charge * .11 + (weapon.id === 'arcCannon' ? .06 : 0), length = .95 + charge * 1.9;
     const color = weapon.id === 'arcCannon' ? 0xa66cff : weapon.id === 'twinBlasters' ? 0x38dfff : 0xff1838;
-    playLaserShot(charge); const bolt = mesh(new THREE.CylinderGeometry(radius, radius, length, 12), mat(color, color), scene); bolt.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction); bolt.position.copy(start).addScaledVector(direction, .7 + charge * .55); bolt.userData.velocity = direction.multiplyScalar(weapon.projectileSpeed + charge * 3.5); bolt.userData.damage = weaponDamage(weapon, charge); bolt.userData.charge = charge; bolt.userData.weapon = weapon; bolts.push(bolt); say(charge > .72 ? `Charged ${weapon.name} blast fired at ${laserLock.userData.name}!` : `${weapon.name} lock confirmed — projectile fired at ${laserLock.userData.name}.`);
+    playLaserShot(charge); const bolt = mesh(new THREE.CylinderGeometry(radius, radius, length, 12), mat(color, color), scene); bolt.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction); bolt.position.copy(start).addScaledVector(direction, .7 + charge * .55); bolt.userData.velocity = direction.multiplyScalar(weapon.projectileSpeed + charge * 3.5); bolt.userData.damage = weaponDamage(weapon, charge); bolt.userData.charge = charge; bolt.userData.weapon = weapon; bolts.push(bolt); say(charge > .72 ? `Charged ${weapon.name} blast fired for ${Math.ceil(energyCost)} energy at ${laserLock.userData.name}!` : `${weapon.name} lock confirmed — projectile fired for ${Math.ceil(energyCost)} energy at ${laserLock.userData.name}.`);
   };
-  const beginLaserCharge = () => { if (!running || complete || laserChargeStarted !== undefined) return; scanForLaserTarget(); laserChargeStarted = combatNow(); if (laserLock) say(`Red lock: ${laserLock.userData.name}. Hold to charge the ${selectedRanged().name}.`); else say(`${selectedRanged().name} scanning for a target…`); };
+  const beginLaserCharge = () => { if (!running || complete || laserChargeStarted !== undefined) return; const weapon = selectedRanged(); if (energy < laserEnergyCost(weapon, 0)) { say(`Not enough system energy for the ${weapon.name}. Hold position or collect an energy cell.`); return; } scanForLaserTarget(); laserChargeStarted = combatNow(); if (laserLock) say(`Red lock: ${laserLock.userData.name}. Hold to charge the ${weapon.name}.`); else say(`${weapon.name} scanning for a target…`); };
   const releaseLaserCharge = () => { if (laserChargeStarted === undefined) return; const charge = laserChargeAmount(); laserChargeStarted = undefined; fireLaser(charge); };
   const cancelLaserCharge = () => { laserChargeStarted = undefined; ui.laserButtons.forEach((button) => button.classList.remove('is-charging')); };
   const enemyBoltGeometry = new THREE.CylinderGeometry(.055, .055, 1.05, 8), enemyBoltMaterial = mat(0x70c8ff, 0x194ec4);

@@ -8,10 +8,12 @@ import {
   applyROBHealthDamage,
   bossStats,
   conveyorDisplacement,
+  consumeLaserEnergy,
   driveSpeedMultiplier,
   faceColors,
   firstProjectileImpact,
   isUnlocked,
+  laserEnergyCost,
   maximumEnergy,
   meleeAnimationIsClear,
   rangedWeapons,
@@ -89,10 +91,11 @@ test('map pickups replenish shields and repair hull damage without overfilling',
   assert.equal(repairROBHealth(90), MAX_ROB_HEALTH);
 });
 
-test('every fifth level adds a reinforced ten-damage boss', () => {
+test('every fifth level adds an escalating reinforced ten-damage boss', () => {
   assert.deepEqual(bossStats(4, 3), { isBoss: false, shields: 3, contactDamage: undefined, projectileDamage: undefined });
-  assert.deepEqual(bossStats(5, 3), { isBoss: true, shields: 10, contactDamage: 10, projectileDamage: 10 });
-  assert.equal(bossStats(15, 5).shields, 15);
+  assert.deepEqual(bossStats(5, 3), { isBoss: true, shields: 30, contactDamage: 10, projectileDamage: 10 });
+  assert.equal(bossStats(10, 4).shields, 45);
+  assert.equal(bossStats(15, 5).shields, 60);
 });
 
 test('weapon progression matches iOS and visionOS milestones', () => {
@@ -103,6 +106,16 @@ test('weapon progression matches iOS and visionOS milestones', () => {
   assert.equal(isUnlocked(arcCannon, 15), true);
   assert.match(unlockReward(10), /Power Hammer/);
   assert.equal(weaponDamage(arcCannon, 1), 5);
+});
+
+test('laser shots spend system energy and charged weapons cost more', () => {
+  const [gatling, twinBlasters, arcCannon] = rangedWeapons;
+  assert.equal(laserEnergyCost(gatling, 0), 4);
+  assert.equal(laserEnergyCost(gatling, 1), 12);
+  assert.equal(laserEnergyCost(twinBlasters, 1), 14);
+  assert.equal(laserEnergyCost(arcCannon, 1), 22);
+  assert.deepEqual(consumeLaserEnergy({ energy: 30, weapon: arcCannon, charge: 1 }), { fired: true, cost: 22, energy: 8 });
+  assert.deepEqual(consumeLaserEnergy({ energy: 20, weapon: arcCannon, charge: 1 }), { fired: false, cost: 22, energy: 20 });
 });
 
 test('performance upgrades match the Apple game economy', () => {
