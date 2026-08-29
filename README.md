@@ -90,7 +90,7 @@ The ROB Training game uses that same public CloudKit container and website token
 
 ### ROB Training gameplay sync
 
-Website gameplay rules live in `assets/js/rob-game-rules.mjs` and the Three.js implementation lives in `assets/js/rob-simulator.js`. Every gameplay change must be mirrored in the ROBTrainingGames repository's shared Swift session, renderer, platform controls, and tests so the iPhone, iPad, Vision Pro, and browser campaigns remain equivalent. Keep `GAMEPLAY_RULESET_VERSION` equal to `GameSession.gameplayRulesetVersion`; the current synchronized version is `2026.09.01`.
+Website gameplay rules live in `assets/js/rob-game-rules.mjs` and the Three.js implementation lives in `assets/js/rob-simulator.js`. Every gameplay change must be mirrored in the ROBTrainingGames repository's shared Swift session, renderer, platform controls, and tests so the iPhone, iPad, Vision Pro, and browser campaigns remain equivalent. Keep `GAMEPLAY_RULESET_VERSION` equal to `GameSession.gameplayRulesetVersion`; the current synchronized version is `2026.09.02`.
 
 For this custom GitHub Actions deployment, the custom domain configured under
 **Settings → Pages** is authoritative. `static/CNAME` mirrors that value in the

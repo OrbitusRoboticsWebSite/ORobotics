@@ -2,7 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   MAX_ROB_HEALTH,
+  MAX_ROB_SHIELDS,
   BASE_ROB_ENERGY,
+  applyROBDamage,
   applyROBHealthDamage,
   bossStats,
   conveyorDisplacement,
@@ -13,6 +15,8 @@ import {
   maximumEnergy,
   meleeAnimationIsClear,
   rangedWeapons,
+  repairROBHealth,
+  replenishROBShields,
   resolveAxisSlidingMotion,
   securityCameraSees,
   securityMiniBossStats,
@@ -59,6 +63,32 @@ test('ROB takes regular damage without forcing a restart at positive health', ()
   assert.deepEqual(applyROBHealthDamage(MAX_ROB_HEALTH, 6), { appliedDamage: 6, health: 94, scorePenalty: 120 });
 });
 
+test('ROB shields absorb hits before damage reaches the hull', () => {
+  assert.deepEqual(applyROBDamage({ health: MAX_ROB_HEALTH, shields: MAX_ROB_SHIELDS, damage: 6 }), {
+    appliedDamage: 6,
+    shieldDamage: 6,
+    healthDamage: 0,
+    shields: 34,
+    health: 100,
+    scorePenalty: 120,
+  });
+  assert.deepEqual(applyROBDamage({ health: MAX_ROB_HEALTH, shields: 4, damage: 10 }), {
+    appliedDamage: 10,
+    shieldDamage: 4,
+    healthDamage: 6,
+    shields: 0,
+    health: 94,
+    scorePenalty: 200,
+  });
+});
+
+test('map pickups replenish shields and repair hull damage without overfilling', () => {
+  assert.equal(replenishROBShields(5), 29);
+  assert.equal(replenishROBShields(35), MAX_ROB_SHIELDS);
+  assert.equal(repairROBHealth(50), 85);
+  assert.equal(repairROBHealth(90), MAX_ROB_HEALTH);
+});
+
 test('every fifth level adds a reinforced ten-damage boss', () => {
   assert.deepEqual(bossStats(4, 3), { isBoss: false, shields: 3, contactDamage: undefined, projectileDamage: undefined });
   assert.deepEqual(bossStats(5, 3), { isBoss: true, shields: 10, contactDamage: 10, projectileDamage: 10 });
@@ -82,7 +112,8 @@ test('performance upgrades match the Apple game economy', () => {
   assert.equal(upgradeCost(speed, 3), undefined);
   assert.equal(upgradeCost(capacity, 0), 550);
   assert.equal(upgradeCost(weapon, 0), 900);
-  assert.equal(driveSpeedMultiplier(1), 1.18);
+  assert.equal(driveSpeedMultiplier(1), 1.35);
+  assert.equal(driveSpeedMultiplier(3), 2.05);
   assert.equal(maximumEnergy(1), 125);
   assert.equal(upgradedWeaponDamage(2, 1), 3);
 });

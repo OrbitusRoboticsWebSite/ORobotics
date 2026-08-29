@@ -1,6 +1,9 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.09.01';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.02';
 export const MAX_ROB_HEALTH = 100;
+export const MAX_ROB_SHIELDS = 40;
 export const BASE_ROB_ENERGY = 100;
+export const SHIELD_PICKUP_STRENGTH = 24;
+export const REPAIR_PICKUP_STRENGTH = 35;
 
 export const upgrades = [
   { id: 'speedBoost', name: 'Speed Boost', maximumLevel: 3, baseCost: 700, costStep: 650 },
@@ -9,7 +12,7 @@ export const upgrades = [
 ];
 
 export const upgradeCost = (upgrade, level) => level < upgrade.maximumLevel ? upgrade.baseCost + level * upgrade.costStep : undefined;
-export const driveSpeedMultiplier = (level) => 1 + Math.max(0, level) * .18;
+export const driveSpeedMultiplier = (level) => 1 + Math.max(0, level) * .35;
 export const maximumEnergy = (level) => BASE_ROB_ENERGY + Math.max(0, level) * 25;
 export const upgradedWeaponDamage = (damage, level) => damage + Math.max(0, level);
 export const updateDriveEnergy = ({ energy, maximum, moving, delta, capacityLevel = 0 }) => Math.max(0, Math.min(
@@ -188,3 +191,27 @@ export const applyROBHealthDamage = (health, damage) => {
   const appliedDamage = Math.max(0, Math.floor(damage));
   return { appliedDamage, health: Math.max(0, health - appliedDamage), scorePenalty: appliedDamage * 20 };
 };
+
+export const applyROBDamage = ({ health, shields, damage }) => {
+  const appliedDamage = Math.max(0, Math.floor(damage));
+  const shieldDamage = Math.min(Math.max(0, shields), appliedDamage);
+  const healthDamage = appliedDamage - shieldDamage;
+  return {
+    appliedDamage,
+    shieldDamage,
+    healthDamage,
+    shields: Math.max(0, shields - shieldDamage),
+    health: Math.max(0, health - healthDamage),
+    scorePenalty: appliedDamage * 20,
+  };
+};
+
+export const replenishROBShields = (shields, amount = SHIELD_PICKUP_STRENGTH) => Math.min(
+  MAX_ROB_SHIELDS,
+  Math.max(0, shields) + Math.max(0, amount),
+);
+
+export const repairROBHealth = (health, amount = REPAIR_PICKUP_STRENGTH) => Math.min(
+  MAX_ROB_HEALTH,
+  Math.max(0, health) + Math.max(0, amount),
+);

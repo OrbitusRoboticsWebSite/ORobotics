@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import {
   MAX_ROB_HEALTH,
-  applyROBHealthDamage,
+  MAX_ROB_SHIELDS,
+  applyROBDamage,
   bossStats,
   cameraHeading,
   conveyorDisplacement,
@@ -14,6 +15,8 @@ import {
   meleeWeapons,
   maximumEnergy,
   rangedWeapons,
+  repairROBHealth,
+  replenishROBShields,
   resolveAxisSlidingMotion,
   securityCameraSees,
   securityMiniBossStats,
@@ -35,12 +38,12 @@ if (root) {
   const scene = new THREE.Scene(); scene.background = new THREE.Color(0x07111b); scene.fog = new THREE.Fog(0x07111b, 28, 52);
   const camera = new THREE.PerspectiveCamera(55, 1, .1, 90); const clock = new THREE.Clock();
   const controls = { left: 0, right: 0 }, touch = { forward: 0, steering: 0, left: 0, right: 0, leftActive: false, rightActive: false }; const keys = new Set(), activeDrivePointers = new Map(), activeTreadPointers = new Map();
-  const obstacles = [], cells = [], bolts = [], enemyBolts = [], enemies = [], levelParts = [], conveyors = [], securityCameras = [], shadowZones = [];
+  const obstacles = [], cells = [], shieldPickups = [], repairPickups = [], bolts = [], enemyBolts = [], enemies = [], levelParts = [], conveyors = [], securityCameras = [], shadowZones = [];
   const ARENA_HALF_WIDTH = 16, ARENA_HALF_DEPTH = 12, LEVEL_SCALE = 1.38, ROBOT_HALF_WIDTH = 1.12, ROBOT_HALF_LENGTH = 1.13, ARENA_CLEARANCE = .18;
   const readProgress = (key, fallback) => { try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; } };
   const saveProgress = (key, value) => { try { localStorage.setItem(key, String(value)); } catch {} };
   let running = false, complete = false, levelComplete = false, elapsed = 0, levelElapsed = 0, score = 0, gateDone = false, cellCount = 0, lastShot = -Infinity, levelIndex = 0, hasKey = false, doorOpen = true, hacking = false, hackingProgress = 0, securityAlertRemaining = 0, securityMiniBossReleased = false, laserLock, laserChargeStarted, saberCombo = 0, lastSaberAttack = -Infinity, saberAnimation, gamepadLaserHeld = false;
-  let health = MAX_ROB_HEALTH, damageInvulnerableUntil = -Infinity, highestCompletedLevel = Math.max(0, Math.min(15, Number(readProgress('robHighestCompletedLevel', 0)) || 0));
+  let health = MAX_ROB_HEALTH, shields = MAX_ROB_SHIELDS, damageInvulnerableUntil = -Infinity, highestCompletedLevel = Math.max(0, Math.min(15, Number(readProgress('robHighestCompletedLevel', 0)) || 0));
   let upgradePoints = Math.max(0, Number(readProgress('robUpgradePoints', 0)) || 0);
   const upgradeLevels = Object.fromEntries(upgrades.map((upgrade) => [upgrade.id, Math.max(0, Math.min(upgrade.maximumLevel, Number(readProgress(`rob${upgrade.id}Level`, 0)) || 0))]));
   let energy = maximumEnergy(upgradeLevels.energyCapacity);
@@ -81,6 +84,32 @@ if (root) {
       if (farDepth > .05) level.obstacles.push([x, z + d / 2 + farDepth / 2, w, farDepth, 1.8]);
     }
   });
+  const itemCandidates = [
+    [-13.2, -9.2], [13.2, -9.2], [-13.2, 7.8], [13.2, 7.8],
+    [-8.8, -7.2], [8.8, -7.2], [-10.5, 2.4], [10.5, 2.4],
+    [-4.5, 7.4], [4.5, 7.4], [0, -8.2], [0, 5.8],
+    [-6.7, -.2], [6.7, -.2],
+  ];
+  const pointIsClear = (level, point, reserved, padding = .85) => (
+    Math.abs(point[0]) < ARENA_HALF_WIDTH - 1.4
+      && Math.abs(point[1]) < ARENA_HALF_DEPTH - 1.4
+      && level.obstacles.every(([x, z, width, depth]) => Math.abs(point[0] - x) > width / 2 + padding || Math.abs(point[1] - z) > depth / 2 + padding)
+      && (!level.door || Math.abs(point[0] - level.door[0]) > level.door[2] / 2 + padding || Math.abs(point[1] - level.door[1]) > level.door[3] / 2 + padding)
+      && reserved.every((candidate) => Math.hypot(point[0] - candidate[0], point[1] - candidate[1]) > 1.35)
+  );
+  levels.forEach((level, index) => {
+    const rotation = (index + 1) % itemCandidates.length, ordered = [...itemCandidates.slice(rotation), ...itemCandidates.slice(0, rotation)];
+    const reserved = [...level.cells, level.dock, ...(level.key ? [level.key] : [])];
+    const takePoint = () => {
+      const pointIndex = ordered.findIndex((point) => pointIsClear(level, point, reserved));
+      const point = pointIndex >= 0 ? ordered.splice(pointIndex, 1)[0] : ordered.shift();
+      reserved.push(point);
+      return point;
+    };
+    level.cells.push(takePoint(), takePoint());
+    level.shieldPickups = Array.from({ length: index + 1 >= 8 ? 2 : 1 }, takePoint);
+    level.repairPickups = Array.from({ length: index + 1 >= 10 ? 2 : 1 }, takePoint);
+  });
   const isTouch = matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
   root.classList.toggle('is-touch', isTouch);
   let soundEnabled = true;
@@ -120,6 +149,17 @@ if (root) {
   const doorObject = mesh(new THREE.BoxGeometry(4, 1.8, .35), mat(0xd14c42, 0x5c1714), scene); doorObject.position.y = .9;
   const hackTerminal = new THREE.Group(); mesh(new THREE.BoxGeometry(.28, 1.05, .28), mat(0x434b52), hackTerminal, 0, .525); mesh(new THREE.BoxGeometry(.62, .48, .22), mat(0xf2872f, 0x5e2208), hackTerminal, 0, 1.08); const hackTerminalLamp = mesh(new THREE.SphereGeometry(.11, 12, 8), mat(0xff3030, 0x8b0505), hackTerminal, 0, 1.08, -.15); scene.add(hackTerminal);
   for (let i = 0; i < Math.max(...levels.map((level) => level.cells.length)); i += 1) { const c = mesh(new THREE.CylinderGeometry(.24, .24, .7, 14), mat(0xffc83d, 0x805000), scene); c.rotation.z = Math.PI / 2; cells.push(c); }
+  for (let i = 0; i < Math.max(...levels.map((level) => level.shieldPickups.length)); i += 1) {
+    const pickup = new THREE.Group(), core = mesh(new THREE.IcosahedronGeometry(.34, 1), mat(0x55eaff, 0x087995), pickup, 0, .45);
+    const halo = mesh(new THREE.TorusGeometry(.48, .065, 10, 28), mat(0x3f78ff, 0x17399b), pickup, 0, .45); halo.rotation.x = Math.PI / 2; core.rotation.z = .35;
+    scene.add(pickup); shieldPickups.push(pickup);
+  }
+  for (let i = 0; i < Math.max(...levels.map((level) => level.repairPickups.length)); i += 1) {
+    const pickup = new THREE.Group(); mesh(new THREE.BoxGeometry(.62, .45, .48), mat(0xd93149, 0x6d0717), pickup, 0, .36);
+    mesh(new THREE.BoxGeometry(.34, .09, .025), mat(0xffffff, 0x555555), pickup, 0, .36, -.255);
+    mesh(new THREE.BoxGeometry(.09, .34, .025), mat(0xffffff, 0x555555), pickup, 0, .36, -.255);
+    scene.add(pickup); repairPickups.push(pickup);
+  }
 
   const armAssemblies = [], robotRig = { treadWheels: [], finishMaterials: [], faceMaterials: [], sabers: [] };
   const buildROB = () => {
@@ -155,6 +195,8 @@ if (root) {
     const arcCannon = new THREE.Group(); arcCannon.name = 'Arc Cannon'; arcCannon.position.set(.78, 1.65, -.1); torso.add(arcCannon); robotRig.arcCannon = arcCannon;
     mesh(new THREE.BoxGeometry(.46, .38, .62), dark, arcCannon, 0, 0, -.12); const arcBarrel = mesh(new THREE.CylinderGeometry(.09, .15, .92, 12), mat(0x8c63ff, 0x3b1ca8), arcCannon, 0, 0, -.68); arcBarrel.rotation.x = Math.PI / 2;
     const hammer = new THREE.Group(); hammer.name = 'Power Hammer'; hammer.position.set(.82, .5, -.68); torso.add(hammer); robotRig.hammer = hammer; const hammerHandle = mesh(new THREE.CylinderGeometry(.045, .055, 1.15, 10), steel, hammer); hammerHandle.rotation.z = -.28; mesh(new THREE.BoxGeometry(.65, .28, .28), mat(0xf1a43c, 0x5b2c05), hammer, .16, .5, 0);
+    const shieldField = mesh(new THREE.SphereGeometry(1.72, 24, 16), new THREE.MeshBasicMaterial({ color: 0x56eaff, transparent: true, opacity: .13, wireframe: true, depthWrite: false }), r, 0, 1.35);
+    shieldField.scale.y = .9; shieldField.castShadow = false; shieldField.receiveShadow = false; robotRig.shieldField = shieldField;
     return r;
   };
   const robot = buildROB(); scene.add(robot);
@@ -188,7 +230,7 @@ if (root) {
   const buildDalek = () => { const g = new THREE.Group(), silver = mat(0xaeb9c4, 0, .75), blue = mat(0x279de0, 0x063b61); const skirt = mesh(new THREE.CylinderGeometry(.65, 1.05, 1.55, 8), silver, g, 0, .82); for (let y = .35; y < 1.25; y += .3) for (let a = 0; a < Math.PI * 2; a += Math.PI / 3) mesh(new THREE.SphereGeometry(.11, 10, 8), blue, g, Math.sin(a) * (.78 - y * .08), y, Math.cos(a) * (.78 - y * .08)); mesh(new THREE.CylinderGeometry(.65, .65, .5, 16), mat(0x242b31), g, 0, 1.75); mesh(new THREE.SphereGeometry(.62, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), silver, g, 0, 2); const eye = mesh(new THREE.CylinderGeometry(.055, .085, .9, 10), silver, g, 0, 2.2, -.63); eye.rotation.x = Math.PI / 2; mesh(new THREE.SphereGeometry(.12, 10, 8), blue, g, 0, 2.2, -1.08); [-1, 1].forEach((side) => { const arm = mesh(new THREE.CylinderGeometry(.035, .05, 1, 8), silver, g, side * .48, 1.6, -.65); arm.rotation.x = Math.PI / 2; }); return g; };
   for (let i = 0; i < 8; i += 1) { const spider = buildSpider(); spider.userData.type = 'spider'; scene.add(spider); enemies.push(spider); const dalek = buildDalek(); dalek.userData.type = 'dalek'; scene.add(dalek); enemies.push(dalek); }
 
-  const ui = { time: root.querySelector('[data-sim-time]'), score: root.querySelector('[data-sim-score]'), points: root.querySelector('[data-sim-points]'), level: root.querySelector('[data-sim-level]'), levelName: root.querySelector('[data-sim-level-name]'), left: root.querySelector('[data-sim-left]'), right: root.querySelector('[data-sim-right]'), enemies: root.querySelector('[data-sim-enemies]'), lock: root.querySelector('[data-sim-lock]'), message: root.querySelector('[data-sim-message]'), start: root.querySelector('[data-sim-start]'), reset: root.querySelector('[data-sim-reset]'), fullscreen: root.querySelector('[data-sim-fullscreen]'), hack: root.querySelector('[data-sim-hack]'), laserButtons: [...root.querySelectorAll('[data-sim-laser]')], saberButtons: [...root.querySelectorAll('[data-sim-saber]')], health: root.querySelector('[data-sim-health]'), healthText: root.querySelector('[data-sim-health-text]'), energy: root.querySelector('[data-sim-energy]'), energyText: root.querySelector('[data-sim-energy-text]'), security: root.querySelector('[data-sim-security]'), boss: root.querySelector('[data-sim-boss]'), bossName: root.querySelector('[data-sim-boss-name]'), bossText: root.querySelector('[data-sim-boss-text]'), bossHealth: root.querySelector('[data-sim-boss-health]'), progress: root.querySelector('[data-sim-progress]'), nextUnlock: root.querySelector('[data-sim-next-unlock]'), finish: root.querySelector('[data-sim-finish]'), faceColor: root.querySelector('[data-sim-face-color]'), ranged: root.querySelector('[data-sim-ranged]'), melee: root.querySelector('[data-sim-melee]'), workshopPoints: root.querySelector('[data-sim-workshop-points]'), upgradeButtons: [...root.querySelectorAll('[data-upgrade]')], loadoutStatus: root.querySelector('[data-sim-loadout-status]') };
+  const ui = { time: root.querySelector('[data-sim-time]'), score: root.querySelector('[data-sim-score]'), points: root.querySelector('[data-sim-points]'), level: root.querySelector('[data-sim-level]'), levelName: root.querySelector('[data-sim-level-name]'), left: root.querySelector('[data-sim-left]'), right: root.querySelector('[data-sim-right]'), enemies: root.querySelector('[data-sim-enemies]'), lock: root.querySelector('[data-sim-lock]'), message: root.querySelector('[data-sim-message]'), start: root.querySelector('[data-sim-start]'), reset: root.querySelector('[data-sim-reset]'), fullscreen: root.querySelector('[data-sim-fullscreen]'), hack: root.querySelector('[data-sim-hack]'), laserButtons: [...root.querySelectorAll('[data-sim-laser]')], saberButtons: [...root.querySelectorAll('[data-sim-saber]')], health: root.querySelector('[data-sim-health]'), healthText: root.querySelector('[data-sim-health-text]'), shields: root.querySelector('[data-sim-shields]'), shieldsText: root.querySelector('[data-sim-shields-text]'), energy: root.querySelector('[data-sim-energy]'), energyText: root.querySelector('[data-sim-energy-text]'), security: root.querySelector('[data-sim-security]'), boss: root.querySelector('[data-sim-boss]'), bossName: root.querySelector('[data-sim-boss-name]'), bossText: root.querySelector('[data-sim-boss-text]'), bossHealth: root.querySelector('[data-sim-boss-health]'), progress: root.querySelector('[data-sim-progress]'), nextUnlock: root.querySelector('[data-sim-next-unlock]'), finish: root.querySelector('[data-sim-finish]'), faceColor: root.querySelector('[data-sim-face-color]'), ranged: root.querySelector('[data-sim-ranged]'), melee: root.querySelector('[data-sim-melee]'), workshopPoints: root.querySelector('[data-sim-workshop-points]'), upgradeButtons: [...root.querySelectorAll('[data-upgrade]')], loadoutStatus: root.querySelector('[data-sim-loadout-status]') };
   const awardMissionPoints = (points) => { if (points <= 0) return; score += points; upgradePoints += points; saveProgress('robUpgradePoints', upgradePoints); updateWorkshop(); };
   const objectives = Object.fromEntries([...root.querySelectorAll('[data-objective]')].map((item) => [item.dataset.objective, item])); const say = (t) => { ui.message.textContent = t; }; const mark = (n, t, p) => { if (objectives[n].classList.contains('is-complete')) return; objectives[n].classList.add('is-complete'); awardMissionPoints(p); say(t); };
   const currentBoss = () => enemies.find((enemy) => enemy.userData.alive && enemy.userData.isBoss);
@@ -218,12 +260,14 @@ if (root) {
     level.obstacles.forEach((o, i) => box(...o, i % 2 ? 0x465262 : 0x344552, true, true));
     buildEnvironmentalFeatures(index);
     floor.material.color.setHex(level.floor); grid.material.color.setHex(level.grid); gate.position.set(level.gate[0], 0, level.gate[1]); dock.position.set(level.dock[0], .05, level.dock[1]);
-    robot.position.set(0, 0, ARENA_HALF_DEPTH - 1.6); robot.rotation.set(0, 0, 0); robotRig.torso.rotation.set(0, 0, 0); armAssemblies.forEach((arm) => arm.rotation.set(0, 0, 0)); levelElapsed = 0; health = MAX_ROB_HEALTH; energy = maximumEnergy(upgradeLevels.energyCapacity); damageInvulnerableUntil = -Infinity; gateDone = false; cellCount = 0; levelComplete = false; hasKey = false; doorOpen = !level.key; hacking = false; hackingProgress = 0; securityAlertRemaining = 0; securityMiniBossReleased = false; laserLock = undefined; laserChargeStarted = undefined; saberCombo = 0; lastSaberAttack = -Infinity; saberAnimation = undefined; gamepadLaserHeld = false;
+    robot.position.set(0, 0, ARENA_HALF_DEPTH - 1.6); robot.rotation.set(0, 0, 0); robotRig.torso.rotation.set(0, 0, 0); armAssemblies.forEach((arm) => arm.rotation.set(0, 0, 0)); levelElapsed = 0; health = MAX_ROB_HEALTH; shields = MAX_ROB_SHIELDS; energy = maximumEnergy(upgradeLevels.energyCapacity); damageInvulnerableUntil = -Infinity; gateDone = false; cellCount = 0; levelComplete = false; hasKey = false; doorOpen = !level.key; hacking = false; hackingProgress = 0; securityAlertRemaining = 0; securityMiniBossReleased = false; laserLock = undefined; laserChargeStarted = undefined; saberCombo = 0; lastSaberAttack = -Infinity; saberAnimation = undefined; gamepadLaserHeld = false;
     releaseAllInput(); keyObject.visible = Boolean(level.key); if (level.key) keyObject.position.set(level.key[0], 0, level.key[1]);
     doorObject.visible = Boolean(level.door); if (level.door) { doorObject.position.set(level.door[0], .9, level.door[1]); doorObject.scale.set(level.door[2] / 4, 1, level.door[3] / .35); }
     const hackPosition = hackPositionForLevel(level); hackTerminal.visible = Boolean(hackPosition); if (hackPosition) hackTerminal.position.set(hackPosition[0], 0, hackPosition[1]);
     bolts.splice(0).forEach((bolt) => scene.remove(bolt)); enemyBolts.splice(0).forEach((bolt) => scene.remove(bolt)); window.speechSynthesis?.cancel?.();
     cells.forEach((cell, i) => { const position = level.cells[i]; cell.visible = Boolean(position); cell.userData.got = false; if (position) cell.position.set(position[0], .55, position[1]); });
+    shieldPickups.forEach((pickup, i) => { const position = level.shieldPickups[i]; pickup.visible = Boolean(position); pickup.userData.got = false; if (position) pickup.position.set(position[0], 0, position[1]); });
+    repairPickups.forEach((pickup, i) => { const position = level.repairPickups[i]; pickup.visible = Boolean(position); pickup.userData.got = false; if (position) pickup.position.set(position[0], 0, position[1]); });
     enemies.forEach((enemy) => { enemy.visible = false; enemy.userData.alive = false; enemy.userData.isMiniBoss = false; });
     level.enemies.forEach((spec, enemyIndex) => {
       const enemy = enemies.find((candidate) => !candidate.visible && candidate.userData.type === spec[0]);
@@ -267,8 +311,13 @@ if (root) {
   const damageEnemy = (hit, weapon, amount = 1) => { const damage = upgradedWeaponDamage(amount, upgradeLevels.weaponPower); hit.userData.health -= damage; awardMissionPoints(50 * damage); if (hit.userData.type === 'spider') playSpiderSound(hit.userData.health <= 0 ? 'shutdown' : 'impact'); say(`${hit.userData.name} hit by ${weapon} — ${Math.max(0, hit.userData.health)} shields remain.`); if (hit.userData.health <= 0) { hit.userData.alive = false; hit.visible = false; awardMissionPoints(hit.userData.defeatReward ?? (hit.userData.isBoss ? 1000 : 300)); if (laserLock === hit) laserLock = undefined; if (hit.userData.type !== 'spider') playDalekSentry(); say(`${hit.userData.name} disabled by ${weapon}. ${enemies.filter((enemy) => enemy.userData.alive).length} targets remain.`); if (enemies.every((e) => !e.userData.alive)) mark('enemies', 'Training-room defense complete.', 400); } };
   const damageROB = (attack, damage) => {
     if (!running || elapsed < damageInvulnerableUntil) return false;
-    const result = applyROBHealthDamage(health, damage); health = result.health; score = Math.max(0, score - result.scorePenalty); damageInvulnerableUntil = elapsed + .75;
-    if (health > 0) { say(`${attack} dealt ${result.appliedDamage} damage. ROB health: ${health}/${MAX_ROB_HEALTH}.`); return true; }
+    const result = applyROBDamage({ health, shields, damage }); health = result.health; shields = result.shields; score = Math.max(0, score - result.scorePenalty); damageInvulnerableUntil = elapsed + .75;
+    if (health > 0) {
+      if (result.healthDamage > 0 && result.shieldDamage > 0) say(`${attack} broke ROB’s shield and dealt ${result.healthDamage} hull damage. Health: ${health}/${MAX_ROB_HEALTH}.`);
+      else if (result.shieldDamage > 0) say(`${attack} drained ${result.shieldDamage} shield points. ROB shields: ${shields}/${MAX_ROB_SHIELDS}.`);
+      else say(`${attack} dealt ${result.healthDamage} hull damage. ROB health: ${health}/${MAX_ROB_HEALTH}.`);
+      return true;
+    }
     loadLevel(levelIndex); running = true; ui.start.hidden = true; damageInvulnerableUntil = elapsed + 1; say(`ROB was disabled by ${attack}. Restarting level ${levelIndex + 1} with full health.`); return true;
   };
   const combatNow = () => performance.now() / 1000;
@@ -374,6 +423,8 @@ if (root) {
     if (!gateDone && robot.position.distanceTo(gate.position) < 1.55) { gateDone = true; awardMissionPoints(250); say('Calibration gate bonus collected. Continue with the shared mission objectives.'); }
     if (keyObject.visible && robot.position.distanceTo(keyObject.position) < 1) { hasKey = true; keyObject.visible = false; awardMissionPoints(250); playSound('pickup'); say('Access key secured. Reach the orange panel and start ROB’s Flipper Zero hack.'); }
     cells.forEach((c) => { if (c.visible && !c.userData.got && robot.position.distanceTo(c.position) < 1) { c.userData.got = true; c.visible = false; cellCount += 1; energy = Math.min(maximumEnergy(upgradeLevels.energyCapacity), energy + 32); awardMissionPoints(150); playSound('pickup'); say(`Energy cell ${cellCount} of ${level.cells.length} secured. Battery recharged.`); if (cellCount === level.cells.length) mark('cells', 'All cells secured. Dock after the room is safe.', 300); } });
+    shieldPickups.forEach((pickup) => { if (pickup.visible && !pickup.userData.got && shields < MAX_ROB_SHIELDS && robot.position.distanceTo(pickup.position) < 1.1) { const before = shields; shields = replenishROBShields(shields); pickup.userData.got = true; pickup.visible = false; awardMissionPoints(100); playSound('pickup'); say(`Shield capacitor restored ${shields - before} points. ROB shields: ${shields}/${MAX_ROB_SHIELDS}.`); } });
+    repairPickups.forEach((pickup) => { if (pickup.visible && !pickup.userData.got && health < MAX_ROB_HEALTH && robot.position.distanceTo(pickup.position) < 1.1) { const before = health; health = repairROBHealth(health); pickup.userData.got = true; pickup.visible = false; awardMissionPoints(100); playSound('pickup'); say(`Repair kit restored ${health - before} hull points. ROB health: ${health}/${MAX_ROB_HEALTH}.`); } });
     if (cellCount === level.cells.length && enemies.every((e) => !e.userData.alive) && doorOpen && robot.position.distanceTo(dock.position) < 1.15) { const timeBonus = Math.max(0, level.bonus - Math.floor(levelElapsed) * 10), completedLevel = levelIndex + 1, earnedProgress = completedLevel > highestCompletedLevel, reward = earnedProgress ? unlockReward(completedLevel) : undefined; highestCompletedLevel = Math.max(highestCompletedLevel, completedLevel); saveProgress('robHighestCompletedLevel', highestCompletedLevel); updateWorkshop(); mark('dock', [reward, `Level cleared! Time bonus: ${timeBonus}.`].filter(Boolean).join(' '), 500 + timeBonus); playSound('level-complete'); running = false; levelComplete = true; ui.start.hidden = false; if (levelIndex < levels.length - 1) ui.start.textContent = `Continue to level ${levelIndex + 2}`; else { complete = true; ui.start.textContent = 'Play campaign again'; root.dispatchEvent(new CustomEvent('rob:campaign-complete', { detail: { score, durationSeconds: Math.round(elapsed), levelsCompleted: levels.length } })); say([reward, `Campaign complete with ${score.toLocaleString()} points. Add your call sign!`].filter(Boolean).join(' ')); } }
   };
   const fullscreenElement = () => document.fullscreenElement || document.webkitFullscreenElement;
@@ -383,9 +434,12 @@ if (root) {
   const animate = () => {
     requestAnimationFrame(animate); const dt = Math.min(clock.getDelta(), .05); tick(dt); updateRobotWeapons();
     cells.forEach((c, i) => { if (c.visible) { c.rotation.y += dt * 1.4; c.position.y = .55 + Math.sin(elapsed * 2 + i) * .08; } });
+    shieldPickups.forEach((pickup, i) => { if (pickup.visible) { pickup.rotation.y += dt * 1.8; pickup.position.y = Math.sin(elapsed * 2.3 + i) * .1; } });
+    repairPickups.forEach((pickup, i) => { if (pickup.visible) { pickup.rotation.y -= dt * .9; pickup.position.y = Math.sin(elapsed * 1.8 + i) * .07; } });
+    robotRig.shieldField.visible = shields > 0; robotRig.shieldField.rotation.y += dt * .35; robotRig.shieldField.material.opacity = .06 + .1 * (shields / MAX_ROB_SHIELDS);
     camera.position.lerp(new THREE.Vector3(robot.position.x + 6.2, 11.2, robot.position.z + 8.2), .06); camera.lookAt(robot.position.x, .65, robot.position.z - 1.8);
     ui.time.textContent = new Date(elapsed * 1000).toISOString().slice(14, 22); ui.score.textContent = score; ui.points.textContent = upgradePoints; ui.left.textContent = controls.left.toFixed(2); ui.right.textContent = controls.right.toFixed(2); ui.enemies.textContent = enemies.filter((e) => e.userData.alive).length;
-    ui.health.value = health; ui.healthText.textContent = `${health} / ${MAX_ROB_HEALTH}`; const energyMaximum = maximumEnergy(upgradeLevels.energyCapacity); ui.energy.max = energyMaximum; ui.energy.value = energy; ui.energyText.textContent = `${Math.floor(energy)} / ${energyMaximum}`; ui.security.hidden = securityAlertRemaining <= 0;
+    ui.health.value = health; ui.healthText.textContent = `${health} / ${MAX_ROB_HEALTH}`; ui.shields.value = shields; ui.shieldsText.textContent = `${shields} / ${MAX_ROB_SHIELDS}`; const energyMaximum = maximumEnergy(upgradeLevels.energyCapacity); ui.energy.max = energyMaximum; ui.energy.value = energy; ui.energyText.textContent = `${Math.floor(energy)} / ${energyMaximum}`; ui.security.hidden = securityAlertRemaining <= 0;
     const level = levels[levelIndex], hackDistance = robot.position.distanceTo(hackTerminal.position), hackAvailable = Boolean(level.door && !doorOpen && hackDistance <= 2.7); ui.hack.hidden = !hackAvailable; ui.hack.disabled = hacking; ui.hack.textContent = hacking ? `▣ Hacking ${Math.round(hackingProgress * 100)}%` : hasKey ? '▣ Hack door' : '▣ Key required';
     hackTerminalLamp.material.color.setHex(hacking ? 0xffcf33 : hasKey ? 0x37e887 : 0xff3030); hackTerminalLamp.material.emissive.setHex(hacking ? 0xb37700 : hasKey ? 0x087a35 : 0x8b0505);
     ui.workshopPoints.textContent = `${upgradePoints.toLocaleString()} points`;
