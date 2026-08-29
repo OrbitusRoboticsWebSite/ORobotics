@@ -18,7 +18,7 @@ import {
   calculateVoltageDivider,
   connectionSet,
   hasConnection,
-  matchesCircuit,
+  matchesAnyCircuit,
   parseArduinoBlink,
   simulateSolar,
   solveOhmsLaw,
@@ -353,15 +353,16 @@ if (root) {
       hints: ['Connect D2 to one side of the button.', 'Connect the other side to GND.', 'With INPUT_PULLUP, released means HIGH and pressed means LOW.'],
       components: [
         { id: 'uno', type: 'uno', variant: 'input', label: 'Arduino Uno · INPUT_PULLUP', x: 24, y: 52 },
-        { id: 'button', type: 'button', label: 'Momentary pushbutton', x: 76, y: 51 },
+        { id: 'button', type: 'button', orientation: 'vertical', label: 'Momentary pushbutton · no polarity', x: 76, y: 51 },
       ],
-      required: [edge('uno.d2', 'button.out'), edge('button.in', 'uno.gnd')], supply: 5, resistance: 10000, action: 'arduino-input',
+      required: [edge('uno.d2', 'button.in'), edge('button.out', 'uno.gnd')],
+      requiredAlternatives: [[edge('uno.d2', 'button.out'), edge('button.in', 'uno.gnd')]], supply: 5, resistance: 10000, action: 'arduino-input',
       objectives: [
         ['Wire D2 through the button to GND', (s) => s.exact],
         ['Observe released = HIGH', (s) => s.highSeen],
         ['Press and observe LOW', (s) => s.lowSeen],
       ],
-      noteTitle: 'Pull-ups prevent floating inputs', note: 'An unconnected input can pick up noise and randomly change state. INPUT_PULLUP connects a weak resistor to 5 V inside the Uno. The switch overrides it by connecting the pin to GND.'
+      noteTitle: 'Pull-ups prevent floating inputs', note: 'An unconnected input can pick up noise and randomly change state. INPUT_PULLUP connects a weak resistor to 5 V inside the Uno. The switch overrides it by connecting the pin to GND. A two-terminal momentary switch has no input/output polarity, so either terminal may face D2.'
     },
     {
       icon: '🌗', tier: 'Arduino PWM', difficulty: 'Coder', kicker: 'Build 18 · Shape a pulse', title: 'Dim an LED with PWM',
@@ -457,6 +458,7 @@ if (root) {
         { id: 'led', type: 'led', label: 'Pulse LED module', x: 90, y: 51, color: '#35d985' },
       ],
       required: [edge('cell.pos', 'timer.vcc'), edge('cell.pos', 'timer.reset'), edge('cell.neg', 'timer.gnd'), edge('cell.pos', 'r.in'), edge('r.out', 'timer.timing'), edge('timer.timing', 'c.in'), edge('c.out', 'cell.neg'), edge('button.out', 'timer.trigger'), edge('button.in', 'cell.neg'), edge('timer.out', 'led.a'), edge('led.k', 'cell.neg')],
+      requiredAlternatives: [[edge('cell.pos', 'timer.vcc'), edge('cell.pos', 'timer.reset'), edge('cell.neg', 'timer.gnd'), edge('cell.pos', 'r.in'), edge('r.out', 'timer.timing'), edge('timer.timing', 'c.in'), edge('c.out', 'cell.neg'), edge('button.in', 'timer.trigger'), edge('button.out', 'cell.neg'), edge('timer.out', 'led.a'), edge('led.k', 'cell.neg')]],
       supply: 5, resistance: 100000, capacitance: .00001, action: 'timer-monostable',
       objectives: [
         ['Build the powered one-shot', (s) => s.exact],
@@ -619,8 +621,8 @@ if (root) {
       inside: [edge('r.out', 'r.in'), edge('coil.out', 'coil.in'), edge('source.a', 'source.b')],
     },
     {
-      wires: [edge('uno.gnd', 'button.in'), edge('button.out', 'uno.d2')],
-      inside: [edge('button.in', 'button.out'), edge('uno.d2', 'uno.gnd')],
+      wires: [edge('uno.gnd', 'button.out'), edge('button.in', 'uno.d2')],
+      inside: [edge('button.out', 'button.in'), edge('uno.d2', 'uno.gnd')],
     },
     {
       wires: [edge('uno.gnd', 'led.k'), edge('led.a', 'r.out'), edge('r.in', 'uno.d9')],
@@ -811,7 +813,10 @@ if (root) {
       body = `<div class="part-uno__body"><span class="part-uno__usb"></span><span class="part-uno__brand">ARDUINO<small>UNO</small></span><span class="part-uno__infinity">∞</span><span class="part-uno__chip"></span><span class="part-uno__pins"></span><i class="part-uno__led" data-uno-led></i>${unoPorts}</div>`;
     }
     if (component.type === 'button') {
-      body = `<div class="part-button__body"><button type="button" class="part-button__cap" data-input-button aria-label="Press virtual pushbutton"><i></i><strong>PUSH</strong></button>${port(component.id, 'in', 'IN', 'lab-port--ground port-left-middle')}${port(component.id, 'out', 'OUT', 'lab-port--signal port-right-middle')}</div>`;
+      const vertical = component.orientation === 'vertical';
+      const inputPosition = vertical ? 'port-top-middle' : 'port-left-middle';
+      const outputPosition = vertical ? 'port-bottom-middle' : 'port-right-middle';
+      body = `<div class="part-button__body"><button type="button" class="part-button__cap" data-input-button aria-label="Press virtual pushbutton"><i></i><strong>PUSH</strong></button>${port(component.id, 'in', '1', `lab-port--signal ${inputPosition}`)}${port(component.id, 'out', '2', `lab-port--signal ${outputPosition}`)}</div>`;
     }
     if (component.type === 'potentiometer') {
       body = `<div class="part-potentiometer__body" style="--knob-angle:0deg"><span class="part-potentiometer__track"></span><i class="part-potentiometer__knob"></i><b>${component.id === 'ref' ? '2.5 V' : 'KNOB'}</b>${port(component.id, 'high', '5V', 'lab-port--positive port-left-top')}${port(component.id, 'wiper', 'W', 'lab-port--signal port-right-middle')}${port(component.id, 'low', '0V', 'lab-port--ground port-left-bottom')}</div>`;
@@ -986,8 +991,10 @@ if (root) {
   function terminalName(node) {
     const [componentId, terminal] = node.split('.');
     const mission = missions[state.missionIndex];
-    const label = mission.components.find((component) => component.id === componentId)?.label || componentId;
-    return `${label} ${terminal}`;
+    const component = mission.components.find((item) => item.id === componentId);
+    const label = component?.label || componentId;
+    const terminalLabel = component?.type === 'button' ? terminal === 'in' ? 'terminal 1' : 'terminal 2' : terminal;
+    return `${label} ${terminalLabel}`;
   }
 
   function toggleSwitch() {
@@ -1045,7 +1052,7 @@ if (root) {
 
   function evaluate() {
     const mission = missions[state.missionIndex];
-    state.exact = matchesCircuit(state.connections, mission.required);
+    state.exact = matchesAnyCircuit(state.connections, [mission.required, ...(mission.requiredAlternatives || [])]);
     if (mission.action === 'solar' && state.exact && state.solar.sun >= 60) state.solar.daySeen = true;
     if (state.exact && ['capacitive-ac', 'inductive-ac'].includes(mission.action)) {
       if (state.experiment.frequency <= 20) state.experiment.lowSeen = true;
@@ -1940,7 +1947,14 @@ if (root) {
 
   function activeElectronFlow() {
     const configured = electronFlows[state.missionIndex];
-    if (missions[state.missionIndex].action !== 'solar') return configured;
+    const mission = missions[state.missionIndex];
+    if (mission.action === 'arduino-input' && hasConnection(state.connections, 'uno.d2', 'button.out')) {
+      return {
+        wires: [edge('uno.gnd', 'button.in'), edge('button.out', 'uno.d2')],
+        inside: [edge('button.in', 'button.out'), edge('uno.d2', 'uno.gnd')],
+      };
+    }
+    if (mission.action !== 'solar') return configured;
     return state.solar.result?.powerSource?.includes('battery') ? configured.night : configured.day;
   }
 

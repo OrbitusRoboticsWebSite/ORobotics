@@ -18,6 +18,7 @@ import {
   calculateSeries,
   calculateSeriesRLC,
   calculateVoltageDivider,
+  matchesAnyCircuit,
   matchesCircuit,
   parseArduinoBlink,
   simulateSolar,
@@ -32,6 +33,19 @@ test('circuit matching ignores wire direction but rejects missing and extra wire
   ], required), true);
   assert.equal(matchesCircuit([{ a: 'lamp.a', b: 'battery.pos' }], required), false);
   assert.equal(matchesCircuit([...required, ['battery.pos', 'battery.neg']], required), false);
+});
+
+test('circuit matching accepts either side of a declared non-polarized switch', () => {
+  const required = [['uno.d2', 'button.in'], ['button.out', 'uno.gnd']];
+  const reversed = [['uno.d2', 'button.out'], ['button.in', 'uno.gnd']];
+  assert.equal(matchesAnyCircuit([
+    ['uno.d2', 'button.out'],
+    ['button.in', 'uno.gnd'],
+  ], [required, reversed]), true);
+  assert.equal(matchesAnyCircuit([
+    ['uno.d2', 'button.in'],
+    ['button.in', 'uno.gnd'],
+  ], [required, reversed]), false);
 });
 
 test('series circuit reports current, component drops, and power', () => {

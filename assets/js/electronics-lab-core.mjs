@@ -16,6 +16,10 @@ export function matchesCircuit(connections, requiredEdges) {
   return [...required].every((edge) => actual.has(edge));
 }
 
+export function matchesAnyCircuit(connections, requiredCircuitOptions) {
+  return requiredCircuitOptions.some((requiredEdges) => matchesCircuit(connections, requiredEdges));
+}
+
 export function hasConnection(connections, a, b) {
   return connectionSet(connections).has(normalizeEdge(a, b));
 }
