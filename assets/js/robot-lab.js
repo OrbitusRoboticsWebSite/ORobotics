@@ -19,26 +19,26 @@ if (root) {
   const missions = [
     {
       icon: '💡', tier: 'Basics', difficulty: 'Rookie', kicker: 'Build 01 · First circuit', title: 'Light the workshop lamp',
-      intro: 'Connect a battery to a bulb and give the electrons a complete path home.',
-      guide: 'A wire out is only half a circuit. Charge must travel through the lamp and return to the battery.',
-      success: 'The loop is closed, current flows, and the lamp turns electrical energy into light and heat.',
-      hints: ['Start at the red + terminal and connect it to either lamp terminal.', 'Now give the current a way home: connect the lamp’s other terminal to battery −.'],
+      intro: 'Connect a battery to a bulb and give electrons a complete circular path from − through the lamp to +.',
+      guide: 'Electrons in the external wires drift out of battery −, pass through the lamp, and enter battery +. Inside the battery, chemistry keeps the charges separated so the loop can continue.',
+      success: 'The loop is closed! Watch the white electrons circle from battery −, through the lamp, toward battery +.',
+      hints: ['Start where external electron flow starts: connect battery − to one lamp terminal.', 'Complete the circle by connecting the lamp’s other terminal to battery +.'],
       components: [
         { id: 'cell', type: 'battery', label: '3 V battery pack', x: 20, y: 50, voltage: 3 },
         { id: 'lamp', type: 'lamp', label: 'Workshop lamp', x: 78, y: 50, color: '#ffe43b' },
       ],
       required: [edge('cell.pos', 'lamp.a'), edge('cell.neg', 'lamp.b')], supply: 3, resistance: 12,
       objectives: [
-        ['Wire battery + to the lamp', (s) => s.has('cell.pos', 'lamp.a')],
-        ['Wire the lamp back to battery −', (s) => s.has('cell.neg', 'lamp.b')],
+        ['Wire battery − to the lamp', (s) => s.has('cell.neg', 'lamp.b')],
+        ['Wire the lamp onward to battery +', (s) => s.has('cell.pos', 'lamp.a')],
         ['Create light with a closed loop', (s) => s.powered],
       ],
-      noteTitle: 'Why did it light?', note: 'Voltage pushes charge around the closed path. The lamp transfers electrical energy into light and heat. Remove either wire and the current becomes zero.'
+      noteTitle: 'Why did it light?', note: 'In the external metal wires, electrons drift from − through the entire load and toward +. Battery chemistry maintains the voltage that keeps the loop moving. Remove either wire and the circular path opens, so current becomes zero.'
     },
     {
       icon: '⏻', tier: 'Basics', difficulty: 'Rookie', kicker: 'Build 02 · Control the flow', title: 'Put a switch in charge',
       intro: 'Route power through a switch, then close it to control the lamp without pulling wires.',
-      guide: 'A switch opens or closes a deliberate gap. Wire it in series so every electron must pass through it.',
+      guide: 'A switch opens or closes a deliberate gap. Put it in the complete loop so electron drift from − toward + must pass through the switch and lamp.',
       success: 'One small mechanical movement closed the path. Switches control when energy can flow.',
       hints: ['Connect battery + to the switch IN terminal.', 'Continue from switch OUT to the lamp, then return the lamp to battery −.', 'The wires are ready—press the switch itself to close the final gap.'],
       components: [
@@ -175,6 +175,58 @@ if (root) {
     },
   ];
 
+  // White particles follow electron drift in the external metal circuit: negative to positive.
+  // The dim internal source segment represents the chemistry that maintains charge separation.
+  const electronFlows = [
+    {
+      wires: [edge('cell.neg', 'lamp.b'), edge('lamp.a', 'cell.pos')],
+      inside: [edge('lamp.b', 'lamp.a'), edge('cell.pos', 'cell.neg')],
+    },
+    {
+      wires: [edge('cell.neg', 'lamp.b'), edge('lamp.a', 'switch.out'), edge('switch.in', 'cell.pos')],
+      inside: [edge('lamp.b', 'lamp.a'), edge('switch.out', 'switch.in'), edge('cell.pos', 'cell.neg')],
+    },
+    {
+      wires: [edge('cell.neg', 'led.k'), edge('led.a', 'r.out'), edge('r.in', 'cell.pos')],
+      inside: [edge('led.k', 'led.a'), edge('r.out', 'r.in'), edge('cell.pos', 'cell.neg')],
+    },
+    {
+      wires: [edge('cell.neg', 'r2.out'), edge('r2.in', 'r1.out'), edge('r1.in', 'cell.pos')],
+      inside: [edge('r2.out', 'r2.in'), edge('r1.out', 'r1.in'), edge('cell.pos', 'cell.neg')],
+    },
+    {
+      wires: [
+        edge('cell.neg', 'lamp1.b'), edge('lamp1.a', 'cell.pos'),
+        edge('cell.neg', 'lamp2.b'), edge('lamp2.a', 'cell.pos'),
+      ],
+      inside: [edge('lamp1.b', 'lamp1.a'), edge('lamp2.b', 'lamp2.a'), edge('cell.pos', 'cell.neg')],
+    },
+    {
+      day: {
+        wires: [
+          edge('panel.neg', 'controller.pvNeg'), edge('controller.loadNeg', 'lamp.b'), edge('lamp.a', 'controller.loadPos'), edge('controller.pvPos', 'panel.pos'),
+          edge('controller.battNeg', 'battery.neg'), edge('battery.pos', 'controller.battPos'),
+        ],
+        inside: [
+          edge('controller.pvNeg', 'controller.loadNeg'), edge('controller.loadPos', 'controller.pvPos'), edge('lamp.b', 'lamp.a'), edge('panel.pos', 'panel.neg'),
+          edge('controller.pvNeg', 'controller.battNeg'), edge('controller.battPos', 'controller.pvPos'), edge('battery.neg', 'battery.pos'),
+        ],
+      },
+      night: {
+        wires: [edge('battery.neg', 'controller.battNeg'), edge('controller.loadNeg', 'lamp.b'), edge('lamp.a', 'controller.loadPos'), edge('controller.battPos', 'battery.pos')],
+        inside: [edge('controller.battNeg', 'controller.loadNeg'), edge('lamp.b', 'lamp.a'), edge('controller.loadPos', 'controller.battPos'), edge('battery.pos', 'battery.neg')],
+      },
+    },
+    {
+      wires: [edge('uno.gnd', 'led.k'), edge('led.a', 'r.out'), edge('r.in', 'uno.d13')],
+      inside: [edge('led.k', 'led.a'), edge('r.out', 'r.in'), edge('uno.d13', 'uno.gnd')],
+    },
+    {
+      wires: [edge('uno.gnd', 'led.k'), edge('led.a', 'r.out'), edge('r.in', 'uno.d13')],
+      inside: [edge('led.k', 'led.a'), edge('r.out', 'r.in'), edge('uno.d13', 'uno.gnd')],
+    },
+  ];
+
   const wireColors = ['#ff4fa3', '#2ee5eb', '#ffe43b', '#35d985', '#ff8a32', '#a27cff', '#ff4967', '#5bb6ff'];
   const state = {
     missionIndex: 0,
@@ -204,7 +256,7 @@ if (root) {
   const els = {
     rail: $('mission-rail'), guide: $('guide-message'), guideStatus: $('guide-status'), objectives: $('objective-list'), score: $('lab-score'), scoreBar: $('score-bar'),
     kicker: $('mission-kicker'), title: $('mission-title'), intro: $('mission-intro'), difficulty: $('mission-difficulty'), components: $('components'),
-    workbench: $('workbench'), loading: $('workbench-loading'), wireCanvas: $('wire-canvas'), scopeCanvas: $('scope-canvas'), toast: $('lab-toast'),
+    workbench: $('workbench'), loading: $('workbench-loading'), wireCanvas: $('wire-canvas'), electronCanvas: $('electron-canvas'), scopeCanvas: $('scope-canvas'), toast: $('lab-toast'),
     success: $('success'), successCopy: $('success-copy'), plug: $('plug-indicator'), wireStatus: $('wire-status'), undo: $('undo-wire'), clear: $('clear-wires'),
     meterVoltage: $('meter-voltage'), meterCurrent: $('meter-current'), meterResistance: $('meter-resistance'), powerState: $('power-state'),
     action: $('mission-action'), previous: $('previous-mission'), next: $('next-mission'), progress: $('lab-progress'),
@@ -558,31 +610,45 @@ if (root) {
     let voltage = mission.supply || 0;
     let resistance = mission.resistance || state.resistance || 0;
     let current = 0;
-    let label = 'OPEN LOOP';
+    let label = `${voltage.toFixed(1)} V DC · OPEN LOOP`;
+    let danger = false;
     if (mission.action === 'solar') {
       voltage = state.exact ? 3.7 : 0;
       current = state.exact && state.solar.loadOn ? 270 : 0;
       resistance = state.solar.loadOn ? 3.7 : 0;
-      label = state.exact ? state.solar.result?.state?.toUpperCase() || 'ENERGY READY' : 'OPEN LOOP';
+      label = state.exact ? `DC · ${state.solar.result?.state?.toUpperCase() || 'ENERGY READY'}` : '0 V DC · OPEN LOOP';
     } else if (mission.ledForward) {
       resistance = state.resistance;
       current = state.exact ? Math.max(0, (mission.supply - mission.ledForward) / state.resistance * 1000) : 0;
-      label = state.exact && state.resistance < 150 ? 'TOO MUCH CURRENT' : state.powered ? 'LED SAFE' : 'OPEN LOOP';
+      danger = state.exact && state.resistance < 150;
+      label = danger ? '⚠ DC · CURRENT TOO HIGH!' : state.powered ? `${voltage.toFixed(1)} V DC · LED SAFE` : `${voltage.toFixed(1)} V DC · OPEN LOOP`;
     } else if (state.missionIndex === 7) {
       current = state.powered ? (5 - 2) / 220 * 1000 : 0;
-      label = state.programRunning ? 'PROGRAM RUNNING' : state.exact ? 'READY FOR CODE' : 'OPEN LOOP';
+      label = state.programRunning ? `${state.powered ? '5.0' : '0.0'} V PULSED DC · PIN ${state.powered ? 'HIGH' : 'LOW'}` : state.exact ? '0 V DC · READY FOR CODE' : '0 V DC · OPEN LOOP';
     } else if (state.missionIndex === 6) {
       current = 0;
-      label = state.exact ? 'SIGNAL READY' : 'OPEN LOOP';
+      label = state.exact ? '0 V DC · SIGNAL READY' : '0 V DC · OPEN LOOP';
     } else if (state.exact && (!mission.hasSwitch || state.switchClosed)) {
       current = resistance ? voltage / resistance * 1000 : 0;
-      label = 'CURRENT FLOWING';
+      label = `${voltage.toFixed(1)} V DC · STEADY FLOW`;
     }
     els.meterVoltage.textContent = voltage.toFixed(1);
     els.meterCurrent.textContent = current < 10 ? current.toFixed(1) : current.toFixed(0);
     els.meterResistance.textContent = resistance ? (resistance >= 1000 ? `${resistance / 1000}k` : String(resistance)) : '—';
     els.powerState.textContent = label;
     els.powerState.classList.toggle('is-live', state.powered || state.exact);
+    els.powerState.classList.toggle('is-danger', danger);
+    els.meterCurrent.closest('div')?.classList.toggle('has-danger', danger);
+    updateCurrentAlert(current, danger);
+  }
+
+  function updateCurrentAlert(current, danger) {
+    const alert = els.action.querySelector('[data-current-alert]');
+    const prediction = els.action.querySelector('[data-resistor-output]');
+    if (prediction) prediction.classList.toggle('is-danger', state.resistance < 150);
+    if (!alert) return;
+    alert.hidden = !danger;
+    if (danger) alert.innerHTML = `<strong>⚠ CURRENT TOO HIGH: ${current.toFixed(1)} mA</strong><span>This exceeds the LED’s 20 mA limit. Choose 150 Ω or more before continuing.</span>`;
   }
 
   function setGuide(message, status = 'READY') {
@@ -616,13 +682,14 @@ if (root) {
   function renderMissionAction(mission) {
     const note = `<div class="lesson-note"><span aria-hidden="true">⚡</span><div><h3>${mission.noteTitle}</h3><p>${mission.note}</p></div></div>`;
     if (mission.action === 'resistor') {
-      els.action.innerHTML = `${note}<div class="resistor-picker"><span>Choose a resistor:</span>${[100, 150, 220, 330].map((value) => `<button type="button" data-resistance="${value}"${value === state.resistance ? ' class="is-active"' : ''}>${value} Ω</button>`).join('')}<output data-resistor-output>30.0 mA · too high</output></div>`;
+      els.action.innerHTML = `${note}<div class="current-alert" data-current-alert role="alert" aria-live="assertive" hidden></div><div class="resistor-picker"><span>Choose a resistor:</span>${[100, 150, 220, 330].map((value) => `<button type="button" data-resistance="${value}"${value === state.resistance ? ' class="is-active"' : ''}>${value} Ω</button>`).join('')}<output class="is-danger" data-resistor-output>30.0 mA · TOO HIGH</output></div>`;
       els.action.querySelectorAll('[data-resistance]').forEach((button) => button.addEventListener('click', () => {
         state.resistance = Number(button.dataset.resistance);
         els.action.querySelectorAll('[data-resistance]').forEach((item) => item.classList.toggle('is-active', item === button));
         const current = (mission.supply - mission.ledForward) / state.resistance * 1000;
         const output = els.action.querySelector('[data-resistor-output]');
-        output.textContent = `${current.toFixed(1)} mA · ${current <= 20 ? 'safe glow' : 'too high'}`;
+        output.textContent = `${current.toFixed(1)} mA · ${current <= 20 ? 'SAFE GLOW' : 'TOO HIGH'}`;
+        output.classList.toggle('is-danger', current > 20);
         evaluate();
       }));
       return;
@@ -749,7 +816,7 @@ if (root) {
   }
 
   function resizeCanvases() {
-    [els.wireCanvas, els.scopeCanvas].forEach((canvas) => {
+    [els.wireCanvas, els.electronCanvas, els.scopeCanvas].forEach((canvas) => {
       const rect = canvas.getBoundingClientRect();
       const ratio = Math.min(2, window.devicePixelRatio || 1);
       if (canvas.width !== Math.round(rect.width * ratio) || canvas.height !== Math.round(rect.height * ratio)) {
@@ -767,14 +834,14 @@ if (root) {
     return { x: portRect.left - benchRect.left + portRect.width / 2, y: portRect.top - benchRect.top + portRect.height / 2 };
   }
 
-  function drawWires(time) {
+  function drawWires() {
     const canvas = els.wireCanvas;
     const context = canvas.getContext('2d');
     const rect = canvas.getBoundingClientRect();
     const ratio = canvas.width / Math.max(1, rect.width);
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
     context.clearRect(0, 0, rect.width, rect.height);
-    const drawCable = (from, to, color, energized, temporary = false) => {
+    const drawCable = (from, to, color, temporary = false) => {
       if (!from || !to) return;
       const bend = Math.max(55, Math.abs(to.x - from.x) * .42);
       const c1 = { x: from.x + (to.x >= from.x ? bend : -bend), y: from.y };
@@ -783,18 +850,109 @@ if (root) {
       context.lineCap = 'round'; context.lineWidth = temporary ? 5 : 10; context.strokeStyle = temporary ? '#ffffff88' : '#07081799'; context.stroke();
       context.beginPath(); context.moveTo(from.x, from.y); context.bezierCurveTo(c1.x, c1.y, c2.x, c2.y, to.x, to.y);
       context.lineWidth = temporary ? 3 : 6; context.strokeStyle = color; context.setLineDash(temporary ? [7, 7] : []); context.stroke(); context.setLineDash([]);
-      if (energized && !state.reducedMotion) {
-        for (let particle = 0; particle < 3; particle += 1) {
-          const progress = ((time / 1500) + particle / 3) % 1;
-          const inverse = 1 - progress;
-          const x = inverse ** 3 * from.x + 3 * inverse ** 2 * progress * c1.x + 3 * inverse * progress ** 2 * c2.x + progress ** 3 * to.x;
-          const y = inverse ** 3 * from.y + 3 * inverse ** 2 * progress * c1.y + 3 * inverse * progress ** 2 * c2.y + progress ** 3 * to.y;
-          context.beginPath(); context.arc(x, y, 4, 0, Math.PI * 2); context.fillStyle = '#fff'; context.shadowColor = color; context.shadowBlur = 12; context.fill(); context.shadowBlur = 0;
-        }
-      }
     };
-    state.connections.forEach((connection) => drawCable(portPosition(connection.a), portPosition(connection.b), connection.color, state.powered || (state.exact && state.missionIndex === 6)));
-    if (state.wireDraft?.moved) drawCable(portPosition(state.wireDraft.from), state.wireDraft, '#ffe43b', false, true);
+    state.connections.forEach((connection) => drawCable(portPosition(connection.a), portPosition(connection.b), connection.color));
+    if (state.wireDraft?.moved) drawCable(portPosition(state.wireDraft.from), state.wireDraft, '#ffe43b', true);
+  }
+
+  function activeElectronFlow() {
+    const configured = electronFlows[state.missionIndex];
+    if (state.missionIndex !== 5) return configured;
+    return state.solar.result?.batteryWatts < 0 ? configured.night : configured.day;
+  }
+
+  function electronFlowIsActive() {
+    if (!state.exact) return false;
+    if (state.missionIndex === 1) return state.switchClosed;
+    if (state.missionIndex === 5) return state.exact && (state.powered || Math.abs(state.solar.result?.batteryWatts || 0) > .01);
+    if (state.missionIndex === 6) return false;
+    if (state.missionIndex === 7) return state.powered;
+    return true;
+  }
+
+  function connectedWireColor(fromNode, toNode) {
+    const wanted = [fromNode, toNode].sort().join('::');
+    return state.connections.find((connection) => [connection.a, connection.b].sort().join('::') === wanted)?.color || '#2ee5eb';
+  }
+
+  function isSourceSegment(fromNode, toNode) {
+    const fromId = fromNode.split('.')[0];
+    if (fromId !== toNode.split('.')[0]) return false;
+    const type = missions[state.missionIndex].components.find((component) => component.id === fromId)?.type;
+    return type === 'battery' || type === 'solar' || type === 'uno';
+  }
+
+  function bezierPoints(from, to) {
+    const bend = Math.max(55, Math.abs(to.x - from.x) * .42);
+    return {
+      from,
+      c1: { x: from.x + (to.x >= from.x ? bend : -bend), y: from.y },
+      c2: { x: to.x - (to.x >= from.x ? bend : -bend), y: to.y },
+      to,
+    };
+  }
+
+  function pointOnBezier(curve, progress) {
+    const inverse = 1 - progress;
+    return {
+      x: inverse ** 3 * curve.from.x + 3 * inverse ** 2 * progress * curve.c1.x + 3 * inverse * progress ** 2 * curve.c2.x + progress ** 3 * curve.to.x,
+      y: inverse ** 3 * curve.from.y + 3 * inverse ** 2 * progress * curve.c1.y + 3 * inverse * progress ** 2 * curve.c2.y + progress ** 3 * curve.to.y,
+    };
+  }
+
+  function drawElectrons(time) {
+    const canvas = els.electronCanvas;
+    const context = canvas.getContext('2d');
+    const rect = canvas.getBoundingClientRect();
+    const ratio = canvas.width / Math.max(1, rect.width);
+    context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    context.clearRect(0, 0, rect.width, rect.height);
+    if (!electronFlowIsActive()) return;
+
+    const flow = activeElectronFlow();
+    const segments = [
+      ...flow.wires.map(([fromNode, toNode]) => ({ fromNode, toNode, kind: 'wire', color: connectedWireColor(fromNode, toNode) })),
+      ...flow.inside.map(([fromNode, toNode]) => ({ fromNode, toNode, kind: 'inside', source: isSourceSegment(fromNode, toNode), color: '#ffffff' })),
+    ];
+    const danger = state.missionIndex === 2 && state.resistance < 150;
+
+    segments.forEach((segment, segmentIndex) => {
+      const from = portPosition(segment.fromNode);
+      const to = portPosition(segment.toNode);
+      if (!from || !to) return;
+      const curve = segment.kind === 'wire' ? bezierPoints(from, to) : {
+        from,
+        c1: { x: from.x + (to.x - from.x) * .33, y: from.y + (to.y - from.y) * .12 },
+        c2: { x: from.x + (to.x - from.x) * .66, y: to.y - (to.y - from.y) * .12 },
+        to,
+      };
+
+      if (segment.kind === 'inside') {
+        context.beginPath();
+        context.moveTo(from.x, from.y);
+        context.bezierCurveTo(curve.c1.x, curve.c1.y, curve.c2.x, curve.c2.y, to.x, to.y);
+        context.setLineDash([3, 7]);
+        context.lineWidth = 1.5;
+        context.strokeStyle = segment.source ? '#ffe43b70' : danger ? '#ff496788' : '#ffffff48';
+        context.stroke();
+        context.setLineDash([]);
+      }
+
+      const particleCount = state.reducedMotion ? 1 : 2;
+      for (let particle = 0; particle < particleCount; particle += 1) {
+        const motion = state.reducedMotion ? .58 : (time / 1450 + particle / particleCount + segmentIndex / segments.length) % 1;
+        const point = pointOnBezier(curve, motion);
+        const color = segment.source ? '#ffe43b' : danger ? '#ff4967' : segment.color;
+        context.beginPath();
+        if (segment.source) context.rect(point.x - 4, point.y - 4, 8, 8);
+        else context.arc(point.x, point.y, danger ? 5 : 4, 0, Math.PI * 2);
+        context.fillStyle = segment.source ? '#ffe43b' : '#fff';
+        context.shadowColor = color;
+        context.shadowBlur = danger ? 18 : 12;
+        context.fill();
+        context.shadowBlur = 0;
+      }
+    });
   }
 
   function drawScope(time) {
@@ -806,14 +964,41 @@ if (root) {
     context.clearRect(0, 0, rect.width, rect.height);
     context.strokeStyle = '#2ee5eb20'; context.lineWidth = 1;
     for (let x = 0; x < rect.width; x += 20) { context.beginPath(); context.moveTo(x, 0); context.lineTo(x, rect.height); context.stroke(); }
-    context.strokeStyle = state.powered ? '#35d985' : '#666a90'; context.lineWidth = 2.5; context.shadowColor = state.powered ? '#35d985' : 'transparent'; context.shadowBlur = 8;
+    const flowing = electronFlowIsActive();
+    const danger = state.missionIndex === 2 && state.exact && state.resistance < 150;
+    const highY = rect.height * .3;
+    const zeroY = rect.height * .72;
+    const traceY = flowing ? highY : zeroY;
+    const traceColor = danger ? '#ff4967' : flowing ? '#35d985' : '#666a90';
+
+    context.strokeStyle = traceColor;
+    context.lineWidth = danger ? 4 : 2.5;
+    context.shadowColor = flowing ? traceColor : 'transparent';
+    context.shadowBlur = flowing ? 9 : 0;
     context.beginPath();
-    for (let x = 0; x <= rect.width; x += 3) {
-      const active = state.powered ? Math.sin((x + time * .08) * .08) * 12 : 0;
-      const y = rect.height / 2 + active;
-      if (x === 0) context.moveTo(x, y); else context.lineTo(x, y);
+    context.moveTo(0, zeroY);
+    if (flowing) {
+      context.lineTo(14, zeroY);
+      context.lineTo(14, highY);
     }
-    context.stroke(); context.shadowBlur = 0;
+    context.lineTo(rect.width, traceY);
+    context.stroke();
+    context.shadowBlur = 0;
+
+    context.fillStyle = '#8589ae';
+    context.font = '700 8px ui-monospace, monospace';
+    context.fillText('DC', 4, 11);
+    context.fillText('0 V', 4, Math.min(rect.height - 3, zeroY + 12));
+    if (flowing && !state.reducedMotion) {
+      const dotX = 18 + (time * .08) % Math.max(1, rect.width - 22);
+      context.beginPath();
+      context.arc(dotX, traceY, danger ? 4.5 : 3.5, 0, Math.PI * 2);
+      context.fillStyle = '#fff';
+      context.shadowColor = traceColor;
+      context.shadowBlur = 12;
+      context.fill();
+      context.shadowBlur = 0;
+    }
   }
 
   function animationFrame(time) {
@@ -826,7 +1011,8 @@ if (root) {
         updateMeters();
       }
     }
-    drawWires(time);
+    drawWires();
+    drawElectrons(time);
     drawScope(time);
     state.lastFrame = time;
     requestAnimationFrame(animationFrame);

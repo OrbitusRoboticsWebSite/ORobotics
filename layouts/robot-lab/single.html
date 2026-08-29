@@ -9,7 +9,7 @@
       </div>
       <p class="circuit-kicker">ROB’s Systems Lab presents</p>
       <h1>Circuit<br><em>Quest</em></h1>
-      <p class="circuit-hero__lede">Snap in colorful wires, chase electrons, light bulbs with real circuit rules, store sunshine in a battery, master <strong>V = I × R</strong>, and program a virtual Arduino Uno.</p>
+      <p class="circuit-hero__lede">Snap in colorful wires, watch electrons circle the external circuit from <strong>negative (−) toward positive (+)</strong>, store sunshine in a battery, master <strong>V = I × R</strong>, and program a virtual Arduino Uno.</p>
       <div class="circuit-hero__actions">
         <button type="button" data-lab-start>Power up the lab <span aria-hidden="true">↗</span></button>
         <a href="#mission-map">See all 8 builds</a>
@@ -76,6 +76,7 @@
 
       <div class="workbench" data-workbench>
         <canvas data-wire-canvas aria-hidden="true"></canvas>
+        <canvas data-electron-canvas aria-hidden="true"></canvas>
         <div class="workbench__grid" aria-hidden="true"></div>
         <div class="workbench__components" data-components></div>
         <div class="workbench__empty" data-workbench-loading><span>⚡</span><p>Preparing your circuit bench…</p></div>
@@ -92,6 +93,11 @@
           <span class="wire-plug" data-plug-indicator></span>
           <div><small>WIRE TOOL</small><strong data-wire-status>Select a terminal to start a wire</strong></div>
         </div>
+        <div class="electron-direction" aria-label="Electron flow direction">
+          <small>EXTERNAL ELECTRON DRIFT</small>
+          <strong><b>−</b> → around the complete loop → <b>+</b></strong>
+          <span>Battery chemistry keeps the charges separated.</span>
+        </div>
         <div class="wire-dock__controls">
           <button type="button" data-undo-wire disabled>↶ <span>Undo wire</span></button>
           <button type="button" data-clear-wires>Clear</button>
@@ -102,7 +108,7 @@
         <div><small>SUPPLY</small><strong><span data-meter-voltage>0.0</span> V</strong><i>voltage</i></div>
         <div><small>FLOW</small><strong><span data-meter-current>0.0</span> mA</strong><i>current</i></div>
         <div><small>LOAD</small><strong><span data-meter-resistance>—</span> Ω</strong><i>resistance</i></div>
-        <div class="lab-instruments__scope"><small>ENERGY SCOPE</small><canvas data-scope-canvas aria-hidden="true"></canvas><strong data-power-state>OPEN LOOP</strong></div>
+        <div class="lab-instruments__scope"><small>DC ENERGY SCOPE</small><canvas data-scope-canvas aria-hidden="true"></canvas><strong data-power-state>0 V DC · OPEN LOOP</strong></div>
       </div>
 
       <div class="mission-action" data-mission-action></div>
@@ -125,6 +131,10 @@
         <article><span>I</span><div><strong>Current</strong><small>Charge flowing each second</small></div><b>amps</b></article>
         <article><span>R</span><div><strong>Resistance</strong><small>Opposition to flow</small></div><b>ohms</b></article>
       </div>
+      <aside class="electron-fact">
+        <span aria-hidden="true">− → +</span>
+        <div><strong>Electron flow and current arrows point in opposite directions.</strong><p>The white dots show electrons drifting through metal wires from the battery’s negative terminal, around the whole loop, to its positive terminal. Circuit diagrams usually show <em>conventional current</em> from + to −. Engineers use that convention for V = I × R even though the electrons drift the other way.</p></div>
+      </aside>
     </div>
     <div class="ohm-calculator">
       <div class="ohm-calculator__top"><span>V = I × R</span><small>OHM-O-MATIC 3000</small></div>
@@ -186,6 +196,7 @@
       <div><dt>Parallel</dt><dd>Components have separate branches with the same voltage across each branch.</dd></div>
       <div><dt>Ground (GND)</dt><dd>The circuit’s shared reference and return path—not a magic place where electricity disappears.</dd></div>
       <div><dt>Charge controller</dt><dd>Electronics that safely manage energy between a solar panel, rechargeable battery, and load.</dd></div>
+      <div><dt>Electron flow</dt><dd>In the external metal wires, electrons drift from a source’s negative terminal through the complete loop toward its positive terminal. Conventional current arrows point the opposite way.</dd></div>
     </dl>
   </section>
 
