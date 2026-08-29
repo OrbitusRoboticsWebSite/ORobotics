@@ -150,5 +150,76 @@ test('Arduino parser gives focused feedback for incomplete sketches', () => {
 
   const wrongOutput = parseArduinoBlink('void setup() { pinMode(12, OUTPUT); } void loop() { digitalWrite(13, HIGH); delay(500); digitalWrite(13, LOW); delay(500); }');
   assert.equal(wrongOutput.valid, false);
-  assert.match(wrongOutput.reason, /Configure pin 13/);
+  assert.match(wrongOutput.reason, /configure pin 13/);
+});
+
+test('Arduino compiler rejects malformed and unsupported added lines', () => {
+  const unsupported = parseArduinoBlink(`const int ledPin = 13;
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+void loop() {
+  makeTheLightBlinkNow();
+  digitalWrite(ledPin, HIGH);
+  delay(500);
+  digitalWrite(ledPin, LOW);
+  delay(500);
+}`);
+  assert.equal(unsupported.valid, false);
+  assert.equal(unsupported.line, 6);
+  assert.match(unsupported.reason, /Line 6.*makeTheLightBlinkNow/);
+
+  const missingSemicolon = parseArduinoBlink(`const int ledPin = 13;
+void setup() {
+  pinMode(ledPin, OUTPUT)
+}
+void loop() {
+  digitalWrite(ledPin, HIGH);
+  delay(500);
+  digitalWrite(ledPin, LOW);
+  delay(500);
+}`);
+  assert.equal(missingSemicolon.valid, false);
+  assert.equal(missingSemicolon.line, 3);
+  assert.match(missingSemicolon.reason, /expected ';'/);
+
+  const brokenBrace = parseArduinoBlink('void setup() { pinMode(13, OUTPUT); }\nvoid loop() { digitalWrite(13, HIGH);');
+  assert.equal(brokenBrace.valid, false);
+  assert.equal(brokenBrace.line, 2);
+  assert.match(brokenBrace.reason, /missing the closing character/);
+
+  const misspelledCommand = parseArduinoBlink('void setup() { pinMode(13, OUTPUT); }\nvoid loop() { digitalwrite(13, HIGH); delay(500); digitalWrite(13, LOW); delay(500); }');
+  assert.equal(misspelledCommand.valid, false);
+  assert.equal(misspelledCommand.line, 2);
+  assert.match(misspelledCommand.reason, /digitalwrite/);
+});
+
+test('Arduino compiler ignores comments but checks command scope and names', () => {
+  const commentedCode = parseArduinoBlink(`const int ledPin = 13;
+// makeTheLightBlinkNow(); is only a note
+void setup() { pinMode(ledPin, OUTPUT); }
+void loop() {
+  /* brokenStuff();
+     still only a comment */
+  digitalWrite(ledPin, HIGH);
+  delay(100);
+  digitalWrite(ledPin, LOW);
+  delay(100);
+}`);
+  assert.equal(commentedCode.valid, true);
+
+  const undeclaredPin = parseArduinoBlink('void setup() { pinMode(myPin, OUTPUT); } void loop() { digitalWrite(myPin, HIGH); delay(100); digitalWrite(myPin, LOW); delay(100); }');
+  assert.equal(undeclaredPin.valid, false);
+  assert.match(undeclaredPin.reason, /myPin.*not declared/);
+
+  const validSetupCall = parseArduinoBlink('void setup() { digitalWrite(13, LOW); pinMode(13, OUTPUT); } void loop() { digitalWrite(13, HIGH); delay(100); digitalWrite(13, LOW); delay(100); }');
+  assert.equal(validSetupCall.valid, true);
+
+  const topLevelCall = parseArduinoBlink('digitalWrite(13, LOW); void setup() { pinMode(13, OUTPUT); } void loop() { digitalWrite(13, HIGH); delay(100); digitalWrite(13, LOW); delay(100); }');
+  assert.equal(topLevelCall.valid, false);
+  assert.match(topLevelCall.reason, /outside setup.*loop/);
+
+  const setupOnlyPinName = parseArduinoBlink('void setup() { const int localPin = 13; pinMode(localPin, OUTPUT); } void loop() { digitalWrite(localPin, HIGH); delay(100); digitalWrite(localPin, LOW); delay(100); }');
+  assert.equal(setupOnlyPinName.valid, false);
+  assert.match(setupOnlyPinName.reason, /localPin.*not declared/);
 });

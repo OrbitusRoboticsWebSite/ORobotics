@@ -233,38 +233,129 @@ export function simulateSolar({
 
 function stripArduinoComments(source) {
   return String(source || '')
-    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\/\*[\s\S]*?\*\//g, (comment) => comment.replace(/[^\n]/g, ' '))
     .replace(/\/\/.*$/gm, '');
 }
 
 export function parseArduinoBlink(source) {
   const code = stripArduinoComments(source);
-  const constants = new Map();
-  for (const match of code.matchAll(/(?:const\s+)?int\s+([A-Za-z_]\w*)\s*=\s*(\d+)\s*;/g)) {
-    constants.set(match[1], Number(match[2]));
+  const fail = (line, message) => ({ valid: false, line, reason: `${line ? `Line ${line}: ` : ''}${message}` });
+  const lineAt = (index) => code.slice(0, index).split('\n').length;
+  const pairs = { ')': '(', ']': '[', '}': '{' };
+  const openers = new Set(Object.values(pairs));
+  const delimiterStack = [];
+  let delimiterLine = 1;
+  for (const character of code) {
+    if (character === '\n') delimiterLine += 1;
+    else if (openers.has(character)) delimiterStack.push({ character, line: delimiterLine });
+    else if (pairs[character]) {
+      const opener = delimiterStack.pop();
+      if (!opener || opener.character !== pairs[character]) return fail(delimiterLine, `unexpected '${character}'. Check the brackets and braces.`);
+    }
   }
-  const resolvePin = (token) => /^\d+$/.test(token) ? Number(token) : constants.get(token);
-  const writes = [...code.matchAll(/digitalWrite\s*\(\s*([A-Za-z_]\w*|\d+)\s*,\s*(HIGH|LOW)\s*\)\s*;/g)]
-    .map((match) => ({ pin: resolvePin(match[1]), value: match[2] }));
-  const delays = [...code.matchAll(/delay\s*\(\s*(\d+)\s*\)\s*;/g)].map((match) => Number(match[1]));
-  const setup = code.match(/void\s+setup\s*\(\s*\)\s*\{[\s\S]*?\}/)?.[0] || '';
-  const loop = code.match(/void\s+loop\s*\(\s*\)\s*\{[\s\S]*?\}/)?.[0] || '';
-  const high = writes.find((write) => write.value === 'HIGH');
-  const low = writes.find((write) => write.value === 'LOW' && (!high || write.pin === high.pin));
-  const pin = high?.pin;
-  const configuredPins = [...setup.matchAll(/pinMode\s*\(\s*([A-Za-z_]\w*|\d+)\s*,\s*OUTPUT\s*\)/g)]
-    .map((match) => resolvePin(match[1]));
-  const pinConfigured = Number.isFinite(pin) && configuredPins.includes(pin);
-  const highDelay = delays[0];
-  const lowDelay = delays[1];
+  if (delimiterStack.length) {
+    const opener = delimiterStack.at(-1);
+    return fail(opener.line, `missing the closing character for '${opener.character}'.`);
+  }
 
-  if (!setup || !loop) return { valid: false, reason: 'Arduino sketches need both setup() and loop().' };
-  if (!high || !low || high.pin !== low.pin) return { valid: false, reason: 'Set the same LED pin HIGH and then LOW inside loop().' };
-  if (!pinConfigured) return { valid: false, reason: `Configure pin ${pin ?? '13'} as OUTPUT inside setup().` };
-  if (!Number.isFinite(highDelay) || !Number.isFinite(lowDelay) || highDelay < 25 || lowDelay < 25) {
-    return { valid: false, reason: 'Add a delay of at least 25 ms after each LED state.' };
+  const constants = { global: new Map(), setup: new Map(), loop: new Map() };
+  const resolvePin = (token, section) => /^\d+$/.test(token) ? Number(token) : constants[section]?.get(token) ?? constants.global.get(token);
+  const configuredPins = [];
+  const loopOperations = [];
+  const functions = new Set();
+  let section = null;
+  let index = 0;
+
+  const matchAt = (pattern) => {
+    pattern.lastIndex = index;
+    return pattern.exec(code);
+  };
+  const advance = (match) => { index = match.index + match[0].length; };
+
+  while (index < code.length) {
+    if (/\s/.test(code[index])) { index += 1; continue; }
+    const line = lineAt(index);
+
+    let match = matchAt(/(?:const\s+)?(?:int|byte)\s+([A-Za-z_]\w*)\s*=\s*(\d+)\s*;/y);
+    if (match) {
+      const scope = section || 'global';
+      if (constants[scope].has(match[1])) return fail(line, `'${match[1]}' was declared more than once in the same scope.`);
+      constants[scope].set(match[1], Number(match[2]));
+      advance(match);
+      continue;
+    }
+
+    match = matchAt(/void\s+(setup|loop)\s*\(\s*\)\s*\{/y);
+    if (match) {
+      if (section) return fail(line, `a function cannot begin inside ${section}().`);
+      if (functions.has(match[1])) return fail(line, `${match[1]}() was defined more than once.`);
+      functions.add(match[1]);
+      section = match[1];
+      advance(match);
+      continue;
+    }
+
+    match = matchAt(/pinMode\s*\(\s*([A-Za-z_]\w*|\d+)\s*,\s*OUTPUT\s*\)\s*;/y);
+    if (match) {
+      if (!section) return fail(line, 'function calls are not allowed outside setup() or loop().');
+      const pin = resolvePin(match[1], section);
+      if (!Number.isFinite(pin)) return fail(line, `'${match[1]}' was not declared in this sketch.`);
+      configuredPins.push(pin);
+      advance(match);
+      continue;
+    }
+
+    match = matchAt(/digitalWrite\s*\(\s*([A-Za-z_]\w*|\d+)\s*,\s*(HIGH|LOW)\s*\)\s*;/y);
+    if (match) {
+      if (!section) return fail(line, 'function calls are not allowed outside setup() or loop().');
+      const pin = resolvePin(match[1], section);
+      if (!Number.isFinite(pin)) return fail(line, `'${match[1]}' was not declared in this sketch.`);
+      if (section === 'loop') loopOperations.push({ type: 'write', pin, value: match[2], line });
+      advance(match);
+      continue;
+    }
+
+    match = matchAt(/delay\s*\(\s*(\d+)\s*\)\s*;/y);
+    if (match) {
+      if (!section) return fail(line, 'function calls are not allowed outside setup() or loop().');
+      if (section === 'loop') loopOperations.push({ type: 'delay', milliseconds: Number(match[1]), line });
+      advance(match);
+      continue;
+    }
+
+    if (code[index] === '}') {
+      if (!section) return fail(line, "unexpected '}'.");
+      section = null;
+      index += 1;
+      continue;
+    }
+    if (code[index] === ';') { index += 1; continue; }
+
+    const remaining = code.slice(index);
+    const missingSemicolon = remaining.match(/^((?:const\s+)?(?:int|byte)\s+[A-Za-z_]\w*\s*=\s*\d+|(?:pinMode|digitalWrite|delay)\s*\([^\n{};]*\))\s*(?=\n|}|$)/);
+    if (missingSemicolon) return fail(line, `expected ';' after ${missingSemicolon[1].trim()}.`);
+    const missingBrace = remaining.match(/^void\s+(setup|loop)\s*\(\s*\)\s*(?=\n|$)/);
+    if (missingBrace) return fail(line, `expected '{' after ${missingBrace[1]}().`);
+    const snippet = (remaining.match(/^[^\n{};]*/)?.[0] || remaining[0]).trim().slice(0, 52);
+    return fail(line, `unknown or unsupported statement${snippet ? ` "${snippet}"` : ''}. Use the commands in ROB's code map.`);
   }
-  return { valid: true, pin, highMs: highDelay, lowMs: lowDelay, cycleMs: highDelay + lowDelay };
+
+  if (!functions.has('setup') || !functions.has('loop')) return fail(0, 'Arduino sketches need both setup() and loop().');
+  const highIndex = loopOperations.findIndex((operation) => operation.type === 'write' && operation.value === 'HIGH');
+  const high = loopOperations[highIndex];
+  const highDelay = loopOperations.slice(highIndex + 1).find((operation) => operation.type === 'delay');
+  const lowIndex = loopOperations.findIndex((operation, operationIndex) => operationIndex > highIndex && operation.type === 'write' && operation.value === 'LOW' && operation.pin === high?.pin);
+  const low = loopOperations[lowIndex];
+  const lowDelay = loopOperations.slice(lowIndex + 1).find((operation) => operation.type === 'delay');
+  const pin = high?.pin;
+  const pinConfigured = Number.isFinite(pin) && configuredPins.includes(pin);
+
+  if (!high || !low || high.pin !== low.pin) return fail(0, 'Set the same LED pin HIGH and then LOW inside loop().');
+  if (!pinConfigured) return fail(high.line, `configure pin ${pin ?? '13'} as OUTPUT inside setup().`);
+  if (!highDelay || !lowDelay || highDelay.milliseconds < 25 || lowDelay.milliseconds < 25) {
+    return fail((highDelay || lowDelay || high).line, 'add a delay of at least 25 ms after each LED state.');
+  }
+  return { valid: true, pin, highMs: highDelay.milliseconds, lowMs: lowDelay.milliseconds, cycleMs: highDelay.milliseconds + lowDelay.milliseconds };
 }
 
 export function arduinoOutputAt(elapsedMs, program) {

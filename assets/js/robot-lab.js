@@ -1216,7 +1216,7 @@ if (root) {
       return;
     }
     if (mission.action === 'code') {
-      els.action.innerHTML = `${note}<div class="code-studio"><div class="code-editor"><div class="code-editor__bar"><span>circuit_quest_blink.ino</span><div><button type="button" data-code-reset>Reset code</button><button type="button" data-code-stop>■ Stop</button><button type="button" data-code-run>▶ Run sketch</button></div></div><textarea data-code-source aria-label="Arduino sketch editor" spellcheck="false"></textarea></div><aside class="code-guide"><h3>ROB’s code map</h3><ol><li>Give the LED pin a memorable name.</li><li>Set that pin to OUTPUT once in setup().</li><li>Send HIGH, wait, send LOW, and wait.</li><li>Change the delays and run again to experiment.</li></ol><div class="serial-monitor" data-serial-monitor>ROB:// Virtual Uno connected\nReady to compile your sketch.</div></aside></div>`;
+      els.action.innerHTML = `${note}<div class="code-studio"><div class="code-editor"><div class="code-editor__bar"><span>circuit_quest_blink.ino</span><div><button type="button" data-code-reset>Reset code</button><button type="button" data-code-stop>■ Stop</button><button type="button" data-code-run>▶ Compile &amp; run</button></div></div><textarea data-code-source aria-label="Arduino sketch editor" spellcheck="false"></textarea></div><aside class="code-guide"><h3>ROB’s code map</h3><ol><li>Give the LED pin a memorable name.</li><li>Set that pin to OUTPUT once in setup().</li><li>Send HIGH, wait, send LOW, and wait.</li><li>End declarations and commands with a semicolon.</li><li>Change the delays and compile again to experiment.</li></ol><div class="serial-monitor" data-serial-monitor role="status" aria-live="polite">ROB:// Virtual Uno connected\nEvery non-comment line will be checked.\nReady to compile your sketch.</div></aside></div>`;
       const source = els.action.querySelector('[data-code-source]');
       const starter = `const int ledPin = 13;\n\nvoid setup() {\n  pinMode(ledPin, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(ledPin, HIGH);\n  delay(500);\n  digitalWrite(ledPin, LOW);\n  delay(500);\n}`;
       source.value = starter;
@@ -1264,15 +1264,26 @@ if (root) {
   function runProgram(source) {
     state.program = parseArduinoBlink(source);
     const monitor = els.action.querySelector('[data-serial-monitor]');
+    const editor = els.action.querySelector('[data-code-source]');
     if (!state.program.valid) {
       state.programRunning = false;
-      monitor.textContent = `COMPILE NEEDS A FIX\n${state.program.reason}\nROB:// Check the code map and try again.`;
+      monitor.classList.add('has-error');
+      editor?.setAttribute('aria-invalid', 'true');
+      monitor.textContent = `COMPILATION ERROR ✕\n${state.program.reason}\nROB:// Fix that line, then compile again.`;
+      if (editor && state.program.line > 0) {
+        const lines = editor.value.split('\n');
+        const start = lines.slice(0, state.program.line - 1).reduce((length, line) => length + line.length + 1, 0);
+        editor.focus();
+        editor.setSelectionRange(start, start + (lines[state.program.line - 1]?.length || 0));
+      }
       setGuide(state.program.reason, 'DEBUG');
       evaluate();
       return;
     }
     state.programRunning = true;
     state.programStartedAt = performance.now();
+    monitor.classList.remove('has-error');
+    editor?.setAttribute('aria-invalid', 'false');
     monitor.textContent = `COMPILE OK ✓\nPin ${state.program.pin} OUTPUT\nHIGH ${state.program.highMs} ms → LOW ${state.program.lowMs} ms\nROB:// Sketch running in a ${state.program.cycleMs} ms loop.`;
     setGuide(`Pin ${state.program.pin} is blinking: ${state.program.highMs} ms on, ${state.program.lowMs} ms off.`, 'RUNNING');
     evaluate();
@@ -1282,7 +1293,11 @@ if (root) {
     state.programRunning = false;
     state.arduinoHigh = false;
     const monitor = els.action.querySelector('[data-serial-monitor]');
-    if (monitor) monitor.textContent = `ROB:// ${message}`;
+    if (monitor) {
+      monitor.classList.remove('has-error');
+      monitor.textContent = `ROB:// ${message}`;
+    }
+    els.action.querySelector('[data-code-source]')?.setAttribute('aria-invalid', 'false');
     evaluate();
   }
 
