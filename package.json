@@ -20,7 +20,8 @@
     "build": "npm run build:css && hugo --gc --minify",
     "validate": "node scripts/validate-gallery.mjs",
     "validate:subpath": "node scripts/validate-subpath.mjs",
-    "test": "npm run build && npm run validate && npm run validate:subpath"
+    "test:game": "node --test tests/rob-game-rules.test.mjs",
+    "test": "npm run test:game && npm run build && npm run validate && npm run validate:subpath"
   },
   "repository": {
     "type": "git",
