@@ -78,7 +78,7 @@ export const securityCameraSightDistance = ({ camera, heading, angleOffset = 0, 
   }, 1);
   return camera.range * nearestFraction;
 };
-export const securityCameraVisionDistances = ({ camera, heading, blockers = [], rayCount = 25 }) => {
+export const securityCameraVisionDistances = ({ camera, heading, blockers = [], rayCount = 49 }) => {
   const count = Math.max(2, Math.floor(rayCount));
   return Array.from({ length: count }, (_, index) => {
     const angleOffset = -SECURITY_CAMERA_HALF_ANGLE + (SECURITY_CAMERA_HALF_ANGLE * 2 * index) / (count - 1);

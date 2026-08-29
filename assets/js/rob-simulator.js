@@ -145,7 +145,8 @@ if (root) {
   scene.add(new THREE.HemisphereLight(0xa5edff, 0x101820, 2.5)); const sun = new THREE.DirectionalLight(0xffffff, 3.5); sun.position.set(5, 12, 7); sun.castShadow = true; scene.add(sun);
   const mat = (color, emissive = 0, metalness = .25) => new THREE.MeshStandardMaterial({ color, emissive, emissiveIntensity: emissive ? 1.8 : 0, roughness: .5, metalness });
   const mesh = (geometry, material, parent, x = 0, y = 0, z = 0) => { const part = new THREE.Mesh(geometry, material); part.position.set(x, y, z); part.castShadow = true; part.receiveShadow = true; parent.add(part); return part; };
-  const SECURITY_CAMERA_VISION_RAYS = 25;
+  // Dense rays keep the red edge tight to corners while the camera sweeps.
+  const SECURITY_CAMERA_VISION_RAYS = 49;
   const makeSecurityCameraBeam = (cameraData, parent) => {
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array((SECURITY_CAMERA_VISION_RAYS + 1) * 3);

@@ -198,10 +198,10 @@ test('camera vision fan stops every red ray at the wall surface', () => {
     camera,
     heading: 0,
     blockers: [{ x: 0, z: 0, w: 4, d: .1 }],
-    rayCount: 25,
+    rayCount: 49,
   });
 
-  assert.equal(distances.length, 25);
+  assert.equal(distances.length, 49);
   assert.ok(distances.every((distance) => distance < 2.4));
   assert.equal(securityCameraVisionDistances({ camera, heading: 0, rayCount: 5 }).every((distance) => distance === 8), true);
 });
