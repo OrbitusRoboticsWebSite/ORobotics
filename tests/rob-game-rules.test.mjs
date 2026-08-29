@@ -15,6 +15,7 @@ import {
   isUnlocked,
   laserEnergyCost,
   maximumEnergy,
+  maximumLaserLocks,
   meleeAnimationIsClear,
   rangedWeapons,
   repairROBHealth,
@@ -118,8 +119,18 @@ test('laser shots spend system energy and charged weapons cost more', () => {
   assert.deepEqual(consumeLaserEnergy({ energy: 20, weapon: arcCannon, charge: 1 }), { fired: false, cost: 22, energy: 20 });
 });
 
+test('Twin Blasters require the targeting computer upgrade for two independent locks', () => {
+  const twinBlasters = rangedWeapons.find(({ id }) => id === 'twinBlasters');
+  assert.equal(maximumLaserLocks(twinBlasters, 0), 1);
+  assert.equal(maximumLaserLocks(twinBlasters, 1), 2);
+  assert.equal(maximumLaserLocks(rangedWeapons[0], 1), 1);
+  const targetingComputer = upgrades.find(({ id }) => id === 'targetingComputer');
+  assert.equal(upgradeCost(targetingComputer, 0), 1200);
+  assert.equal(upgradeCost(targetingComputer, 1), undefined);
+});
+
 test('performance upgrades match the Apple game economy', () => {
-  const [speed, capacity, weapon] = upgrades;
+  const [speed, capacity, weapon, targetingComputer] = upgrades;
   assert.equal(upgradeCost(speed, 0), 700);
   assert.equal(upgradeCost(speed, 1), 1350);
   assert.equal(upgradeCost(speed, 3), undefined);
@@ -129,6 +140,7 @@ test('performance upgrades match the Apple game economy', () => {
   assert.equal(driveSpeedMultiplier(3), 2.05);
   assert.equal(maximumEnergy(1), 125);
   assert.equal(upgradedWeaponDamage(2, 1), 3);
+  assert.equal(targetingComputer.name, 'Targeting Computer');
 });
 
 test('drive energy drains in motion and charges while stopped', () => {

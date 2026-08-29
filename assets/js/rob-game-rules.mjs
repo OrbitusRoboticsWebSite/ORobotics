@@ -1,4 +1,4 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.09.03';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.04';
 export const MAX_ROB_HEALTH = 100;
 export const MAX_ROB_SHIELDS = 40;
 export const BASE_ROB_ENERGY = 100;
@@ -9,6 +9,7 @@ export const upgrades = [
   { id: 'speedBoost', name: 'Speed Boost', maximumLevel: 3, baseCost: 700, costStep: 650 },
   { id: 'energyCapacity', name: 'Energy Capacity', maximumLevel: 3, baseCost: 550, costStep: 500 },
   { id: 'weaponPower', name: 'Weapon Power', maximumLevel: 3, baseCost: 900, costStep: 800 },
+  { id: 'targetingComputer', name: 'Targeting Computer', maximumLevel: 1, baseCost: 1200, costStep: 0 },
 ];
 
 export const upgradeCost = (upgrade, level) => level < upgrade.maximumLevel ? upgrade.baseCost + level * upgrade.costStep : undefined;
@@ -99,6 +100,9 @@ export const consumeLaserEnergy = ({ energy, weapon, charge }) => {
   const cost = laserEnergyCost(weapon, charge);
   return energy >= cost ? { fired: true, cost, energy: energy - cost } : { fired: false, cost, energy };
 };
+export const maximumLaserLocks = (weapon, targetingComputerLevel = 0) => (
+  weapon?.id === 'twinBlasters' && targetingComputerLevel > 0 ? 2 : 1
+);
 
 export const bossStats = (levelNumber, baseShields) => {
   const isBoss = levelNumber % 5 === 0;
