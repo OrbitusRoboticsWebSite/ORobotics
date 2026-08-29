@@ -4,6 +4,7 @@ import {
   MAX_ROB_HEALTH,
   MAX_ROB_SHIELDS,
   BASE_ROB_ENERGY,
+  BASE_DRIVE_SPEED,
   applyROBDamage,
   applyROBHealthDamage,
   battleUpgradePoints,
@@ -12,6 +13,7 @@ import {
   conveyorDisplacement,
   consumeLaserEnergy,
   driveSpeedMultiplier,
+  energyPickupAmount,
   faceColors,
   firstProjectileImpact,
   isUnlocked,
@@ -22,6 +24,7 @@ import {
   rangedWeapons,
   repairROBHealth,
   replenishROBShields,
+  passiveEnergyRecharge,
   resolveAxisSlidingMotion,
   securityCameraSees,
   securityCameraVisionDistances,
@@ -139,9 +142,15 @@ test('performance upgrades match the Apple game economy', () => {
   assert.equal(upgradeCost(speed, 3), undefined);
   assert.equal(upgradeCost(capacity, 0), 550);
   assert.equal(upgradeCost(weapon, 0), 900);
-  assert.equal(driveSpeedMultiplier(1), 1.35);
-  assert.equal(driveSpeedMultiplier(3), 2.05);
-  assert.equal(maximumEnergy(1), 125);
+  assert.equal(BASE_DRIVE_SPEED, 4.5);
+  assert.equal(driveSpeedMultiplier(1), 1.6);
+  assert.equal(driveSpeedMultiplier(3), 2.8);
+  assert.equal(maximumEnergy(1), 160);
+  assert.equal(maximumEnergy(3), 280);
+  assert.equal(energyPickupAmount(0), 70);
+  assert.equal(energyPickupAmount(3), 130);
+  assert.equal(passiveEnergyRecharge(0), 6);
+  assert.equal(passiveEnergyRecharge(3), 15);
   assert.equal(upgradedWeaponDamage(2, 1), 3);
   assert.equal(targetingComputer.name, 'Targeting Computer');
 });
@@ -149,8 +158,8 @@ test('performance upgrades match the Apple game economy', () => {
 test('drive energy drains in motion and charges while stopped', () => {
   const drained = updateDriveEnergy({ energy: BASE_ROB_ENERGY, maximum: BASE_ROB_ENERGY, moving: true, delta: 1 });
   assert.equal(drained, 93.4);
-  assert.equal(updateDriveEnergy({ energy: drained, maximum: BASE_ROB_ENERGY, moving: false, delta: 1 }), 96.60000000000001);
-  assert.equal(updateDriveEnergy({ energy: 124, maximum: 125, moving: false, delta: 1, capacityLevel: 1 }), 125);
+  assert.equal(updateDriveEnergy({ energy: drained, maximum: BASE_ROB_ENERGY, moving: false, delta: 1 }), 99.4);
+  assert.equal(updateDriveEnergy({ energy: 151, maximum: 160, moving: false, delta: 1, capacityLevel: 1 }), 160);
 });
 
 test('wall assist slides along obstacles and always permits a clear reverse', () => {

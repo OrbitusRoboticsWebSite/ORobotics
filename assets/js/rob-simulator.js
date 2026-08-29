@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {
+  BASE_DRIVE_SPEED,
   MAX_ROB_HEALTH,
   MAX_ROB_SHIELDS,
   SECURITY_CAMERA_HALF_ANGLE,
@@ -11,6 +12,7 @@ import {
   conveyorArrowOffset,
   conveyorDisplacement,
   driveSpeedMultiplier,
+  energyPickupAmount,
   faceColors,
   finishes,
   firstProjectileImpact,
@@ -294,7 +296,7 @@ if (root) {
     ui.workshopPoints.textContent = `${upgradePoints.toLocaleString()} points`;
     ui.intermissionPoints.textContent = `${upgradePoints.toLocaleString()} battle points available`;
     ui.upgradeButtons.forEach((button) => { const upgrade = upgrades.find(({ id }) => id === button.dataset.upgrade), level = upgradeLevels[upgrade.id], cost = upgradeCost(upgrade, level); button.textContent = cost === undefined ? `${upgrade.name} · MAX` : `${upgrade.name} L${level} · ${cost}`; button.disabled = cost === undefined || upgradePoints < cost; });
-    ui.loadoutStatus.textContent = `${selectedFinish().name} finish · ${selectedFaceColor().name} smile · ${selectedRanged().name} · ${selectedMelee().name} · Speed L${upgradeLevels.speedBoost} · Energy L${upgradeLevels.energyCapacity} · Power L${upgradeLevels.weaponPower} · Targeting L${upgradeLevels.targetingComputer}`;
+    ui.loadoutStatus.textContent = `${selectedFinish().name} finish · ${selectedFaceColor().name} smile · ${selectedRanged().name} · ${selectedMelee().name} · Speed L${upgradeLevels.speedBoost} (${Math.round(driveSpeedMultiplier(upgradeLevels.speedBoost) * 100)}%) · Energy L${upgradeLevels.energyCapacity} (${maximumEnergy(upgradeLevels.energyCapacity)} max) · Power L${upgradeLevels.weaponPower} · Targeting L${upgradeLevels.targetingComputer}`;
   };
   const applyLoadout = () => {
     robotRig.finishMaterials.forEach((material) => material.color.setHex(selectedFinish().color));
@@ -437,7 +439,7 @@ if (root) {
   const tick = (dt) => {
     readInput(); if (!running || complete || levelComplete) return;
     elapsed += dt; levelElapsed += dt; securityAlertRemaining = Math.max(0, securityAlertRemaining - dt);
-    const level = levels[levelIndex], old = robot.position.clone(), oldHeading = robot.rotation.y, powered = energy > .05 ? 1 : 0, speedMultiplier = driveSpeedMultiplier(upgradeLevels.speedBoost), left = controls.left * 3.2 * speedMultiplier * powered, right = controls.right * 3.2 * speedMultiplier * powered, linear = (left + right) / 2, yaw = (right - left) / 1.55 * dt, targetHeading = oldHeading + yaw;
+    const level = levels[levelIndex], old = robot.position.clone(), oldHeading = robot.rotation.y, powered = energy > .05 ? 1 : 0, speedMultiplier = driveSpeedMultiplier(upgradeLevels.speedBoost), left = controls.left * BASE_DRIVE_SPEED * speedMultiplier * powered, right = controls.right * BASE_DRIVE_SPEED * speedMultiplier * powered, linear = (left + right) / 2, yaw = (right - left) / 1.55 * dt, targetHeading = oldHeading + yaw;
     let resolvedHeading = oldHeading;
     for (const fraction of [1, .66, .33]) { const candidateHeading = oldHeading + yaw * fraction; if (!collision(old, candidateHeading)) { resolvedHeading = candidateHeading; break; } }
     const travelHeading = oldHeading + (resolvedHeading - oldHeading) / 2, intended = { x: old.x - Math.sin(travelHeading) * linear * dt, z: old.z - Math.cos(travelHeading) * linear * dt };
@@ -451,7 +453,7 @@ if (root) {
     energy = updateDriveEnergy({ energy, maximum: maximumEnergy(upgradeLevels.energyCapacity), moving: treadsPowered, delta: dt, capacityLevel: upgradeLevels.energyCapacity });
     const conveyorMove = conveyorDisplacement({ point: { x: robot.position.x, z: robot.position.z }, conveyors, delta: dt });
     const conveyorPosition = robot.position.clone(); conveyorPosition.x += conveyorMove.x; conveyorPosition.z += conveyorMove.z; if (!collision(conveyorPosition)) robot.position.copy(conveyorPosition);
-    robotRig.treadWheels.forEach(({ wheel, side }) => { wheel.rotation.x -= controls[side] * dt * 7.5; });
+    robotRig.treadWheels.forEach(({ wheel, side }) => { wheel.rotation.x -= controls[side] * dt * 10.5 * speedMultiplier; });
     if (motion.collided && Math.abs(linear) > .1) say(robot.position.distanceTo(old) > .001 ? 'Wall assist active — ROB is sliding along the open edge.' : 'Wall contact — reverse or pivot away; ROB will release cleanly.');
     const robotPoint = { x: robot.position.x, z: robot.position.z }, wasAlerted = securityAlertRemaining > 0, cameraBlockers = projectileBlockers();
     const detectingCamera = securityCameras.find((securityCamera) => securityCameraSees({ camera: securityCamera, robot: robotPoint, elapsed, blockers: cameraBlockers, shadows: shadowZones }));
@@ -485,7 +487,7 @@ if (root) {
     for (let i = bolts.length - 1; i >= 0; i -= 1) { const bolt = bolts[i], start = bolt.position.clone(); bolt.position.addScaledVector(bolt.userData.velocity, dt); const targets = enemies.filter((enemy) => enemy.userData.alive).map((enemy) => ({ enemy, x: enemy.position.x, z: enemy.position.z, radius: (enemy.userData.type === 'spider' ? .72 : .8) * (enemy.userData.combatScale || 1) })), impact = firstProjectileImpact({ start: { x: start.x, z: start.z }, end: { x: bolt.position.x, z: bolt.position.z }, blockers: projectileBlockers(), targets }); if (impact) { scene.remove(bolt); bolts.splice(i, 1); if (impact.kind === 'wall') { say(`${bolt.userData.weapon.name} struck the wall. Reposition for a clear shot.`); continue; } const hit = impact.target.enemy, weaponLabel = bolt.userData.charge > .72 ? `charged ${bolt.userData.weapon.name.toLowerCase()}` : bolt.userData.weapon.name.toLowerCase(); damageEnemy(hit, weaponLabel, bolt.userData.damage || 1); if (bolt.userData.weapon.id === 'arcCannon') { const secondary = enemies.find((enemy) => enemy.userData.alive && enemy !== hit && enemy.position.distanceTo(hit.position) <= 2.2); if (secondary) damageEnemy(secondary, 'arc cannon chain', Math.max(1, Math.floor((bolt.userData.damage || 1) / 2))); } } else if (bolt.position.distanceTo(robot.position) > 42) { scene.remove(bolt); bolts.splice(i, 1); } }
     if (!gateDone && robot.position.distanceTo(gate.position) < 1.55) { gateDone = true; awardMissionPoints(250); say('Calibration gate bonus collected. Continue with the shared mission objectives.'); }
     if (keyObject.visible && robot.position.distanceTo(keyObject.position) < 1) { hasKey = true; keyObject.visible = false; awardMissionPoints(250); playSound('pickup'); say('Access key secured. Reach the orange panel and start ROB’s Flipper Zero hack.'); }
-    cells.forEach((c) => { if (c.visible && !c.userData.got && robot.position.distanceTo(c.position) < 1) { c.userData.got = true; c.visible = false; cellCount += 1; energy = Math.min(maximumEnergy(upgradeLevels.energyCapacity), energy + 32); awardMissionPoints(150); playSound('pickup'); say(`Energy cell ${cellCount} of ${level.cells.length} secured. Battery recharged.`); if (cellCount === level.cells.length) mark('cells', 'All cells secured. Dock after the room is safe.', 300); } });
+    cells.forEach((c) => { if (c.visible && !c.userData.got && robot.position.distanceTo(c.position) < 1) { c.userData.got = true; c.visible = false; cellCount += 1; const restoredEnergy = energyPickupAmount(upgradeLevels.energyCapacity); energy = Math.min(maximumEnergy(upgradeLevels.energyCapacity), energy + restoredEnergy); awardMissionPoints(150); playSound('pickup'); say(`Energy cell ${cellCount} of ${level.cells.length} secured. Battery boosted by up to ${restoredEnergy}.`); if (cellCount === level.cells.length) mark('cells', 'All cells secured. Dock after the room is safe.', 300); } });
     shieldPickups.forEach((pickup) => { if (pickup.visible && !pickup.userData.got && shields < MAX_ROB_SHIELDS && robot.position.distanceTo(pickup.position) < 1.1) { const before = shields; shields = replenishROBShields(shields); pickup.userData.got = true; pickup.visible = false; awardMissionPoints(100); playSound('pickup'); say(`Shield capacitor restored ${shields - before} points. ROB shields: ${shields}/${MAX_ROB_SHIELDS}.`); } });
     repairPickups.forEach((pickup) => { if (pickup.visible && !pickup.userData.got && health < MAX_ROB_HEALTH && robot.position.distanceTo(pickup.position) < 1.1) { const before = health; health = repairROBHealth(health); pickup.userData.got = true; pickup.visible = false; awardMissionPoints(100); playSound('pickup'); say(`Repair kit restored ${health - before} hull points. ROB health: ${health}/${MAX_ROB_HEALTH}.`); } });
     if (cellCount === level.cells.length && enemies.every((e) => !e.userData.alive) && doorOpen && robot.position.distanceTo(dock.position) < 1.15) {
@@ -561,7 +563,7 @@ if (root) {
     const upgrade = upgrades.find(({ id }) => id === button.dataset.upgrade), level = upgradeLevels[upgrade.id], cost = upgradeCost(upgrade, level);
     if (cost === undefined) { say(`${upgrade.name} is already fully upgraded.`); return; }
     if (upgradePoints < cost) { say(`${cost - upgradePoints} more mission points needed for ${upgrade.name}.`); return; }
-    upgradePoints -= cost; upgradeLevels[upgrade.id] += 1; saveProgress('robUpgradePoints', upgradePoints); saveProgress(`rob${upgrade.id}Level`, upgradeLevels[upgrade.id]); if (upgrade.id === 'energyCapacity') energy = Math.min(maximumEnergy(upgradeLevels.energyCapacity), energy + 25); updateWorkshop(); say(`${upgrade.name} upgraded to Level ${upgradeLevels[upgrade.id]}.`);
+    upgradePoints -= cost; upgradeLevels[upgrade.id] += 1; saveProgress('robUpgradePoints', upgradePoints); saveProgress(`rob${upgrade.id}Level`, upgradeLevels[upgrade.id]); if (upgrade.id === 'energyCapacity') energy = Math.min(maximumEnergy(upgradeLevels.energyCapacity), energy + 60); updateWorkshop(); const benefit = upgrade.id === 'speedBoost' ? `${Math.round(driveSpeedMultiplier(upgradeLevels.speedBoost) * 100)}% drive speed` : upgrade.id === 'energyCapacity' ? `${maximumEnergy(upgradeLevels.energyCapacity)} max energy` : undefined; say(`${upgrade.name} upgraded to Level ${upgradeLevels[upgrade.id]}${benefit ? ` — ${benefit}.` : '.'}`);
   }));
   document.addEventListener('visibilitychange', () => { if (document.hidden) releaseAllInput(); }); addEventListener('pagehide', releaseAllInput); new ResizeObserver(resize).observe(viewport); reset(); resize(); animate();
 }

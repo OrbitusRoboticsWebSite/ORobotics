@@ -1,7 +1,8 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.09.05';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.06';
 export const MAX_ROB_HEALTH = 100;
 export const MAX_ROB_SHIELDS = 40;
 export const BASE_ROB_ENERGY = 100;
+export const BASE_DRIVE_SPEED = 4.5;
 export const SHIELD_PICKUP_STRENGTH = 24;
 export const REPAIR_PICKUP_STRENGTH = 35;
 
@@ -13,12 +14,14 @@ export const upgrades = [
 ];
 
 export const upgradeCost = (upgrade, level) => level < upgrade.maximumLevel ? upgrade.baseCost + level * upgrade.costStep : undefined;
-export const driveSpeedMultiplier = (level) => 1 + Math.max(0, level) * .35;
-export const maximumEnergy = (level) => BASE_ROB_ENERGY + Math.max(0, level) * 25;
+export const driveSpeedMultiplier = (level) => 1 + Math.max(0, level) * .6;
+export const maximumEnergy = (level) => BASE_ROB_ENERGY + Math.max(0, level) * 60;
+export const energyPickupAmount = (capacityLevel = 0) => 70 + Math.max(0, capacityLevel) * 20;
+export const passiveEnergyRecharge = (capacityLevel = 0) => 6 + Math.max(0, capacityLevel) * 3;
 export const upgradedWeaponDamage = (damage, level) => damage + Math.max(0, level);
 export const updateDriveEnergy = ({ energy, maximum, moving, delta, capacityLevel = 0 }) => Math.max(0, Math.min(
   maximum,
-  energy + delta * (moving ? -6.6 : 3.2 + Math.max(0, capacityLevel) * .8),
+  energy + delta * (moving ? -6.6 : passiveEnergyRecharge(capacityLevel)),
 ));
 
 export const resolveAxisSlidingMotion = ({ start, end, canOccupy, iterations = 10 }) => {
