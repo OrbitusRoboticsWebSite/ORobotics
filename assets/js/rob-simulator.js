@@ -3,6 +3,8 @@ import {
   BASE_DRIVE_SPEED,
   MAX_ROB_HEALTH,
   MAX_ROB_SHIELDS,
+  FLIPPER_HACK_DURATION,
+  FLIPPER_HACK_REWARD,
   SECURITY_CAMERA_HALF_ANGLE,
   applyROBDamage,
   battleUpgradePoints,
@@ -51,7 +53,7 @@ if (root) {
   const ARENA_HALF_WIDTH = 16, ARENA_HALF_DEPTH = 12, LEVEL_SCALE = 1.38, ROBOT_HALF_WIDTH = 1.12, ROBOT_HALF_LENGTH = 1.13, ARENA_CLEARANCE = .18;
   const readProgress = (key, fallback) => { try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; } };
   const saveProgress = (key, value) => { try { localStorage.setItem(key, String(value)); } catch {} };
-  let running = false, complete = false, levelComplete = false, elapsed = 0, levelElapsed = 0, score = 0, gateDone = false, cellCount = 0, lastShot = -Infinity, levelIndex = 0, hasKey = false, doorOpen = true, hacking = false, hackingProgress = 0, securityAlertRemaining = 0, securityMiniBossReleased = false, laserLock, secondaryLaserLock, laserChargeStarted, saberCombo = 0, lastSaberAttack = -Infinity, saberAnimation, gamepadLaserHeld = false;
+  let running = false, complete = false, levelComplete = false, elapsed = 0, levelElapsed = 0, score = 0, gateDone = false, cellCount = 0, lastShot = -Infinity, levelIndex = 0, hasKey = false, doorOpen = true, hacking = false, hackingCamera, hackingProgress = 0, securityAlertRemaining = 0, securityMiniBossReleased = false, laserLock, secondaryLaserLock, laserChargeStarted, saberCombo = 0, lastSaberAttack = -Infinity, saberAnimation, gamepadLaserHeld = false;
   let health = MAX_ROB_HEALTH, shields = MAX_ROB_SHIELDS, damageInvulnerableUntil = -Infinity, highestCompletedLevel = Math.max(0, Math.min(15, Number(readProgress('robHighestCompletedLevel', 0)) || 0));
   let upgradePoints = Math.max(0, Number(readProgress('robUpgradePoints', 0)) || 0);
   const upgradeLevels = Object.fromEntries(upgrades.map((upgrade) => [upgrade.id, Math.max(0, Math.min(upgrade.maximumLevel, Number(readProgress(`rob${upgrade.id}Level`, 0)) || 0))]));
@@ -149,6 +151,7 @@ if (root) {
   const mesh = (geometry, material, parent, x = 0, y = 0, z = 0) => { const part = new THREE.Mesh(geometry, material); part.position.set(x, y, z); part.castShadow = true; part.receiveShadow = true; parent.add(part); return part; };
   // Dense rays keep the red edge tight to corners while the camera sweeps.
   const SECURITY_CAMERA_VISION_RAYS = 49;
+  const SECURITY_CAMERA_HACK_RANGE = 2.4;
   const makeSecurityCameraBeam = (cameraData, parent) => {
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array((SECURITY_CAMERA_VISION_RAYS + 1) * 3);
@@ -264,7 +267,7 @@ if (root) {
     }
     if (index < 2) return;
     const cameraX = (index + 1) % 2 === 0 ? -13.2 : 13.2, cameraZ = -2.2, target = { x: 0, z: 1.2 }, heading = Math.atan2(-(target.x - cameraX), -(target.z - cameraZ));
-    const cameraData = { id: 0, x: cameraX, z: cameraZ, heading, sweep: .7, range: 14.5 };
+    const cameraData = { id: 0, x: cameraX, z: cameraZ, heading, sweep: .7, range: 14.5, disabled: false };
     const cameraGroup = new THREE.Group(); cameraGroup.position.set(cameraX, 0, cameraZ); cameraGroup.rotation.y = heading;
     mesh(new THREE.CylinderGeometry(.09, .11, 2.2, 10), mat(0x3f484e), cameraGroup, 0, 1.1); mesh(new THREE.BoxGeometry(.7, .45, .9), mat(0xb4bbc0, 0, .7), cameraGroup, 0, 2.05, -.3); const lens = mesh(new THREE.SphereGeometry(.14, 12, 8), mat(0xff243f, 0xa60018), cameraGroup, 0, 2.05, -.82);
     cameraData.group = cameraGroup; cameraData.lens = lens; cameraData.beam = makeSecurityCameraBeam(cameraData, cameraGroup); securityCameras.push(cameraData); scene.add(cameraGroup); levelParts.push(cameraGroup);
@@ -314,7 +317,7 @@ if (root) {
     level.obstacles.forEach((o, i) => box(...o, i % 2 ? 0x465262 : 0x344552, true, true));
     buildEnvironmentalFeatures(index);
     floor.material.color.setHex(level.floor); grid.material.color.setHex(level.grid); gate.position.set(level.gate[0], 0, level.gate[1]); dock.position.set(level.dock[0], .05, level.dock[1]);
-    robot.position.set(0, 0, ARENA_HALF_DEPTH - 1.6); robot.rotation.set(0, 0, 0); robotRig.torso.rotation.set(0, 0, 0); armAssemblies.forEach((arm) => arm.rotation.set(0, 0, 0)); levelElapsed = 0; health = MAX_ROB_HEALTH; shields = MAX_ROB_SHIELDS; energy = maximumEnergy(upgradeLevels.energyCapacity); damageInvulnerableUntil = -Infinity; gateDone = false; cellCount = 0; levelComplete = false; hasKey = false; doorOpen = !level.key; hacking = false; hackingProgress = 0; securityAlertRemaining = 0; securityMiniBossReleased = false; laserLock = undefined; secondaryLaserLock = undefined; laserChargeStarted = undefined; saberCombo = 0; lastSaberAttack = -Infinity; saberAnimation = undefined; gamepadLaserHeld = false;
+    robot.position.set(0, 0, ARENA_HALF_DEPTH - 1.6); robot.rotation.set(0, 0, 0); robotRig.torso.rotation.set(0, 0, 0); armAssemblies.forEach((arm) => arm.rotation.set(0, 0, 0)); levelElapsed = 0; health = MAX_ROB_HEALTH; shields = MAX_ROB_SHIELDS; energy = maximumEnergy(upgradeLevels.energyCapacity); damageInvulnerableUntil = -Infinity; gateDone = false; cellCount = 0; levelComplete = false; hasKey = false; doorOpen = !level.key; hacking = false; hackingCamera = undefined; hackingProgress = 0; securityAlertRemaining = 0; securityMiniBossReleased = false; laserLock = undefined; secondaryLaserLock = undefined; laserChargeStarted = undefined; saberCombo = 0; lastSaberAttack = -Infinity; saberAnimation = undefined; gamepadLaserHeld = false;
     releaseAllInput(); keyObject.visible = Boolean(level.key); if (level.key) keyObject.position.set(level.key[0], 0, level.key[1]);
     doorObject.visible = Boolean(level.door); if (level.door) { doorObject.position.set(level.door[0], .9, level.door[1]); doorObject.scale.set(level.door[2] / 4, 1, level.door[3] / .35); }
     const initialCameraBlockers = projectileBlockers();
@@ -430,11 +433,25 @@ if (root) {
     ui.saberButtons.forEach((button) => { button.textContent = button.classList.contains('rob-sim__fire') ? selectedMelee().shortName.toUpperCase() : `${selectedMelee().name} · Space`; });
   };
   const readInput = () => { let forward = touch.forward || (((keys.has('ArrowUp') || keys.has('KeyW')) ? 1 : 0) - ((keys.has('ArrowDown') || keys.has('KeyS')) ? 1 : 0)), steering = touch.steering || (((keys.has('ArrowLeft') || keys.has('KeyA')) ? 1 : 0) - ((keys.has('ArrowRight') || keys.has('KeyD')) ? 1 : 0)), leftTarget, rightTarget; const pad = [...(navigator.getGamepads?.() || [])].find(Boolean); if (pad && (Math.abs(pad.axes[0] || 0) > .12 || Math.abs(pad.axes[1] || 0) > .12)) { forward = -(pad.axes[1] || 0); steering = -(pad.axes[0] || 0); } leftTarget = THREE.MathUtils.clamp(forward - steering * .72, -1, 1); rightTarget = THREE.MathUtils.clamp(forward + steering * .72, -1, 1); if (touch.leftActive || touch.rightActive) { leftTarget = touch.leftActive ? touch.left : 0; rightTarget = touch.rightActive ? touch.right : 0; } const gamepadLaserPressed = Boolean(pad?.buttons.some((b, i) => (i === 0 || i === 6 || i === 7) && b.pressed)); if (gamepadLaserPressed && !gamepadLaserHeld) beginLaserCharge(); else if (!gamepadLaserPressed && gamepadLaserHeld) releaseLaserCharge(); gamepadLaserHeld = gamepadLaserPressed; controls.left += (leftTarget - controls.left) * .28; controls.right += (rightTarget - controls.right) * .28; };
+  const nearestHackableCamera = (range = SECURITY_CAMERA_HACK_RANGE) => securityCameras
+    .filter((securityCamera) => !securityCamera.disabled)
+    .map((securityCamera) => ({ securityCamera, distance: robot.position.distanceTo(securityCamera.group.position) }))
+    .filter(({ distance }) => distance <= range)
+    .sort((a, b) => a.distance - b.distance)[0]?.securityCamera;
   const startDoorHack = () => {
-    const level = levels[levelIndex]; if (!running || !level.door || doorOpen || hacking) return;
+    const level = levels[levelIndex]; if (!running || !level.door || doorOpen || hacking || hackingCamera) return;
     if (!hasKey) { say('The security lock needs its access key before ROB can hack it.'); return; }
     if (robot.position.distanceTo(hackTerminal.position) > 2.25) { say('Move ROB beside the orange hack panel first.'); return; }
     hacking = true; hackingProgress = 0; releaseAllInput(); say('Flipper Zero connected. ROB is running the door hack automatically…');
+  };
+  const startCameraHack = (securityCamera = nearestHackableCamera()) => {
+    if (!running || hacking || hackingCamera || !securityCamera || securityCamera.disabled) return;
+    hackingCamera = securityCamera; hackingProgress = 0; releaseAllInput(); say('Flipper Zero connected to the security camera. Hold position while ROB disables its sensor and alarm…');
+  };
+  const startFlipperHack = () => {
+    const securityCamera = nearestHackableCamera();
+    if (securityCamera) startCameraHack(securityCamera);
+    else startDoorHack();
   };
   const tick = (dt) => {
     readInput(); if (!running || complete || levelComplete) return;
@@ -455,13 +472,17 @@ if (root) {
     const conveyorPosition = robot.position.clone(); conveyorPosition.x += conveyorMove.x; conveyorPosition.z += conveyorMove.z; if (!collision(conveyorPosition)) robot.position.copy(conveyorPosition);
     robotRig.treadWheels.forEach(({ wheel, side }) => { wheel.rotation.x -= controls[side] * dt * 10.5 * speedMultiplier; });
     if (motion.collided && Math.abs(linear) > .1) say(robot.position.distanceTo(old) > .001 ? 'Wall assist active — ROB is sliding along the open edge.' : 'Wall contact — reverse or pivot away; ROB will release cleanly.');
+    if (hackingCamera) {
+      if (robot.position.distanceTo(hackingCamera.group.position) > SECURITY_CAMERA_HACK_RANGE) { hackingCamera = undefined; hackingProgress = 0; say('Camera hack interrupted. Move back within Flipper Zero range.'); }
+      else { hackingProgress = Math.min(1, hackingProgress + dt / FLIPPER_HACK_DURATION); if (hackingProgress >= 1) { const disabledCamera = hackingCamera; hackingCamera = undefined; hackingProgress = 0; disabledCamera.disabled = true; disabledCamera.beam.visible = false; securityAlertRemaining = 0; awardMissionPoints(FLIPPER_HACK_REWARD); playSound('pickup'); say(`Flipper Zero camera hack complete. Camera ${disabledCamera.id + 1} sensor and alarm disabled.`); } }
+    }
     const robotPoint = { x: robot.position.x, z: robot.position.z }, wasAlerted = securityAlertRemaining > 0, cameraBlockers = projectileBlockers();
     const detectingCamera = securityCameras.find((securityCamera) => securityCameraSees({ camera: securityCamera, robot: robotPoint, elapsed, blockers: cameraBlockers, shadows: shadowZones }));
     if (detectingCamera) { securityAlertRemaining = 5; if (!wasAlerted) say(releaseSecurityMiniBoss(detectingCamera) ? 'Security camera caught ROB! A three-shield mini boss has been released — disable it or escape into shadow.' : 'Security camera spotted ROB again! Dodge into a dark shadow pad.'); }
-    securityCameras.forEach((securityCamera) => { const heading = cameraHeading(securityCamera, elapsed); securityCamera.group.rotation.y = heading; updateSecurityCameraBeam(securityCamera, heading, cameraBlockers); securityCamera.lens.material.emissiveIntensity = securityAlertRemaining > 0 ? 3.2 : 1.8; });
+    securityCameras.forEach((securityCamera) => { const heading = cameraHeading(securityCamera, elapsed), isHackTarget = hackingCamera === securityCamera; securityCamera.group.rotation.y = heading; securityCamera.beam.visible = !securityCamera.disabled; if (!securityCamera.disabled) updateSecurityCameraBeam(securityCamera, heading, cameraBlockers); const lensColor = securityCamera.disabled ? 0x55ff95 : isHackTarget ? 0xffcf33 : 0xff243f, lensEmissive = securityCamera.disabled ? 0x0b7a38 : isHackTarget ? 0xb37700 : 0xa60018; securityCamera.lens.material.color.setHex(lensColor); securityCamera.lens.material.emissive.setHex(lensEmissive); securityCamera.lens.material.emissiveIntensity = securityCamera.disabled ? 1.25 : isHackTarget ? 2.6 + Math.sin(elapsed * 9) * .6 : securityAlertRemaining > 0 ? 3.2 : 1.8; });
     if (hacking) {
       if (robot.position.distanceTo(hackTerminal.position) > 2.25) { hacking = false; hackingProgress = 0; say('Hack interrupted. Move back beside the orange panel.'); }
-      else { hackingProgress = Math.min(1, hackingProgress + dt / 2.2); if (hackingProgress >= 1) { hacking = false; doorOpen = true; doorObject.visible = false; hackTerminal.visible = false; awardMissionPoints(300); playSound('pickup'); say('Flipper Zero hack complete. Security lock bypassed and door open.'); } }
+      else { hackingProgress = Math.min(1, hackingProgress + dt / FLIPPER_HACK_DURATION); if (hackingProgress >= 1) { hacking = false; doorOpen = true; doorObject.visible = false; hackTerminal.visible = false; awardMissionPoints(FLIPPER_HACK_REWARD); playSound('pickup'); say('Flipper Zero hack complete. Security lock bypassed and door open.'); } }
     }
     for (let i = 0; i < enemies.length; i += 1) {
       const enemy = enemies[i]; if (!enemy.userData.alive) continue;
@@ -526,7 +547,7 @@ if (root) {
     camera.position.lerp(new THREE.Vector3(robot.position.x + 6.2, 11.2, robot.position.z + 8.2), .06); camera.lookAt(robot.position.x, .65, robot.position.z - 1.8);
     ui.time.textContent = new Date(elapsed * 1000).toISOString().slice(14, 22); ui.score.textContent = score; ui.points.textContent = upgradePoints; ui.left.textContent = controls.left.toFixed(2); ui.right.textContent = controls.right.toFixed(2); ui.enemies.textContent = enemies.filter((e) => e.userData.alive).length;
     ui.health.value = health; ui.healthText.textContent = `${health} / ${MAX_ROB_HEALTH}`; ui.shields.value = shields; ui.shieldsText.textContent = `${shields} / ${MAX_ROB_SHIELDS}`; const energyMaximum = maximumEnergy(upgradeLevels.energyCapacity); ui.energy.max = energyMaximum; ui.energy.value = energy; ui.energyText.textContent = `${Math.floor(energy)} / ${energyMaximum}`; ui.security.hidden = securityAlertRemaining <= 0;
-    const level = levels[levelIndex], hackDistance = robot.position.distanceTo(hackTerminal.position), hackAvailable = Boolean(level.door && !doorOpen && hackDistance <= 2.7); ui.hack.hidden = !hackAvailable; ui.hack.disabled = hacking; ui.hack.textContent = hacking ? `▣ Hacking ${Math.round(hackingProgress * 100)}%` : hasKey ? '▣ Hack door' : '▣ Key required';
+    const level = levels[levelIndex], hackDistance = robot.position.distanceTo(hackTerminal.position), doorHackAvailable = Boolean(level.door && !doorOpen && hackDistance <= 2.7), nearbyCamera = nearestHackableCamera(), hasActiveCamera = securityCameras.some((securityCamera) => !securityCamera.disabled), hackAvailable = doorHackAvailable || hasActiveCamera || hacking || Boolean(hackingCamera); ui.hack.hidden = !hackAvailable; ui.hack.disabled = hacking || Boolean(hackingCamera) || (!nearbyCamera && !doorHackAvailable); ui.hack.textContent = hackingCamera ? `▣ Hacking camera ${Math.round(hackingProgress * 100)}%` : hacking ? `▣ Hacking door ${Math.round(hackingProgress * 100)}%` : nearbyCamera ? '▣ Hack camera' : doorHackAvailable ? hasKey ? '▣ Hack door' : '▣ Key required' : '▣ Reach security camera';
     hackTerminalLamp.material.color.setHex(hacking ? 0xffcf33 : hasKey ? 0x37e887 : 0xff3030); hackTerminalLamp.material.emissive.setHex(hacking ? 0xb37700 : hasKey ? 0x087a35 : 0x8b0505);
     ui.workshopPoints.textContent = `${upgradePoints.toLocaleString()} points`;
     const boss = currentBoss(); ui.boss.hidden = !boss; if (boss) { ui.bossName.textContent = `${boss.userData.name} shields`; ui.bossText.textContent = `${boss.userData.health} / ${boss.userData.maxHealth}`; ui.bossHealth.max = boss.userData.maxHealth; ui.bossHealth.value = Math.max(0, boss.userData.health); }
@@ -543,7 +564,7 @@ if (root) {
   root.querySelectorAll('[data-drive]').forEach((button) => { const forward = Number(button.dataset.forward || 0), steering = Number(button.dataset.steering || 0); button.setAttribute('aria-pressed', 'false'); button.addEventListener('pointerdown', (e) => { e.preventDefault(); activeDrivePointers.set(e.pointerId, { forward, steering, button }); updateTouchDrive(); button.classList.add('is-pressed'); button.setAttribute('aria-pressed', 'true'); button.setPointerCapture?.(e.pointerId); }); ['pointerup', 'pointercancel', 'lostpointercapture'].forEach((eventName) => button.addEventListener(eventName, (e) => releaseDrive(e.pointerId))); });
   root.querySelectorAll('[data-tread-stick]').forEach((stick) => { const side = stick.dataset.treadStick; stick.addEventListener('pointerdown', (e) => { e.preventDefault(); if (touch[`${side}Active`]) return; activeTreadPointers.set(e.pointerId, { side, stick }); stick.setPointerCapture?.(e.pointerId); updateTreadStick(stick, side, e.clientX, e.clientY); }); stick.addEventListener('pointermove', (e) => { if (activeTreadPointers.get(e.pointerId)?.stick === stick) updateTreadStick(stick, side, e.clientX, e.clientY); }); ['pointerup', 'pointercancel', 'lostpointercapture'].forEach((eventName) => stick.addEventListener(eventName, (e) => { e.preventDefault(); releaseTread(e.pointerId); })); stick.addEventListener('keydown', (e) => { if (!['ArrowUp', 'ArrowDown'].includes(e.code)) return; e.preventDefault(); e.stopPropagation(); const value = e.code === 'ArrowUp' ? 1 : -1, rect = stick.getBoundingClientRect(); updateTreadStick(stick, side, rect.left + rect.width / 2, rect.top + rect.height * (.5 - value * .34)); }); stick.addEventListener('keyup', (e) => { if (!['ArrowUp', 'ArrowDown'].includes(e.code)) return; e.preventDefault(); e.stopPropagation(); resetTreadStick(stick, side); }); });
   ui.laserButtons.forEach((button) => { button.addEventListener('pointerdown', (e) => { e.preventDefault(); beginLaserCharge(); button.setPointerCapture?.(e.pointerId); }); button.addEventListener('pointerup', (e) => { e.preventDefault(); releaseLaserCharge(); }); button.addEventListener('pointercancel', (e) => { e.preventDefault(); cancelLaserCharge(); }); button.addEventListener('lostpointercapture', releaseLaserCharge); }); root.querySelectorAll('[data-sim-saber]').forEach((button) => button.addEventListener('pointerdown', (e) => { e.preventDefault(); saberSlash(); }));
-  ui.hack.addEventListener('click', startDoorHack);
+  ui.hack.addEventListener('click', startFlipperHack);
   const enterPseudoFullscreen = () => { shell.classList.add('is-pseudo-fullscreen'); document.body.classList.add('rob-game-open'); };
   const leavePseudoFullscreen = () => { shell.classList.remove('is-pseudo-fullscreen'); document.body.classList.remove('rob-game-open'); };
   const syncFullscreen = () => { const open = Boolean(fullscreenElement()) || shell.classList.contains('is-pseudo-fullscreen'); shell.classList.toggle('is-fullscreen', open); ui.fullscreen.textContent = open ? '× Exit' : '⛶ Fullscreen'; ui.fullscreen.setAttribute('aria-label', open ? 'Exit fullscreen' : 'Enter fullscreen'); releaseAllInput(); requestAnimationFrame(resize); };

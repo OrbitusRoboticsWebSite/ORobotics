@@ -9,6 +9,7 @@ import {
   applyROBHealthDamage,
   battleUpgradePoints,
   bossStats,
+  cameraHeading,
   conveyorArrowOffset,
   conveyorDisplacement,
   consumeLaserEnergy,
@@ -199,6 +200,10 @@ test('security cameras respect their view cone, walls, and shadow cover', () => 
   assert.equal(securityCameraSees({ camera, robot, elapsed: 0, blockers: [{ x: 0, z: 0, w: 1, d: .1 }] }), false);
   assert.equal(securityCameraSees({ camera, robot, elapsed: 0, shadows: [{ x: 0, z: -2, w: 1, d: 1 }] }), false);
   assert.equal(securityCameraSees({ camera, robot: { x: 5, z: 2 }, elapsed: 0 }), false);
+  const disabledCamera = { ...camera, disabled: true };
+  assert.equal(securityCameraSees({ camera: disabledCamera, robot, elapsed: 0 }), false);
+  assert.equal(cameraHeading(disabledCamera, 4), camera.heading);
+  assert.deepEqual(securityCameraVisionDistances({ camera: disabledCamera, heading: 0, rayCount: 5 }), [0, 0, 0, 0, 0]);
 });
 
 test('camera vision fan stops every red ray at the wall surface', () => {

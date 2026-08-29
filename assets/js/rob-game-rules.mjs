@@ -1,4 +1,4 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.09.06';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.07';
 export const MAX_ROB_HEALTH = 100;
 export const MAX_ROB_SHIELDS = 40;
 export const BASE_ROB_ENERGY = 100;
@@ -68,8 +68,11 @@ export const battleUpgradePoints = ({ damage = 0, defeatReward = 0 }) => (
 );
 
 export const SECURITY_CAMERA_HALF_ANGLE = Math.PI / 5;
-export const cameraHeading = (camera, elapsed) => camera.heading + Math.sin(elapsed * .72 + camera.id * 1.7) * camera.sweep;
+export const FLIPPER_HACK_DURATION = 2.2;
+export const FLIPPER_HACK_REWARD = 300;
+export const cameraHeading = (camera, elapsed) => camera.disabled ? camera.heading : camera.heading + Math.sin(elapsed * .72 + camera.id * 1.7) * camera.sweep;
 export const securityCameraSightDistance = ({ camera, heading, angleOffset = 0, blockers = [] }) => {
+  if (camera.disabled) return 0;
   const rayHeading = heading + angleOffset;
   const end = {
     x: camera.x - Math.sin(rayHeading) * camera.range,
@@ -89,6 +92,7 @@ export const securityCameraVisionDistances = ({ camera, heading, blockers = [], 
   });
 };
 export const securityCameraSees = ({ camera, robot, elapsed, blockers = [], shadows = [] }) => {
+  if (camera.disabled) return false;
   if (shadows.some((shadow) => pointInBox(robot, shadow))) return false;
   const offset = { x: robot.x - camera.x, z: robot.z - camera.z };
   const distance = Math.hypot(offset.x, offset.z);
