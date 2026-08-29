@@ -1,5 +1,40 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.08.28';
+export const GAMEPLAY_RULESET_VERSION = '2026.08.29';
 export const MAX_ROB_HEALTH = 100;
+export const BASE_ROB_ENERGY = 100;
+
+export const upgrades = [
+  { id: 'speedBoost', name: 'Speed Boost', maximumLevel: 3, baseCost: 700, costStep: 650 },
+  { id: 'energyCapacity', name: 'Energy Capacity', maximumLevel: 3, baseCost: 550, costStep: 500 },
+  { id: 'weaponPower', name: 'Weapon Power', maximumLevel: 3, baseCost: 900, costStep: 800 },
+];
+
+export const upgradeCost = (upgrade, level) => level < upgrade.maximumLevel ? upgrade.baseCost + level * upgrade.costStep : undefined;
+export const driveSpeedMultiplier = (level) => 1 + Math.max(0, level) * .18;
+export const maximumEnergy = (level) => BASE_ROB_ENERGY + Math.max(0, level) * 25;
+export const upgradedWeaponDamage = (damage, level) => damage + Math.max(0, level);
+export const updateDriveEnergy = ({ energy, maximum, moving, delta, capacityLevel = 0 }) => Math.max(0, Math.min(
+  maximum,
+  energy + delta * (moving ? -6.6 : 3.2 + Math.max(0, capacityLevel) * .8),
+));
+
+export const pointInBox = (point, box) => Math.abs(point.x - box.x) <= box.w && Math.abs(point.z - box.z) <= box.d;
+
+export const conveyorDisplacement = ({ point, conveyors, delta }) => {
+  const conveyor = conveyors.find((candidate) => pointInBox(point, candidate));
+  return conveyor ? { x: conveyor.dx * conveyor.speed * delta, z: conveyor.dz * conveyor.speed * delta } : { x: 0, z: 0 };
+};
+
+export const cameraHeading = (camera, elapsed) => camera.heading + Math.sin(elapsed * .72 + camera.id * 1.7) * camera.sweep;
+export const securityCameraSees = ({ camera, robot, elapsed, blockers = [], shadows = [] }) => {
+  if (shadows.some((shadow) => pointInBox(robot, shadow))) return false;
+  const offset = { x: robot.x - camera.x, z: robot.z - camera.z };
+  const distance = Math.hypot(offset.x, offset.z);
+  if (distance < .001 || distance > camera.range) return false;
+  const heading = cameraHeading(camera, elapsed);
+  const forward = { x: -Math.sin(heading), z: -Math.cos(heading) };
+  if ((offset.x / distance) * forward.x + (offset.z / distance) * forward.z < Math.cos(Math.PI / 5)) return false;
+  return blockers.every((blocker) => segmentBoxHitFraction(camera, robot, blocker, .015) === undefined);
+};
 
 export const finishes = [
   { id: 'graphite', name: 'Graphite', color: 0x45515d },
