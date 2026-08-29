@@ -15,6 +15,7 @@ import {
   rangedWeapons,
   resolveAxisSlidingMotion,
   securityCameraSees,
+  securityMiniBossStats,
   updateDriveEnergy,
   upgradeCost,
   upgrades,
@@ -117,4 +118,16 @@ test('security cameras respect their view cone, walls, and shadow cover', () => 
   assert.equal(securityCameraSees({ camera, robot, elapsed: 0, blockers: [{ x: 0, z: 0, w: 1, d: .1 }] }), false);
   assert.equal(securityCameraSees({ camera, robot, elapsed: 0, shadows: [{ x: 0, z: -2, w: 1, d: 1 }] }), false);
   assert.equal(securityCameraSees({ camera, robot: { x: 5, z: 2 }, elapsed: 0 }), false);
+});
+
+test('a camera releases one lightweight mini boss profile', () => {
+  assert.deepEqual(securityMiniBossStats(), {
+    isBoss: true,
+    isMiniBoss: true,
+    shields: 3,
+    contactDamage: 4,
+    projectileDamage: 3,
+    scale: 1.15,
+    defeatReward: 500,
+  });
 });

@@ -1,4 +1,4 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.08.31';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.01';
 export const MAX_ROB_HEALTH = 100;
 export const BASE_ROB_ENERGY = 100;
 
@@ -101,6 +101,16 @@ export const bossStats = (levelNumber, baseShields) => {
     projectileDamage: isBoss ? 10 : undefined,
   };
 };
+
+export const securityMiniBossStats = () => ({
+  isBoss: true,
+  isMiniBoss: true,
+  shields: 3,
+  contactDamage: 4,
+  projectileDamage: 3,
+  scale: 1.15,
+  defeatReward: 500,
+});
 
 export const unlockReward = (completedLevel) => ({
   5: 'Twin Blasters unlocked in the ROB workshop!',
