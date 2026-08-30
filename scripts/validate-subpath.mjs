@@ -180,7 +180,7 @@ try {
     failures.push("Homepage hero is missing its responsive srcset or high fetch priority.");
   }
 
-  for (const expectedPath of ["makerfaire/", "orbitus/", "contact/", "images/site-logo.svg"]) {
+  for (const expectedPath of ["learn/", "books/", "makerfaire/", "orbitus/", "contact/", "images/site-logo.svg"]) {
     if (!home.includes(`${basePath}${expectedPath}`)) {
       failures.push(`Homepage is missing subpath-safe URL: ${basePath}${expectedPath}`);
     }
@@ -278,11 +278,21 @@ try {
     }
   }
 
-  for (const activePage of ["makerfaire/index.html", "orbitus/index.html", "contact/index.html"]) {
+  for (const activePage of ["learn/index.html", "books/index.html", "makerfaire/index.html", "orbitus/index.html", "contact/index.html"]) {
     const page = await readFile(path.join(destination, activePage), "utf8");
     if (!/aria-current=(?:["']page["']|page)(?:\s|>)/i.test(page)) {
       failures.push(`${activePage} is missing its active navigation state.`);
     }
+  }
+
+  const learnPage = await readFile(path.join(destination, "learn", "index.html"), "utf8");
+  if (!learnPage.includes("The Orbitus Robotics learning classroom") || !learnPage.includes(`${basePath}downloads/posters/orbitus-learning-classroom-36x60.pdf`)) {
+    failures.push("Learning landing page is missing its campaign heading or poster download.");
+  }
+
+  const booksPage = await readFile(path.join(destination, "books", "index.html"), "utf8");
+  if (!booksPage.includes("Prepublication catalog") || !booksPage.includes("55%") || !booksPage.includes("id1538369440")) {
+    failures.push("Books catalog is missing its release status, collection discount, or existing Apple Books title.");
   }
 
   if (failures.length > 0) {

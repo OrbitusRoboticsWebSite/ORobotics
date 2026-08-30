@@ -220,8 +220,12 @@ menu:
       weight: 4
     - identifier: learn
       name: Learn Robotics
-      pageRef: /robot-lab
+      pageRef: /learn
       weight: 5
+    - identifier: books
+      name: Books
+      pageRef: /books
+      weight: 6
     - identifier: Makerfaire
       name: Maker Faire
       pageRef: /makerfaire
@@ -235,6 +239,14 @@ menu:
       pageRef: /contact
       weight: 30
   footer:
+    - identifier: learn
+      name: Learn Robotics
+      pageRef: /learn
+      weight: 2
+    - identifier: books
+      name: Books
+      pageRef: /books
+      weight: 3
     - identifier: products
       name: Products
       pageRef: /products

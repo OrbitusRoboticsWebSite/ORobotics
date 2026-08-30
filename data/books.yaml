@@ -1,0 +1,129 @@
+series:
+  title: "Building R.O.B."
+  author: "Rodolfo Aramayo"
+  publisher: "OrbitusRobotics LLC"
+  language: "English"
+  release_status: "Prepublication review"
+  individual_total_usd: 55.92
+  collection_price_usd: 24.99
+  collection_savings_percent: 55
+  apple_series_url: ""
+
+books:
+  - slug: "rob-and-the-lost-yellow-ball"
+    title: "ROB and the Lost Yellow Ball"
+    subtitle: "A little robot stops, looks, thinks, and helps"
+    audience: "Ages 5–6 · Read aloud"
+    pages: 23
+    price_usd: 2.99
+    position: 0
+    image: "images/books/rob-and-the-lost-yellow-ball.webp"
+    description: "A gentle picture story about sensing, stopping, planning, checking, counting, kindness, and feedback."
+    apple_url: ""
+    status: "Accessible EPUB 3 in preparation"
+  - slug: "volume-1-meet-rob"
+    title: "Meet ROB"
+    subtitle: "Building R.O.B. · Volume 1"
+    audience: "Ages 8–12"
+    pages: 37
+    price_usd: 4.99
+    position: 1
+    image: "images/books/volume-1-meet-rob.webp"
+    description: "Meet a real robot through systems thinking, structure, energy, sensors, iteration, and engineering logs."
+    apple_url: ""
+    status: "Accessible EPUB 3 in preparation"
+  - slug: "volume-2-circuits-and-signals"
+    title: "Circuits & Signals"
+    subtitle: "Building R.O.B. · Volume 2"
+    audience: "Ages 10–14"
+    pages: 35
+    price_usd: 4.99
+    position: 2
+    image: "images/books/volume-2-circuits-and-signals.webp"
+    description: "Follow low-voltage circuits, digital and analog signals, PWM, Arduino pins, serial messages, sensors, and watchdogs."
+    apple_url: ""
+    status: "Accessible EPUB 3 in preparation"
+  - slug: "volume-3-motion-workshop"
+    title: "Motion Workshop"
+    subtitle: "Building R.O.B. · Volume 3"
+    audience: "Ages 10–15"
+    pages: 36
+    price_usd: 4.99
+    position: 3
+    image: "images/books/volume-3-motion-workshop.webp"
+    description: "Explore loads, differential drive, gearing, actuators, materials, fabrication, assembly, and test ladders."
+    apple_url: ""
+    status: "Accessible EPUB 3 in preparation"
+  - slug: "volume-4-mission-control"
+    title: "Mission Control"
+    subtitle: "Building R.O.B. · Volume 4"
+    audience: "Ages 12–16"
+    pages: 40
+    price_usd: 4.99
+    position: 4
+    image: "images/books/volume-4-mission-control.webp"
+    description: "Learn how computers, controllers, cameras, maps, privacy, AI boundaries, and simulations coordinate a robot."
+    apple_url: ""
+    status: "Accessible EPUB 3 in preparation"
+  - slug: "volume-5-ai-robotics-with-codex"
+    title: "AI, Robotics, and Codex"
+    subtitle: "Building R.O.B. · Volume 5"
+    audience: "Advanced makers and software builders"
+    pages: 43
+    price_usd: 8.99
+    position: 5
+    image: "images/books/volume-5-ai-robotics-with-codex.webp"
+    description: "A source-based software history plus practical lessons in Swift, MLX, perception, recording, identity, shows, and spatial interfaces."
+    apple_url: ""
+    status: "Accessible EPUB 3 in preparation"
+  - slug: "volume-6-amber-dual-arm-robotics"
+    title: "Dual-Arm Robotics"
+    subtitle: "Building R.O.B. · Volume 6"
+    audience: "Advanced makers and robot integrators"
+    pages: 34
+    price_usd: 8.99
+    position: 6
+    image: "images/books/volume-6-amber-dual-arm-robotics.webp"
+    description: "Integrate two seven-joint AMBER arms through URDF, frame calibration, CAN identity, UDP/LCM, Ubuntu, diagnostics, and staged commissioning."
+    apple_url: ""
+    status: "Accessible EPUB 3 in preparation"
+  - slug: "volume-7-engineering-robcontrollervision"
+    title: "Engineering ROBControllerVision"
+    subtitle: "Building R.O.B. · Volume 7"
+    audience: "Swift and visionOS developers"
+    pages: 38
+    price_usd: 8.99
+    position: 7
+    image: "images/books/volume-7-engineering-robcontrollervision.webp"
+    description: "Study Swift 6 architecture, explicit control ownership, spatial controllers, authenticated video, immersive 360 presentation, speech, and testing."
+    apple_url: ""
+    status: "Accessible EPUB 3 in preparation"
+  - slug: "volume-8-engineering-cerebro"
+    title: "Engineering Cerebro"
+    subtitle: "Building R.O.B. · Volume 8"
+    audience: "Swift and Objective-C developers"
+    pages: 50
+    price_usd: 8.99
+    position: 8
+    image: "images/books/volume-8-engineering-cerebro.webp"
+    description: "Examine RGB-D and panoramic perception, local and cloud AI, encrypted face context, private messaging, training capture, video, and bounded autonomy."
+    apple_url: ""
+    status: "Accessible EPUB 3 in preparation"
+  - slug: "complete-builders-field-manual"
+    title: "Complete Builder's Field Manual"
+    subtitle: "The discounted complete digital collection"
+    audience: "Advanced makers, developers, and mentors"
+    pages: 235
+    price_usd: 24.99
+    position: 9
+    image: "images/books/complete-builders-field-manual.webp"
+    description: "The unified series: mechanics, circuits, software, perception, privacy, arms, AI boundaries, verification, operations, maintenance, and the open evidence queue."
+    apple_url: ""
+    status: "Accessible EPUB 3 in preparation"
+
+existing_apple_title:
+  title: "Dark Vapor4"
+  subtitle: "for Xcode 12 and macOS Big Sur"
+  author: "Rodolfo Aramayo"
+  publisher: "OrbitusRobotics LLC"
+  apple_url: "https://books.apple.com/us/book/dark-vapor4/id1538369440/"

@@ -1,0 +1,95 @@
+{{ define "main" }}
+{{ $catalog := hugo.Data.books }}
+<main id="main" class="rob-books">
+  <style>
+    .rob-books{--book-ink:#071020;--book-blue:#4f46e5;--book-cyan:#22d3ee;--book-gold:#fbbf24;background:#f6f7fb;color:#0f172a}.rob-books *{box-sizing:border-box}.rob-books a:focus-visible{outline:3px solid var(--book-cyan);outline-offset:4px}.books-hero{position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(circle at 76% 26%,rgba(34,211,238,.28),transparent 25rem),linear-gradient(135deg,#050811 0%,#111f4f 64%,#18256a 100%);color:#fff}.books-hero:after{position:absolute;inset:0;z-index:-1;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:48px 48px;content:"";mask-image:linear-gradient(to bottom,#000,transparent 82%)}.books-hero__inner,.books-section{width:min(1180px,calc(100% - 2rem));margin:auto}.books-hero__inner{display:grid;min-height:740px;align-items:center;gap:3rem;padding:6rem 0}.books-kicker{margin:0 0 1rem;color:var(--book-cyan);font-size:.78rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase}.books-hero h1{max-width:760px;margin:0;font-size:clamp(3.3rem,8vw,7.5rem);font-weight:1000;letter-spacing:-.065em;line-height:.82}.books-hero h1 em{display:block;color:var(--book-gold);font-style:normal}.books-hero__lede{max-width:670px;margin:1.8rem 0 0;color:#dbeafe;font-size:clamp(1.05rem,2vw,1.35rem);line-height:1.65}.books-actions{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:2rem}.books-button{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:.8rem 1.15rem;border:1px solid rgba(255,255,255,.34);border-radius:999px;color:#fff;font-weight:900;text-decoration:none}.books-button--primary{border-color:var(--book-gold);background:var(--book-gold);color:#111827}.books-hero__covers{position:relative;min-height:540px}.books-hero__covers img{position:absolute;width:min(52%,260px);border:1px solid rgba(255,255,255,.7);border-radius:.45rem;box-shadow:0 28px 60px rgba(0,0,0,.45)}.books-hero__covers img:nth-child(1){left:3%;top:16%;transform:rotate(-8deg)}.books-hero__covers img:nth-child(2){left:26%;top:6%;z-index:2;transform:rotate(-2deg)}.books-hero__covers img:nth-child(3){right:2%;top:18%;transform:rotate(8deg)}.books-hero__covers img:nth-child(4){left:28%;bottom:0;z-index:3;width:min(56%,285px)}.books-review{background:#fff3cd;border-bottom:1px solid #f3cf59}.books-review__inner{width:min(1180px,calc(100% - 2rem));margin:auto;padding:1.05rem 0;color:#573f00;font-size:.94rem;line-height:1.6}.books-review strong{font-weight:1000}.books-section{padding:5rem 0}.books-heading{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:1.4rem;margin-bottom:2.2rem}.books-heading h2{max-width:760px;margin:0;font-size:clamp(2.3rem,5vw,4.6rem);font-weight:1000;letter-spacing:-.055em;line-height:.96}.books-heading p{max-width:590px;margin:1rem 0 0;color:#475569;line-height:1.7}.books-offer{display:grid;gap:1.5rem;padding:2rem;border:1px solid #c7d2fe;border-radius:1.5rem;background:linear-gradient(135deg,#fff,#eef2ff);box-shadow:0 18px 50px rgba(30,41,59,.08)}.books-offer__price strong{display:block;font-size:clamp(3.5rem,7vw,6.5rem);font-weight:1000;letter-spacing:-.07em;line-height:1;color:#111f4f}.books-offer__price span{display:block;margin-top:.45rem;color:#64748b}.books-offer__copy h3{margin:0;font-size:1.9rem}.books-offer__copy p{margin:.75rem 0 0;color:#475569;line-height:1.7}.books-offer__badge{display:inline-flex;margin-top:1rem;padding:.55rem .8rem;border-radius:999px;background:#dcfce7;color:#166534;font-size:.78rem;font-weight:1000;letter-spacing:.08em;text-transform:uppercase}.book-grid{display:grid;gap:1.25rem}.book-card{display:grid;grid-template-columns:130px 1fr;gap:1.2rem;min-width:0;padding:1.15rem;border:1px solid #e2e8f0;border-radius:1.15rem;background:#fff;box-shadow:0 10px 30px rgba(15,23,42,.055)}.book-card img{width:130px;height:auto;border-radius:.3rem;box-shadow:0 10px 26px rgba(15,23,42,.2)}.book-card__number{color:#6366f1;font-size:.7rem;font-weight:1000;letter-spacing:.14em;text-transform:uppercase}.book-card h3{margin:.25rem 0 0;font-size:1.35rem;line-height:1.08}.book-card__audience{margin:.5rem 0;color:#64748b;font-size:.82rem;font-weight:800}.book-card__description{margin:.7rem 0;color:#475569;font-size:.93rem;line-height:1.55}.book-card__bottom{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;margin-top:auto}.book-card__price{font-size:1.25rem;font-weight:1000}.book-card__status{font-size:.74rem;color:#64748b}.book-card__apple{display:inline-flex;padding:.65rem .8rem;border-radius:.7rem;background:#111827;color:#fff;font-size:.8rem;font-weight:900;text-decoration:none}.book-card__pending{display:inline-flex;padding:.6rem .75rem;border:1px solid #dbe3ee;border-radius:.7rem;background:#f8fafc;color:#64748b;font-size:.72rem;font-weight:800}.books-dark{background:#071020;color:#fff}.books-dark .books-heading p{color:#cbd5e1}.books-process{display:grid;gap:1rem;counter-reset:process}.books-process article{position:relative;padding:1.5rem 1.5rem 1.5rem 4.7rem;border:1px solid rgba(255,255,255,.14);border-radius:1rem;background:rgba(255,255,255,.055)}.books-process article:before{position:absolute;left:1.2rem;top:1.25rem;display:grid;width:2.6rem;height:2.6rem;place-items:center;border-radius:50%;background:var(--book-cyan);color:#071020;font-weight:1000;counter-increment:process;content:counter(process)}.books-process h3{margin:0 0 .4rem}.books-process p{margin:0;color:#cbd5e1;line-height:1.65}.books-print{display:grid;gap:1.25rem}.books-print article{padding:1.5rem;border:1px solid #e2e8f0;border-radius:1rem;background:#fff}.books-print h3{margin:0 0 .55rem}.books-print p{margin:0;color:#475569;line-height:1.65}.books-print a{color:#3730a3;font-weight:900}.books-posters{display:grid;gap:1rem}.books-poster{display:grid;grid-template-columns:92px 1fr;gap:1rem;padding:1rem;border:1px solid #e2e8f0;border-radius:1rem;background:#fff}.books-poster img{width:92px;border-radius:.25rem}.books-poster h3{margin:.2rem 0}.books-poster p{margin:.4rem 0;color:#64748b;font-size:.88rem}.books-poster a{font-weight:900;color:#3730a3}.books-published{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem;margin-top:2rem;padding:1.25rem;border:1px solid #bfdbfe;border-radius:1rem;background:#eff6ff}.books-published p{margin:0;color:#1e3a8a}.books-published a{font-weight:1000;color:#1e3a8a}@media(min-width:760px){.books-offer{grid-template-columns:.7fr 1.3fr;align-items:center}.book-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.books-process,.books-print,.books-posters{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(min-width:940px){.books-hero__inner{grid-template-columns:1.1fr .9fr}.books-hero__covers{min-height:610px}}@media(max-width:560px){.books-hero__inner{padding:4rem 0}.books-hero__covers{min-height:420px}.book-card{grid-template-columns:92px 1fr}.book-card img{width:92px}.books-poster{grid-template-columns:70px 1fr}.books-poster img{width:70px}}
+  </style>
+
+  <header class="books-hero">
+    <div class="books-hero__inner">
+      <div>
+        <p class="books-kicker">Orbitus Robotics learning library</p>
+        <h1>One robot.<br><em>Every layer.</em></h1>
+        <p class="books-hero__lede">Begin with a read-aloud adventure, grow through four youth maker volumes, then open the implementation-level books behind R.O.B.'s arms, Apple-platform controls, perception, and AI boundaries.</p>
+        <div class="books-actions">
+          <a class="books-button books-button--primary" href="#library">Explore the ten-book catalog</a>
+          <a class="books-button" href="{{ $catalog.existing_apple_title.apple_url }}" target="_blank" rel="noopener noreferrer">See our published Apple Books title ↗</a>
+        </div>
+      </div>
+      <div class="books-hero__covers" aria-label="Selected Building R.O.B. covers">
+        <img src="{{ "images/books/volume-1-meet-rob.webp" | relURL }}" width="660" height="854" alt="Meet ROB book cover">
+        <img src="{{ "images/books/volume-2-circuits-and-signals.webp" | relURL }}" width="660" height="854" alt="Circuits and Signals book cover">
+        <img src="{{ "images/books/complete-builders-field-manual.webp" | relURL }}" width="660" height="854" alt="Complete Builder's Field Manual book cover">
+        <img src="{{ "images/books/rob-and-the-lost-yellow-ball.webp" | relURL }}" width="660" height="854" alt="ROB and the Lost Yellow Ball book cover">
+      </div>
+    </div>
+  </header>
+
+  <aside class="books-review" aria-label="Publication status">
+    <div class="books-review__inner"><strong>Prepublication catalog:</strong> planned prices and formats are shown for launch planning. The ROB editions remain in editorial, safety, rights, accessibility, and EPUB review. Apple purchase buttons will activate only after each edition is approved and on store.</div>
+  </aside>
+
+  <section class="books-section" aria-labelledby="collection-title">
+    <div class="books-heading"><div><p class="books-kicker">Complete digital collection</p><h2 id="collection-title">The whole series for one discounted price.</h2><p>The Complete Builder's Field Manual unifies the eight numbered volumes into one digital reference. Its planned launch price is far below buying every volume separately.</p></div></div>
+    <div class="books-offer">
+      <div class="books-offer__price"><strong>${{ printf "%.2f" $catalog.series.collection_price_usd }}</strong><span>planned Apple Books collection price</span></div>
+      <div class="books-offer__copy"><h3>Complete Builder's Field Manual</h3><p>235 pages covering mechanics, circuits, firmware, controllers, perception, privacy, AMBER arms, spatial interfaces, AI boundaries, verification, public operation, and the open evidence queue.</p><span class="books-offer__badge">Save {{ $catalog.series.collection_savings_percent }}% vs. ${{ printf "%.2f" $catalog.series.individual_total_usd }} individually</span></div>
+    </div>
+  </section>
+
+  <section id="library" class="books-section" aria-labelledby="library-title">
+    <div class="books-heading"><div><p class="books-kicker">Ten ways into robotics</p><h2 id="library-title">Choose the reader. Choose the depth.</h2><p>Every title connects ideas to the same physical robot while keeping historical evidence, simulations, experiments, and verified behavior clearly separated.</p></div></div>
+    <div class="book-grid">
+      {{ range sort $catalog.books "position" }}
+      <article class="book-card">
+        <img src="{{ .image | relURL }}" width="660" height="854" loading="lazy" alt="{{ .title }} cover">
+        <div>
+          <span class="book-card__number">{{ .subtitle }}</span>
+          <h3>{{ .title }}</h3>
+          <p class="book-card__audience">{{ .audience }} · {{ .pages }} pages</p>
+          <p class="book-card__description">{{ .description }}</p>
+          <div class="book-card__bottom">
+            <span class="book-card__price">${{ printf "%.2f" .price_usd }}</span>
+            {{ if .apple_url }}
+            <a class="book-card__apple" href="{{ .apple_url }}" target="_blank" rel="noopener noreferrer">Buy on Apple Books</a>
+            {{ else }}
+            <span class="book-card__pending">{{ .status }}</span>
+            {{ end }}
+          </div>
+        </div>
+      </article>
+      {{ end }}
+    </div>
+    <div class="books-published"><p><strong>Already published by OrbitusRobotics LLC:</strong> {{ $catalog.existing_apple_title.title }} - {{ $catalog.existing_apple_title.subtitle }}</p><a href="{{ $catalog.existing_apple_title.apple_url }}" target="_blank" rel="noopener noreferrer">Open in Apple Books ↗</a></div>
+  </section>
+
+  <section class="books-dark">
+    <div class="books-section" aria-labelledby="release-title">
+      <div class="books-heading"><div><p class="books-kicker">Apple Books release path</p><h2 id="release-title">Publish only what has passed the gate.</h2><p>Apple requires a validated EPUB, cover, sample, metadata, and separate rights and pricing. Orbitus adds human review before any ROB edition goes live.</p></div></div>
+      <div class="books-process">
+        <article><h3>Review and rights</h3><p>Close editorial placeholders; review youth safety, technical claims, photograph rights, privacy, trademark use, and accessibility.</p></article>
+        <article><h3>Validate the edition</h3><p>Build an accessible EPUB 3 with live searchable text, run EPUBCheck, inspect it on iPhone and iPad, and verify every image description, sample, and link.</p></article>
+        <article><h3>Release and connect</h3><p>Submit through the Apple Books publishing portal, set rights and pricing, group the numbered volumes as a series, then add each final product URL here.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="books-section" aria-labelledby="print-title">
+    <div class="books-heading"><div><p class="books-kicker">Physical editions</p><h2 id="print-title">Proof locally. Scale with print on demand.</h2><p>The current interiors are US Letter and image-rich. Before sale, each needs a printer-specific color preflight plus a separate wrap cover sized for its exact binding, paper, and page count.</p></div></div>
+    <div class="books-print">
+      <article><h3>1. Classroom proof set</h3><p>Start with one or two bound copies of the picture story and youth volumes. Check dark pages, small labels, gutter clearance, and classroom handling before ordering more.</p></article>
+      <article><h3>2. Short-run and direct sales</h3><p><a href="https://www.lulu.com/" target="_blank" rel="noopener noreferrer">Lulu ↗</a> supports print-on-demand, full color, and Letter-size formats, which makes it a practical first proof and direct-order route.</p></article>
+      <article><h3>3. Bookstore distribution</h3><p><a href="https://www.ingramspark.com/plan-your-book/print/trim-sizes" target="_blank" rel="noopener noreferrer">IngramSpark ↗</a> supports up to 8.5×11-inch color interiors and wider retail distribution after ISBN, cover, CMYK, margin, and proof approval.</p></article>
+    </div>
+  </section>
+
+  <section class="books-section" aria-labelledby="poster-title">
+    <div class="books-heading"><div><p class="books-kicker">Large-format campaign kit</p><h2 id="poster-title">Print the 3×5-foot posters.</h2><p>Each PDF is built at its finished 36×60-inch size with vector type and a high-error-correction QR code pointing to a stable Orbitus landing page.</p></div></div>
+    <div class="books-posters">
+      <article class="books-poster"><img src="{{ "images/posters/orbitus-learning-classroom-36x60.webp" | relURL }}" width="900" height="1500" loading="lazy" alt="Learning classroom campaign poster preview"><div><h3>Learning Classroom</h3><p>36×60 inches · PDF · scan to /learn/</p><a href="{{ "downloads/posters/orbitus-learning-classroom-36x60.pdf" | relURL }}">Download print PDF</a></div></article>
+      <article class="books-poster"><img src="{{ "images/posters/rob-training-games-36x60.webp" | relURL }}" width="900" height="1500" loading="lazy" alt="ROB Training Games campaign poster preview"><div><h3>ROB Training Games</h3><p>36×60 inches · PDF · scan to the apps</p><a href="{{ "downloads/posters/rob-training-games-36x60.pdf" | relURL }}">Download print PDF</a></div></article>
+      <article class="books-poster"><img src="{{ "images/posters/building-rob-books-36x60.webp" | relURL }}" width="900" height="1500" loading="lazy" alt="Building ROB book series campaign poster preview"><div><h3>Building R.O.B. Books</h3><p>36×60 inches · PDF · scan to /books/</p><a href="{{ "downloads/posters/building-rob-books-36x60.pdf" | relURL }}">Download print PDF</a></div></article>
+    </div>
+  </section>
+</main>
+{{ end }}
