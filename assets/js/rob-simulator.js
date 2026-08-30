@@ -39,6 +39,12 @@ import {
   upgrades,
   weaponDamage,
 } from './rob-game-rules.mjs';
+import {
+  droidHousingMaterials,
+  readDroidProfile,
+  sanitizeDroidProfile,
+  writeDroidProfile,
+} from './rob-droid-profile.mjs';
 
 const root = document.querySelector('[data-rob-simulator]');
 if (root) {
@@ -59,7 +65,8 @@ if (root) {
   let upgradePoints = Math.max(0, Number(readProgress('robUpgradePoints', 0)) || 0);
   const upgradeLevels = Object.fromEntries(upgrades.map((upgrade) => [upgrade.id, Math.max(0, Math.min(upgrade.maximumLevel, Number(readProgress(`rob${upgrade.id}Level`, 0)) || 0))]));
   let energy = maximumEnergy(upgradeLevels.energyCapacity);
-  let selectedFinishID = readProgress('robRobotFinish', 'graphite'), selectedFaceColorID = readProgress('robFaceColor', 'lime'), selectedRangedID = readProgress('robRangedWeapon', 'shoulderGatling'), selectedMeleeID = readProgress('robMeleeWeapon', 'dualSabers');
+  let droidProfile = readDroidProfile();
+  let selectedFinishID = droidProfile.finish, selectedFaceColorID = droidProfile.faceColor, selectedRangedID = readProgress('robRangedWeapon', 'shoulderGatling'), selectedMeleeID = readProgress('robMeleeWeapon', 'dualSabers');
   const selectedFinish = () => finishes.find(({ id }) => id === selectedFinishID) || finishes[0];
   const selectedFaceColor = () => faceColors.find(({ id }) => id === selectedFaceColorID) || faceColors[0];
   const selectedRanged = () => rangedWeapons.find((weapon) => weapon.id === selectedRangedID && isUnlocked(weapon, highestCompletedLevel)) || rangedWeapons[0];
@@ -229,10 +236,15 @@ if (root) {
     [[-.12, 2.38], [.12, 2.38], [-.15, 2.25], [-.075, 2.215], [0, 2.2], [.075, 2.215], [.15, 2.25]].forEach(([x, y], index) => { const pixel = mesh(new THREE.SphereGeometry(index < 2 ? .047 : .037, 12, 8), smileMaterial, torso, x, y, -.34); pixel.name = index === 0 ? 'Face Smiley Left Eye' : index === 1 ? 'Face Smiley Right Eye' : index === 4 ? 'Face Smiley Center Smile' : 'Face Smiley Pixel'; });
     [-.16, .16].forEach((x) => { const antenna = mesh(new THREE.CylinderGeometry(.018, .018, .55, 8), steel, torso, x * 1.5, 2.77); antenna.rotation.z = x > 0 ? -.3 : .3; });
     [-1, 1].forEach((side) => { const arm = new THREE.Group(); arm.name = side < 0 ? 'Left Arm Assembly' : 'Right Arm Assembly'; arm.position.set(side * .7, 1.45, 0); arm.userData.side = side; torso.add(arm); armAssemblies.push(arm); let x = 0, y = 0, z = 0; for (let j = 0; j < 7; j += 1) { mesh(new THREE.SphereGeometry(j < 3 ? .1 : .07, 12, 8), j % 2 ? body : steel, arm, x, y, z); if (j < 6) { const link = mesh(new THREE.BoxGeometry(.13, .28, .13), steel, arm, x, y - .15, z - .04); link.rotation.z = side * (j < 2 ? -.2 : .08); } x += side * .045; y -= j < 3 ? .25 : .09; z -= j < 3 ? .04 : .12; } const grip = mesh(new THREE.CylinderGeometry(.055, .055, .28, 12), dark, arm, x, Math.max(-.9, y), z - .12); grip.rotation.x = Math.PI / 2; const saber = mesh(new THREE.CylinderGeometry(.035, .035, 1.55, 10), side < 0 ? green : cyan, arm, x, Math.max(-.9, y), z - .92); saber.rotation.x = Math.PI / 2; saber.visible = false; robotRig.sabers.push(saber); });
-    const gatling = new THREE.Group(); gatling.name = 'Right Shoulder Gatling'; gatling.position.set(.78, 1.65, -.1); torso.add(gatling); robotRig.gatling = gatling;
-    mesh(new THREE.BoxGeometry(.38, .3, .58), mat(0x030405, 0, .85), gatling, 0, 0, -.1);
-    const barrelCluster = new THREE.Group(); gatling.add(barrelCluster); robotRig.barrels = barrelCluster; [-.085, .085].forEach((x) => [-.085, .085].forEach((y) => { const barrel = mesh(new THREE.CylinderGeometry(.025, .025, .82, 10), mat(0x000000, 0, .95), barrelCluster, x, y, -.56); barrel.rotation.x = Math.PI / 2; }));
-    const lockLamp = mesh(new THREE.SphereGeometry(.085, 12, 8), mat(0xff182f, 0xff0018, .5), gatling, 0, .23, -.32); lockLamp.visible = false; robotRig.lockLamp = lockLamp;
+    const gatling = new THREE.Group(); gatling.name = 'Right Pan Servo'; gatling.position.set(.78, 1.65, -.1); torso.add(gatling); robotRig.gatling = gatling;
+    mesh(new THREE.CylinderGeometry(.18, .22, .12, 18), steel, gatling, 0, -.2, .02);
+    const gatlingTilt = new THREE.Group(); gatlingTilt.name = 'Gatling Tilt Servo'; gatling.add(gatlingTilt); robotRig.gatlingTilt = gatlingTilt;
+    mesh(new THREE.CylinderGeometry(.12, .12, .43, 16), steel, gatlingTilt, 0, 0, .03).rotation.z = Math.PI / 2;
+    mesh(new THREE.BoxGeometry(.38, .3, .58), mat(0x030405, 0, .85), gatlingTilt, 0, 0, -.1);
+    const barrelCluster = new THREE.Group(); gatlingTilt.add(barrelCluster); robotRig.barrels = barrelCluster; [-.085, .085].forEach((x) => [-.085, .085].forEach((y) => { const barrel = mesh(new THREE.CylinderGeometry(.025, .025, .82, 10), mat(0x000000, 0, .95), barrelCluster, x, y, -.56); barrel.rotation.x = Math.PI / 2; }));
+    const lockLamp = mesh(new THREE.SphereGeometry(.085, 12, 8), mat(0xff182f, 0xff0018, .5), gatlingTilt, 0, .23, -.32); lockLamp.visible = false; robotRig.lockLamp = lockLamp;
+    const blueEmitter = mesh(new THREE.SphereGeometry(.055, 12, 8), mat(0x38a8ff, 0x1578ff, .2), gatlingTilt, 0, -.17, -.39); blueEmitter.name = 'Virtual Blue Balloon Beam Emitter';
+    const targetBeam = mesh(new THREE.CylinderGeometry(.006, .006, 3, 6), new THREE.MeshBasicMaterial({ color: 0xff1838, transparent: true, opacity: .32, depthWrite: false }), gatlingTilt, 0, .23, -1.7); targetBeam.rotation.x = Math.PI / 2; targetBeam.visible = false; robotRig.targetBeam = targetBeam;
     const twinBlasters = new THREE.Group(); twinBlasters.name = 'Twin Blasters'; torso.add(twinBlasters); robotRig.twinBlasters = twinBlasters; robotRig.twinBlasterMounts = [];
     [-.62, .62].forEach((x, index) => { const mount = new THREE.Group(); mount.name = index ? 'Right Blaster Mount' : 'Left Blaster Mount'; mount.position.set(x, 1.25, 0); twinBlasters.add(mount); robotRig.twinBlasterMounts.push(mount); mesh(new THREE.BoxGeometry(.18, .16, .45), dark, mount, 0, 0, -.42); const barrel = mesh(new THREE.CylinderGeometry(.035, .045, .58, 10), cyan, mount, 0, 0, -.78); barrel.rotation.x = Math.PI / 2; });
     const arcCannon = new THREE.Group(); arcCannon.name = 'Arc Cannon'; arcCannon.position.set(.78, 1.65, -.1); torso.add(arcCannon); robotRig.arcCannon = arcCannon;
@@ -303,7 +315,8 @@ if (root) {
     ui.loadoutStatus.textContent = `${selectedFinish().name} finish · ${selectedFaceColor().name} smile · ${selectedRanged().name} · ${selectedMelee().name} · Speed L${upgradeLevels.speedBoost} (${Math.round(driveSpeedMultiplier(upgradeLevels.speedBoost) * 100)}%) · Energy L${upgradeLevels.energyCapacity} (${maximumEnergy(upgradeLevels.energyCapacity)} max) · Power L${upgradeLevels.weaponPower} · Targeting L${upgradeLevels.targetingComputer}`;
   };
   const applyLoadout = () => {
-    robotRig.finishMaterials.forEach((material) => material.color.setHex(selectedFinish().color));
+    const housingMaterial = droidHousingMaterials.find(({ id }) => id === droidProfile.material) || droidHousingMaterials[0];
+    robotRig.finishMaterials.forEach((material) => { material.color.setHex(selectedFinish().color); material.metalness = housingMaterial.metalness; material.roughness = housingMaterial.roughness; material.needsUpdate = true; });
     robotRig.faceMaterials.forEach((material) => { material.color.setHex(selectedFaceColor().color); material.emissive.setHex(selectedFaceColor().color); });
     robotRig.gatling.visible = selectedRangedID === 'shoulderGatling'; robotRig.twinBlasters.visible = selectedRangedID === 'twinBlasters'; robotRig.arcCannon.visible = selectedRangedID === 'arcCannon'; robotRig.hammer.visible = selectedMeleeID === 'powerHammer';
     robotRig.sabers.forEach((saber) => { saber.visible = selectedMeleeID === 'dualSabers' && Boolean(saberAnimation); });
@@ -396,7 +409,7 @@ if (root) {
     if (!discharge.fired) { say(`${weapon.name} needs ${Math.ceil(energyCost)} system energy. Hold position or collect an energy cell.`); return; }
     energy = discharge.energy;
     lastShot = elapsed; const targets = weapon.id === 'twinBlasters' ? [laserLock, secondaryLaserLock || laserLock] : [laserLock], lateralOffsets = weapon.id === 'twinBlasters' ? [-.62, .62] : [.78], shotHeight = weapon.id === 'twinBlasters' ? 1.25 : 1.65, radius = .04 + charge * .11 + (weapon.id === 'arcCannon' ? .06 : 0), length = .95 + charge * 1.9;
-    const color = weapon.id === 'arcCannon' ? 0xa66cff : weapon.id === 'twinBlasters' ? 0x38dfff : 0xff1838;
+    const color = weapon.id === 'arcCannon' ? 0xa66cff : 0x38dfff;
     playLaserShot(charge); targets.forEach((lockedTarget, index) => { const start = new THREE.Vector3(lateralOffsets[index], shotHeight, -.58).applyQuaternion(robot.quaternion).add(robot.position), target = lockedTarget.position.clone().add(new THREE.Vector3(0, 1, 0)), direction = target.sub(start).normalize(), bolt = mesh(new THREE.CylinderGeometry(radius, radius, length, 12), mat(color, color), scene); bolt.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction); bolt.position.copy(start).addScaledVector(direction, .7 + charge * .55); bolt.userData.velocity = direction.multiplyScalar(weapon.projectileSpeed + charge * 3.5); bolt.userData.damage = weaponDamage(weapon, charge); bolt.userData.charge = charge; bolt.userData.weapon = weapon; bolt.userData.target = lockedTarget; bolts.push(bolt); });
     if (weapon.id === 'twinBlasters' && secondaryLaserLock) say(`Twin Blasters dual lock confirmed — two beams fired at ${laserLock.userData.name} and ${secondaryLaserLock.userData.name} for ${Math.ceil(energyCost)} energy.`);
     else if (weapon.id === 'twinBlasters') say(`Twin Blasters fired both beams at ${laserLock.userData.name}. Upgrade the Targeting Computer for independent locks.`);
@@ -427,7 +440,7 @@ if (root) {
     const aimAt = (rig, target, scanPhase = 0) => { if (target) { const offset = target.position.clone().sub(robot.position), worldYaw = Math.atan2(-offset.x, -offset.z), localYaw = Math.atan2(Math.sin(worldYaw - robot.rotation.y), Math.cos(worldYaw - robot.rotation.y)); rig.rotation.y += (localYaw - rig.rotation.y) * .18; } else rig.rotation.y = Math.sin(now * 1.35 + scanPhase) * .9; };
     if (selectedRangedID === 'twinBlasters') { aimAt(robotRig.twinBlasterMounts[0], laserLock, 0); aimAt(robotRig.twinBlasterMounts[1], secondaryLaserLock || laserLock, .5); }
     else aimAt(selectedRangedID === 'arcCannon' ? robotRig.arcCannon : robotRig.gatling, laserLock);
-    robotRig.barrels.rotation.z += .035 + charge * .22; robotRig.lockLamp.visible = Boolean(laserLock); robotRig.lockLamp.scale.setScalar(laserLock ? 1 + Math.sin(now * 12) * .24 : 1); if (ui.lock) { const lockLabel = secondaryLaserLock ? `DUAL LOCK · ${laserLock.userData.name} + ${secondaryLaserLock.userData.name}` : laserLock && selectedRangedID === 'twinBlasters' && !upgradeLevels.targetingComputer ? `RED LOCK · ${laserLock.userData.name} · TARGETING UPGRADE REQUIRED` : laserLock ? `RED LOCK · ${laserLock.userData.name}` : 'SCANNING'; if (ui.lock.textContent !== lockLabel) ui.lock.textContent = lockLabel; ui.lock.classList.toggle('is-locked', Boolean(laserLock)); }
+    robotRig.gatlingTilt.rotation.x = laserLock ? -.06 : Math.sin(now * .7) * .13; robotRig.barrels.rotation.z += .035 + charge * .22; robotRig.lockLamp.visible = Boolean(laserLock); robotRig.targetBeam.visible = Boolean(laserLock && selectedRangedID === 'shoulderGatling'); robotRig.lockLamp.scale.setScalar(laserLock ? 1 + Math.sin(now * 12) * .24 : 1); if (ui.lock) { const lockLabel = secondaryLaserLock ? `DUAL LOCK · ${laserLock.userData.name} + ${secondaryLaserLock.userData.name}` : laserLock && selectedRangedID === 'twinBlasters' && !upgradeLevels.targetingComputer ? `RED LOCK · ${laserLock.userData.name} · TARGETING UPGRADE REQUIRED` : laserLock ? `RED LOCK · ${laserLock.userData.name}` : 'SCANNING'; if (ui.lock.textContent !== lockLabel) ui.lock.textContent = lockLabel; ui.lock.classList.toggle('is-locked', Boolean(laserLock)); }
     ui.laserButtons.forEach((button) => { button.classList.toggle('is-charging', laserChargeStarted !== undefined); button.style.setProperty('--laser-charge', `${Math.round(charge * 100)}%`); const compact = button.classList.contains('rob-sim__fire'); button.textContent = laserChargeStarted !== undefined ? `CHARGE ${Math.round(charge * 100)}%` : laserLock ? (compact ? `${selectedRanged().shortName.toUpperCase()} LOCK` : `${selectedRanged().name} locked · hold Q`) : (compact ? `${selectedRanged().shortName.toUpperCase()} SCAN` : `${selectedRanged().name} scanning · hold Q`); });
     ui.saberButtons.forEach((button) => { button.textContent = button.classList.contains('rob-sim__fire') ? selectedMelee().shortName.toUpperCase() : `${selectedMelee().name} · Space`; });
   };
@@ -575,8 +588,8 @@ if (root) {
     viewport.focus();
   });
   ui.start.addEventListener('click', () => { if (complete) reset(); else if (levelComplete) { levelIndex += 1; loadLevel(levelIndex); } running = true; startMusic(); playSound('mission-start'); ui.start.hidden = true; say(`Level ${levelIndex + 1}: clear the targets, collect every cell, solve the key and door when present, then dock.`); viewport.focus(); }); ui.reset.addEventListener('click', reset); root.querySelector('[data-sim-sound]').addEventListener('click', (event) => { soundEnabled = !soundEnabled; if (!soundEnabled) window.speechSynthesis?.cancel?.(); event.currentTarget.setAttribute('aria-pressed', String(soundEnabled)); event.currentTarget.textContent = soundEnabled ? '♪ Effects' : 'Effects off'; }); root.querySelector('[data-sim-music]').addEventListener('click', (event) => { musicEnabled = !musicEnabled; event.currentTarget.setAttribute('aria-pressed', String(musicEnabled)); event.currentTarget.textContent = musicEnabled ? '♫ Techno' : 'Music off'; if (musicEnabled && running) startMusic(); else stopMusic(); });
-  ui.finish.addEventListener('change', () => { selectedFinishID = ui.finish.value; saveProgress('robRobotFinish', selectedFinishID); applyLoadout(); say(`${selectedFinish().name} finish equipped.`); });
-  ui.faceColor.addEventListener('change', () => { selectedFaceColorID = ui.faceColor.value; saveProgress('robFaceColor', selectedFaceColorID); applyLoadout(); say(`${selectedFaceColor().name} smile equipped.`); });
+  ui.finish.addEventListener('change', () => { selectedFinishID = ui.finish.value; droidProfile = writeDroidProfile({ ...droidProfile, finish: selectedFinishID }); applyLoadout(); say(`${selectedFinish().name} finish equipped.`); });
+  ui.faceColor.addEventListener('change', () => { selectedFaceColorID = ui.faceColor.value; droidProfile = writeDroidProfile({ ...droidProfile, faceColor: selectedFaceColorID }); applyLoadout(); say(`${selectedFaceColor().name} smile equipped.`); });
   ui.ranged.addEventListener('change', () => { const requested = rangedWeapons.find(({ id }) => id === ui.ranged.value); if (!requested || !isUnlocked(requested, highestCompletedLevel)) { say(`Complete Level ${requested?.requiredLevel ?? 0} to unlock ${requested?.name ?? 'that weapon'}.`); updateWorkshop(); return; } selectedRangedID = requested.id; saveProgress('robRangedWeapon', selectedRangedID); applyLoadout(); say(`${requested.name} equipped.`); });
   ui.melee.addEventListener('change', () => { const requested = meleeWeapons.find(({ id }) => id === ui.melee.value); if (!requested || !isUnlocked(requested, highestCompletedLevel)) { say(`Complete Level ${requested?.requiredLevel ?? 0} to unlock ${requested?.name ?? 'that weapon'}.`); updateWorkshop(); return; } selectedMeleeID = requested.id; saveProgress('robMeleeWeapon', selectedMeleeID); applyLoadout(); say(`${requested.name} equipped.`); });
   ui.upgradeButtons.forEach((button) => button.addEventListener('click', () => {
@@ -585,5 +598,12 @@ if (root) {
     if (upgradePoints < cost) { say(`${cost - upgradePoints} more mission points needed for ${upgrade.name}.`); return; }
     upgradePoints -= cost; upgradeLevels[upgrade.id] += 1; saveProgress('robUpgradePoints', upgradePoints); saveProgress(`rob${upgrade.id}Level`, upgradeLevels[upgrade.id]); if (upgrade.id === 'energyCapacity') energy = Math.min(maximumEnergy(upgradeLevels.energyCapacity), energy + 60); updateWorkshop(); const benefit = upgrade.id === 'speedBoost' ? `${Math.round(driveSpeedMultiplier(upgradeLevels.speedBoost) * 100)}% drive speed` : upgrade.id === 'energyCapacity' ? `${maximumEnergy(upgradeLevels.energyCapacity)} max energy` : undefined; say(`${upgrade.name} upgraded to Level ${upgradeLevels[upgrade.id]}${benefit ? ` — ${benefit}.` : '.'}`);
   }));
+  window.addEventListener('rob:droid-profile', (event) => {
+    droidProfile = sanitizeDroidProfile(event.detail?.profile);
+    selectedFinishID = droidProfile.finish;
+    selectedFaceColorID = droidProfile.faceColor;
+    applyLoadout();
+    if (event.detail?.announce) say(`${droidProfile.name} loaded with ${droidProfile.material.replace(/([A-Z])/g, ' $1').toLowerCase()} housing.`);
+  });
   document.addEventListener('visibilitychange', () => { if (document.hidden) releaseAllInput(); }); addEventListener('pagehide', releaseAllInput); new ResizeObserver(resize).observe(viewport); reset(); resize(); animate();
 }

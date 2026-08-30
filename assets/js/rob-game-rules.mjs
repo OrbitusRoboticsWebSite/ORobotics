@@ -1,4 +1,4 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.09.08';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.09';
 export const MAX_ROB_HEALTH = 100;
 export const MAX_ROB_SHIELDS = 40;
 export const BASE_ROB_ENERGY = 100;
@@ -110,6 +110,9 @@ export const finishes = [
   { id: 'arcticWhite', name: 'Arctic White', color: 0xe5edf2 },
   { id: 'cobaltBlue', name: 'Cobalt Blue', color: 0x2769ba },
   { id: 'tacticalGreen', name: 'Tactical Green', color: 0x4d7151 },
+  { id: 'solarYellow', name: 'Solar Yellow', color: 0xf6c945 },
+  { id: 'plasmaPurple', name: 'Plasma Purple', color: 0x824de3 },
+  { id: 'makerPink', name: 'Maker Pink', color: 0xe24a9a },
 ];
 
 export const faceColors = [
@@ -122,7 +125,7 @@ export const faceColors = [
 ];
 
 export const rangedWeapons = [
-  { id: 'shoulderGatling', name: 'Shoulder Gatling', shortName: 'Gatling', requiredLevel: 0, projectileSpeed: 13, baseDamage: 1, chargeDamage: 2, baseEnergy: 4, chargeEnergy: 8 },
+  { id: 'shoulderGatling', name: 'Pan-Tilt Gatling', shortName: 'Gatling', requiredLevel: 0, projectileSpeed: 13, baseDamage: 1, chargeDamage: 2, baseEnergy: 4, chargeEnergy: 8 },
   { id: 'twinBlasters', name: 'Twin Blasters', shortName: 'Blasters', requiredLevel: 5, projectileSpeed: 18, baseDamage: 1, chargeDamage: 1, baseEnergy: 5, chargeEnergy: 9 },
   { id: 'arcCannon', name: 'Arc Cannon', shortName: 'Arc Cannon', requiredLevel: 15, projectileSpeed: 11, baseDamage: 2, chargeDamage: 3, baseEnergy: 8, chargeEnergy: 14 },
 ];

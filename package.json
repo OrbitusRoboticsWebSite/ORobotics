@@ -21,7 +21,7 @@
     "validate": "node scripts/validate-gallery.mjs",
     "validate:subpath": "node scripts/validate-subpath.mjs",
     "test:game": "node --test tests/rob-game-rules.test.mjs",
-    "test:lab": "node --test tests/electronics-lab-core.test.mjs tests/robot-lab-rob-missions.test.mjs tests/robot-lab-field-missions.test.mjs tests/robot-lab-passport-core.test.mjs",
+    "test:lab": "node --test tests/electronics-lab-core.test.mjs tests/robot-lab-rob-missions.test.mjs tests/robot-lab-field-missions.test.mjs tests/robot-lab-passport-core.test.mjs tests/rob-droid-profile.test.mjs",
     "test": "npm run test:game && npm run test:lab && npm run build && npm run validate && npm run validate:subpath"
   },
   "repository": {

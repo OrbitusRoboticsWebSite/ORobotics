@@ -267,6 +267,31 @@
     <aside><strong>Installed-hardware boundary</strong><p>Builds involving the 12 V inverter, its AC outlets, the 48 V arm supply, high-current 24 V conductors, and moving mechanisms are diagram-only learning activities. Real work requires the exact manufacturer documents, measured loads, rated protection, isolation, strain relief, trained adults or technicians, and ROB’s formal risk assessment.</p></aside>
   </section>
 
+  <section class="rob-droid-builder" data-droid-builder aria-labelledby="droid-builder-title">
+    <header>
+      <div><p class="circuit-kicker">Your robot takes shape</p><h2 id="droid-builder-title">Assemble it. Color it. Take it training.</h2></div>
+      <p>Starting with ROB’s build tutorials, each finished chapter snaps a completed system onto your personal droid. Choose protective housing, create a portable Droid Code, and use the same visual identity in ROB Training on the web, iPhone, iPad, or Apple Vision Pro.</p>
+    </header>
+    <div class="rob-droid-builder__grid">
+      <div class="rob-droid-preview" data-droid-preview aria-label="Preview of the robot sections assembled by completed tutorials">
+        <div class="droid-preview__laser"><i></i><b></b></div><div class="droid-preview__head">••<span>‿</span></div><div class="droid-preview__torso"><i></i><i></i></div><div class="droid-preview__arms"></div><div class="droid-preview__treads"><i></i><i></i></div><small>YOUR CIRCUIT QUEST DROID</small>
+      </div>
+      <div class="rob-droid-builder__controls">
+        <label>Droid designation<input data-droid-name maxlength="20" autocomplete="nickname"></label>
+        <label>Housing color<select data-droid-finish></select></label>
+        <label>Housing material<select data-droid-material></select></label>
+        <label>Panel style<select data-droid-housing></select></label>
+        <div class="rob-droid-builder__weapon"><span>VIRTUAL TOOL MOUNT</span><strong>Side pan-tilt Gatling</strong><p>A yaw servo scans left and right, a tilt servo aims up and down, a red game dot confirms lock, and a blue game beam pops simulated balloons and tags training targets.</p><div><i></i><b></b><em>RED TARGET</em><strong>BLUE TRAINING BEAM</strong></div></div>
+        <label class="rob-droid-builder__code">Portable Droid Code<textarea data-droid-code rows="3" spellcheck="false" autocapitalize="off"></textarea></label>
+        <div class="rob-droid-builder__actions"><button type="button" data-droid-copy>Copy Droid Code</button><button type="button" data-droid-import>Import Droid Code</button><a href="{{ "rob-simulator/" | relURL }}">Train this droid ↗</a></div>
+        <p data-droid-status role="status" aria-live="polite">Droid profile ready.</p>
+      </div>
+    </div>
+    <div class="rob-droid-sections" data-droid-sections aria-label="Robot section assembly progress"></div>
+    <div class="rob-droid-builder__handoff"><article><span>01</span><strong>LEARN</strong><p>Wire Circuit Quest builds. Chapter completion assembles a tested robot section.</p></article><i>→</i><article><span>02</span><strong>CUSTOMIZE</strong><p>Choose color, material, panel style, and a kid-safe virtual training loadout.</p></article><i>→</i><article><span>03</span><strong>PLAY TOGETHER</strong><p>Import the checked code. Nearby battles exchange the profile so every pilot sees the same droid.</p></article></div>
+    <aside><strong>Laser safety boundary</strong><p>The red target dot and blue “balloon popper” are fictional simulator effects—not instructions for building or installing a real laser. Never aim a real laser at a person, animal, vehicle, aircraft, or reflective surface. Use only age-appropriate products exactly as labeled with responsible adult supervision.</p></aside>
+  </section>
+
   <section id="maker-reward" class="maker-passport" data-maker-passport aria-labelledby="maker-passport-title">
     <header>
       <div><p class="circuit-kicker">Optional learner passport</p><h2 id="maker-passport-title">Remember the maker. Reward the journey.</h2></div>
@@ -384,4 +409,7 @@
 {{ $passportOptions := dict "targetPath" "js/robot-lab-passport.js" "format" "esm" "minify" hugo.IsProduction }}
 {{ $passport := resources.Get "js/robot-lab-passport.js" | js.Build $passportOptions | fingerprint }}
 <script type="module" src="{{ $passport.RelPermalink }}" integrity="{{ $passport.Data.Integrity }}"></script>
+{{ $droidOptions := dict "targetPath" "js/rob-droid-builder.js" "format" "esm" "minify" hugo.IsProduction }}
+{{ $droid := resources.Get "js/rob-droid-builder.js" | js.Build $droidOptions | fingerprint }}
+<script type="module" src="{{ $droid.RelPermalink }}" integrity="{{ $droid.Data.Integrity }}"></script>
 {{ end }}
