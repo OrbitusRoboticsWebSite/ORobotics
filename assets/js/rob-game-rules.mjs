@@ -1,4 +1,4 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.09.09';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.10';
 export const MAX_ROB_HEALTH = 100;
 export const MAX_ROB_SHIELDS = 40;
 export const BASE_ROB_ENERGY = 100;
@@ -23,6 +23,20 @@ export const updateDriveEnergy = ({ energy, maximum, moving, delta, capacityLeve
   maximum,
   energy + delta * (moving ? -6.6 : passiveEnergyRecharge(capacityLevel)),
 ));
+
+export const BASE_FLIPPER_ENERGY_COST = 8;
+export const BASE_FLIPPER_DURATION = 2.8;
+export const baseFlipperPresentation = (elapsedSinceStart) => {
+  if (!Number.isFinite(elapsedSinceStart) || elapsedSinceStart < 0 || elapsedSinceStart >= BASE_FLIPPER_DURATION) {
+    return { active: false, phase: 0, angle: 0, lift: 0, pitch: 0 };
+  }
+  let phase;
+  if (elapsedSinceStart < .6) phase = elapsedSinceStart / .6;
+  else if (elapsedSinceStart < 1.55) phase = 1;
+  else phase = 1 - (elapsedSinceStart - 1.55) / (BASE_FLIPPER_DURATION - 1.55);
+  const eased = .5 - Math.cos(Math.max(0, Math.min(1, phase)) * Math.PI) / 2;
+  return { active: true, phase: eased, angle: -.95 * eased, lift: .24 * eased, pitch: .075 * eased };
+};
 
 export const resolveAxisSlidingMotion = ({ start, end, canOccupy, iterations = 10 }) => {
   if (canOccupy(end)) return { position: { x: end.x, z: end.z }, collided: false };

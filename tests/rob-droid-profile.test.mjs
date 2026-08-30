@@ -13,7 +13,7 @@ import { finishes } from '../assets/js/rob-game-rules.mjs';
 test('a Droid Code round-trips every shared cosmetic and assembled section', () => {
   const profile = sanitizeDroidProfile({
     name: 'Nova 7', finish: 'plasmaPurple', faceColor: 'cyan', material: 'brushedAluminum', housing: 'festivalArmor',
-    sections: ['treads', 'torso', 'cameraNetwork'],
+    sections: ['treads', 'torso', 'cameraNetwork', 'baseFlipper', 'voiceAudio', 'showReady'],
   });
   assert.deepEqual(decodeDroidProfile(encodeDroidProfile(profile)), profile);
 });
@@ -43,6 +43,15 @@ test('robot sections assemble only after every build in their range is complete'
 test('imported robot sections survive on a device without matching local progress', () => {
   const profile = profileWithCurriculum({ sections: ['treads', 'torso'] }, []);
   assert.deepEqual(profile.sections, ['treads', 'torso']);
+});
+
+test('book-bridge build ranges assemble the lift, audio, and show-ready sections', () => {
+  const through90 = Array.from({ length: 90 }, (_, index) => index);
+  const progress = droidSectionProgress(through90);
+  assert.equal(progress.find(({ id }) => id === 'baseFlipper').required, 4);
+  assert.equal(progress.find(({ id }) => id === 'voiceAudio').required, 5);
+  assert.equal(progress.find(({ id }) => id === 'showReady').required, 1);
+  assert.deepEqual(profileWithCurriculum({}, through90).sections.slice(-3), ['baseFlipper', 'voiceAudio', 'showReady']);
 });
 
 test('droid builder and training game expose the same finish palette', () => {

@@ -1,0 +1,203 @@
+const port = (id, label, position, tone = 'signal') => ({ id, label, className: `lab-port--${tone} ${position}` });
+const box = (id, label, badge, x, y, ports, tone = 'purple') => ({ id, type: 'systembox', label, badge, x, y, ports, tone });
+const control = (id, label, set, readout) => ({ id, label, set, readout });
+const mission = (config) => ({ ...config, objectives: config.objectiveSpecs.map(([text, key]) => [text, (state) => Boolean(state[key])]) });
+
+const baseController = (x, y, ports) => box('base', 'Arduino base controller', 'BASE CONTROL', x, y, ports, 'cyan');
+const flipper = (x, y, ports) => ({ id: 'flipper', type: 'flipper', label: 'Motorized base lift flipper', x, y, ports });
+const speaker = (id, label, x, y, ports) => ({ id, type: 'speaker', label, x, y, ports });
+const microphone = (x, y, ports) => ({ id: 'mic', type: 'microphone', label: 'Conference microphone', x, y, ports });
+
+export function createRobExpressionMissions(edge) {
+  return [
+    mission({
+      icon: '🛞', tier: 'Book bridge · Base recovery', difficulty: 'Engineer', kicker: 'Build 81 · Flipper energy', title: 'Give ROB’s base a lift flipper',
+      intro: 'Add a separately driven flipper motor to the tread base so the virtual mechanism can push against the floor and raise the chassis.',
+      guide: 'The base flipper is a third motor channel, not part of either tread. Its complete power loop needs a rated driver, current limit, return, and a neutral state.',
+      success: 'ROB’s virtual base lifts while both treads remain independently stopped.',
+      hints: ['Connect protected 24 V and 0 V to the flipper driver.', 'Connect both driver outputs to the flipper motor.', 'Inspect the isolated mechanism before running the low-power lift test.'],
+      components: [
+        box('bus', 'Protected 24 V base branch', '24 V FLIPPER', 9, 52, [port('pos', '24V+', 'port-right-top', 'positive'), port('neg', '0V', 'port-right-bottom', 'ground')], 'orange'),
+        box('driver', 'Current-limited H-bridge', 'FLIPPER DRIVER', 48, 52, [port('vm', 'VM', 'port-left-top', 'positive'), port('gnd', 'P−', 'port-left-bottom', 'ground'), port('a', 'M A', 'port-right-top'), port('b', 'M B', 'port-right-bottom')], 'cyan'),
+        flipper(86, 52, [port('a', 'A', 'port-left-top'), port('b', 'B', 'port-left-bottom')]),
+      ],
+      required: [edge('bus.pos', 'driver.vm'), edge('bus.neg', 'driver.gnd'), edge('driver.a', 'flipper.a'), edge('driver.b', 'flipper.b')],
+      supply: 24, resistance: 8, action: 'robot-flipper-power', completeKeys: ['flipperInspectSeen', 'flipperLiftSeen'],
+      objectiveSpecs: [['Build the complete motor-energy loop', 'exact'], ['Inspect clearance and restraints', 'flipperInspectSeen'], ['Lift the virtual base', 'flipperLiftSeen']],
+      noteTitle: 'A flipper changes the support polygon', note: 'Pushing the flipper down shifts load between the flipper tip and treads, so current, traction, center of mass, hinge load, and tip-over margin all change. This is a virtual mechanism lesson, not a dimensioned build plan.',
+      robot: { mode: 'flipper', labels: ['MOTOR LOOP', 'BASE HEIGHT', 'TREAD STATE'], code: 'treads = neutral\nflipper = boundedLift(currentLimit, angleLimit)', controls: [control('flipper-inspect', 'Inspect lift envelope', { flipperInspectSeen: true }, ['OPEN + RETURN', '0 mm', 'NEUTRAL']), control('flipper-lift', 'Run low-power lift', { flipperLiftSeen: true, flipperAngle: 42 }, ['CURRENT LIMITED', '+86 mm', 'L 0.00 / R 0.00'])] },
+    }),
+    mission({
+      icon: '↕️', tier: 'Book bridge · Base recovery', difficulty: 'Coder', kicker: 'Build 82 · Direction and brake', title: 'Command the flipper without moving the treads',
+      intro: 'Wire dedicated PWM, direction, and brake signals for the lift motor, then prove that a flipper command cannot leak into either tread channel.',
+      guide: 'One motor command needs an explicit owner and safe default. Direction chooses polarity, PWM bounds effort, and brake or neutral behavior must be measured.',
+      success: 'Deploy, hold, and retract affect only the base flipper.',
+      hints: ['Connect FLIP PWM, DIR, and BRAKE to matching driver inputs.', 'Share the logic reference.', 'Test deploy, hold, and retract in that order.'],
+      components: [
+        baseController(18, 50, [port('pwm', 'D6 PWM', 'port-right-top'), port('dir', 'D29 DIR', 'port-right-middle'), port('brake', 'D7 BRAKE', 'port-right-bottom'), port('gnd', 'GND', 'port-bottom-right', 'ground')]),
+        box('driver', 'Flipper motor driver', 'PWM · DIR · BRAKE', 58, 50, [port('pwm', 'PWM', 'port-left-top'), port('dir', 'DIR', 'port-left-middle'), port('brake', 'BRAKE', 'port-left-bottom'), port('gnd', 'GND', 'port-bottom-left', 'ground'), port('motor', 'MOTOR', 'port-right-middle')], 'green'),
+        flipper(89, 50, [port('drive', 'DRIVE', 'port-left-middle')]),
+      ],
+      required: [edge('base.pwm', 'driver.pwm'), edge('base.dir', 'driver.dir'), edge('base.brake', 'driver.brake'), edge('base.gnd', 'driver.gnd'), edge('driver.motor', 'flipper.drive')],
+      supply: 5, resistance: 100, action: 'robot-flipper-command', completeKeys: ['flipperDeploySeen', 'flipperHoldSeen', 'flipperRetractSeen'],
+      objectiveSpecs: [['Wire the dedicated command channel', 'exact'], ['Deploy without tread motion', 'flipperDeploySeen'], ['Hold the pose safely', 'flipperHoldSeen'], ['Retract to the travel envelope', 'flipperRetractSeen']],
+      noteTitle: 'Neutral is a specified behavior', note: 'Preserved base firmware maps flipper speed to D6, brake to D7, and direction to D29; those are historical evidence, not proof of the present harness. Coast, brake, hold torque, and mechanical self-locking are different and must be verified under restraint.',
+      robot: { mode: 'flipper', labels: ['COMMAND', 'ANGLE', 'LEFT / RIGHT'], code: 'setFlipper(clamp(command))\nsetTreads(0, 0)', controls: [control('flipper-deploy', 'Deploy at 25%', { flipperDeploySeen: true, flipperAngle: 42 }, ['+0.25', '42°', '0.00 / 0.00']), control('flipper-hold', 'Command safe hold', { flipperHoldSeen: true }, ['HOLD', '42°', '0.00 / 0.00']), control('flipper-retract', 'Retract to travel', { flipperRetractSeen: true, flipperAngle: 0 }, ['−0.20', '0°', '0.00 / 0.00'])] },
+    }),
+    mission({
+      icon: '📐', tier: 'Book bridge · Base recovery', difficulty: 'Engineer', kicker: 'Build 83 · Position feedback', title: 'Know where the flipper actually is',
+      intro: 'Return a home switch and motion feedback to the base controller so a command is checked against measured mechanism state.',
+      guide: 'Time or PWM alone does not prove angle. A home reference, bounded position estimate, current observation, and timeout make failures visible.',
+      success: 'The controller homes the flipper and rejects a simulated jam instead of pushing forever.',
+      hints: ['Wire the normally closed HOME return.', 'Wire motion feedback to the counter input.', 'Home first, then inject the jam and watch the timeout.'],
+      components: [
+        baseController(20, 50, [port('home', 'HOME', 'port-right-top'), port('tach', 'TACH', 'port-right-middle'), port('gnd', 'GND', 'port-right-bottom', 'ground')]),
+        flipper(66, 50, [port('home', 'HOME NC', 'port-left-top'), port('tach', 'TACH', 'port-left-middle'), port('gnd', 'GND', 'port-left-bottom', 'ground')]),
+      ],
+      required: [edge('flipper.home', 'base.home'), edge('flipper.tach', 'base.tach'), edge('flipper.gnd', 'base.gnd')],
+      supply: 5, resistance: 10000, action: 'robot-flipper-feedback', completeKeys: ['flipperHomeSeen', 'flipperJamSeen'],
+      objectiveSpecs: [['Wire home, motion, and reference', 'exact'], ['Establish the travel reference', 'flipperHomeSeen'], ['Detect and stop a simulated jam', 'flipperJamSeen']],
+      noteTitle: 'Commanded motion is not measured motion', note: 'A stalled mechanism may draw current without changing angle. Production monitoring combines the feedback actually available—switch, encoder or tach, current, time, and IMU—with conservative thresholds and a local stop.',
+      robot: { mode: 'flipper', labels: ['HOME', 'MOTION', 'FAULT RESPONSE'], code: 'if (commanded && !motionBeforeDeadline) stopFlipper();', controls: [control('flipper-home', 'Home slowly', { flipperHomeSeen: true, flipperAngle: 0 }, ['NC FOUND', '0°', 'READY']), control('flipper-jam', 'Inject blocked motion', { flipperJamSeen: true }, ['CLOSED', '0 COUNTS', 'TIMEOUT · STOP'])] },
+    }),
+    mission({
+      icon: '⚖️', tier: 'Book bridge · Mechanics', difficulty: 'Inventor', kicker: 'Build 84 · Recovery state', title: 'Lift the base without tipping ROB',
+      intro: 'Combine flipper angle, chassis tilt, current, and tread neutral state into a cautious recovery sequence.',
+      guide: 'A flipper can help cross an edge or change contact geometry, but it can also shrink stability margin. Recovery is a state machine with aborts—not one long motor command.',
+      success: 'ROB raises, pauses, verifies stability, and returns to travel pose.',
+      hints: ['Connect IMU and current observations to the recovery controller.', 'Connect the controller output to the flipper channel.', 'Run the stable case and then the tilt-abort case.'],
+      components: [
+        box('sensors', 'Tilt + current observations', 'IMU · AMPS', 12, 32, [port('tilt', 'TILT', 'port-right-top'), port('amps', 'AMPS', 'port-right-bottom')], 'green'),
+        box('recovery', 'Base recovery state machine', 'CHECK · LIFT · ABORT', 53, 50, [port('tilt', 'TILT', 'port-left-top'), port('amps', 'AMPS', 'port-left-bottom'), port('out', 'FLIP', 'port-right-middle')], 'cyan'),
+        flipper(89, 58, [port('command', 'CMD', 'port-left-middle')]),
+      ],
+      required: [edge('sensors.tilt', 'recovery.tilt'), edge('sensors.amps', 'recovery.amps'), edge('recovery.out', 'flipper.command')],
+      supply: 5, resistance: 100, action: 'robot-flipper-recovery', completeKeys: ['recoveryStableSeen', 'recoveryAbortSeen'],
+      objectiveSpecs: [['Wire the recovery evidence loop', 'exact'], ['Complete a stable lift cycle', 'recoveryStableSeen'], ['Abort on unsafe tilt', 'recoveryAbortSeen']],
+      noteTitle: 'Center of mass decides the safe pose', note: 'The support polygon must contain the projected center of mass with margin. Floor friction, slope, payload, arm pose, moving liquid, cable pull, and flipper contact can all change the result. Real recovery needs a guarded test plan.',
+      robot: { mode: 'flipper', labels: ['CHASSIS TILT', 'FLIPPER', 'STATE'], code: 'CHECK → LIFT → VERIFY → HOLD → RETRACT\nunsafe tilt/current → STOP', controls: [control('recovery-stable', 'Run stable lift cycle', { recoveryStableSeen: true, flipperAngle: 46 }, ['6°', '46°', 'VERIFIED']), control('recovery-abort', 'Simulate rising tilt', { recoveryAbortSeen: true, flipperAngle: 18 }, ['17°', '18°', 'ABORT · RETRACT'])] },
+    }),
+    mission({
+      icon: '🔊', tier: 'Book bridge · Robot audio', difficulty: 'Maker', kicker: 'Build 85 · Speaker energy', title: 'Power ROB’s speaker system',
+      intro: 'Give ROB’s left and right speakers a protected low-voltage power/interface path so electrical energy can become sound.',
+      guide: 'A speaker is a transducer: current in its voice coil creates a changing magnetic force that moves a cone and pushes air.',
+      success: 'Both virtual speakers convert the test tone into matching air-pressure waves.',
+      hints: ['Connect the protected audio supply to the interface.', 'Wire separate left and right output pairs.', 'Run a quiet channel test before the music test.'],
+      components: [
+        box('power', 'Protected low-voltage audio supply', 'AUDIO POWER', 8, 52, [port('pos', '+', 'port-right-top', 'positive'), port('neg', '−', 'port-right-bottom', 'ground')], 'orange'),
+        box('audio', 'Rated speaker interface', 'L / R AUDIO', 48, 52, [port('pos', 'P+', 'port-left-top', 'positive'), port('neg', 'P−', 'port-left-bottom', 'ground'), port('left', 'LEFT', 'port-right-top'), port('right', 'RIGHT', 'port-right-bottom')], 'cyan'),
+        speaker('speakerL', 'Left ROB speaker', 84, 28, [port('in', 'IN', 'port-left-middle')]),
+        speaker('speakerR', 'Right ROB speaker', 84, 74, [port('in', 'IN', 'port-left-middle')]),
+      ],
+      required: [edge('power.pos', 'audio.pos'), edge('power.neg', 'audio.neg'), edge('audio.left', 'speakerL.in'), edge('audio.right', 'speakerR.in')],
+      supply: 12, resistance: 8, action: 'robot-speaker-power', completeKeys: ['speakerChannelSeen', 'speakerToneSeen'],
+      objectiveSpecs: [['Build power and both audio paths', 'exact'], ['Check each speaker quietly', 'speakerChannelSeen'], ['Play the virtual test tone', 'speakerToneSeen']],
+      noteTitle: 'Sound is an energy chain', note: 'Digital samples become an analog voltage, the output stage supplies current, the magnetic motor moves the cone, and air carries pressure changes to ears. Ratings, enclosure, impedance, ventilation, and hearing-safe level all matter.',
+      robot: { mode: 'audio', labels: ['CHANNELS', 'OUTPUT LEVEL', 'AIR PRESSURE'], code: 'samples → output stage → voice coil → cone → sound', controls: [control('speaker-channel', 'Check L then R', { speakerChannelSeen: true, speakerLevel: .18 }, ['L ✓ / R ✓', 'QUIET', 'SEPARATE']), control('speaker-tone', 'Play 440 Hz test tone', { speakerToneSeen: true, speakerLevel: .45 }, ['L + R', '−18 dBFS', 'STEADY WAVE'])] },
+    }),
+    mission({
+      icon: '🎛️', tier: 'Book bridge · Digital audio', difficulty: 'Coder', kicker: 'Build 86 · Audio data path', title: 'Send samples from Cerebro to the speakers',
+      intro: 'Connect Cerebro’s generated audio stream to a bounded audio interface without confusing digital samples with speaker power.',
+      guide: 'The computer carries numbers that describe pressure over time. A converter and output stage reconstruct a changing electrical signal; the speaker power path remains local.',
+      success: 'A clean sample stream reaches both speakers without starving robot control.',
+      hints: ['Connect Cerebro AUDIO to the interface DATA input.', 'Connect the interface outputs to both speakers.', 'Start a 48 kHz stream and inspect underruns.'],
+      components: [
+        { id: 'cerebro', type: 'computer', label: 'Cerebro Mac mini', badge: 'CEREBRO', x: 12, y: 52, ports: [port('audio', 'AUDIO', 'port-right-middle')] },
+        box('interface', 'USB/Bluetooth audio boundary', 'DAC + OUTPUT', 50, 52, [port('data', 'DATA', 'port-left-middle'), port('left', 'L', 'port-right-top'), port('right', 'R', 'port-right-bottom')], 'green'),
+        speaker('speakerL', 'Left ROB speaker', 86, 28, [port('in', 'IN', 'port-left-middle')]),
+        speaker('speakerR', 'Right ROB speaker', 86, 74, [port('in', 'IN', 'port-left-middle')]),
+      ],
+      required: [edge('cerebro.audio', 'interface.data'), edge('interface.left', 'speakerL.in'), edge('interface.right', 'speakerR.in')],
+      supply: 5, resistance: 100, action: 'robot-audio-stream', completeKeys: ['audioFormatSeen', 'audioBufferSeen'],
+      objectiveSpecs: [['Wire data and output channels', 'exact'], ['Negotiate a sample format', 'audioFormatSeen'], ['Verify bounded buffering', 'audioBufferSeen']],
+      noteTitle: 'Latency is accumulated waiting', note: 'Sample rate, buffer size, transport, resampling, and scheduling add delay. Music tolerates more buffering than a spoken conversation; neither audio queue may delay a control or STOP message.',
+      robot: { mode: 'audio', labels: ['FORMAT', 'BUFFER', 'CONTROL EFFECT'], code: '48 kHz · stereo · bounded ring buffer\nold optional audio may drop; STOP never waits', controls: [control('audio-format', 'Negotiate audio format', { audioFormatSeen: true }, ['48 kHz / 16-bit', 'EMPTY', 'NONE']), control('audio-buffer', 'Run bounded stream', { audioBufferSeen: true, speakerLevel: .34 }, ['48 kHz / STEREO', '12 ms · 0 XRUN', 'NONE'])] },
+    }),
+    mission({
+      icon: '🎵', tier: 'Book bridge · Techno engine', difficulty: 'Inventor', kicker: 'Build 87 · Generative soundtrack', title: 'Play ROB Training techno through ROB',
+      intro: 'Route the game’s locally generated kick, bass, hats, and melody through a level meter and limiter before the speaker output.',
+      guide: 'Several waveforms add together. Headroom and a limiter prevent their sum from clipping while a hearing-safe master level protects listeners.',
+      success: 'ROB’s speaker cones pulse with an original procedural techno loop that stays below the virtual limit.',
+      hints: ['Connect the techno engine to the meter/limiter.', 'Connect limited audio to the speaker system.', 'Compare the normal mix with an intentionally hot mix.'],
+      components: [
+        box('music', 'ROB Training techno engine', 'KICK · BASS · HATS', 12, 50, [port('out', 'MIX', 'port-right-middle')], 'purple'),
+        box('limiter', 'Meter + master limiter', 'HEADROOM', 52, 50, [port('in', 'IN', 'port-left-middle'), port('out', 'SAFE OUT', 'port-right-middle')], 'cyan'),
+        speaker('speaker', 'ROB speaker pair', 88, 50, [port('in', 'L + R', 'port-left-middle')]),
+      ],
+      required: [edge('music.out', 'limiter.in'), edge('limiter.out', 'speaker.in')],
+      supply: 5, resistance: 100, action: 'robot-techno', completeKeys: ['technoMixSeen', 'limiterSeen'],
+      objectiveSpecs: [['Wire the virtual mix chain', 'exact'], ['Play the normal generative loop', 'technoMixSeen'], ['Catch a hot mix with the limiter', 'limiterSeen']],
+      noteTitle: 'The soundtrack is code', note: 'ROB Training schedules original synthesized notes and percussion locally. Tempo and note patterns can respond to a level without downloading a recording. A real public demo still needs volume limits, quiet zones, and an operator mute.',
+      robot: { mode: 'audio', labels: ['MIX', 'PEAK', 'SPEAKER STATE'], code: 'kick + hats + bass + melody → master gain → limiter', controls: [control('techno-play', 'Play ROB techno', { technoMixSeen: true, speakerLevel: .62 }, ['4 SYNTH LAYERS', '−8 dBFS', 'PULSING']), control('techno-hot', 'Test hot mix', { limiterSeen: true, speakerLevel: .8 }, ['SUM > 1.0', 'LIMITED · NO CLIP', 'HEARING-SAFE SIM'])] },
+    }),
+    mission({
+      icon: '🎙️', tier: 'Book bridge · Far-field voice', difficulty: 'Maker', kicker: 'Build 88 · Conference microphone', title: 'Help ROB hear a distant command',
+      intro: 'Connect a conference microphone to Cerebro and compare a close voice with a distant voice mixed with room noise.',
+      guide: 'A microphone is another transducer. Air pressure moves a diaphragm; electronics turn that movement into samples. Distance reduces direct sound relative to noise and reflections.',
+      success: 'Cerebro receives the microphone stream and labels the far-field sample as less certain.',
+      hints: ['Connect the conference microphone’s USB/audio link.', 'Connect the visible privacy indicator.', 'Compare close and far-field signal-to-noise ratio.'],
+      components: [
+        microphone(18, 50, [port('usb', 'USB AUDIO', 'port-right-top'), port('light', 'ACTIVE', 'port-right-bottom')]),
+        { id: 'cerebro', type: 'computer', label: 'Cerebro voice input', badge: 'CEREBRO', x: 64, y: 38, ports: [port('mic', 'MIC', 'port-left-middle')] },
+        box('notice', 'Visible microphone notice', 'MIC STATUS', 64, 78, [port('light', 'LIGHT', 'port-left-middle')], 'orange'),
+      ],
+      required: [edge('mic.usb', 'cerebro.mic'), edge('mic.light', 'notice.light')],
+      supply: 5, resistance: 100, action: 'robot-far-field-mic', completeKeys: ['micCloseSeen', 'micFarSeen'],
+      objectiveSpecs: [['Wire audio and activity notice', 'exact'], ['Measure a close command', 'micCloseSeen'], ['Measure a distant noisy command', 'micFarSeen']],
+      noteTitle: 'Loudness is not understanding', note: 'Far-field speech depends on distance, direction, room reflections, crowd noise, microphone placement, automatic gain, and model quality. Amplifying everything also amplifies noise; uncertain speech should ask for clarification.',
+      robot: { mode: 'acoustic', labels: ['DISTANCE', 'SNR', 'TRANSCRIPT CONFIDENCE'], code: 'pressure → microphone → samples → speech recognizer\nlow confidence → ask again', controls: [control('mic-close', 'Speak from 1 m', { micCloseSeen: true, micLevel: .7 }, ['1 m', '+22 dB', '0.96']), control('mic-far', 'Speak from 7 m + crowd', { micFarSeen: true, micLevel: .25 }, ['7 m', '+5 dB', '0.58 · CLARIFY'])] },
+    }),
+    mission({
+      icon: '🗣️', tier: 'Book bridge · Voice DSP', difficulty: 'Engineer', kicker: 'Build 89 · Hear while speaking', title: 'Separate ROB’s voice from the learner’s command',
+      intro: 'Feed the speaker reference and conference microphone into an echo-control stage before speech recognition.',
+      guide: 'When ROB speaks or plays music, its own speakers reach its microphone. Echo cancellation uses a reference copy of the output to estimate and reduce that known contribution.',
+      success: 'The virtual recognizer hears “ROB stop” through quiet techno and rejects an ambiguous crowd fragment.',
+      hints: ['Connect microphone audio to the echo-control input.', 'Connect a copy of speaker output as the reference.', 'Send cleaned audio to Cerebro, then test clear and ambiguous phrases.'],
+      components: [
+        microphone(9, 32, [port('out', 'MIC', 'port-right-middle')]),
+        speaker('speaker', 'ROB speaker reference', 9, 76, [port('ref', 'REF', 'port-right-middle')]),
+        box('dsp', 'Echo control + voice activity', 'AEC · VAD', 50, 52, [port('mic', 'MIC', 'port-left-top'), port('ref', 'REF', 'port-left-bottom'), port('clean', 'CLEAN', 'port-right-middle')], 'green'),
+        { id: 'cerebro', type: 'computer', label: 'Cerebro speech recognizer', badge: 'CEREBRO', x: 88, y: 52, ports: [port('audio', 'AUDIO', 'port-left-middle')] },
+      ],
+      required: [edge('mic.out', 'dsp.mic'), edge('speaker.ref', 'dsp.ref'), edge('dsp.clean', 'cerebro.audio')],
+      supply: 5, resistance: 100, action: 'robot-echo-command', completeKeys: ['echoCancelSeen', 'voiceClarifySeen'],
+      objectiveSpecs: [['Wire microphone, reference, and cleaned output', 'exact'], ['Recognize a clear stop phrase', 'echoCancelSeen'], ['Reject an uncertain command', 'voiceClarifySeen']],
+      noteTitle: 'Speech recognition produces evidence, not authority', note: 'Echo control improves the signal but does not prove the speaker’s identity or intent. A transcript must still pass confidence, command grammar, operator authority, freshness, and safety checks before any action is considered.',
+      robot: { mode: 'acoustic', labels: ['ECHO RETURN', 'TRANSCRIPT', 'DECISION'], code: 'cleanAudio → transcript + confidence\nvalidate(intent, authority, freshness) before action', controls: [control('echo-stop', 'Say “ROB stop” over techno', { echoCancelSeen: true }, ['−24 dB', 'ROB STOP · 0.94', 'LOCAL STOP ACCEPTED']), control('echo-unclear', 'Play ambiguous crowd phrase', { voiceClarifySeen: true }, ['VARIABLE', 'MOVE? · 0.41', 'REJECT · ASK AGAIN'])] },
+    }),
+    mission({
+      icon: '🎪', tier: 'Book bridge · Show integration', difficulty: 'Inventor', kicker: 'Build 90 · Maker Faire rehearsal', title: 'Coordinate voice, techno, and the base flipper',
+      intro: 'Assemble the microphone, Cerebro, speaker system, and base flipper into one rehearsed show state machine with an immediate stop path.',
+      guide: 'Creative systems may speak and play music, but motion remains a separate bounded action. Listening lowers music; uncertain speech does nothing; STOP cancels every optional cue.',
+      success: 'Your completed ROB hears, answers, plays techno, demonstrates the virtual lift, and returns to a quiet safe state.',
+      hints: ['Connect microphone and speakers to Cerebro.', 'Connect only the bounded flipper command to the base controller.', 'Run rehearsal, ambiguity, and stop tests.'],
+      components: [
+        microphone(8, 23, [port('audio', 'AUDIO', 'port-right-middle')]),
+        speaker('speaker', 'ROB speaker system', 8, 77, [port('audio', 'AUDIO', 'port-right-middle')]),
+        { id: 'cerebro', type: 'computer', label: 'Cerebro show coordinator', badge: 'CEREBRO', x: 48, y: 50, ports: [port('mic', 'MIC', 'port-left-top'), port('speaker', 'SPEAKER', 'port-left-bottom'), port('intent', 'BOUNDED INTENT', 'port-right-middle')] },
+        baseController(75, 50, [port('intent', 'INTENT', 'port-left-middle'), port('flip', 'FLIP', 'port-right-middle')]),
+        flipper(94, 50, [port('command', 'CMD', 'port-left-middle')]),
+      ],
+      required: [edge('mic.audio', 'cerebro.mic'), edge('cerebro.speaker', 'speaker.audio'), edge('cerebro.intent', 'base.intent'), edge('base.flip', 'flipper.command')],
+      supply: 5, resistance: 100, action: 'robot-show-audio-flipper', completeKeys: ['showRehearsalSeen', 'showAmbiguousSeen', 'showStopSeen'],
+      objectiveSpecs: [['Wire audio and bounded motion paths', 'exact'], ['Run the authored rehearsal', 'showRehearsalSeen'], ['Prove ambiguity causes no motion', 'showAmbiguousSeen'], ['Cancel everything with STOP', 'showStopSeen']],
+      noteTitle: 'A show is a cancellable state machine', note: 'Music, speech, lighting, and motion have distinct owners and deadlines. ROB may be expressive without letting a microphone, model, or media queue directly drive a motor. Public microphone notice and an operator mute remain required.',
+      robot: { mode: 'integrated', labels: ['AUDIO', 'FLIPPER', 'SHOW STATE'], code: 'IDLE → LISTEN → VALIDATE → CUE\nSTOP → mute + neutral + cancel', controls: [control('show-rehearse', 'Run authored rehearsal', { showRehearsalSeen: true, speakerLevel: .62, flipperAngle: 38 }, ['TECHNO + VOICE', '38° DEMO', 'CUE COMPLETE']), control('show-ambiguous', 'Inject uncertain phrase', { showAmbiguousSeen: true, speakerLevel: .12, flipperAngle: 0 }, ['MUSIC DUCKED', 'NO MOTION', 'CLARIFY']), control('show-stop', 'Press simulated STOP', { showStopSeen: true, stopSeen: true, speakerLevel: 0, flipperAngle: 0 }, ['MUTED', 'NEUTRAL', 'CANCELLED'])] },
+    }),
+  ];
+}
+
+export function createRobExpressionElectronFlows(edge) {
+  return [
+    { wires: [edge('bus.neg', 'driver.gnd'), edge('driver.b', 'flipper.b'), edge('flipper.a', 'driver.a'), edge('driver.vm', 'bus.pos')], inside: [edge('driver.gnd', 'driver.b'), edge('flipper.b', 'flipper.a'), edge('driver.a', 'driver.vm')] },
+    { wires: [edge('base.gnd', 'driver.gnd'), edge('driver.motor', 'flipper.drive'), edge('base.pwm', 'driver.pwm')], inside: [edge('driver.gnd', 'driver.motor'), edge('driver.pwm', 'base.pwm')] },
+    { wires: [edge('flipper.gnd', 'base.gnd'), edge('flipper.home', 'base.home'), edge('flipper.tach', 'base.tach')], inside: [] },
+    { wires: [edge('sensors.tilt', 'recovery.tilt'), edge('sensors.amps', 'recovery.amps'), edge('recovery.out', 'flipper.command')], inside: [] },
+    { wires: [edge('power.neg', 'audio.neg'), edge('audio.left', 'speakerL.in'), edge('audio.right', 'speakerR.in'), edge('audio.pos', 'power.pos')], inside: [edge('audio.neg', 'audio.left'), edge('audio.neg', 'audio.right')] },
+    { wires: [edge('cerebro.audio', 'interface.data'), edge('interface.left', 'speakerL.in'), edge('interface.right', 'speakerR.in')], inside: [] },
+    { wires: [edge('music.out', 'limiter.in'), edge('limiter.out', 'speaker.in')], inside: [] },
+    { wires: [edge('mic.usb', 'cerebro.mic'), edge('mic.light', 'notice.light')], inside: [] },
+    { wires: [edge('mic.out', 'dsp.mic'), edge('speaker.ref', 'dsp.ref'), edge('dsp.clean', 'cerebro.audio')], inside: [] },
+    { wires: [edge('mic.audio', 'cerebro.mic'), edge('cerebro.speaker', 'speaker.audio'), edge('cerebro.intent', 'base.intent'), edge('base.flip', 'flipper.command')], inside: [] },
+  ];
+}

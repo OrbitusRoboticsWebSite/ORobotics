@@ -41,7 +41,10 @@ export const droidSectionDefinitions = [
   { id: 'cameraNetwork', name: 'Camera & network', icon: '🛰️', startBuild: 58, endBuild: 64, summary: 'RPLIDAR, USB 3 slip ring, Orbi LAN, Insta360, and link monitoring.' },
   { id: 'bellyCompute', name: 'Belly compute', icon: '🖥️', startBuild: 65, endBuild: 70, summary: 'Protected 12 V compute rail, sealed inverter boundary, and startup tests.' },
   { id: 'arms', name: 'Arm system', icon: '🦾', startBuild: 71, endBuild: 77, summary: '48 V arm power, contactor, CAN, Ubuntu gateway, and bounded commands.' },
-  { id: 'commissioned', name: 'Mission-ready ROB', icon: '🏁', startBuild: 78, endBuild: 80, summary: 'Commissioning sequence, watchdog proof, passport, and Maker Faire handoff.' },
+  { id: 'commissioned', name: 'Core mission-ready ROB', icon: '🏁', startBuild: 78, endBuild: 80, summary: 'Core commissioning, watchdog proof, passport, and Maker Faire handoff.' },
+  { id: 'baseFlipper', name: 'Base lift flipper', icon: '↕️', startBuild: 81, endBuild: 84, summary: 'Independent lift motor, feedback, jam detection, stability, and recovery state.' },
+  { id: 'voiceAudio', name: 'Voice & audio', icon: '🎙️', startBuild: 85, endBuild: 89, summary: 'ROB speakers, procedural techno, conference microphone, echo control, and bounded voice intent.' },
+  { id: 'showReady', name: 'Show-ready systems', icon: '🎪', startBuild: 90, endBuild: 90, summary: 'A cancellable Maker Faire cue joining voice, music, and virtual base motion.' },
 ];
 
 const validID = (value, values, fallback) => values.some(({ id }) => id === value) ? value : fallback;

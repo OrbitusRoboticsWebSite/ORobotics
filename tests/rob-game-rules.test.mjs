@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  BASE_FLIPPER_DURATION,
   MAX_ROB_HEALTH,
   MAX_ROB_SHIELDS,
   BASE_ROB_ENERGY,
@@ -8,6 +9,7 @@ import {
   applyROBDamage,
   applyROBHealthDamage,
   battleUpgradePoints,
+  baseFlipperPresentation,
   bossStats,
   cameraHeading,
   circularBodiesOverlap,
@@ -237,4 +239,20 @@ test('a camera releases one lightweight mini boss profile', () => {
     scale: 1.15,
     defeatReward: 500,
   });
+});
+
+test('the base flipper presentation deploys, holds, lifts, and returns to travel pose', () => {
+  const resting = baseFlipperPresentation(-1);
+  const deploying = baseFlipperPresentation(.3);
+  const holding = baseFlipperPresentation(1);
+  const retracting = baseFlipperPresentation(2.2);
+  const complete = baseFlipperPresentation(BASE_FLIPPER_DURATION);
+
+  assert.deepEqual(resting, { active: false, phase: 0, angle: 0, lift: 0, pitch: 0 });
+  assert.equal(deploying.active, true);
+  assert.ok(deploying.phase > 0 && deploying.phase < 1);
+  assert.equal(holding.phase, 1);
+  assert.ok(holding.angle < 0 && holding.lift > 0 && holding.pitch > 0);
+  assert.ok(retracting.phase > 0 && retracting.phase < 1);
+  assert.deepEqual(complete, resting);
 });

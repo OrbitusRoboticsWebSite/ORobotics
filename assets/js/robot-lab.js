@@ -31,6 +31,7 @@ import {
 } from './electronics-lab-core.mjs';
 import { createRobElectronFlows, createRobSystemsMissions } from './robot-lab-rob-missions.mjs';
 import { createRobFieldElectronFlows, createRobFieldMissions } from './robot-lab-field-missions.mjs';
+import { createRobExpressionElectronFlows, createRobExpressionMissions } from './robot-lab-expression-missions.mjs';
 
 const root = document.querySelector('[data-circuit-lab]');
 
@@ -542,6 +543,7 @@ if (root) {
   ];
   missions.push(...createRobSystemsMissions(edge));
   missions.push(...createRobFieldMissions(edge));
+  missions.push(...createRobExpressionMissions(edge));
 
   // White particles show electron drift: negative-to-positive in DC metal paths and
   // back-and-forth oscillation in AC paths. Dim source segments represent the mechanism
@@ -669,6 +671,7 @@ if (root) {
   ];
   electronFlows.push(...createRobElectronFlows(edge));
   electronFlows.push(...createRobFieldElectronFlows(edge));
+  electronFlows.push(...createRobExpressionElectronFlows(edge));
 
   const wireColors = ['#ff4fa3', '#2ee5eb', '#ffe43b', '#35d985', '#ff8a32', '#a27cff', '#ff4967', '#5bb6ff'];
 
@@ -788,6 +791,28 @@ if (root) {
       cloudSyncSeen: false,
       rewardSeen: false,
       redeemSeen: false,
+      flipperInspectSeen: false,
+      flipperLiftSeen: false,
+      flipperDeploySeen: false,
+      flipperHoldSeen: false,
+      flipperRetractSeen: false,
+      flipperHomeSeen: false,
+      flipperJamSeen: false,
+      recoveryStableSeen: false,
+      recoveryAbortSeen: false,
+      speakerChannelSeen: false,
+      speakerToneSeen: false,
+      audioFormatSeen: false,
+      audioBufferSeen: false,
+      technoMixSeen: false,
+      limiterSeen: false,
+      micCloseSeen: false,
+      micFarSeen: false,
+      echoCancelSeen: false,
+      voiceClarifySeen: false,
+      showRehearsalSeen: false,
+      showAmbiguousSeen: false,
+      showStopSeen: false,
       direction: 1,
       leftDemand: 0,
       rightDemand: 0,
@@ -798,6 +823,9 @@ if (root) {
       frameAgeMs: 0,
       cameraPan: 0,
       armJoint: 0,
+      flipperAngle: 0,
+      speakerLevel: 0,
+      micLevel: 0,
       transient: false,
       estopOpen: false,
       packetCorrupt: false,
@@ -956,6 +984,15 @@ if (root) {
     }
     if (component.type === 'tread') {
       body = `<div class="part-tread__body"><span class="part-tread__track"><i></i><i></i><i></i><i></i><i></i></span><strong>${component.side.toUpperCase()}</strong><small>TREAD</small>${componentPorts(component)}</div>`;
+    }
+    if (component.type === 'flipper') {
+      body = `<div class="part-flipper__body"><span class="part-flipper__motor"><i></i></span><span class="part-flipper__arm"><i></i></span><strong>BASE LIFT</strong><small>FLIPPER MOTOR</small>${componentPorts(component)}</div>`;
+    }
+    if (component.type === 'speaker') {
+      body = `<div class="part-speaker__body"><span class="part-speaker__cone"><i></i></span><b></b><strong>ROB AUDIO</strong>${componentPorts(component)}</div>`;
+    }
+    if (component.type === 'microphone') {
+      body = `<div class="part-microphone__body"><span class="part-microphone__capsule"><i></i><i></i><i></i><i></i></span><span class="part-microphone__stand"></span><strong>FAR-FIELD MIC</strong>${componentPorts(component)}</div>`;
     }
     if (component.type === 'computer') {
       body = `<div class="part-computer__body"><span class="part-computer__screen"><i></i><strong>${component.badge || 'CEREBRO'}</strong><small>CONTROL COMPUTER</small></span><span class="part-computer__base"></span>${componentPorts(component)}</div>`;
@@ -1395,7 +1432,7 @@ if (root) {
     const mission = missions[state.missionIndex];
     els.components.querySelectorAll('.lab-part').forEach((part) => part.classList.remove('is-powered'));
     if (mission.action?.startsWith('robot-') && state.exact) {
-      els.components.querySelectorAll('.part-systembox, .part-computer, .part-vision, .part-camera, .part-arm, .part-converter, .part-fuse, .part-slipring, .part-stepper, .part-router, .part-lidar, .part-inverter, .part-ethernet, .part-canbus').forEach((part) => part.classList.add('is-powered'));
+      els.components.querySelectorAll('.part-systembox, .part-computer, .part-vision, .part-camera, .part-arm, .part-converter, .part-fuse, .part-slipring, .part-stepper, .part-router, .part-lidar, .part-inverter, .part-ethernet, .part-canbus, .part-flipper, .part-speaker, .part-microphone').forEach((part) => part.classList.add('is-powered'));
     }
     if (state.powered) {
       if (state.missionIndex === 4) {
@@ -1478,6 +1515,18 @@ if (root) {
       els.components.querySelectorAll('.part-lidar').forEach((part) => part.classList.toggle('is-scanning', Boolean(state.experiment.scanSeen) && !state.experiment.stallSeen));
       els.components.querySelectorAll('.part-stepper').forEach((part) => part.classList.toggle('is-stepping', Boolean(state.experiment.stepSeen || state.experiment.stepperPowerSeen)));
       els.components.querySelectorAll('.part-router, .part-ethernet, .part-canbus').forEach((part) => part.classList.toggle('is-linked', Boolean(state.experiment.lastRobotControl)));
+      els.components.querySelectorAll('.part-flipper').forEach((part) => {
+        part.style.setProperty('--flipper-angle', `${state.experiment.flipperAngle || 0}deg`);
+        part.classList.toggle('is-lifting', Boolean(state.experiment.flipperAngle));
+      });
+      els.components.querySelectorAll('.part-speaker').forEach((part) => {
+        part.style.setProperty('--speaker-level', String(state.experiment.speakerLevel || 0));
+        part.classList.toggle('is-playing', (state.experiment.speakerLevel || 0) > .01);
+      });
+      els.components.querySelectorAll('.part-microphone').forEach((part) => {
+        part.style.setProperty('--mic-level', String(state.experiment.micLevel || 0));
+        part.classList.toggle('is-listening', (state.experiment.micLevel || 0) > .01);
+      });
     }
   }
 
@@ -1607,9 +1656,11 @@ if (root) {
     }
     if (mission.action?.startsWith('robot-')) {
       const metrics = robotMetrics(mission);
-      if (els.voltageLabel) els.voltageLabel.textContent = ['motor', 'dual', 'protection', 'safety'].includes(mission.robot.mode) ? 'MOTOR BUS' : 'LOGIC / LINK';
-      if (els.currentLabel) els.currentLabel.textContent = ['motor', 'dual', 'protection', 'safety'].includes(mission.robot.mode) ? 'EST. MOTOR FLOW' : 'SIGNAL FLOW';
-      if (els.resistanceLabel) els.resistanceLabel.textContent = ['motor', 'dual', 'protection', 'safety'].includes(mission.robot.mode) ? 'EST. LOAD' : 'LINK LOAD';
+      const energyMode = ['motor', 'dual', 'protection', 'safety', 'flipper'].includes(mission.robot.mode);
+      const audioMode = ['audio', 'acoustic'].includes(mission.robot.mode);
+      if (els.voltageLabel) els.voltageLabel.textContent = energyMode ? 'MOTOR BUS' : audioMode ? 'AUDIO / DATA' : 'LOGIC / LINK';
+      if (els.currentLabel) els.currentLabel.textContent = energyMode ? 'EST. MOTOR FLOW' : audioMode ? 'SIGNAL / SOUND' : 'SIGNAL FLOW';
+      if (els.resistanceLabel) els.resistanceLabel.textContent = energyMode ? 'EST. LOAD' : audioMode ? 'BOUNDED PATH' : 'LINK LOAD';
       voltage = metrics.voltage;
       current = metrics.currentMilliAmps;
       resistance = metrics.loadOhms;
