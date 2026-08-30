@@ -7,17 +7,23 @@ import {
   calculateArduinoAdc,
   calculateArduinoPwm,
   calculateCapacitiveReactance,
+  calculateDcMotor,
+  calculateDifferentialDrive,
+  calculateEncoderSpeed,
   calculateInductiveReactance,
   calculateLedResistor,
   calculateParallelRLC,
   calculateOpAmpComparator,
   calculateOpAmpNonInverting,
   calculateRCTransient,
+  calculateProportionalControl,
   calculateResonantFrequency,
   calculateRLTransient,
   calculateSeries,
   calculateSeriesRLC,
+  calculateSerialChecksum,
   calculateVoltageDivider,
+  applyMotorWatchdog,
   matchesAnyCircuit,
   matchesCircuit,
   parseArduinoBlink,
@@ -179,6 +185,38 @@ test('solar simulation charges in sun and discharges after sunset', () => {
   assert.equal(weakSunEmptyBattery.generatedWatts, 0.6);
   assert.equal(weakSunEmptyBattery.powerSource, 'off');
   assert.equal(weakSunEmptyBattery.loadPowered, false);
+});
+
+test('ROB motor and differential-drive models clamp commands and preserve direction', () => {
+  const forward = calculateDcMotor({ supplyVoltage: 12, pwmValue: 128, direction: 1, freeSpeedRpm: 120 });
+  const reverse = calculateDcMotor({ supplyVoltage: 12, pwmValue: 999, direction: -1, freeSpeedRpm: 120 });
+  assert.ok(Math.abs(forward.averageVoltage - 12 * 128 / 255) < 1e-12);
+  assert.ok(forward.estimatedCurrent > 0);
+  assert.equal(reverse.pwmValue, 255);
+  assert.equal(reverse.averageVoltage, -12);
+  assert.equal(reverse.estimatedRpm, -120);
+
+  assert.deepEqual(calculateDifferentialDrive({ leftDemand: 2, rightDemand: -.5 }), {
+    leftDemand: 1, rightDemand: -.5, linearDemand: .25, turnDemand: -.75,
+  });
+});
+
+test('ROB encoder, controller, protocol, and watchdog models expose safe boundaries', () => {
+  const speed = calculateEncoderSpeed({ pulses: 24, countsPerRevolution: 360, intervalSeconds: .2, wheelDiameterMeters: .1 });
+  assert.equal(speed.rpm, 20);
+  assert.ok(Math.abs(speed.surfaceSpeedMetersPerSecond - Math.PI / 30) < 1e-12);
+
+  const control = calculateProportionalControl({ target: 80, measured: 52, kp: 2.5, limit: 50 });
+  assert.equal(control.error, 28);
+  assert.equal(control.requestedOutput, 70);
+  assert.equal(control.output, 50);
+  assert.equal(control.saturated, true);
+  assert.equal(calculateSerialChecksum('DRIVE,42,0.30,0.28'), calculateSerialChecksum('DRIVE,42,0.30,0.28'));
+  assert.notEqual(calculateSerialChecksum('DRIVE,42,0.30,0.28'), calculateSerialChecksum('DRIVE,43,0.30,0.28'));
+
+  assert.deepEqual(applyMotorWatchdog({ leftDemand: .4, rightDemand: .3, frameAgeMs: 600, timeoutMs: 600 }), {
+    leftDemand: 0, rightDemand: 0, linearDemand: .35, turnDemand: -.05000000000000002, stale: true, brake: true,
+  });
 });
 
 test('Arduino parser accepts a standard named-pin blink sketch', () => {

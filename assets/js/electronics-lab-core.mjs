@@ -304,6 +304,54 @@ export function simulateSolar({
   };
 }
 
+export function calculateDcMotor({ supplyVoltage = 12, pwmValue = 0, direction = 1, freeSpeedRpm = 120, runningCurrent = 1.2 } = {}) {
+  const supply = Math.max(0, Number(supplyVoltage) || 0);
+  const pwm = Math.min(255, Math.max(0, Number(pwmValue) || 0));
+  const sign = Number(direction) < 0 ? -1 : 1;
+  const dutyCycle = pwm / 255;
+  return {
+    supplyVoltage: supply,
+    pwmValue: pwm,
+    dutyCycle,
+    averageVoltage: supply * dutyCycle * sign,
+    estimatedRpm: Math.max(0, Number(freeSpeedRpm) || 0) * dutyCycle * sign,
+    estimatedCurrent: dutyCycle === 0 ? 0 : Math.max(0, Number(runningCurrent) || 0) * (.25 + .75 * dutyCycle),
+  };
+}
+
+export function calculateDifferentialDrive({ leftDemand = 0, rightDemand = 0 } = {}) {
+  const clamp = (value) => Math.min(1, Math.max(-1, Number(value) || 0));
+  const left = clamp(leftDemand);
+  const right = clamp(rightDemand);
+  return { leftDemand: left, rightDemand: right, linearDemand: (left + right) / 2, turnDemand: (right - left) / 2 };
+}
+
+export function calculateEncoderSpeed({ pulses = 0, countsPerRevolution = 360, intervalSeconds = .2, wheelDiameterMeters = .1 } = {}) {
+  const counts = Number(pulses) || 0;
+  const cpr = Math.max(1, Number(countsPerRevolution) || 1);
+  const seconds = Math.max(Number.EPSILON, Number(intervalSeconds) || 0);
+  const diameter = Math.max(0, Number(wheelDiameterMeters) || 0);
+  const revolutionsPerSecond = counts / cpr / seconds;
+  return { pulses: counts, rpm: revolutionsPerSecond * 60, surfaceSpeedMetersPerSecond: revolutionsPerSecond * Math.PI * diameter };
+}
+
+export function calculateProportionalControl({ target = 0, measured = 0, kp = 2.5, feedforward = 0, limit = 255 } = {}) {
+  const error = (Number(target) || 0) - (Number(measured) || 0);
+  const requestedOutput = (Number(feedforward) || 0) + (Number(kp) || 0) * error;
+  const safeLimit = Math.max(0, Number(limit) || 0);
+  return { target: Number(target) || 0, measured: Number(measured) || 0, error, requestedOutput, output: Math.min(safeLimit, Math.max(-safeLimit, requestedOutput)), saturated: Math.abs(requestedOutput) > safeLimit };
+}
+
+export function calculateSerialChecksum(payload = '') {
+  return [...String(payload)].reduce((checksum, character) => checksum ^ character.codePointAt(0), 0) & 0xff;
+}
+
+export function applyMotorWatchdog({ leftDemand = 0, rightDemand = 0, frameAgeMs = 0, timeoutMs = 600 } = {}) {
+  const stale = Math.max(0, Number(frameAgeMs) || 0) >= Math.max(0, Number(timeoutMs) || 0);
+  const demands = calculateDifferentialDrive({ leftDemand, rightDemand });
+  return { ...demands, leftDemand: stale ? 0 : demands.leftDemand, rightDemand: stale ? 0 : demands.rightDemand, stale, brake: stale };
+}
+
 function stripArduinoComments(source) {
   return String(source || '')
     .replace(/\/\*[\s\S]*?\*\//g, (comment) => comment.replace(/[^\n]/g, ' '))

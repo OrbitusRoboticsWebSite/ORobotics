@@ -5,9 +5,13 @@ import {
   calculateArduinoAdc,
   calculateArduinoPwm,
   calculateCapacitiveReactance,
+  calculateDcMotor,
+  calculateDifferentialDrive,
+  calculateEncoderSpeed,
   calculateInductiveReactance,
   calculateLedResistor,
   calculateParallelRLC,
+  calculateProportionalControl,
   calculateOpAmpComparator,
   calculateOpAmpNonInverting,
   calculateRCTransient,
@@ -15,6 +19,7 @@ import {
   calculateRLTransient,
   calculateSeries,
   calculateSeriesRLC,
+  calculateSerialChecksum,
   calculateVoltageDivider,
   connectionSet,
   hasConnection,
@@ -22,7 +27,9 @@ import {
   parseArduinoBlink,
   simulateSolar,
   solveOhmsLaw,
+  applyMotorWatchdog,
 } from './electronics-lab-core.mjs';
+import { createRobElectronFlows, createRobSystemsMissions } from './robot-lab-rob-missions.mjs';
 
 const root = document.querySelector('[data-circuit-lab]');
 
@@ -532,6 +539,7 @@ if (root) {
       noteTitle: 'Comparator refresher', note: 'A dedicated comparator usually switches faster and tolerates saturation better than a general-purpose op amp. Add positive feedback for hysteresis when a noisy input would chatter near the threshold.'
     },
   ];
+  missions.push(...createRobSystemsMissions(edge));
 
   // White particles show electron drift: negative-to-positive in DC metal paths and
   // back-and-forth oscillation in AC paths. Dim source segments represent the mechanism
@@ -657,6 +665,7 @@ if (root) {
       inside: [edge('led.k', 'led.a'), edge('op.out', 'op.vcc'), edge('cell.pos', 'cell.neg')],
     },
   ];
+  electronFlows.push(...createRobElectronFlows(edge));
 
   const wireColors = ['#ff4fa3', '#2ee5eb', '#ffe43b', '#35d985', '#ff8a32', '#a27cff', '#ff4967', '#5bb6ff'];
 
@@ -686,6 +695,57 @@ if (root) {
       lowSeen: false,
       highSeen: false,
       resonanceSeen: false,
+      powerChecked: false,
+      forwardSeen: false,
+      reverseSeen: false,
+      leftSeen: false,
+      rightSeen: false,
+      straightSeen: false,
+      arcSeen: false,
+      pivotSeen: false,
+      motionSeen: false,
+      stopSeen: false,
+      encoderSeen: false,
+      errorSeen: false,
+      settledSeen: false,
+      healthySeen: false,
+      batteryLowSeen: false,
+      linkSeen: false,
+      baudFaultSeen: false,
+      identitySeen: false,
+      parseFaultSeen: false,
+      commandSeen: false,
+      checksumFaultSeen: false,
+      frameSeen: false,
+      heartbeatSeen: false,
+      watchdogSeen: false,
+      telemetrySeen: false,
+      snapshotSeen: false,
+      neutralSeen: false,
+      authoritySeen: false,
+      releaseSeen: false,
+      cameraSeen: false,
+      centerSeen: false,
+      videoSeen: false,
+      armInitialized: false,
+      armSeen: false,
+      armHoldSeen: false,
+      sessionSeen: false,
+      faultSeen: false,
+      direction: 1,
+      leftDemand: 0,
+      rightDemand: 0,
+      batteryVoltage: 12.4,
+      encoderPulses: 0,
+      targetRpm: 0,
+      measuredRpm: 0,
+      frameAgeMs: 0,
+      cameraPan: 0,
+      armJoint: 0,
+      transient: false,
+      estopOpen: false,
+      packetCorrupt: false,
+      lastRobotControl: null,
       lastTick: performance.now(),
     };
   }
@@ -762,6 +822,10 @@ if (root) {
     return `<button type="button" class="lab-port ${className}" data-node="${id}.${key}" aria-label="${label} terminal">${label}</button>`;
   }
 
+  function componentPorts(component) {
+    return (component.ports || []).map((item) => port(component.id, item.id, item.label, item.className)).join('');
+  }
+
   function partMarkup(component) {
     let body = '';
     if (component.type === 'battery') {
@@ -830,6 +894,27 @@ if (root) {
     if (component.type === 'opamp') {
       body = `<div class="part-opamp__body"><span class="part-opamp__triangle"><b>−</b><b>+</b><strong>OP<br>AMP</strong></span>${port(component.id, 'minus', 'V−', 'lab-port--signal port-left-top')}${port(component.id, 'plus', 'V+', 'lab-port--signal port-left-bottom')}${port(component.id, 'out', 'OUT', 'lab-port--signal port-right-middle')}${port(component.id, 'vcc', '+5', 'lab-port--positive port-top-middle')}${port(component.id, 'gnd', '0V', 'lab-port--ground port-bottom-middle')}</div>`;
     }
+    if (component.type === 'systembox') {
+      body = `<div class="part-systembox__body part-systembox__body--${component.tone || 'purple'}"><span class="part-systembox__chip"></span><strong>${component.badge}</strong><small>ROB SYSTEM MODULE</small>${componentPorts(component)}</div>`;
+    }
+    if (component.type === 'tread') {
+      body = `<div class="part-tread__body"><span class="part-tread__track"><i></i><i></i><i></i><i></i><i></i></span><strong>${component.side.toUpperCase()}</strong><small>TREAD</small>${componentPorts(component)}</div>`;
+    }
+    if (component.type === 'computer') {
+      body = `<div class="part-computer__body"><span class="part-computer__screen"><i></i><strong>CEREBRO</strong><small>CONTROL COMPUTER</small></span><span class="part-computer__base"></span>${componentPorts(component)}</div>`;
+    }
+    if (component.type === 'estop') {
+      body = `<div class="part-estop__body"><button type="button" data-robot-estop aria-label="Press simulated emergency stop"><span>STOP</span></button><small>NORMALLY CLOSED</small>${port(component.id, 'in', 'IN', 'lab-port--positive port-left-middle')}${port(component.id, 'out', 'OUT', 'lab-port--positive port-right-middle')}</div>`;
+    }
+    if (component.type === 'camera') {
+      body = `<div class="part-camera__body"><span class="part-camera__lens"><i></i></span><span class="part-camera__neck"></span><strong>CAM</strong>${componentPorts(component)}</div>`;
+    }
+    if (component.type === 'vision') {
+      body = `<div class="part-vision__body"><span class="part-vision__visor"><i></i><i></i></span><strong>VISION PRO</strong><small>REMOTE COCKPIT</small>${componentPorts(component)}</div>`;
+    }
+    if (component.type === 'arm') {
+      body = `<div class="part-arm__body"><span class="part-arm__base"></span><span class="part-arm__link part-arm__link--one"></span><span class="part-arm__joint"></span><span class="part-arm__link part-arm__link--two"></span><span class="part-arm__grip"></span>${componentPorts(component)}</div>`;
+    }
     const orientationClass = component.orientation ? ` part-${component.type}--${component.orientation}` : '';
     return `<article class="lab-part part-${component.type}${orientationClass}" data-part="${component.id}" style="left:${component.x}%;top:${component.y}%;--lamp-color:${component.color || '#ffe43b'}"><div>${body}</div><span class="lab-part__label">${component.label}</span></article>`;
   }
@@ -873,6 +958,7 @@ if (root) {
     els.success.hidden = true;
     els.workbench.classList.toggle('is-solar', mission.action === 'solar');
     els.workbench.classList.toggle('is-ac', mission.mode === 'ac');
+    els.workbench.classList.toggle('is-robot-system', mission.action?.startsWith('robot-'));
     els.workbench.classList.toggle('is-pulsed', ['arduino-pwm', 'arduino-control', 'timer-astable', 'timer-monostable'].includes(mission.action));
     els.workbench.style.setProperty('--sun', String(state.solar.sun));
     if (els.directionLabel) els.directionLabel.textContent = mission.mode === 'ac' ? 'AC ELECTRON OSCILLATION' : 'EXTERNAL ELECTRON DRIFT';
@@ -893,7 +979,12 @@ if (root) {
       if (els.directionPath) els.directionPath.innerHTML = '<b>INPUTS</b> sense voltage · <b>SUPPLY</b> powers output';
       if (els.directionNote) els.directionNote.textContent = 'Ideal op-amp inputs draw almost no current; output energy comes from the supply rails.';
     }
-    if (els.scopeLabel) els.scopeLabel.textContent = mission.mode === 'ac' ? 'AC WAVEFORM SCOPE' : mission.action === 'solar' ? 'SOLAR OUTPUT SCOPE' : ['arduino-pwm', 'arduino-control'].includes(mission.action) ? 'PWM PULSE SCOPE' : ['arduino-input', 'arduino-analog'].includes(mission.action) ? 'ARDUINO INPUT SCOPE' : mission.action?.startsWith('timer-') ? '555 OUTPUT SCOPE' : mission.action?.startsWith('opamp-') ? 'OP-AMP OUTPUT SCOPE' : 'DC ENERGY SCOPE';
+    if (mission.action?.startsWith('robot-')) {
+      if (els.directionLabel) els.directionLabel.textContent = ['power', 'motor', 'dual', 'protection', 'safety'].includes(mission.robot.mode) ? 'MOTOR ENERGY + CONTROL SIGNALS' : 'INFORMATION PATH + LOCAL ENERGY';
+      if (els.directionPath) els.directionPath.innerHTML = ['power', 'motor', 'dual', 'protection', 'safety'].includes(mission.robot.mode) ? '<b>BATTERY −</b> → driver + tread loop → <b>BATTERY +</b>' : '<b>SENDER</b> ⇄ framed data ⇄ <b>RECEIVER</b>';
+      if (els.directionNote) els.directionNote.textContent = ['power', 'motor', 'dual', 'protection', 'safety'].includes(mission.robot.mode) ? 'Electrons circulate in the local motor-power loop; the Arduino pins only command the driver.' : 'The cable carries information and a local electrical signal; it does not send motor energy across the network.';
+    }
+    if (els.scopeLabel) els.scopeLabel.textContent = mission.action?.startsWith('robot-') ? 'ROB CONTROL + TELEMETRY SCOPE' : mission.mode === 'ac' ? 'AC WAVEFORM SCOPE' : mission.action === 'solar' ? 'SOLAR OUTPUT SCOPE' : ['arduino-pwm', 'arduino-control'].includes(mission.action) ? 'PWM PULSE SCOPE' : ['arduino-input', 'arduino-analog'].includes(mission.action) ? 'ARDUINO INPUT SCOPE' : mission.action?.startsWith('timer-') ? '555 OUTPUT SCOPE' : mission.action?.startsWith('opamp-') ? 'OP-AMP OUTPUT SCOPE' : 'DC ENERGY SCOPE';
     els.previous.disabled = index === 0;
     els.next.disabled = !state.achieved;
     els.next.innerHTML = index === missions.length - 1 ? 'Finish quest <span aria-hidden="true">✦</span>' : 'Next build <span aria-hidden="true">→</span>';
@@ -921,6 +1012,7 @@ if (root) {
       if (action === 'arduino-input') toggleArduinoInput();
       if (action === 'timer-monostable') triggerMonostable();
     }));
+    els.components.querySelectorAll('[data-robot-estop]').forEach((button) => button.addEventListener('click', () => runRobotControl('estop')));
   }
 
   function beginWireDrag(event, node) {
@@ -1039,6 +1131,7 @@ if (root) {
     const resonantFrequency = mission.inductance && mission.capacitance ? calculateResonantFrequency(mission.inductance, mission.capacitance) : 0;
     const tuned = resonantFrequency > 0 && Math.abs(state.experiment.frequency - resonantFrequency) <= 2.5;
     return {
+      ...state.experiment,
       exact: state.exact, powered: state.powered, resistance: state.resistance, safeCurrent, answerCorrect: state.answerCorrect,
       daySeen: state.solar.daySeen, nightSeen: state.solar.nightSeen, program: state.program, programRunning: state.programRunning,
       chargeSeen: state.experiment.chargeSeen, dischargeSeen: state.experiment.dischargeSeen,
@@ -1101,6 +1194,7 @@ if (root) {
     else if (mission.action === 'resistor') state.powered = state.exact && safeLed;
     else if (mission.action === 'solar') state.powered = state.exact && state.solar.loadOn && Boolean(state.solar.result?.loadPowered);
     else if (mission.action === 'code') state.powered = state.exact && state.programRunning && state.arduinoHigh;
+    else if (mission.action?.startsWith('robot-')) state.powered = state.exact && robotEnergyActive(mission);
     else if (state.missionIndex === 6) state.powered = false;
     else state.powered = state.exact;
 
@@ -1140,6 +1234,8 @@ if (root) {
       setGuide('The 555 is powered. Change the RC timing value and compare the pulse measurements on the scope.', 'TUNE RC');
     } else if (state.exact && mission.action?.startsWith('opamp-') && !completionCondition()) {
       setGuide('The amplifier is powered. Sweep the input and compare ideal output with the real supply-limited result.', 'MEASURE');
+    } else if (state.exact && mission.action?.startsWith('robot-') && !completionCondition()) {
+      setGuide('The system wiring checks out. Use the ROB console to test each command, measurement, fault, and safe-state objective.', 'RUN SYSTEM');
     } else if (state.exact && state.missionIndex === 6) {
       setGuide('The hardware signal path is ready. Build 08 will turn that path on and off with code.', 'WIRED');
     } else if (!complete && !state.achieved) {
@@ -1148,6 +1244,8 @@ if (root) {
   }
 
   function completionCondition() {
+    const currentMission = missions[state.missionIndex];
+    if (currentMission.action?.startsWith('robot-')) return state.exact && currentMission.completeKeys.every((key) => Boolean(state.experiment[key]));
     if (state.missionIndex === 1) return state.exact && state.switchClosed;
     if (state.missionIndex === 2) return state.exact && state.resistance >= 150;
     if (state.missionIndex === 3) return state.exact && state.answerCorrect;
@@ -1212,6 +1310,9 @@ if (root) {
   function updateParts() {
     const mission = missions[state.missionIndex];
     els.components.querySelectorAll('.lab-part').forEach((part) => part.classList.remove('is-powered'));
+    if (mission.action?.startsWith('robot-') && state.exact) {
+      els.components.querySelectorAll('.part-systembox, .part-computer, .part-vision, .part-camera, .part-arm').forEach((part) => part.classList.add('is-powered'));
+    }
     if (state.powered) {
       if (state.missionIndex === 4) {
         els.components.querySelector('[data-part="lamp1"]')?.classList.add('is-powered');
@@ -1275,6 +1376,20 @@ if (root) {
       const metrics = reactiveMetrics(mission);
       const lampLevel = Math.min(1, metrics.currentRms / (mission.supplyRms / Math.max(1, mission.resistance || 30)));
       els.components.querySelectorAll('.part-lamp').forEach((part) => part.style.setProperty('--lamp-level', state.exact ? lampLevel.toFixed(3) : '0'));
+    }
+    if (mission.action?.startsWith('robot-')) {
+      const motorDemand = Math.max(Math.abs(state.experiment.leftDemand), Math.abs(state.experiment.rightDemand), state.experiment.pwmValue / 255);
+      els.components.querySelectorAll('.part-tread').forEach((part) => {
+        const isRight = part.dataset.part === 'right';
+        const demand = ['dual', 'integrated'].includes(mission.robot.mode) ? (isRight ? state.experiment.rightDemand : state.experiment.leftDemand) : state.experiment.direction * state.experiment.pwmValue / 255;
+        part.classList.toggle('is-running', state.exact && Math.abs(demand) > .01 && !state.experiment.estopOpen && !state.experiment.stopSeen);
+        part.classList.toggle('is-reversing', demand < 0);
+        part.style.setProperty('--tread-rate', `${Math.max(.35, 1.4 - Math.abs(demand || motorDemand))}s`);
+      });
+      els.components.querySelector('[data-part="estop"]')?.classList.toggle('is-open', Boolean(state.experiment.estopOpen));
+      els.components.querySelectorAll('.part-computer, .part-vision').forEach((part) => part.classList.toggle('is-linked', Boolean(state.experiment.lastRobotControl)));
+      els.components.querySelector('[data-part="camera"]')?.style.setProperty('--camera-pan', `${state.experiment.cameraPan || 0}deg`);
+      els.components.querySelector('[data-part="arm"]')?.style.setProperty('--arm-joint', `${state.experiment.armJoint || 0}deg`);
     }
   }
 
@@ -1341,6 +1456,38 @@ if (root) {
     return {};
   }
 
+  function robotEnergyActive(mission) {
+    if (!state.experiment.lastRobotControl) return false;
+    if (mission.robot.mode === 'power') return false;
+    if (mission.robot.mode === 'safety') return state.experiment.motionSeen && !state.experiment.estopOpen;
+    if (['motor', 'protection'].includes(mission.robot.mode)) return state.experiment.pwmValue > 0 && !state.experiment.stopSeen;
+    if (['dual', 'pid', 'integrated'].includes(mission.robot.mode)) return Math.abs(state.experiment.leftDemand) + Math.abs(state.experiment.rightDemand) > 0;
+    return true;
+  }
+
+  function robotMetrics(mission) {
+    const readout = state.experiment.lastRobotControl?.readout || ['—', '—', 'WAITING'];
+    let voltage = state.exact ? mission.supply || 5 : 0;
+    let currentMilliAmps = 0;
+    let loadOhms = mission.resistance || 100;
+    if (['motor', 'protection'].includes(mission.robot.mode)) {
+      const motor = calculateDcMotor({ supplyVoltage: mission.supply, pwmValue: state.experiment.pwmValue, direction: state.experiment.direction });
+      voltage = state.exact ? Math.abs(motor.averageVoltage) : 0;
+      currentMilliAmps = state.exact ? motor.estimatedCurrent * 1000 : 0;
+      loadOhms = currentMilliAmps ? voltage / (currentMilliAmps / 1000) : mission.resistance;
+    }
+    if (['dual', 'integrated'].includes(mission.robot.mode)) {
+      const drive = calculateDifferentialDrive(state.experiment);
+      currentMilliAmps = state.exact ? (Math.abs(drive.leftDemand) + Math.abs(drive.rightDemand)) * 1200 : 0;
+      loadOhms = currentMilliAmps ? (mission.supply || 12) / (currentMilliAmps / 1000) : mission.resistance;
+    }
+    if (mission.robot.mode === 'encoder') calculateEncoderSpeed({ pulses: state.experiment.encoderPulses });
+    if (mission.robot.mode === 'pid') calculateProportionalControl({ target: state.experiment.targetRpm, measured: state.experiment.measuredRpm });
+    if (mission.robot.mode === 'protocol') calculateSerialChecksum('DRIVE,42,0.30,0.28');
+    if (mission.robot.mode === 'watchdog') applyMotorWatchdog({ leftDemand: .4, rightDemand: .4, frameAgeMs: state.experiment.frameAgeMs, timeoutMs: 600 });
+    return { voltage, currentMilliAmps, loadOhms, readout, label: state.exact ? readout.join(' · ') : 'ROB SYSTEM · WIRING INCOMPLETE' };
+  }
+
   function updateMeters() {
     const mission = missions[state.missionIndex];
     let voltage = mission.supply || 0;
@@ -1366,7 +1513,16 @@ if (root) {
       if (els.currentLabel) els.currentLabel.textContent = 'LOAD FLOW';
       if (els.resistanceLabel) els.resistanceLabel.textContent = mission.action === 'opamp-comparator' ? 'LED LOAD' : 'FEEDBACK';
     }
-    if (mission.action === 'arduino-input') {
+    if (mission.action?.startsWith('robot-')) {
+      const metrics = robotMetrics(mission);
+      if (els.voltageLabel) els.voltageLabel.textContent = ['motor', 'dual', 'protection', 'safety'].includes(mission.robot.mode) ? 'MOTOR BUS' : 'LOGIC / LINK';
+      if (els.currentLabel) els.currentLabel.textContent = ['motor', 'dual', 'protection', 'safety'].includes(mission.robot.mode) ? 'EST. MOTOR FLOW' : 'SIGNAL FLOW';
+      if (els.resistanceLabel) els.resistanceLabel.textContent = ['motor', 'dual', 'protection', 'safety'].includes(mission.robot.mode) ? 'EST. LOAD' : 'LINK LOAD';
+      voltage = metrics.voltage;
+      current = metrics.currentMilliAmps;
+      resistance = metrics.loadOhms;
+      label = metrics.label;
+    } else if (mission.action === 'arduino-input') {
       voltage = state.experiment.inputPressed ? 0 : 5;
       current = state.exact && state.experiment.inputPressed ? .5 : 0;
       resistance = 10000;
@@ -1467,6 +1623,7 @@ if (root) {
     els.meterCurrent.closest('div')?.classList.toggle('has-danger', danger);
     updateCurrentAlert(current, danger);
     updateAdvancedReadout();
+    updateRobotReadout();
   }
 
   function updateCurrentAlert(current, danger) {
@@ -1672,8 +1829,49 @@ if (root) {
     if (explain) explain.textContent = explanation;
   }
 
+  function updateRobotReadout() {
+    const mission = missions[state.missionIndex];
+    if (!mission.action?.startsWith('robot-')) return;
+    const control = state.experiment.lastRobotControl;
+    const readout = control?.readout || ['—', '—', 'WAITING'];
+    els.action.querySelectorAll('[data-robot-readout]').forEach((item, index) => { item.textContent = readout[index] || '—'; });
+    els.action.querySelectorAll('[data-robot-control]').forEach((button) => {
+      const active = button.dataset.robotControl === control?.id;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    const explain = els.action.querySelector('[data-robot-explain]');
+    if (explain) explain.textContent = !state.exact
+      ? 'Finish every required connection before the virtual controller can exchange energy or data.'
+      : control
+        ? `${control.label} complete. Compare command, measured response, and the resulting safe state before continuing.`
+        : 'Wiring verified. Run every test in order and watch commands stay separate from measured feedback.';
+  }
+
+  function runRobotControl(controlId) {
+    const mission = missions[state.missionIndex];
+    if (!mission.action?.startsWith('robot-')) return;
+    if (!state.exact) {
+      showToast('Complete the system wiring before running this test.', true);
+      return;
+    }
+    const control = mission.robot.controls.find((item) => item.id === controlId);
+    if (!control) return;
+    Object.assign(state.experiment, control.set);
+    state.experiment.lastRobotControl = control;
+    evaluate();
+    updateRobotReadout();
+  }
+
   function renderMissionAction(mission) {
     const note = `<div class="lesson-note"><span aria-hidden="true">⚡</span><div><h3>${mission.noteTitle}</h3><p>${mission.note}</p></div></div>`;
+    if (mission.action?.startsWith('robot-')) {
+      const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
+      els.action.innerHTML = `${note}<section class="robot-console" aria-label="ROB systems simulator"><header><span>ROB SYSTEMS SIM</span><strong>${mission.robot.mode.toUpperCase()}</strong><i>HARDWARE SAFE · VIRTUAL ONLY</i></header><div class="robot-console__grid"><div class="robot-console__controls"><small>TEST SEQUENCE</small>${mission.robot.controls.map((item) => `<button type="button" data-robot-control="${item.id}">${escapeHtml(item.label)}<span>RUN →</span></button>`).join('')}</div><div class="robot-console__readout">${mission.robot.labels.map((label, index) => `<div><small>${escapeHtml(label)}</small><strong data-robot-readout="${index}">—</strong></div>`).join('')}<p data-robot-explain>Complete the wiring, then run each system test. The simulator never connects to physical ROB hardware.</p></div><pre><span>REFERENCE LOGIC</span><code>${escapeHtml(mission.robot.code)}</code></pre></div></section>`;
+      els.action.querySelectorAll('[data-robot-control]').forEach((button) => button.addEventListener('click', () => runRobotControl(button.dataset.robotControl)));
+      updateRobotReadout();
+      return;
+    }
     if (mission.action === 'resistor') {
       els.action.innerHTML = `${note}<div class="current-alert" data-current-alert role="alert" aria-live="assertive" hidden></div><div class="resistor-picker"><span>Choose a resistor:</span>${[100, 150, 220, 330].map((value) => `<button type="button" data-resistance="${value}"${value === state.resistance ? ' class="is-active"' : ''}>${value} Ω</button>`).join('')}<output class="is-danger" data-resistor-output>30.0 mA · TOO HIGH</output></div>`;
       els.action.querySelectorAll('[data-resistance]').forEach((button) => button.addEventListener('click', () => {
@@ -1961,6 +2159,7 @@ if (root) {
   function electronFlowIsActive() {
     const mission = missions[state.missionIndex];
     if (!state.exact) return false;
+    if (mission.action?.startsWith('robot-')) return robotEnergyActive(mission);
     if (mission.action === 'capacitor') return state.experiment.capacitorCharge > .01 && state.experiment.capacitorCharge < .99;
     if (mission.action === 'inductor') return state.experiment.inductorField > .01;
     if (mission.hasSwitch) return state.switchClosed;
@@ -2125,6 +2324,46 @@ if (root) {
     for (let x = 0; x < rect.width; x += 20) { context.beginPath(); context.moveTo(x, 0); context.lineTo(x, rect.height); context.stroke(); }
     for (let y = 0; y < rect.height; y += 18) { context.beginPath(); context.moveTo(0, y); context.lineTo(rect.width, y); context.stroke(); }
     const mission = missions[state.missionIndex];
+    if (mission.action?.startsWith('robot-')) {
+      const upper = rect.height * .32;
+      const lower = rect.height * .7;
+      context.font = '800 8px ui-monospace, monospace';
+      context.fillStyle = '#a8acd1';
+      context.fillText(['motor', 'dual', 'protection', 'safety', 'integrated'].includes(mission.robot.mode) ? 'LEFT / DRIVE' : 'COMMAND', 5, 11);
+      context.fillText(['motor', 'dual', 'protection', 'safety', 'integrated'].includes(mission.robot.mode) ? 'RIGHT / RETURN' : 'TELEMETRY', 5, rect.height - 5);
+      context.strokeStyle = '#ffffff22';
+      context.beginPath(); context.moveTo(0, upper); context.lineTo(rect.width, upper); context.moveTo(0, lower); context.lineTo(rect.width, lower); context.stroke();
+      if (!state.exact || !state.experiment.lastRobotControl) {
+        context.strokeStyle = '#666a90'; context.lineWidth = 2.5;
+        context.beginPath(); context.moveTo(0, upper); context.lineTo(rect.width, upper); context.moveTo(0, lower); context.lineTo(rect.width, lower); context.stroke();
+        return;
+      }
+      if (['motor', 'dual', 'protection', 'safety', 'integrated', 'pid'].includes(mission.robot.mode)) {
+        const usesIndependentTreads = ['dual', 'safety', 'integrated', 'pid'].includes(mission.robot.mode);
+        const motorDemand = state.experiment.direction * state.experiment.pwmValue / 255;
+        const drive = calculateDifferentialDrive({ leftDemand: usesIndependentTreads ? state.experiment.leftDemand : motorDemand, rightDemand: usesIndependentTreads ? state.experiment.rightDemand : motorDemand });
+        const drawDrive = (y, demand, color) => {
+          const level = y - demand * rect.height * .17;
+          context.beginPath(); context.moveTo(0, y);
+          for (let x = 0; x <= rect.width; x += 18) { context.lineTo(x, level); context.lineTo(Math.min(rect.width, x + 11), level); context.lineTo(Math.min(rect.width, x + 11), y); }
+          context.strokeStyle = color; context.lineWidth = 2.5; context.shadowColor = color; context.shadowBlur = 6; context.stroke(); context.shadowBlur = 0;
+        };
+        drawDrive(upper, drive.leftDemand, '#2ee5eb');
+        drawDrive(lower, drive.rightDemand, '#ffe43b');
+      } else {
+        const offset = state.reducedMotion ? 0 : (time / 18) % 48;
+        const drawPackets = (y, color, reverse = false) => {
+          for (let x = -48; x < rect.width + 48; x += 48) {
+            const position = reverse ? rect.width - (x + offset) : x + offset;
+            context.fillStyle = `${color}33`; context.strokeStyle = color; context.lineWidth = 2;
+            context.fillRect(position, y - 9, 30, 18); context.strokeRect(position, y - 9, 30, 18);
+          }
+        };
+        drawPackets(upper, '#2ee5eb');
+        drawPackets(lower, '#ffe43b', true);
+      }
+      return;
+    }
     if (['arduino-pwm', 'arduino-control', 'timer-astable', 'timer-monostable'].includes(mission.action)) {
       const highY = rect.height * .25;
       const lowY = rect.height * .75;

@@ -9,10 +9,10 @@
       </div>
       <p class="circuit-kicker">ROB’s Systems Lab presents</p>
       <h1>Circuit<br><em>Quest</em></h1>
-      <p class="circuit-hero__lede">Snap in colorful wires, compare <strong>DC and AC</strong>, master <strong>V = I × R</strong>, program an Arduino Uno, tune <strong>RLC resonance</strong>, and refresh essential <strong>555 timer and op-amp</strong> skills.</p>
+      <p class="circuit-hero__lede">Snap in colorful wires, master <strong>V = I × R</strong>, program an Arduino Uno, then build a <strong>two-tread ROB base</strong> and carry bounded commands from a computer all the way to <strong>CerebroVisionPro</strong>.</p>
       <div class="circuit-hero__actions">
         <button type="button" data-lab-start>Power up the lab <span aria-hidden="true">↗</span></button>
-        <a href="#mission-map">See all 25 builds</a>
+        <a href="#mission-map">See all 50 builds</a>
       </div>
       <p class="circuit-hero__privacy"><span aria-hidden="true">●</span> No login, no tracking, no physical robot connection. Progress stays on this device.</p>
     </div>
@@ -31,7 +31,7 @@
   </header>
 
   <section class="circuit-marquee" aria-label="Topics covered">
-    <div><span>COMPLETE THE LOOP</span><i>✦</i><span>ARDUINO I/O</span><i>✦</i><span>555 TIMERS</span><i>✦</i><span>OP-AMP FEEDBACK</span><i>✦</i><span>RLC RESONANCE</span><i>✦</i><span>MAKE • TEST • LEARN</span><i>✦</i></div>
+    <div><span>COMPLETE THE LOOP</span><i>✦</i><span>ARDUINO I/O</span><i>✦</i><span>ROBO TREADS</span><i>✦</i><span>WATCHDOGS</span><i>✦</i><span>CEREBROVISIONPRO</span><i>✦</i><span>MAKE • TEST • LEARN</span><i>✦</i></div>
   </section>
 
   <section class="concept-lab" aria-labelledby="concept-lab-title">
@@ -57,7 +57,7 @@
     <div class="mission-map__heading">
       <div>
         <p class="circuit-kicker">Your maker journey</p>
-        <h2 id="mission-map-title">Twenty-five builds. One bright idea at a time.</h2>
+        <h2 id="mission-map-title">Fifty builds. From one bulb to all of ROB.</h2>
       </div>
       <p>Each mission adds one new idea. Finish a build to unlock the next bench—just like a real engineer earning access to new tools.</p>
     </div>
@@ -78,7 +78,7 @@
       <button type="button" class="lab-hint" data-lab-hint><span aria-hidden="true">?</span> Give me a hint</button>
       <div class="lab-guide__score">
         <span>Maker sparks</span>
-        <strong><b data-lab-score>0</b> / 75</strong>
+        <strong><b data-lab-score>0</b> / 150</strong>
         <div><i data-score-bar></i></div>
       </div>
     </aside>
@@ -134,7 +134,7 @@
 
       <footer class="lab-stage__footer">
         <button type="button" data-previous-mission>← Previous</button>
-        <p data-lab-progress>Build 1 of 25</p>
+        <p data-lab-progress>Build 1 of 50</p>
         <button type="button" class="mission-next" data-next-mission disabled>Next build <span aria-hidden="true">→</span></button>
       </footer>
     </div>
@@ -194,9 +194,9 @@
       <div class="uno-ghost"><span>∞</span><strong>ARDUINO</strong><small>UNO</small><i></i><i></i><i></i><i></i><b>13</b><b>GND</b></div>
     </div>
     <div>
-      <p class="circuit-kicker">Builds 7, 8 &amp; 17–20 · Tiny computer, big ideas</p>
+      <p class="circuit-kicker">Builds 7, 8, 17–20 &amp; 26–45 · Tiny computer, full robot</p>
       <h2 id="arduino-school-title">From electricity to instructions.</h2>
-      <p>An Arduino Uno is a small computer that reads inputs and controls outputs. Start with a compiled blink sketch, then learn pull-up buttons, PWM, 10-bit analog conversion, and the input-process-output loop behind robotics.</p>
+      <p>An Arduino Uno is a small computer that reads inputs and controls outputs. Start with a compiler-checked blink sketch, then learn pull-up buttons, PWM, encoders, independent treads, bounded serial messages, telemetry, and the local watchdog that stops motion when a computer goes quiet.</p>
       <ol>
         <li><span>1</span><div><strong>setup()</strong><small>Runs once. Configure pin modes and startup behavior.</small></div></li>
         <li><span>2</span><div><strong>loop()</strong><small>Repeats while the board has power.</small></div></li>
@@ -223,6 +223,26 @@
       <article><span>CMP</span><h3>Comparator behavior</h3><p>Without negative feedback, a tiny difference drives the output high or low. Positive feedback adds hysteresis to reject threshold noise.</p><b>V+ &gt; V− → HIGH</b></article>
     </div>
     <aside><strong>Bench checklist</strong><p>Confirm pinout and supply polarity, add local bypass capacitors, calculate worst-case current and power, check input/output range, leave margin for tolerances and temperature, then measure the real circuit.</p></aside>
+  </section>
+
+  <section class="robot-campaign" aria-labelledby="robot-campaign-title">
+    <header>
+      <p class="circuit-kicker">Builds 26–50 · ROB systems campaign</p>
+      <h2 id="robot-campaign-title">Power. Protocol. Presence.</h2>
+      <p>The second half of Circuit Quest follows a command from two thumb controls to physical tread energy, measured feedback, an authenticated Cerebro session, live cameras, and bounded arm motion.</p>
+    </header>
+    <div class="robot-campaign__chapters">
+      <article><span>26–38</span><i aria-hidden="true">🛞</i><h3>Build the base</h3><p>Separate logic and motor power, drive and reverse a tread with an H-bridge, mix two sides, stop hard, read quadrature encoders, close a speed loop, and measure the battery.</p><b>12 V energy · 5 V logic · PWM · feedback</b></article>
+      <article><span>39–45</span><i aria-hidden="true">⌨️</i><h3>Teach the computer</h3><p>Open a passive USB serial link at 250,000 baud, identify the base, reject malformed or damaged frames, enforce freshness, return telemetry, and run ROB’s 5 Hz base snapshot.</p><b>intent → frame → validate → actuate → measure</b></article>
+      <article><span>46–50</span><i aria-hidden="true">🥽</i><h3>Pilot through Cerebro</h3><p>Authenticate a live operator, acquire expiring authority, keep video separate from STOP, initialize a measured seven-joint arm, and complete a CerebroVisionPro remote session.</p><b>identity · authority · dead-man · safe state</b></article>
+    </div>
+    <div class="robot-campaign__flow" aria-label="ROB remote-control architecture">
+      <article><span>01</span><strong>CerebroVisionPro</strong><small>operator intent + dead-man</small></article><i>⇄<small>control</small></i>
+      <article><span>02</span><strong>Cerebro computer</strong><small>identity, authority, bounds</small></article><i>⇄<small>USB + telemetry</small></i>
+      <article><span>03</span><strong>Arduino base</strong><small>5 Hz snapshots + watchdog</small></article><i>→<small>local energy</small></i>
+      <article><span>04</span><strong>Treads · arms · cameras</strong><small>measured motion + separate video</small></article>
+    </div>
+    <aside><strong>Simulation boundary</strong><p>These lessons mirror the ideas in ROB’s architecture, but the page cannot discover, pair with, or control a physical robot. Real motion requires trained supervision, exclusion zones, rated power hardware, validated limits, and an accessible physical E-stop.</p></aside>
   </section>
 
   <section class="maker-handbook" aria-labelledby="maker-handbook-title">
@@ -267,6 +287,16 @@
       <div><dt>Negative feedback</dt><dd>Returning part of an output to oppose the input error. It trades open-loop gain for stable, predictable closed-loop behavior.</dd></div>
       <div><dt>Saturation</dt><dd>The condition where an amplifier’s requested output exceeds what its supply rails and output stage can provide, causing clipping.</dd></div>
       <div><dt>Comparator</dt><dd>A circuit that reports which of two input voltages is greater by driving its output toward a high or low state.</dd></div>
+      <div><dt>H-bridge</dt><dd>A power-driver arrangement that can apply either polarity across a DC motor so logic signals can command forward, reverse, coast, or brake.</dd></div>
+      <div><dt>Quadrature encoder</dt><dd>Two phase-shifted pulse channels that let a controller count rotation and determine direction.</dd></div>
+      <div><dt>Differential drive</dt><dd>A steering method that controls left and right treads independently. Their average sets translation; their difference sets turning.</dd></div>
+      <div><dt>Serial frame</dt><dd>One complete, delimited message with defined fields. Sequence, bounds, and integrity checks help a receiver reject partial or stale meaning.</dd></div>
+      <div><dt>Telemetry</dt><dd>Measured state returned by a system—such as encoder speed, battery voltage, mode, command acknowledgement, freshness, and faults.</dd></div>
+      <div><dt>Watchdog</dt><dd>A local deadline that forces a known safe output when fresh valid commands stop arriving.</dd></div>
+      <div><dt>Authority lease</dt><dd>Permission to control a subsystem for a short time. It expires, releases, or is revoked independently of network connectivity.</dd></div>
+      <div><dt>Dead-man control</dt><dd>An input that must remain actively held and fresh for motion to continue. Release or stale input commands the safe state.</dd></div>
+      <div><dt>Control plane</dt><dd>The timely path for commands, acknowledgements, authority, and stop state. It must not wait behind optional media.</dd></div>
+      <div><dt>Media plane</dt><dd>The separate path for camera video and recovery. Frames may drop without delaying safety-critical control.</dd></div>
     </dl>
   </section>
 
