@@ -59,6 +59,7 @@ jobs:
           MUSIMOTION_CLOUDKIT_API_TOKEN: ${{ secrets.MUSIMOTION_CLOUDKIT_API_TOKEN }}
           MUSIMOTION_CLOUDKIT_ENVIRONMENT: production
           ROB_CLOUDKIT_LEADERBOARD_ENABLED: ${{ vars.ROB_CLOUDKIT_LEADERBOARD_ENABLED }}
+          ROB_SCHOOL_CLOUDKIT_ENABLED: ${{ vars.ROB_SCHOOL_CLOUDKIT_ENABLED }}
 
       - name: Validate optimized gallery output
         run: npm run validate

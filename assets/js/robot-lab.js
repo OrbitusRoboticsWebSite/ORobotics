@@ -30,6 +30,7 @@ import {
   applyMotorWatchdog,
 } from './electronics-lab-core.mjs';
 import { createRobElectronFlows, createRobSystemsMissions } from './robot-lab-rob-missions.mjs';
+import { createRobFieldElectronFlows, createRobFieldMissions } from './robot-lab-field-missions.mjs';
 
 const root = document.querySelector('[data-circuit-lab]');
 
@@ -540,6 +541,7 @@ if (root) {
     },
   ];
   missions.push(...createRobSystemsMissions(edge));
+  missions.push(...createRobFieldMissions(edge));
 
   // White particles show electron drift: negative-to-positive in DC metal paths and
   // back-and-forth oscillation in AC paths. Dim source segments represent the mechanism
@@ -666,6 +668,7 @@ if (root) {
     },
   ];
   electronFlows.push(...createRobElectronFlows(edge));
+  electronFlows.push(...createRobFieldElectronFlows(edge));
 
   const wireColors = ['#ff4fa3', '#2ee5eb', '#ffe43b', '#35d985', '#ff8a32', '#a27cff', '#ff4967', '#5bb6ff'];
 
@@ -732,6 +735,59 @@ if (root) {
       armHoldSeen: false,
       sessionSeen: false,
       faultSeen: false,
+      inspectSeen: false,
+      boost24Seen: false,
+      fuseSeen: false,
+      bus24Seen: false,
+      gaugeSeen: false,
+      slipPowerSeen: false,
+      tread24Seen: false,
+      stop24Seen: false,
+      stepperPowerSeen: false,
+      homeSeen: false,
+      stepSeen: false,
+      wrapSeen: false,
+      rotationSeen: false,
+      usbPathSeen: false,
+      lidarLinkSeen: false,
+      scanSeen: false,
+      stallSeen: false,
+      usbFaultSeen: false,
+      recoveredSeen: false,
+      orbiSeen: false,
+      topologySeen: false,
+      pathSeen: false,
+      instaLinkSeen: false,
+      bandwidthSeen: false,
+      controlPrioritySeen: false,
+      belly12Seen: false,
+      inverterSeen: false,
+      acBoundarySeen: false,
+      macPowerSeen: false,
+      macBootSeen: false,
+      accessoryPowerSeen: false,
+      budgetSeen: false,
+      startupSeen: false,
+      brownoutSeen: false,
+      isolationSeen: false,
+      boost48Seen: false,
+      armPowerSeen: false,
+      armCutSeen: false,
+      canWiringSeen: false,
+      canFaultSeen: false,
+      adapterSeen: false,
+      linuxSeen: false,
+      armIdsSeen: false,
+      dualTelemetrySeen: false,
+      armGatewaySeen: false,
+      qosSeen: false,
+      videoCongestSeen: false,
+      commissioningSeen: false,
+      failureDrillSeen: false,
+      deviceProfileSeen: false,
+      cloudSyncSeen: false,
+      rewardSeen: false,
+      redeemSeen: false,
       direction: 1,
       leftDemand: 0,
       rightDemand: 0,
@@ -798,6 +854,7 @@ if (root) {
 
   function saveProgress() {
     try { localStorage.setItem('rob-circuit-quest-progress', JSON.stringify([...state.completed])); } catch { /* Device storage is optional. */ }
+    window.dispatchEvent(new CustomEvent('rob:curriculum-progress', { detail: { completed: [...state.completed], total: missions.length } }));
   }
 
   function missionUnlocked(index) {
@@ -901,7 +958,7 @@ if (root) {
       body = `<div class="part-tread__body"><span class="part-tread__track"><i></i><i></i><i></i><i></i><i></i></span><strong>${component.side.toUpperCase()}</strong><small>TREAD</small>${componentPorts(component)}</div>`;
     }
     if (component.type === 'computer') {
-      body = `<div class="part-computer__body"><span class="part-computer__screen"><i></i><strong>CEREBRO</strong><small>CONTROL COMPUTER</small></span><span class="part-computer__base"></span>${componentPorts(component)}</div>`;
+      body = `<div class="part-computer__body"><span class="part-computer__screen"><i></i><strong>${component.badge || 'CEREBRO'}</strong><small>CONTROL COMPUTER</small></span><span class="part-computer__base"></span>${componentPorts(component)}</div>`;
     }
     if (component.type === 'estop') {
       body = `<div class="part-estop__body"><button type="button" data-robot-estop aria-label="Press simulated emergency stop"><span>STOP</span></button><small>NORMALLY CLOSED</small>${port(component.id, 'in', 'IN', 'lab-port--positive port-left-middle')}${port(component.id, 'out', 'OUT', 'lab-port--positive port-right-middle')}</div>`;
@@ -914,6 +971,33 @@ if (root) {
     }
     if (component.type === 'arm') {
       body = `<div class="part-arm__body"><span class="part-arm__base"></span><span class="part-arm__link part-arm__link--one"></span><span class="part-arm__joint"></span><span class="part-arm__link part-arm__link--two"></span><span class="part-arm__grip"></span>${componentPorts(component)}</div>`;
+    }
+    if (component.type === 'converter') {
+      body = `<div class="part-converter__body"><span class="part-converter__coils"><i></i><i></i></span><strong>${component.badge || 'BUCK–BOOST'}</strong><small>REGULATED DC</small><b>↗ VOLTAGE ↘</b>${componentPorts(component)}</div>`;
+    }
+    if (component.type === 'fuse') {
+      body = `<div class="part-fuse__body"><span class="part-fuse__glass"><i></i></span><strong>FUSED</strong><small>PROTECTED LINK</small>${port(component.id, 'in', 'IN', 'lab-port--positive port-left-middle')}${port(component.id, 'out', 'OUT', 'lab-port--positive port-right-middle')}</div>`;
+    }
+    if (component.type === 'slipring') {
+      body = `<div class="part-slipring__body"><span class="part-slipring__fixed"></span><span class="part-slipring__rotor"><i></i><i></i><i></i></span><strong>360°</strong><small>POWER + DATA</small>${componentPorts(component)}</div>`;
+    }
+    if (component.type === 'stepper') {
+      body = `<div class="part-stepper__body"><span class="part-stepper__chip"></span><span class="part-stepper__phases"><i>A</i><i>B</i><i>A</i><i>B</i></span><strong>STEP / DIR</strong><small>CURRENT LIMITED</small>${componentPorts(component)}</div>`;
+    }
+    if (component.type === 'router') {
+      body = `<div class="part-router__body"><span class="part-router__halo"><i></i><i></i><i></i></span><strong>ORBI</strong><small>ROBOT LAN</small><b><i></i><i></i><i></i></b>${componentPorts(component)}</div>`;
+    }
+    if (component.type === 'lidar') {
+      body = `<div class="part-lidar__body"><span class="part-lidar__scanner"><i></i></span><span class="part-lidar__beam"></span><strong>RPLIDAR</strong><small>RANGE SCANNER</small>${componentPorts(component)}</div>`;
+    }
+    if (component.type === 'inverter') {
+      body = `<div class="part-inverter__body"><span class="part-inverter__boundary">DC <i>→</i> AC</span><strong>SEALED</strong><small>LISTED EQUIPMENT ONLY</small>${componentPorts(component)}</div>`;
+    }
+    if (component.type === 'ethernet') {
+      body = `<div class="part-ethernet__body"><span class="part-ethernet__ports"><i></i><i></i><i></i><i></i></span><strong>ETHERNET</strong><small>WIRED STAR</small>${componentPorts(component)}</div>`;
+    }
+    if (component.type === 'canbus') {
+      body = `<div class="part-canbus__body"><span class="part-canbus__usb">USB</span><span class="part-canbus__arrows">⇄</span><span class="part-canbus__can">CAN</span><strong>BRIDGE</strong>${componentPorts(component)}</div>`;
     }
     const orientationClass = component.orientation ? ` part-${component.type}--${component.orientation}` : '';
     return `<article class="lab-part part-${component.type}${orientationClass}" data-part="${component.id}" style="left:${component.x}%;top:${component.y}%;--lamp-color:${component.color || '#ffe43b'}"><div>${body}</div><span class="lab-part__label">${component.label}</span></article>`;
@@ -1311,7 +1395,7 @@ if (root) {
     const mission = missions[state.missionIndex];
     els.components.querySelectorAll('.lab-part').forEach((part) => part.classList.remove('is-powered'));
     if (mission.action?.startsWith('robot-') && state.exact) {
-      els.components.querySelectorAll('.part-systembox, .part-computer, .part-vision, .part-camera, .part-arm').forEach((part) => part.classList.add('is-powered'));
+      els.components.querySelectorAll('.part-systembox, .part-computer, .part-vision, .part-camera, .part-arm, .part-converter, .part-fuse, .part-slipring, .part-stepper, .part-router, .part-lidar, .part-inverter, .part-ethernet, .part-canbus').forEach((part) => part.classList.add('is-powered'));
     }
     if (state.powered) {
       if (state.missionIndex === 4) {
@@ -1390,6 +1474,10 @@ if (root) {
       els.components.querySelectorAll('.part-computer, .part-vision').forEach((part) => part.classList.toggle('is-linked', Boolean(state.experiment.lastRobotControl)));
       els.components.querySelector('[data-part="camera"]')?.style.setProperty('--camera-pan', `${state.experiment.cameraPan || 0}deg`);
       els.components.querySelector('[data-part="arm"]')?.style.setProperty('--arm-joint', `${state.experiment.armJoint || 0}deg`);
+      els.components.querySelectorAll('.part-slipring').forEach((part) => part.classList.toggle('is-rotating', Boolean(state.experiment.rotationSeen)));
+      els.components.querySelectorAll('.part-lidar').forEach((part) => part.classList.toggle('is-scanning', Boolean(state.experiment.scanSeen) && !state.experiment.stallSeen));
+      els.components.querySelectorAll('.part-stepper').forEach((part) => part.classList.toggle('is-stepping', Boolean(state.experiment.stepSeen || state.experiment.stepperPowerSeen)));
+      els.components.querySelectorAll('.part-router, .part-ethernet, .part-canbus').forEach((part) => part.classList.toggle('is-linked', Boolean(state.experiment.lastRobotControl)));
     }
   }
 
@@ -1458,8 +1546,12 @@ if (root) {
 
   function robotEnergyActive(mission) {
     if (!state.experiment.lastRobotControl) return false;
-    if (mission.robot.mode === 'power') return false;
-    if (mission.robot.mode === 'safety') return state.experiment.motionSeen && !state.experiment.estopOpen;
+    if (mission.robot.mode === 'power') return Boolean(
+      state.experiment.boost24Seen || state.experiment.bus24Seen || state.experiment.slipPowerSeen || state.experiment.rotationSeen
+      || state.experiment.belly12Seen || state.experiment.inverterSeen || state.experiment.macPowerSeen || state.experiment.accessoryPowerSeen
+      || state.experiment.startupSeen || state.experiment.isolationSeen || state.experiment.boost48Seen
+    );
+    if (mission.robot.mode === 'safety') return state.experiment.armPowerSeen ? !state.experiment.armCutSeen : state.experiment.motionSeen && !state.experiment.estopOpen;
     if (['motor', 'protection'].includes(mission.robot.mode)) return state.experiment.pwmValue > 0 && !state.experiment.stopSeen;
     if (['dual', 'pid', 'integrated'].includes(mission.robot.mode)) return Math.abs(state.experiment.leftDemand) + Math.abs(state.experiment.rightDemand) > 0;
     return true;
@@ -2338,6 +2430,21 @@ if (root) {
         context.beginPath(); context.moveTo(0, upper); context.lineTo(rect.width, upper); context.moveTo(0, lower); context.lineTo(rect.width, lower); context.stroke();
         return;
       }
+      if (mission.robot.mode === 'power') {
+        const energized = robotEnergyActive(mission);
+        context.fillStyle = '#a8acd1';
+        context.fillText('DC VOLTAGE · FIXED POLARITY', 5, 11);
+        context.fillText('0 V RETURN · NO AC REVERSAL', 5, rect.height - 5);
+        context.strokeStyle = energized ? '#2ee5eb' : '#666a90';
+        context.lineWidth = 3;
+        context.shadowColor = context.strokeStyle;
+        context.shadowBlur = energized ? 7 : 0;
+        context.beginPath(); context.moveTo(0, upper); context.lineTo(rect.width, upper); context.stroke();
+        context.strokeStyle = energized ? '#ffe43b' : '#666a90';
+        context.beginPath(); context.moveTo(0, lower); context.lineTo(rect.width, lower); context.stroke();
+        context.shadowBlur = 0;
+        return;
+      }
       if (['motor', 'dual', 'protection', 'safety', 'integrated', 'pid'].includes(mission.robot.mode)) {
         const usesIndependentTreads = ['dual', 'safety', 'integrated', 'pid'].includes(mission.robot.mode);
         const motorDemand = state.experiment.direction * state.experiment.pwmValue / 255;
@@ -2703,6 +2810,22 @@ if (root) {
     if (els.conceptSummary) els.conceptSummary.textContent = conceptCopy[state.conceptMode][1];
   }));
   window.addEventListener('resize', resizeCanvases, { passive: true });
+  window.addEventListener('rob:merge-progress', (event) => {
+    const incoming = Array.isArray(event.detail?.completed) ? event.detail.completed : [];
+    let changed = false;
+    incoming.forEach((index) => {
+      if (Number.isInteger(index) && index >= 0 && index < missions.length && !state.completed.has(index)) {
+        state.completed.add(index);
+        changed = true;
+      }
+    });
+    if (!changed) return;
+    saveProgress();
+    state.achieved = state.completed.has(state.missionIndex);
+    updateScore();
+    renderRail();
+    els.next.disabled = !state.completed.has(state.missionIndex);
+  });
   if ('ResizeObserver' in window) {
     const canvasObserver = new ResizeObserver(resizeCanvases);
     canvasObserver.observe(els.workbench);

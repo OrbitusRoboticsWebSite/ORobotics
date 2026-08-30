@@ -9,12 +9,12 @@
       </div>
       <p class="circuit-kicker">ROB’s Systems Lab presents</p>
       <h1>Circuit<br><em>Quest</em></h1>
-      <p class="circuit-hero__lede">Snap in colorful wires, master <strong>V = I × R</strong>, program an Arduino Uno, then build a <strong>two-tread ROB base</strong> and carry bounded commands from a computer all the way to <strong>CerebroVisionPro</strong>.</p>
+      <p class="circuit-hero__lede">Snap in colorful wires, master <strong>V = I × R</strong>, program an Arduino Uno, then assemble ROB’s <strong>24 V motion, 12 V compute, 48 V arm, USB, CAN, and Ethernet systems</strong> all the way to <strong>CerebroVisionPro</strong>.</p>
       <div class="circuit-hero__actions">
         <button type="button" data-lab-start>Power up the lab <span aria-hidden="true">↗</span></button>
-        <a href="#mission-map">See all 50 builds</a>
+        <a href="#mission-map">See all 80 builds</a>
       </div>
-      <p class="circuit-hero__privacy"><span aria-hidden="true">●</span> No login, no tracking, no physical robot connection. Progress stays on this device.</p>
+      <p class="circuit-hero__privacy"><span aria-hidden="true">●</span> No tracking and no physical robot connection. Device progress works without an account; optional Apple sign-in privately recalls it.</p>
     </div>
 
     <div class="circuit-hero__machine" aria-label="Animated illustration of solar energy flowing into a battery and lamp">
@@ -31,7 +31,7 @@
   </header>
 
   <section class="circuit-marquee" aria-label="Topics covered">
-    <div><span>COMPLETE THE LOOP</span><i>✦</i><span>ARDUINO I/O</span><i>✦</i><span>ROBO TREADS</span><i>✦</i><span>WATCHDOGS</span><i>✦</i><span>CEREBROVISIONPRO</span><i>✦</i><span>MAKE • TEST • LEARN</span><i>✦</i></div>
+    <div><span>COMPLETE THE LOOP</span><i>✦</i><span>24 V MOTION</span><i>✦</i><span>USB 3 SLIP RING</span><i>✦</i><span>ORBI ETHERNET</span><i>✦</i><span>UBUNTU + CAN</span><i>✦</i><span>CEREBROVISIONPRO</span><i>✦</i><span>MAKE • TEST • LEARN</span><i>✦</i></div>
   </section>
 
   <section class="concept-lab" aria-labelledby="concept-lab-title">
@@ -57,7 +57,7 @@
     <div class="mission-map__heading">
       <div>
         <p class="circuit-kicker">Your maker journey</p>
-        <h2 id="mission-map-title">Fifty builds. From one bulb to all of ROB.</h2>
+        <h2 id="mission-map-title">Eighty builds. From one bulb to all of ROB.</h2>
       </div>
       <p>Each mission adds one new idea. Finish a build to unlock the next bench—just like a real engineer earning access to new tools.</p>
     </div>
@@ -78,7 +78,7 @@
       <button type="button" class="lab-hint" data-lab-hint><span aria-hidden="true">?</span> Give me a hint</button>
       <div class="lab-guide__score">
         <span>Maker sparks</span>
-        <strong><b data-lab-score>0</b> / 150</strong>
+        <strong><b data-lab-score>0</b> / 240</strong>
         <div><i data-score-bar></i></div>
       </div>
     </aside>
@@ -134,7 +134,7 @@
 
       <footer class="lab-stage__footer">
         <button type="button" data-previous-mission>← Previous</button>
-        <p data-lab-progress>Build 1 of 50</p>
+        <p data-lab-progress>Build 1 of 80</p>
         <button type="button" class="mission-next" data-next-mission disabled>Next build <span aria-hidden="true">→</span></button>
       </footer>
     </div>
@@ -229,7 +229,7 @@
     <header>
       <p class="circuit-kicker">Builds 26–50 · ROB systems campaign</p>
       <h2 id="robot-campaign-title">Power. Protocol. Presence.</h2>
-      <p>The second half of Circuit Quest follows a command from two thumb controls to physical tread energy, measured feedback, an authenticated Cerebro session, live cameras, and bounded arm motion.</p>
+      <p>The middle campaign follows a command from two thumb controls to physical tread energy, measured feedback, an authenticated Cerebro session, live cameras, and bounded arm motion.</p>
     </header>
     <div class="robot-campaign__chapters">
       <article><span>26–38</span><i aria-hidden="true">🛞</i><h3>Build the base</h3><p>Separate logic and motor power, drive and reverse a tread with an H-bridge, mix two sides, stop hard, read quadrature encoders, close a speed loop, and measure the battery.</p><b>12 V energy · 5 V logic · PWM · feedback</b></article>
@@ -243,6 +243,65 @@
       <article><span>04</span><strong>Treads · arms · cameras</strong><small>measured motion + separate video</small></article>
     </div>
     <aside><strong>Simulation boundary</strong><p>These lessons mirror the ideas in ROB’s architecture, but the page cannot discover, pair with, or control a physical robot. Real motion requires trained supervision, exclusion zones, rated power hardware, validated limits, and an accessible physical E-stop.</p></aside>
+  </section>
+
+  <section class="field-campaign" aria-labelledby="field-campaign-title">
+    <header>
+      <p class="circuit-kicker">Builds 51–80 · ROB field-systems campaign</p>
+      <h2 id="field-campaign-title">Build the robot behind the robot.</h2>
+      <p>Now the bench expands into ROB’s installed architecture. Follow energy from the source to each return, preserve USB and Ethernet signal paths across rotation, commission every rail independently, and make local safe states stronger than any network promise.</p>
+    </header>
+    <div class="field-campaign__stack">
+      <article><span>51–57</span><i aria-hidden="true">⚡</i><div><h3>Motion power across rotation</h3><p>Regulate and fuse the 24 V rail, feed both tread drivers, current-limit the torso stepper, home before motion, and route the complete 14 AWG power loop through the hybrid slip ring.</p><b>12 V in → 24 V regulated → branch protection → load → 0 V return</b></div></article>
+      <article><span>58–64</span><i aria-hidden="true">🛰️</i><div><h3>USB sensing and robot Ethernet</h3><p>Enumerate RPLIDAR through the USB 3-capable rotating channel, detect stale scans and link faults, then build an Orbi-centered Ethernet star for Cerebro, Amber Ubuntu, and the Insta360 Pro II.</p><b>rotating sensor → slip ring → USB host · endpoints → Orbi LAN</b></div></article>
+      <article><span>65–70</span><i aria-hidden="true">🔌</i><div><h3>12 V belly compute power</h3><p>Create a protected 12 V rail, feed a correctly rated inverter, keep the AC side sealed, power the Mac mini plus approved Orbi and camera adapters, and test startup surge, voltage sag, and thermal margin.</p><b>DC classroom wiring · sealed AC boundary · measured nameplates</b></div></article>
+      <article><span>71–77</span><i aria-hidden="true">🦾</i><div><h3>48 V arms, CAN, and Ubuntu</h3><p>Commission the 48 V arm rail without a live arm, split power after a normally open contactor, terminate CAN correctly, attach USB-to-CAN to the Amber Linux box, and bridge bounded Cerebro targets to measured arm feedback.</p><b>48 V energy ≠ CAN data ≠ Ethernet authority</b></div></article>
+      <article><span>78–80</span><i aria-hidden="true">🎟️</i><div><h3>Commission, remember, graduate</h3><p>Bring every domain online in a measured sequence, prove local watchdog behavior during compute loss, sync an optional private CloudKit learner passport, and unlock a minimal QR reward claim for ROB’s Maker Faire booth.</p><b>inspect → energize → measure → fault → recover → explain</b></div></article>
+    </div>
+    <div class="field-campaign__map" aria-label="ROB installed systems architecture">
+      <div class="field-node field-node--power"><small>ENERGY</small><strong>12 V SOURCE</strong><span>24 V motion · 12 V compute · 48 V arms</span></div>
+      <i>→</i><div class="field-node"><small>ROTATION</small><strong>HYBRID SLIP RING</strong><span>14 AWG power pair · USB channel</span></div>
+      <i>→</i><div class="field-node"><small>COMPUTE</small><strong>MAC MINI + UBUNTU</strong><span>Cerebro orchestration · Amber CAN gateway</span></div>
+      <i>⇄</i><div class="field-node field-node--network"><small>NETWORK</small><strong>ORBI BACKPACK</strong><span>CerebroVisionPro · Insta360 · robot LAN</span></div>
+    </div>
+    <aside><strong>Installed-hardware boundary</strong><p>Builds involving the 12 V inverter, its AC outlets, the 48 V arm supply, high-current 24 V conductors, and moving mechanisms are diagram-only learning activities. Real work requires the exact manufacturer documents, measured loads, rated protection, isolation, strain relief, trained adults or technicians, and ROB’s formal risk assessment.</p></aside>
+  </section>
+
+  <section id="maker-reward" class="maker-passport" data-maker-passport aria-labelledby="maker-passport-title">
+    <header>
+      <div><p class="circuit-kicker">Optional learner passport</p><h2 id="maker-passport-title">Remember the maker. Reward the journey.</h2></div>
+      <p>Every completed build is saved to this browser. Apple sign-in can merge that progress into your private CloudKit database so it can be recalled elsewhere. No email, camera data, location, or robot telemetry is stored by this lab.</p>
+    </header>
+    <div class="maker-passport__grid">
+      <article class="maker-passport__identity">
+        <span class="maker-passport__number">01</span>
+        <small>THIS DEVICE</small>
+        <strong data-passport-device>ROB-LOCAL-ONLY</strong>
+        <p>This random first-party device code is not an advertising identifier and never leaves the browser unless you choose account sync.</p>
+        <form data-passport-form><label>Maker nickname <input data-passport-nickname maxlength="24" autocomplete="nickname" placeholder="ROB MAKER"></label><button type="submit">Save maker name</button></form>
+        <p role="status" aria-live="polite" data-passport-profile-status>Your nickname is private progress data.</p>
+      </article>
+      <article class="maker-passport__progress">
+        <span class="maker-passport__number">02</span>
+        <small>CURRICULUM PROGRESS</small>
+        <strong data-passport-count>0 / 80</strong>
+        <div><i data-passport-bar></i></div>
+        <p>Local and private CloudKit mission lists are merged by union: completing a build on either browser never erases a build completed on the other.</p>
+        <div class="maker-passport__auth" data-passport-auth><div id="rob-school-apple-sign-in"></div><div id="rob-school-apple-sign-out"></div></div>
+        <button type="button" data-passport-sync>Sync private progress</button>
+        <p role="status" aria-live="polite" data-passport-cloud-status>Preparing the device passport…</p>
+      </article>
+      <article class="maker-passport__prize">
+        <span class="maker-passport__number">03</span>
+        <small>MAKER FAIRE REWARD</small>
+        <strong>ROB SCHOOL GRADUATE</strong>
+        <p data-passport-reward-status>Complete all 80 builds to unlock one stable account-bound pass.</p>
+        <button type="button" data-passport-issue disabled>Issue or recall my reward pass</button>
+        <div class="maker-passport__reward" data-passport-reward hidden><canvas data-passport-qr aria-label="Scannable ROB School Maker Faire reward code"></canvas><div><small>CLAIM CODE</small><strong data-passport-reward-code>—</strong><p>Present this QR at ROB’s Maker Faire booth. Staff verifies its CloudKit record and checks the booth’s one-time redemption log.</p></div></div>
+      </article>
+    </div>
+    <p class="maker-passport__verify" data-passport-verify role="status" aria-live="polite" hidden></p>
+    <aside><strong>Fair-play promise</strong><p>This is a friendly, client-reported curriculum reward—not identity proof or high-security anti-cheat. The public claim contains only a random account-derived record name, short code, completion count, and timestamp; it omits nickname and Apple account identity. Booth staff should honor each valid claim once.</p></aside>
   </section>
 
   <section class="maker-handbook" aria-labelledby="maker-handbook-title">
@@ -297,6 +356,16 @@
       <div><dt>Dead-man control</dt><dd>An input that must remain actively held and fresh for motion to continue. Release or stale input commands the safe state.</dd></div>
       <div><dt>Control plane</dt><dd>The timely path for commands, acknowledgements, authority, and stop state. It must not wait behind optional media.</dd></div>
       <div><dt>Media plane</dt><dd>The separate path for camera video and recovery. Frames may drop without delaying safety-critical control.</dd></div>
+      <div><dt>Buck-boost converter</dt><dd>A regulated DC converter that can raise or lower voltage within its current, thermal, efficiency, and protection limits.</dd></div>
+      <div><dt>Wire gauge</dt><dd>A conductor-size system. Gauge is only one part of a current rating; insulation, temperature, bundling, connectors, and duty cycle matter too.</dd></div>
+      <div><dt>Slip ring</dt><dd>An assembly that transfers rated power or signals across a rotating joint. High-speed data requires a purpose-designed channel, not ordinary power contacts.</dd></div>
+      <div><dt>Stepper motor</dt><dd>A multi-phase motor moved in discrete electrical steps. A driver regulates winding current; homing establishes an absolute mechanical reference.</dd></div>
+      <div><dt>RPLIDAR</dt><dd>A rotating range sensor that returns angle-and-distance samples. A consumer must reject stale, incomplete, or mis-timestamped scans.</dd></div>
+      <div><dt>Ethernet star</dt><dd>A topology where each endpoint has its own link to a switch or router, making paths and failures easier to isolate.</dd></div>
+      <div><dt>Inverter</dt><dd>A device that converts DC into AC. In this lab its AC output is always a sealed, listed-equipment boundary and never a learner wiring area.</dd></div>
+      <div><dt>CAN bus</dt><dd>A differential multi-node network using CAN-H and CAN-L, a defined reference strategy, short stubs, and termination at the two physical ends.</dd></div>
+      <div><dt>CloudKit passport</dt><dd>Optional private account storage that merges completed mission numbers with the progress saved on this browser.</dd></div>
+      <div><dt>Reward claim</dt><dd>A minimal public completion record referenced by a QR code. It is separate from the private learner nickname and progress record.</dd></div>
     </dl>
   </section>
 
@@ -305,4 +374,14 @@
 {{ $options := dict "targetPath" "js/robot-lab.js" "format" "esm" "minify" hugo.IsProduction }}
 {{ $game := resources.Get "js/robot-lab.js" | js.Build $options | fingerprint }}
 <script type="module" src="{{ $game.RelPermalink }}" integrity="{{ $game.Data.Integrity }}"></script>
+{{ $cloudKitToken := os.Getenv "MUSIMOTION_CLOUDKIT_API_TOKEN" }}
+{{ $schoolCloudKitEnabled := eq (os.Getenv "ROB_SCHOOL_CLOUDKIT_ENABLED") "true" }}
+{{ if and $cloudKitToken $schoolCloudKitEnabled }}
+  {{ $cloudKitEnvironment := os.Getenv "MUSIMOTION_CLOUDKIT_ENVIRONMENT" | default "production" }}
+  <script id="rob-school-cloudkit-config" type="application/json">{{ dict "apiToken" $cloudKitToken "container" "iCloud.com.orbitusrobotics.Musimotion" "environment" $cloudKitEnvironment | jsonify | safeJS }}</script>
+  <script id="rob-school-cloudkit-script" src="https://cdn.apple-cloudkit.com/ck/2/cloudkit.js" crossorigin="anonymous" async></script>
+{{ end }}
+{{ $passportOptions := dict "targetPath" "js/robot-lab-passport.js" "format" "esm" "minify" hugo.IsProduction }}
+{{ $passport := resources.Get "js/robot-lab-passport.js" | js.Build $passportOptions | fingerprint }}
+<script type="module" src="{{ $passport.RelPermalink }}" integrity="{{ $passport.Data.Integrity }}"></script>
 {{ end }}
