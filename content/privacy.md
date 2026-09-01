@@ -1,6 +1,6 @@
 ---
 title: "Privacy"
-description: "Privacy practices for Orbitus Robotics apps, including ROBCodex, LingonXRob Plist Editor, ROB Training, and ROB Training Vision."
+description: "Privacy practices for Orbitus Robotics apps, including CodeAtlas, ROBCodex, LingonXRob Plist Editor, ROB Training, and ROB Training Vision."
 layout: "single"
 url: "/privacy/"
 ---
@@ -8,6 +8,16 @@ url: "/privacy/"
 # Orbitus Robotics App Privacy
 
 Last updated: August 31, 2026
+
+## CodeAtlas
+
+CodeAtlas does not collect, track, sell, or share personal data. It contains no advertising, third-party analytics, crash-reporting, telemetry, user accounts, in-app purchases, or network services.
+
+The Mac app runs in Apple's App Sandbox and reads only project folders that you explicitly select. Source files, file paths, analysis results, performance heuristics, and exported graph data remain on your Mac and are not transmitted to Orbitus Robotics or any third party.
+
+When you invoke the CodeAtlas Xcode Source Editor command, the extension reads the current editor buffer and transfers it locally to the companion app through an App Group shared by those two CodeAtlas processes. The buffer is not uploaded or sent over a network.
+
+You can remove locally stored preferences and shared extension data by deleting the app and its local containers.
 
 ## ROBCodex
 
