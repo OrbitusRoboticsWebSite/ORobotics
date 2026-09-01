@@ -1,13 +1,19 @@
 ---
 title: "Privacy"
-description: "Privacy practices for Orbitus Robotics apps, including LingonXRob Plist Editor, ROB Training, and ROB Training Vision."
+description: "Privacy practices for Orbitus Robotics apps, including ROBCodex, LingonXRob Plist Editor, ROB Training, and ROB Training Vision."
 layout: "single"
 url: "/privacy/"
 ---
 
 # Orbitus Robotics App Privacy
 
-Last updated: August 30, 2026
+Last updated: August 31, 2026
+
+## ROBCodex
+
+ROBCodex does not collect, track, sell, or share personal data. Live session content moves directly between the paired iPhone or iPad and Mac over an encrypted local-network connection; Orbitus Robotics does not receive or store it. Codex credentials remain on the Mac.
+
+[Read the complete ROBCodex privacy policy](/privacy/robcodex/), including local-network, Keychain, retention, and deletion details.
 
 ## LingonXRob Plist Editor
 
