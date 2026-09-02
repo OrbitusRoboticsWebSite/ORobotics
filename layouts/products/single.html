@@ -56,6 +56,27 @@
     </div>
   </section>
 
+  <section class="product-hub__developer" aria-labelledby="developer-products-title">
+    <div class="product-hub__section-head">
+      <p class="product-kicker">Developer software</p>
+      <h2 id="developer-products-title">Code should explain its shape.</h2>
+      <p>CodeAtlas turns Swift, Objective-C, C, C++, and Python projects into explorable architecture, then connects the map to Git changes, impact paths, hotspots, test coverage, and CI.</p>
+    </div>
+    <a class="developer-product-card" href="{{ "products/codeatlas/" | relURL }}">
+      <div class="developer-product-card__copy">
+        <span>macOS · Local-first · Open source</span>
+        <h3>CodeAtlas</h3>
+        <p>Fly through a 3D code graph, review the blast radius of a branch, enforce architecture rules, import coverage, and bring explainable findings into every pull request.</p>
+        <ul aria-label="CodeAtlas features"><li>Five connected workspaces</li><li>Git-aware impact review</li><li>SARIF + GitHub Actions</li></ul>
+        <strong>Explore CodeAtlas <span aria-hidden="true">↗</span></strong>
+      </div>
+      <div class="developer-product-card__media">
+        {{ $codeatlasScreen := (resources.Get "images/products/codeatlas/codeatlas-map.png").Process "webp q84" }}
+        <img src="{{ $codeatlasScreen.RelPermalink }}" width="{{ $codeatlasScreen.Width }}" height="{{ $codeatlasScreen.Height }}" alt="CodeAtlas three-dimensional software architecture map" loading="lazy" decoding="async">
+      </div>
+    </a>
+  </section>
+
   <section class="product-hub__creative" aria-labelledby="creative-products-title">
     <div class="product-hub__section-head">
       <p class="product-kicker">Creative software</p>

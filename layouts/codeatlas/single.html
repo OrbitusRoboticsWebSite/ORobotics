@@ -1,0 +1,222 @@
+{{ define "main" }}
+<main id="main" class="codeatlas-page">
+  {{ partial "product-subnav.html" . }}
+
+  <section class="codeatlas-hero" aria-labelledby="codeatlas-title">
+    <div class="codeatlas-hero__grid" aria-hidden="true"></div>
+    <div class="codeatlas-hero__copy">
+      <p class="codeatlas-kicker"><span></span>Local-first developer intelligence for macOS</p>
+      <h1 id="codeatlas-title">See the system.<br><em>Change it with confidence.</em></h1>
+      <p class="codeatlas-hero__lede">CodeAtlas turns Swift, Objective-C, C, C++, and Python codebases into explorable architecture maps, then layers in Git-aware review, impact paths, hotspots, coverage, architecture rules, and CI-ready findings. Your source stays on your Mac.</p>
+      <div class="codeatlas-actions">
+        <a class="codeatlas-button codeatlas-button--primary" href="#workspaces">Explore the workspaces <span aria-hidden="true">↓</span></a>
+        <a class="codeatlas-button" href="https://github.com/RudyAramayo/CodeAtlas">View the source <span aria-hidden="true">↗</span></a>
+      </div>
+      <ul class="codeatlas-hero__facts" aria-label="CodeAtlas highlights">
+        <li><strong>5</strong><span>connected workspaces</span></li>
+        <li><strong>100%</strong><span>on-device analysis</span></li>
+        <li><strong>0</strong><span>source uploads</span></li>
+      </ul>
+    </div>
+    <figure class="codeatlas-hero__media">
+      <div class="codeatlas-windowbar" aria-hidden="true"><i></i><i></i><i></i><span>CodeAtlas / Architecture Map</span></div>
+      {{ $map := (resources.Get "images/products/codeatlas/codeatlas-map.png").Process "webp q84" }}
+      <img src="{{ $map.RelPermalink }}" width="{{ $map.Width }}" height="{{ $map.Height }}" alt="CodeAtlas displaying a three-dimensional map of files, types, functions, and their relationships" fetchpriority="high" decoding="async">
+      <figcaption><span>Real project structure</span><strong>Rendered locally</strong></figcaption>
+    </figure>
+  </section>
+
+  <section id="workspaces" class="codeatlas-workspaces" aria-labelledby="workspaces-title">
+    <div class="codeatlas-section-head">
+      <p class="codeatlas-kicker">One model, five ways to reason</p>
+      <h2 id="workspaces-title">Move from orientation to decision.</h2>
+      <p>Every workspace uses the same project graph, so context follows you from the broadest system view to the exact relationship behind a risky change.</p>
+    </div>
+    <div class="codeatlas-workspace-grid">
+      <article class="codeatlas-workspace codeatlas-workspace--map"><span>01 / MAP</span><h3>Architecture in 3D</h3><p>Fly through folders, files, types, functions, and dependencies. Search, isolate, bookmark, and trace the shortest path between any two symbols.</p></article>
+      <article class="codeatlas-workspace codeatlas-workspace--changes"><span>02 / CHANGES</span><h3>Review the blast radius</h3><p>Compare against a Git baseline, separate added and modified files, and follow every transitive dependent before approving a change.</p></article>
+      <article class="codeatlas-workspace codeatlas-workspace--hotspots"><span>03 / HOTSPOTS</span><h3>Find concentrated risk</h3><p>Combine structural complexity, dependency pressure, code churn, and contributor activity into a prioritized maintenance view.</p></article>
+      <article class="codeatlas-workspace codeatlas-workspace--coverage"><span>04 / COVERAGE</span><h3>Put test gaps in context</h3><p>Import Xcode result bundles, xccov JSON, or LCOV and see weak coverage beside the architecture it is meant to protect.</p></article>
+      <article class="codeatlas-workspace codeatlas-workspace--matrix"><span>05 / MATRIX</span><h3>Read the whole system at once</h3><p>Scan a compact dependency matrix for unexpected coupling, isolated modules, cycles, and relationships that do not fit the intended design.</p></article>
+    </div>
+  </section>
+
+  <section id="review" class="codeatlas-story codeatlas-story--split" aria-labelledby="review-title">
+    <div class="codeatlas-story__copy">
+      <p class="codeatlas-kicker">Git-aware review</p>
+      <h2 id="review-title">A diff tells you what changed. CodeAtlas shows what the change can reach.</h2>
+      <p>Choose a branch, tag, or commit as the baseline. CodeAtlas overlays added and modified files on the architecture, then walks dependencies in both directions to expose upstream requirements and downstream blast radius.</p>
+      <dl class="codeatlas-feature-list">
+        <div><dt>Baseline comparison</dt><dd>Review the current working tree against any Git revision without leaving the app.</dd></div>
+        <div><dt>Impact radius</dt><dd>Traverse every transitive dependent, not only the first visible edge.</dd></div>
+        <div><dt>Path finding</dt><dd>Reveal the shortest architectural path between the selected symbol and a suspected consumer.</dd></div>
+        <div><dt>Navigation memory</dt><dd>Move back and forward through selections, or bookmark the nodes that matter to the review.</dd></div>
+      </dl>
+    </div>
+    <figure class="codeatlas-story__screen">
+      {{ $cerebro := (resources.Get "images/products/codeatlas/codeatlas-cerebro.png").Process "webp q84" }}
+      <img src="{{ $cerebro.RelPermalink }}" width="{{ $cerebro.Width }}" height="{{ $cerebro.Height }}" alt="CodeAtlas visualizing the clustered architecture of the Cerebro robotics project" loading="lazy" decoding="async">
+      <figcaption><span>Cerebro project</span><strong>Clusters expose subsystem boundaries</strong></figcaption>
+    </figure>
+  </section>
+
+  <section id="intelligence" class="codeatlas-intelligence" aria-labelledby="intelligence-title">
+    <div class="codeatlas-section-head">
+      <p class="codeatlas-kicker">Deeper relationships, still build-free</p>
+      <h2 id="intelligence-title">Trace more than imports.</h2>
+      <p>Optional call enrichment adds likely function relationships to the map while preserving the fast, source-first workflow. CodeAtlas also reports the semantic tooling already present on your Mac—including SourceKit-LSP, clangd, and compilation databases—so teams can see which deeper analysis paths are available.</p>
+    </div>
+    <div class="codeatlas-intelligence__flow" aria-label="CodeAtlas analysis flow">
+      <article><span>01</span><strong>Parse locally</strong><small>Swift files, declarations, imports, and structural edges</small></article>
+      <i aria-hidden="true">→</i>
+      <article><span>02</span><strong>Enrich on demand</strong><small>Optional inferred-call relationships, clearly identified as beta</small></article>
+      <i aria-hidden="true">→</i>
+      <article><span>03</span><strong>Inspect readiness</strong><small>SourceKit-LSP, clangd, and compile-command availability</small></article>
+      <i aria-hidden="true">→</i>
+      <article><span>04</span><strong>Render one graph</strong><small>Every lens stays connected to the same architecture model</small></article>
+    </div>
+    <p class="codeatlas-honesty"><strong>Designed to be explicit:</strong> inferred calls are a fast beta signal, not a claim of compiler-exact resolution. You decide when to enable them.</p>
+  </section>
+
+  <section id="guardrails" class="codeatlas-guardrails" aria-labelledby="guardrails-title">
+    <div class="codeatlas-guardrails__heading">
+      <p class="codeatlas-kicker">Architecture as an executable agreement</p>
+      <h2 id="guardrails-title">Make intended boundaries visible.</h2>
+      <p>Define lightweight layer rules and let CodeAtlas identify relationships that cross them. Cycle detection finds strongly connected areas that make systems difficult to separate, test, or replace.</p>
+    </div>
+    <div class="codeatlas-rule-stack" aria-label="Example architecture layers">
+      <article><span>UI</span><strong>Views + interaction</strong><small>May depend on Domain</small></article>
+      <i aria-hidden="true">↓</i>
+      <article><span>DOMAIN</span><strong>Policies + use cases</strong><small>May depend on Data contracts</small></article>
+      <i aria-hidden="true">↓</i>
+      <article><span>DATA</span><strong>Storage + transport</strong><small>Cannot reach back into UI</small></article>
+      <b aria-label="Violation example">Unexpected reverse edge / surfaced as a finding</b>
+    </div>
+    <div class="codeatlas-guardrails__notes">
+      <article><span>RULES</span><h3>Layer violations</h3><p>Catch dependencies that contradict the direction your team intended.</p></article>
+      <article><span>CYCLES</span><h3>Strong components</h3><p>Surface groups that can no longer evolve independently.</p></article>
+      <article><span>CONTEXT</span><h3>Inspect in place</h3><p>Select a finding and return to its files, symbols, and surrounding graph.</p></article>
+    </div>
+  </section>
+
+  <section id="quality" class="codeatlas-quality" aria-labelledby="quality-title">
+    <div class="codeatlas-section-head">
+      <p class="codeatlas-kicker">Prioritize where engineering attention pays back</p>
+      <h2 id="quality-title">Risk becomes a ranked, explainable signal.</h2>
+      <p>Hotspots combine churn and contributor history with graph pressure. Coverage overlays add test evidence. Quality gates bring the signals together without hiding the ingredients behind a single opaque score.</p>
+    </div>
+    <div class="codeatlas-quality__grid">
+      <article class="codeatlas-signal codeatlas-signal--hotspot"><span>HOTSPOTS</span><div class="codeatlas-meter"><i style="--value: 82%"></i></div><h3>Churn × structure</h3><p>Rank files where frequent edits and dense dependencies make the cost of mistakes unusually high.</p><ul><li>Commit frequency</li><li>Contributor activity</li><li>Dependency pressure</li><li>Structural complexity</li></ul></article>
+      <article class="codeatlas-signal codeatlas-signal--coverage"><span>COVERAGE</span><div class="codeatlas-meter"><i style="--value: 61%"></i></div><h3>Tests in context</h3><p>Import existing reports and see weak coverage on the same map used to reason about architecture.</p><ul><li>.xcresult bundles</li><li>xccov JSON</li><li>LCOV</li><li>File-level overlays</li></ul></article>
+      <article class="codeatlas-signal codeatlas-signal--gate"><span>QUALITY GATE</span><div class="codeatlas-gate"><i></i><strong>REVIEW</strong></div><h3>A decision, with evidence</h3><p>Combine new risk, architectural findings, and available coverage into a CI-friendly review result.</p><ul><li>Readable summary</li><li>SARIF findings</li><li>Nonzero CI exit</li><li>Configurable workflow</li></ul></article>
+    </div>
+  </section>
+
+  <section id="automation" class="codeatlas-automation" aria-labelledby="automation-title">
+    <div class="codeatlas-automation__copy">
+      <p class="codeatlas-kicker">From the desktop to every pull request</p>
+      <h2 id="automation-title">The graph can join your CI.</h2>
+      <p>Run the same local-first project analysis from the CodeAtlas command-line target. Export JSON for your own tools, emit SARIF for code-scanning interfaces, or install the included GitHub Actions template and fail a review when new risk crosses the gate.</p>
+      <div class="codeatlas-export-pills" aria-label="Automation formats"><span>CLI</span><span>JSON</span><span>SARIF 2.1</span><span>GitHub Actions</span></div>
+    </div>
+    <div class="codeatlas-terminal" role="img" aria-label="Example CodeAtlas command line analysis">
+      <div><i></i><i></i><i></i><span>zsh — code review</span></div>
+      <pre><code><b>$</b> CodeAtlasCLI ./MyProject \
+    --baseline origin/main \
+    --sarif codeatlas.sarif \
+    --json codeatlas.json \
+    --fail-on-risk
+
+<em>Analyzed</em> 186 files · 1,420 nodes · 4,968 relationships
+<strong>Quality gate: REVIEW</strong>
+3 architecture findings · 2 new high-risk files</code></pre>
+    </div>
+  </section>
+
+  <section id="flow" class="codeatlas-flow" aria-labelledby="flow-title">
+    <div class="codeatlas-section-head">
+      <p class="codeatlas-kicker">Built for the investigation loop</p>
+      <h2 id="flow-title">Keep context while the code keeps moving.</h2>
+    </div>
+    <div class="codeatlas-flow__grid">
+      <article><span>01</span><h3>Saved projects</h3><p>Reopen recent security-scoped project folders directly from the welcome screen.</p></article>
+      <article><span>02</span><h3>Live reanalysis</h3><p>Optionally watch the project fingerprint and refresh the model as source files change.</p></article>
+      <article><span>03</span><h3>Selection history</h3><p>Navigate back and forward across an investigation without rebuilding your mental path.</p></article>
+      <article><span>04</span><h3>Node bookmarks</h3><p>Pin important files and symbols so the next question starts from known landmarks.</p></article>
+      <article><span>05</span><h3>Search + filters</h3><p>Narrow the graph by name, type, relationship, change state, or lens.</p></article>
+      <article><span>06</span><h3>Portable exports</h3><p>Share graph JSON, findings, and starter CI workflow files without sharing source.</p></article>
+    </div>
+  </section>
+
+  <section id="whats-new" class="codeatlas-new" aria-labelledby="new-title">
+    <div class="codeatlas-section-head">
+      <p class="codeatlas-kicker">What’s new in this release</p>
+      <h2 id="new-title">From visualizer to architecture workspace.</h2>
+      <p>The release opens with an in-app briefing and keeps these notes available from the CodeAtlas menu, so every new capability has a clear starting point.</p>
+    </div>
+    <div class="codeatlas-new__grid">
+      <article><b>01</b><h3>Five workspaces</h3><p>Map, Changes, Hotspots, Coverage, and Matrix turn one project model into purpose-built views.</p></article>
+      <article><b>02</b><h3>Git context</h3><p>Choose a baseline and inspect changed files, commit activity, contributors, and blast radius.</p></article>
+      <article><b>03</b><h3>Impact paths</h3><p>Trace dependencies, dependents, and the shortest route between important symbols.</p></article>
+      <article><b>04</b><h3>Guardrails</h3><p>Check layer direction and circular relationships before design drift becomes permanent.</p></article>
+      <article><b>05</b><h3>Quality evidence</h3><p>Rank hotspots, import coverage, and evaluate a transparent quality gate.</p></article>
+      <article><b>06</b><h3>Automation</h3><p>Run analysis from the CLI and export graph JSON, SARIF, or a GitHub Actions workflow.</p></article>
+      <article><b>07</b><h3>Investigation tools</h3><p>Return to recent projects, watch for changes, bookmark nodes, and revisit selection history.</p></article>
+      <article><b>08</b><h3>Learning center</h3><p>Eight guided tutorials live inside the app and remain available whenever you need a reset.</p></article>
+    </div>
+  </section>
+
+  <section id="tutorials" class="codeatlas-tutorials" aria-labelledby="tutorials-title">
+    <div class="codeatlas-tutorials__intro">
+      <p class="codeatlas-kicker">Tutorial center</p>
+      <h2 id="tutorials-title">Learn with the project already in front of you.</h2>
+      <p>Open Tutorials from the CodeAtlas menu or Resources control. Each lesson explains the goal, the controls to use, and what to look for in your own graph.</p>
+      <a class="codeatlas-button codeatlas-button--primary" href="#tutorial-list">See every lesson <span aria-hidden="true">↓</span></a>
+    </div>
+    <ol id="tutorial-list" class="codeatlas-tutorial-list">
+      <li><span>5 min</span><h3>Take your first flight</h3><p>Open a project, orbit the graph, use keyboard flight controls, search, and inspect a symbol.</p></li>
+      <li><span>7 min</span><h3>Review a branch</h3><p>Select a Git baseline and move from changed files to the dependencies each change can affect.</p></li>
+      <li><span>6 min</span><h3>Trace impact</h3><p>Follow direct and transitive dependents, then find the shortest path to a consumer.</p></li>
+      <li><span>8 min</span><h3>Set architecture rules</h3><p>Describe intended layers, read violations, and identify circular components.</p></li>
+      <li><span>6 min</span><h3>Prioritize hotspots</h3><p>Interpret churn, ownership, graph pressure, and complexity without treating a score as truth.</p></li>
+      <li><span>5 min</span><h3>Overlay coverage</h3><p>Import an Xcode or LCOV report and focus testing on risky, weakly protected code.</p></li>
+      <li><span>5 min</span><h3>Enrich likely calls</h3><p>Enable the beta option, distinguish inferred edges, and review toolchain readiness.</p></li>
+      <li><span>9 min</span><h3>Add CodeAtlas to CI</h3><p>Export the workflow, generate SARIF, and choose when new risk should block a pull request.</p></li>
+    </ol>
+  </section>
+
+  <section id="support" class="codeatlas-support" aria-labelledby="support-title">
+    <div class="codeatlas-section-head">
+      <p class="codeatlas-kicker">Support without a data handoff</p>
+      <h2 id="support-title">Your code stays yours.</h2>
+      <p>Project parsing, Git inspection, graph construction, coverage import, and exports run locally. CodeAtlas does not need an account or a source-code upload to explain your architecture.</p>
+    </div>
+    <div class="codeatlas-support__grid">
+      <div class="codeatlas-faq">
+        <details open><summary>Which projects can I open?</summary><p>Select a repository or folder containing Swift, Objective-C, Objective-C++, C, C++, or Python source. CodeAtlas understands the common source and header extensions for those languages, and analysis does not require a successful build.</p></details>
+        <details><summary>Does CodeAtlas change my repository?</summary><p>Analysis is read-only. Exports are created only where you explicitly save them, and live reanalysis watches for changes without editing source.</p></details>
+        <details><summary>Is call enrichment compiler-exact?</summary><p>No. The optional inferred-call layer is labeled beta and is designed as an additional navigation signal. Toolchain readiness is reported separately.</p></details>
+        <details><summary>Can my team use the results?</summary><p>Yes. Export the graph as JSON, findings as SARIF, or a GitHub Actions starter workflow for repository automation.</p></details>
+        <details><summary>Where do I get help?</summary><p>Start in the in-app Tutorial Center, review the open-source project, or contact Orbitus Robotics for product support.</p></details>
+      </div>
+      <aside class="codeatlas-support-card">
+        <span>CODEATLAS SUPPORT</span>
+        <h3>Bring the architecture question. Keep the source on your Mac.</h3>
+        <p>For setup guidance, analysis questions, workflow feedback, or accessibility support, reach the Orbitus team directly.</p>
+        <a class="codeatlas-button codeatlas-button--primary" href="{{ "contact/" | relURL }}">Contact Orbitus Robotics <span aria-hidden="true">↗</span></a>
+        <a class="codeatlas-support-card__link" href="https://github.com/RudyAramayo/CodeAtlas/issues">Report an issue on GitHub <span aria-hidden="true">↗</span></a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="codeatlas-closing" aria-labelledby="closing-title">
+    <p class="codeatlas-kicker">CodeAtlas for macOS</p>
+    <h2 id="closing-title">A codebase is a place.<br><em>Know where you’re going.</em></h2>
+    <p>Explore the source today and follow the first Mac App Store release from Orbitus Robotics.</p>
+    <div class="codeatlas-actions">
+      <a class="codeatlas-button codeatlas-button--primary" href="https://github.com/RudyAramayo/CodeAtlas">Get CodeAtlas on GitHub <span aria-hidden="true">↗</span></a>
+      <a class="codeatlas-button" href="https://apps.apple.com/app/id6807302975">View the Mac App Store release <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+</main>
+{{ end }}
