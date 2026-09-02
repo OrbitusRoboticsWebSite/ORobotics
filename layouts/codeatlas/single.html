@@ -41,22 +41,41 @@
     </div>
   </section>
 
-  <section id="review" class="codeatlas-story codeatlas-story--split" aria-labelledby="review-title">
+  <section id="analysis-progress" class="codeatlas-story codeatlas-story--split" aria-labelledby="analysis-progress-title">
     <div class="codeatlas-story__copy">
-      <p class="codeatlas-kicker">Git-aware review</p>
-      <h2 id="review-title">A diff tells you what changed. CodeAtlas shows what the change can reach.</h2>
-      <p>Choose a branch, tag, or commit as the baseline. CodeAtlas overlays added and modified files on the architecture, then walks dependencies in both directions to expose upstream requirements and downstream blast radius.</p>
+      <p class="codeatlas-kicker">Live analysis, without the blind wait</p>
+      <h2 id="analysis-progress-title">Every phase shows its work.</h2>
+      <p>Large repositories take real work to understand. CodeAtlas now reports overall progress, the active phase, exact file counts, and a live console while your graph is built.</p>
       <dl class="codeatlas-feature-list">
-        <div><dt>Baseline comparison</dt><dd>Review the current working tree against any Git revision without leaving the app.</dd></div>
-        <div><dt>Impact radius</dt><dd>Traverse every transitive dependent, not only the first visible edge.</dd></div>
-        <div><dt>Path finding</dt><dd>Reveal the shortest architectural path between the selected symbol and a suspected consumer.</dd></div>
-        <div><dt>Navigation memory</dt><dd>Move back and forward through selections, or bookmark the nodes that matter to the review.</dd></div>
+        <div><dt>Stage progress</dt><dd>Follow discovery, parsing, indexing, dependency linking, call enrichment, and graph metrics.</dd></div>
+        <div><dt>Per-file activity</dt><dd>See which source file is being read, parsed, indexed, or enriched right now.</dd></div>
+        <div><dt>Live console</dt><dd>Review timestamped events in place or open the full log when you need more detail.</dd></div>
+        <div><dt>In your control</dt><dd>Stop a run at any time, then reanalyze when the project is ready.</dd></div>
       </dl>
     </div>
     <figure class="codeatlas-story__screen">
-      {{ $cerebro := (resources.Get "images/products/codeatlas/codeatlas-cerebro.png").Process "webp q84" }}
-      <img src="{{ $cerebro.RelPermalink }}" width="{{ $cerebro.Width }}" height="{{ $cerebro.Height }}" alt="CodeAtlas visualizing the clustered architecture of the Cerebro robotics project" loading="lazy" decoding="async">
-      <figcaption><span>Cerebro project</span><strong>Clusters expose subsystem boundaries</strong></figcaption>
+      {{ $progress := (resources.Get "images/products/codeatlas/codeatlas-progress.png").Process "webp q84" }}
+      <img src="{{ $progress.RelPermalink }}" width="{{ $progress.Width }}" height="{{ $progress.Height }}" alt="CodeAtlas showing analysis progress and timestamped per-file console output while indexing the Cerebro robotics project" loading="lazy" decoding="async">
+      <figcaption><span>Cerebro / 300 files</span><strong>Progress and console output stay visible</strong></figcaption>
+    </figure>
+  </section>
+
+  <section id="dependency-matrix" class="codeatlas-story codeatlas-story--split" aria-labelledby="dependency-matrix-title">
+    <div class="codeatlas-story__copy">
+      <p class="codeatlas-kicker">Responsive at large-project scale</p>
+      <h2 id="dependency-matrix-title">Open the matrix. Keep moving.</h2>
+      <p>The dependency matrix is prepared on a background index and focuses on the most-connected types, so a graph with hundreds of symbols stays explorable instead of freezing the interface.</p>
+      <dl class="codeatlas-feature-list">
+        <div><dt>Fast entry</dt><dd>Switch from the 3D map to a useful matrix without rebuilding every relationship on the main thread.</dd></div>
+        <div><dt>Focused signal</dt><dd>See the 28 most-connected types first, with weighted cells that expose structural pressure.</dd></div>
+        <div><dt>Relationship detail</dt><dd>Distinguish references, construction, conformance, imports, and likely calls.</dd></div>
+        <div><dt>Shared context</dt><dd>Keep hotspots, impact radius, source links, and architecture findings beside the matrix.</dd></div>
+      </dl>
+    </div>
+    <figure class="codeatlas-story__screen">
+      {{ $matrix := (resources.Get "images/products/codeatlas/codeatlas-matrix.png").Process "webp q84" }}
+      <img src="{{ $matrix.RelPermalink }}" width="{{ $matrix.Width }}" height="{{ $matrix.Height }}" alt="CodeAtlas displaying a color-coded dependency matrix for 934 types in the Cerebro robotics project" loading="lazy" decoding="async">
+      <figcaption><span>934 types / 14,767 relationships</span><strong>Background-indexed and interactive</strong></figcaption>
     </figure>
   </section>
 
