@@ -1,13 +1,41 @@
 ---
 title: "Privacy"
-description: "Privacy practices for Orbitus Robotics apps, including CodeAtlas, ROBCodex, LingonXRob Plist Editor, ROB Training, and ROB Training Vision."
+description: "Privacy practices for Orbitus Robotics apps, including Musimotion Pro, CodeAtlas, ROBCodex, LingonXRob Plist Editor, ROB Training, and ROB Training Vision."
 layout: "single"
 url: "/privacy/"
 ---
 
 # Orbitus Robotics App Privacy
 
-Last updated: August 31, 2026
+Last updated: September 2, 2026
+
+## Musimotion Pro
+
+Musimotion Pro does not track users, show advertising, or use third-party
+analytics. Projects and imported media remain on your device unless you choose
+to share, collaborate, publish, or export them.
+
+When you intentionally use a sharing feature, Musimotion Pro uses Apple's
+CloudKit and SharePlay services to provide private invitations, live
+collaboration, public community publishing, and playable App Clip links. Shared
+content can include your chosen creator name, project title, description,
+images, video, audio, animation data, and interaction records needed to provide
+the requested feature. Community publications are public; private invitations
+and their project data are available only to participants authorized through
+Apple's services. Orbitus Robotics does not use this content for advertising or
+cross-app tracking.
+
+Photo-library, camera, and motion access are optional and requested only when
+you use the related import, augmented-reality, or physics features. Selected
+photos and videos are copied into the project you are editing. On supported
+devices, AI planning and Image Playground features use Apple's on-device
+technologies; Orbitus Robotics does not receive prompts or generated content.
+
+Apple processes App Store purchases and subscription status. Orbitus Robotics
+does not receive or store your payment-card details. You can remove local
+projects by deleting them in the app. Contact
+[orbitus@orbitusrobotics.com](mailto:orbitus@orbitusrobotics.com) for help with
+published community content.
 
 ## CodeAtlas
 
