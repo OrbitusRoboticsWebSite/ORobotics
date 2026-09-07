@@ -2,12 +2,16 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   BASE_FLIPPER_DURATION,
+  BASE_FLIPPER_FORWARD_ANGLE,
+  BASE_FLIPPER_REAR_ANGLE,
+  MAX_TRIAL_LIVES,
   MAX_ROB_HEALTH,
   MAX_ROB_SHIELDS,
   BASE_ROB_ENERGY,
   BASE_DRIVE_SPEED,
   applyROBDamage,
   applyROBHealthDamage,
+  advanceBaseFlipper,
   battleUpgradePoints,
   baseFlipperPresentation,
   bossStats,
@@ -16,6 +20,8 @@ import {
   conveyorArrowOffset,
   conveyorDisplacement,
   consumeLaserEnergy,
+  consumeTrialLife,
+  canMountLedge,
   driveSpeedMultiplier,
   energyPickupAmount,
   faceColors,
@@ -241,18 +247,32 @@ test('a camera releases one lightweight mini boss profile', () => {
   });
 });
 
-test('the base flipper presentation deploys, holds, lifts, and returns to travel pose', () => {
-  const resting = baseFlipperPresentation(-1);
-  const deploying = baseFlipperPresentation(.3);
-  const holding = baseFlipperPresentation(1);
-  const retracting = baseFlipperPresentation(2.2);
-  const complete = baseFlipperPresentation(BASE_FLIPPER_DURATION);
+test('the rear flipper moves to persistent forward and rear stabilization positions', () => {
+  const moving = advanceBaseFlipper({ angle: BASE_FLIPPER_REAR_ANGLE, target: 'forward', delta: BASE_FLIPPER_DURATION / 2 });
+  const forward = advanceBaseFlipper({ angle: BASE_FLIPPER_REAR_ANGLE, target: 'forward', delta: BASE_FLIPPER_DURATION + .01 });
+  const climbingPose = baseFlipperPresentation({ angle: forward.angle, target: 'forward', onLedge: true });
+  const rear = advanceBaseFlipper({ angle: forward.angle, target: 'rear', delta: BASE_FLIPPER_DURATION + .01 });
+  const stablePose = baseFlipperPresentation({ angle: rear.angle, target: 'rear', onLedge: true });
 
-  assert.deepEqual(resting, { active: false, phase: 0, angle: 0, lift: 0, pitch: 0 });
-  assert.equal(deploying.active, true);
-  assert.ok(deploying.phase > 0 && deploying.phase < 1);
-  assert.equal(holding.phase, 1);
-  assert.ok(holding.angle < 0 && holding.lift > 0 && holding.pitch > 0);
-  assert.ok(retracting.phase > 0 && retracting.phase < 1);
-  assert.deepEqual(complete, resting);
+  assert.equal(moving.active, true);
+  assert.ok(moving.angle > BASE_FLIPPER_REAR_ANGLE && moving.angle < BASE_FLIPPER_FORWARD_ANGLE);
+  assert.equal(forward.angle, BASE_FLIPPER_FORWARD_ANGLE);
+  assert.equal(climbingPose.phase, 1);
+  assert.ok(climbingPose.lift > 0 && climbingPose.pitch > 0);
+  assert.equal(rear.angle, BASE_FLIPPER_REAR_ANGLE);
+  assert.deepEqual(stablePose, { active: false, phase: 0, angle: BASE_FLIPPER_REAR_ANGLE, lift: 0, pitch: 0, stabilized: true });
+});
+
+test('a raised deck accepts only a forward flipper approach', () => {
+  const approach = { start: { x: 0, z: -2 }, end: { x: 0, z: -2.4 }, approachEdgeZ: -2.2 };
+  assert.equal(canMountLedge({ ...approach, flipperAngle: BASE_FLIPPER_REAR_ANGLE }), false);
+  assert.equal(canMountLedge({ ...approach, flipperAngle: BASE_FLIPPER_FORWARD_ANGLE }), true);
+  assert.equal(canMountLedge({ start: approach.end, end: approach.start, flipperAngle: BASE_FLIPPER_FORWARD_ANGLE, approachEdgeZ: -2.2 }), false);
+});
+
+test('the third trial life is the terminal life', () => {
+  assert.equal(MAX_TRIAL_LIVES, 3);
+  assert.deepEqual(consumeTrialLife(3), { lives: 2, trialFailed: false });
+  assert.deepEqual(consumeTrialLife(2), { lives: 1, trialFailed: false });
+  assert.deepEqual(consumeTrialLife(1), { lives: 0, trialFailed: true });
 });

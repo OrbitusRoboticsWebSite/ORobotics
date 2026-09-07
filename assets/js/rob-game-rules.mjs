@@ -1,6 +1,7 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.09.10';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.11';
 export const MAX_ROB_HEALTH = 100;
 export const MAX_ROB_SHIELDS = 40;
+export const MAX_TRIAL_LIVES = 3;
 export const BASE_ROB_ENERGY = 100;
 export const BASE_DRIVE_SPEED = 4.5;
 export const SHIELD_PICKUP_STRENGTH = 24;
@@ -23,20 +24,33 @@ export const updateDriveEnergy = ({ energy, maximum, moving, delta, capacityLeve
   maximum,
   energy + delta * (moving ? -6.6 : passiveEnergyRecharge(capacityLevel)),
 ));
-
-export const BASE_FLIPPER_ENERGY_COST = 8;
-export const BASE_FLIPPER_DURATION = 2.8;
-export const baseFlipperPresentation = (elapsedSinceStart) => {
-  if (!Number.isFinite(elapsedSinceStart) || elapsedSinceStart < 0 || elapsedSinceStart >= BASE_FLIPPER_DURATION) {
-    return { active: false, phase: 0, angle: 0, lift: 0, pitch: 0 };
-  }
-  let phase;
-  if (elapsedSinceStart < .6) phase = elapsedSinceStart / .6;
-  else if (elapsedSinceStart < 1.55) phase = 1;
-  else phase = 1 - (elapsedSinceStart - 1.55) / (BASE_FLIPPER_DURATION - 1.55);
-  const eased = .5 - Math.cos(Math.max(0, Math.min(1, phase)) * Math.PI) / 2;
-  return { active: true, phase: eased, angle: -.95 * eased, lift: .24 * eased, pitch: .075 * eased };
+export const consumeTrialLife = (lives) => {
+  const remaining = Math.max(0, Math.min(MAX_TRIAL_LIVES, Math.floor(lives)) - 1);
+  return { lives: remaining, trialFailed: remaining === 0 };
 };
+
+export const BASE_FLIPPER_ENERGY_COST = 4;
+export const BASE_FLIPPER_FORWARD_ANGLE = -.72;
+export const BASE_FLIPPER_REAR_ANGLE = -2.42;
+export const BASE_FLIPPER_MOTOR_SPEED = 2.15;
+export const BASE_FLIPPER_DURATION = Math.abs(BASE_FLIPPER_REAR_ANGLE - BASE_FLIPPER_FORWARD_ANGLE) / BASE_FLIPPER_MOTOR_SPEED;
+export const baseFlipperTargetAngle = (target) => target === 'forward' ? BASE_FLIPPER_FORWARD_ANGLE : BASE_FLIPPER_REAR_ANGLE;
+export const baseFlipperPhase = (angle) => Math.max(0, Math.min(1,
+  (angle - BASE_FLIPPER_REAR_ANGLE) / (BASE_FLIPPER_FORWARD_ANGLE - BASE_FLIPPER_REAR_ANGLE),
+));
+export const advanceBaseFlipper = ({ angle, target, delta }) => {
+  const targetAngle = baseFlipperTargetAngle(target), difference = targetAngle - angle, maximumStep = BASE_FLIPPER_MOTOR_SPEED * Math.max(0, delta);
+  const nextAngle = Math.abs(difference) <= maximumStep ? targetAngle : angle + Math.sign(difference) * maximumStep;
+  return { angle: nextAngle, active: Math.abs(nextAngle - targetAngle) > .005 };
+};
+export const baseFlipperPresentation = ({ angle, target = 'rear', onLedge = false }) => {
+  const phase = baseFlipperPhase(angle), active = Math.abs(angle - baseFlipperTargetAngle(target)) > .005;
+  const stabilized = onLedge && phase <= .1 && !active;
+  return { active, phase, angle, lift: stabilized ? 0 : .16 * phase, pitch: stabilized ? 0 : .19 * phase, stabilized };
+};
+export const canMountLedge = ({ start, end, flipperAngle, approachEdgeZ }) => (
+  end.z < start.z && start.z >= approachEdgeZ && baseFlipperPhase(flipperAngle) >= .9
+);
 
 export const resolveAxisSlidingMotion = ({ start, end, canOccupy, iterations = 10 }) => {
   if (canOccupy(end)) return { position: { x: end.x, z: end.z }, collided: false };
