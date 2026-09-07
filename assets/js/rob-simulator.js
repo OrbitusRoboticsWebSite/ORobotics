@@ -53,6 +53,7 @@ import {
   writeDroidProfile,
 } from './rob-droid-profile.mjs';
 import { KEY_BEACON_HEIGHT, KEY_WORKSHOP_KEY_SPAWN } from './rob-simulator-levels.mjs';
+import { shooterTurretYaw, shooterWheelAngle, spiderLegPose } from './rob-enemy-animation.mjs';
 
 const root = document.querySelector('[data-rob-simulator]');
 if (root) {
@@ -319,8 +320,44 @@ if (root) {
     const shadow = { x: -cameraX * .36, z: 5.3, w: 2.4, d: 1.4 }; shadowZones.push(shadow); const shadowFloor = mesh(new THREE.BoxGeometry(shadow.w * 2, .045, shadow.d * 2), new THREE.MeshStandardMaterial({ color: 0x05070c, transparent: true, opacity: .9 }), scene, shadow.x, surfaceHeight(shadow) + .025, shadow.z); levelParts.push(shadowFloor);
   };
 
-  const buildSpider = () => { const g = new THREE.Group(), bone = mat(0xe6dcb9), steel = mat(0x697178, 0, .7); mesh(new THREE.BoxGeometry(1.5, .45, 1.25), steel, g, 0, .72); const skull = mesh(new THREE.DodecahedronGeometry(.52, 0), bone, g, 0, 1.16, -.45); skull.scale.z = 1.25; [-1, 1].forEach((side) => { for (let row = -1; row <= 1; row += 2) { const z = row * .45; const hip = mesh(new THREE.BoxGeometry(.95, .13, .2), steel, g, side * .75, .65, z); hip.rotation.z = side * -.35; const shin = mesh(new THREE.BoxGeometry(.17, .75, .22), bone, g, side * 1.35, .35, z); shin.rotation.z = side * .3; } }); return g; };
-  const buildDalek = () => { const g = new THREE.Group(), silver = mat(0xaeb9c4, 0, .75), blue = mat(0x279de0, 0x063b61); const skirt = mesh(new THREE.CylinderGeometry(.65, 1.05, 1.55, 8), silver, g, 0, .82); for (let y = .35; y < 1.25; y += .3) for (let a = 0; a < Math.PI * 2; a += Math.PI / 3) mesh(new THREE.SphereGeometry(.11, 10, 8), blue, g, Math.sin(a) * (.78 - y * .08), y, Math.cos(a) * (.78 - y * .08)); mesh(new THREE.CylinderGeometry(.65, .65, .5, 16), mat(0x242b31), g, 0, 1.75); mesh(new THREE.SphereGeometry(.62, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), silver, g, 0, 2); const eye = mesh(new THREE.CylinderGeometry(.055, .085, .9, 10), silver, g, 0, 2.2, -.63); eye.rotation.x = Math.PI / 2; mesh(new THREE.SphereGeometry(.12, 10, 8), blue, g, 0, 2.2, -1.08); [-1, 1].forEach((side) => { const arm = mesh(new THREE.CylinderGeometry(.035, .05, 1, 8), silver, g, side * .48, 1.6, -.65); arm.rotation.x = Math.PI / 2; }); return g; };
+  const buildSpider = () => {
+    const g = new THREE.Group(), bone = mat(0xe6dcb9), steel = mat(0x697178, 0, .7);
+    mesh(new THREE.BoxGeometry(1.5, .45, 1.25), steel, g, 0, .72);
+    const skull = mesh(new THREE.DodecahedronGeometry(.52, 0), bone, g, 0, 1.16, -.45); skull.scale.z = 1.25;
+    g.userData.legJoints = [];
+    [-1, 1].forEach((side) => {
+      [-.48, -.16, .16, .48].forEach((z, legIndex) => {
+        const hip = new THREE.Group(); hip.name = `Spider ${side < 0 ? 'Left' : 'Right'} Leg ${legIndex + 1} Hip`; hip.position.set(side * .48, .67, z); g.add(hip);
+        mesh(new THREE.BoxGeometry(.82, .13, .16), steel, hip, side * .4, 0);
+        const knee = new THREE.Group(); knee.name = `Spider ${side < 0 ? 'Left' : 'Right'} Leg ${legIndex + 1} Knee`; knee.position.set(side * .8, 0, 0); hip.add(knee);
+        mesh(new THREE.BoxGeometry(.17, .72, .18), bone, knee, side * .12, -.32);
+        g.userData.legJoints.push({ hip, knee, side, legIndex });
+      });
+    });
+    return g;
+  };
+  const buildDalek = () => {
+    const g = new THREE.Group(), silver = mat(0xaeb9c4, 0, .75), blue = mat(0x279de0, 0x063b61), tire = mat(0x050608, 0, .78), hub = mat(0xffb13b, 0xff5a00, .7);
+    mesh(new THREE.CylinderGeometry(.6, .76, 1.55, 8), silver, g, 0, .82);
+    for (let y = .35; y < 1.25; y += .3) for (let a = 0; a < Math.PI * 2; a += Math.PI / 3) mesh(new THREE.SphereGeometry(.11, 10, 8), blue, g, Math.sin(a) * (.63 - y * .06), y, Math.cos(a) * (.63 - y * .06));
+    g.userData.driveWheels = [];
+    [-1, 1].forEach((side) => {
+      [-.46, 0, .46].forEach((z, index) => {
+        const wheel = new THREE.Group(); wheel.name = `Shooter ${side < 0 ? 'Left' : 'Right'} Wheel ${index + 1}`; wheel.position.set(side * .84, .34, z); g.add(wheel);
+        const rubber = mesh(new THREE.CylinderGeometry(.27, .27, .2, 18), tire, wheel); rubber.rotation.z = Math.PI / 2;
+        const wheelHub = mesh(new THREE.CylinderGeometry(.16, .16, .23, 14), hub, wheel); wheelHub.rotation.z = Math.PI / 2;
+        mesh(new THREE.BoxGeometry(.045, .4, .055), hub, wheel, side * .13);
+        g.userData.driveWheels.push(wheel);
+      });
+    });
+    const turret = new THREE.Group(); turret.name = 'Shooter Turret Assembly'; g.add(turret); g.userData.turret = turret;
+    mesh(new THREE.CylinderGeometry(.65, .65, .5, 16), mat(0x242b31), turret, 0, 1.75);
+    mesh(new THREE.SphereGeometry(.62, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), silver, turret, 0, 2);
+    const eye = mesh(new THREE.CylinderGeometry(.055, .085, .9, 10), silver, turret, 0, 2.2, -.63); eye.rotation.x = Math.PI / 2;
+    mesh(new THREE.SphereGeometry(.12, 10, 8), blue, turret, 0, 2.2, -1.08);
+    [-1, 1].forEach((side) => { const arm = mesh(new THREE.CylinderGeometry(.035, .05, 1, 8), silver, turret, side * .48, 1.6, -.65); arm.rotation.x = Math.PI / 2; });
+    return g;
+  };
   for (let i = 0; i < 8; i += 1) { const spider = buildSpider(); spider.userData.type = 'spider'; scene.add(spider); enemies.push(spider); const dalek = buildDalek(); dalek.userData.type = 'dalek'; scene.add(dalek); enemies.push(dalek); }
 
   const ui = { time: root.querySelector('[data-sim-time]'), score: root.querySelector('[data-sim-score]'), points: root.querySelector('[data-sim-points]'), lives: root.querySelector('[data-sim-lives]'), level: root.querySelector('[data-sim-level]'), levelName: root.querySelector('[data-sim-level-name]'), left: root.querySelector('[data-sim-left]'), right: root.querySelector('[data-sim-right]'), enemies: root.querySelector('[data-sim-enemies]'), lock: root.querySelector('[data-sim-lock]'), message: root.querySelector('[data-sim-message]'), start: root.querySelector('[data-sim-start]'), reset: root.querySelector('[data-sim-reset]'), fullscreen: root.querySelector('[data-sim-fullscreen]'), hack: root.querySelector('[data-sim-hack]'), laserButtons: [...root.querySelectorAll('[data-sim-laser]')], saberButtons: [...root.querySelectorAll('[data-sim-saber]')], flipperButtons: [...root.querySelectorAll('[data-sim-flipper]')], health: root.querySelector('[data-sim-health]'), healthText: root.querySelector('[data-sim-health-text]'), shields: root.querySelector('[data-sim-shields]'), shieldsText: root.querySelector('[data-sim-shields-text]'), energy: root.querySelector('[data-sim-energy]'), energyText: root.querySelector('[data-sim-energy-text]'), security: root.querySelector('[data-sim-security]'), boss: root.querySelector('[data-sim-boss]'), bossName: root.querySelector('[data-sim-boss-name]'), bossText: root.querySelector('[data-sim-boss-text]'), bossHealth: root.querySelector('[data-sim-boss-health]'), progress: root.querySelector('[data-sim-progress]'), nextUnlock: root.querySelector('[data-sim-next-unlock]'), finish: root.querySelector('[data-sim-finish]'), faceColor: root.querySelector('[data-sim-face-color]'), ranged: root.querySelector('[data-sim-ranged]'), melee: root.querySelector('[data-sim-melee]'), workshopPoints: root.querySelector('[data-sim-workshop-points]'), upgradeButtons: [...root.querySelectorAll('[data-upgrade]')], loadoutStatus: root.querySelector('[data-sim-loadout-status]') };
@@ -379,7 +416,7 @@ if (root) {
       if (!enemy) return;
       const stats = enemyIndex === 0 ? bossStats(index + 1, level.health) : { isBoss: false, shields: level.health };
       enemy.visible = true; enemy.userData.alive = true; enemy.userData.isBoss = stats.isBoss; enemy.userData.isMiniBoss = false; enemy.userData.health = stats.shields; enemy.userData.maxHealth = stats.shields; enemy.userData.contactDamage = stats.contactDamage || (spec[0] === 'spider' ? 6 : 5); enemy.userData.projectileDamage = stats.projectileDamage || 4; enemy.userData.combatScale = stats.isBoss ? 1.35 : 1; enemy.userData.defeatReward = stats.isBoss ? 1000 : 300; enemy.userData.name = `${stats.isBoss ? 'Boss ' : ''}${spec[0] === 'spider' ? 'Spider bot' : 'Dalek-style sentry robot'}`; enemy.scale.setScalar(enemy.userData.combatScale);
-      enemy.position.set(spec[1], surfaceHeight({ x: spec[1], z: spec[2] }), spec[2]); enemy.userData.origin = enemy.position.clone(); enemy.userData.patrolPhase = enemyIndex * 2.17; enemy.userData.nextAttack = elapsed + 1.6 + enemyIndex * .65; enemy.userData.nextSkitterSound = elapsed + .8 + enemyIndex * .38; enemy.userData.lungeUntil = 0;
+      enemy.position.set(spec[1], surfaceHeight({ x: spec[1], z: spec[2] }), spec[2]); enemy.userData.origin = enemy.position.clone(); enemy.userData.patrolPhase = enemyIndex * 2.17; enemy.userData.nextAttack = elapsed + 1.6 + enemyIndex * .65; enemy.userData.nextSkitterSound = elapsed + .8 + enemyIndex * .38; enemy.userData.lungeUntil = 0; enemy.userData.travelDistance = 0;
     });
     Object.values(objectives).forEach((objective) => objective.classList.remove('is-complete')); objectives.cells.querySelector('[data-objective-text]').textContent = `Collect ${level.cells.length} energy cells`; objectives.enemies.querySelector('[data-objective-text]').textContent = `Disable ${level.enemies.length} hostile robots`; objectives.dock.querySelector('[data-objective-text]').textContent = level.key ? 'Find the key, hack the door, use the flipper ledge, then dock' : 'Use the flipper to mount the ledge, then dock';
     ui.level.textContent = `${index + 1} / ${levels.length}`; ui.levelName.textContent = `Level ${index + 1} · ${level.name}`; ui.start.hidden = false; ui.start.textContent = index ? `Start level ${index + 1}` : 'Begin campaign'; applyLoadout(); say(`${level.name}: ${index ? 'difficulty increased' : 'systems ready'}.`);
@@ -414,7 +451,7 @@ if (root) {
     const stats = securityMiniBossStats(), preferred = new THREE.Vector3(-securityCamera.x * .72, 0, -securityCamera.z * .72), candidates = [preferred, new THREE.Vector3(-10, 0, -8), new THREE.Vector3(10, 0, -8), new THREE.Vector3(0, 0, -8)];
     const spawn = candidates.find((candidate) => candidate.distanceTo(robot.position) > 4 && !enemyCollision(candidate, .82)) || preferred;
     enemy.visible = true; enemy.userData.alive = true; enemy.userData.isBoss = stats.isBoss; enemy.userData.isMiniBoss = stats.isMiniBoss; enemy.userData.health = stats.shields; enemy.userData.maxHealth = stats.shields; enemy.userData.contactDamage = stats.contactDamage; enemy.userData.projectileDamage = stats.projectileDamage; enemy.userData.combatScale = stats.scale; enemy.userData.defeatReward = stats.defeatReward; enemy.userData.name = 'Mini Boss Spider bot'; enemy.scale.setScalar(stats.scale);
-    enemy.position.copy(spawn); enemy.position.y = surfaceHeight(enemy.position); enemy.userData.origin = enemy.position.clone(); enemy.userData.patrolPhase = elapsed * .37; enemy.userData.nextAttack = elapsed + 1.8; enemy.userData.nextSkitterSound = elapsed + .5; enemy.userData.lungeUntil = 0; securityMiniBossReleased = true;
+    enemy.position.copy(spawn); enemy.position.y = surfaceHeight(enemy.position); enemy.userData.origin = enemy.position.clone(); enemy.userData.patrolPhase = elapsed * .37; enemy.userData.nextAttack = elapsed + 1.8; enemy.userData.nextSkitterSound = elapsed + .5; enemy.userData.lungeUntil = 0; enemy.userData.travelDistance = 0; securityMiniBossReleased = true;
     objectives.enemies.classList.remove('is-complete'); objectives.enemies.querySelector('[data-objective-text]').textContent = 'Disable hostile robots and the released mini boss';
     return true;
   };
@@ -563,7 +600,22 @@ if (root) {
         if (elapsed >= enemy.userData.nextAttack && distance < (securityAlertRemaining > 0 ? 15 : 12)) { enemy.userData.nextAttack = elapsed + Math.max(1.35, 3.9 - levelIndex * .09 - (securityAlertRemaining > 0 ? .65 : 0)); fireEnemyLaser(enemy); playDalekSentry(); speakDalek(); say('Dalek-style sentry robot: “Exterminate!” Incoming laser — keep moving.'); }
       }
       const facing = (aggressive ? robot.position : target).clone().sub(enemy.position); facing.y = 0; if (facing.lengthSq() > .001) enemy.rotation.y = Math.atan2(-facing.x, -facing.z);
-      moveEnemy(enemy, target, speed, dt); enemy.position.y = surfaceHeight(enemy.position) + (isSpider ? Math.sin(elapsed * 10 + i) * .055 : Math.sin(elapsed * 2.4 + i) * .028);
+      const beforeMoveX = enemy.position.x, beforeMoveZ = enemy.position.z;
+      moveEnemy(enemy, target, speed, dt);
+      enemy.userData.travelDistance = (enemy.userData.travelDistance || 0) + Math.hypot(enemy.position.x - beforeMoveX, enemy.position.z - beforeMoveZ);
+      if (isSpider) {
+        const lunging = elapsed < enemy.userData.lungeUntil;
+        enemy.userData.legJoints.forEach(({ hip, knee, side, legIndex }) => {
+          const pose = spiderLegPose({ travelDistance: enemy.userData.travelDistance, elapsed, legIndex, side, lunging });
+          hip.rotation.set(0, pose.swing, side * (-.34 + pose.lift));
+          knee.rotation.z = side * pose.knee;
+        });
+      } else {
+        const wheelAngle = shooterWheelAngle(enemy.userData.travelDistance);
+        enemy.userData.driveWheels.forEach((wheel) => { wheel.rotation.x = wheelAngle; });
+        enemy.userData.turret.rotation.y = shooterTurretYaw(elapsed, i);
+      }
+      enemy.position.y = surfaceHeight(enemy.position) + (isSpider ? Math.sin(elapsed * 10 + i) * .055 : Math.sin(elapsed * 2.4 + i) * .028);
       if (robotHitsCircle(robot.position, robot.rotation.y, enemy.position, enemyRadius(enemy) + .08)) { if (isSpider) playSpiderSound('impact'); else playDalekSentry(); if (damageROB(isSpider ? `${enemy.userData.name} lunge` : `${enemy.userData.name} collision`, enemy.userData.contactDamage)) return; }
     }
     for (let i = enemyBolts.length - 1; i >= 0; i -= 1) { const bolt = enemyBolts[i], start = bolt.position.clone(); bolt.position.addScaledVector(bolt.userData.velocity, dt); const impact = firstProjectileImpact({ start: { x: start.x, z: start.z }, end: { x: bolt.position.x, z: bolt.position.z }, blockers: projectileBlockers(), targets: [{ id: 'rob', x: robot.position.x, z: robot.position.z, radius: .72 }] }); if (impact || bolt.position.distanceTo(robot.position) > 42) { scene.remove(bolt); enemyBolts.splice(i, 1); if (impact?.kind === 'target') { playDalekSentry(); if (damageROB(bolt.userData.sourceName, bolt.userData.damage)) return; } } }
