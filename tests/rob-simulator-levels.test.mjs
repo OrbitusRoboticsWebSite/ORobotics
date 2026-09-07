@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { KEY_WORKSHOP_KEY_SPAWN, objectiveSpawnIsClear } from '../assets/js/rob-simulator-levels.mjs';
+import { KEY_BEACON_HEIGHT, KEY_WORKSHOP_KEY_SPAWN, objectiveSpawnIsClear } from '../assets/js/rob-simulator-levels.mjs';
+
+test('the access-key visibility line rises above the arena walls', () => {
+  assert.ok(KEY_BEACON_HEIGHT > 4.5);
+});
 
 test('Level 2 key is inside the arena on an obstacle-free route', () => {
   const blockers = [

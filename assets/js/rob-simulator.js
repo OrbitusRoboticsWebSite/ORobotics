@@ -52,7 +52,7 @@ import {
   sanitizeDroidProfile,
   writeDroidProfile,
 } from './rob-droid-profile.mjs';
-import { KEY_WORKSHOP_KEY_SPAWN } from './rob-simulator-levels.mjs';
+import { KEY_BEACON_HEIGHT, KEY_WORKSHOP_KEY_SPAWN } from './rob-simulator-levels.mjs';
 
 const root = document.querySelector('[data-rob-simulator]');
 if (root) {
@@ -215,8 +215,9 @@ if (root) {
   mesh(new THREE.BoxGeometry(1.05, .16, .16), keyMaterial, keyObject, .6, .68);
   mesh(new THREE.BoxGeometry(.16, .34, .16), keyMaterial, keyObject, .98, .53);
   const keyHalo = mesh(new THREE.TorusGeometry(.72, .055, 10, 36), keyMaterial, keyObject, 0, .14); keyHalo.rotation.x = Math.PI / 2;
-  const keyBeaconMaterial = new THREE.MeshBasicMaterial({ color: 0xffd84a, transparent: true, opacity: .26, depthWrite: false });
-  const keyBeacon = mesh(new THREE.CylinderGeometry(.08, .34, 4.2, 16, 1, true), keyBeaconMaterial, keyObject, 0, 2.15); keyBeacon.renderOrder = 3;
+  const keyBeaconMaterial = new THREE.MeshBasicMaterial({ color: 0xffd84a, transparent: true, opacity: .55, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending });
+  const keyBeacon = mesh(new THREE.CylinderGeometry(.09, .3, KEY_BEACON_HEIGHT, 16, 1, true), keyBeaconMaterial, keyObject, 0, KEY_BEACON_HEIGHT / 2 + .08); keyBeacon.name = 'Access Key Visibility Line'; keyBeacon.renderOrder = 30; keyBeacon.frustumCulled = false;
+  const keyBeaconTip = mesh(new THREE.SphereGeometry(.18, 14, 10), keyBeaconMaterial, keyObject, 0, KEY_BEACON_HEIGHT + .08); keyBeaconTip.name = 'Access Key Beacon Tip'; keyBeaconTip.renderOrder = 30; keyBeaconTip.frustumCulled = false;
   scene.add(keyObject);
   const doorObject = mesh(new THREE.BoxGeometry(4, 1.8, .35), mat(0xd14c42, 0x5c1714), scene); doorObject.position.y = .9;
   const hackTerminal = new THREE.Group(); mesh(new THREE.BoxGeometry(.28, 1.05, .28), mat(0x434b52), hackTerminal, 0, .525); mesh(new THREE.BoxGeometry(.62, .48, .22), mat(0xf2872f, 0x5e2208), hackTerminal, 0, 1.08); const hackTerminalLamp = mesh(new THREE.SphereGeometry(.11, 12, 8), mat(0xff3030, 0x8b0505), hackTerminal, 0, 1.08, -.15); scene.add(hackTerminal);
@@ -598,7 +599,7 @@ if (root) {
     requestAnimationFrame(animate); const dt = Math.min(clock.getDelta(), .05); tick(dt); updateRobotWeapons();
     const flipperPose = baseFlipperPresentation({ angle: baseFlipperAngle, target: baseFlipperTarget, onLedge: pointOnLedge(robot.position) }); robotRig.baseFlipper.rotation.x = flipperPose.angle; robotRig.driveBase.rotation.x = flipperPose.pitch; robotRig.torso.position.y = flipperPose.lift; ui.flipperButtons.forEach((button) => { const target = button.dataset.flipperDirection; button.disabled = target === baseFlipperTarget; const compact = button.classList.contains('rob-sim__fire'); button.textContent = target === 'forward' ? (compact ? 'FLIPPER FWD' : 'Flipper Forward · F') : (compact ? 'FLIPPER REAR' : 'Flipper Rear · B'); button.setAttribute('aria-pressed', String(target === baseFlipperTarget)); });
     const speakerPulse = musicEnabled && running ? 1 + Math.max(0, Math.sin(elapsed * Math.PI * 8)) * .13 : 1; robotRig.speakerCones.forEach((cone, index) => cone.scale.set(1 + (speakerPulse - 1) * (index ? .78 : 1), 1, 1 + (speakerPulse - 1) * (index ? .78 : 1)));
-    if (keyObject.visible) { keyObject.rotation.y += dt * 1.7; keyObject.position.y = surfaceHeight(keyObject.position) + .1 + Math.sin(elapsed * 3.2) * .09; keyBeaconMaterial.opacity = .2 + (Math.sin(elapsed * 4.4) + 1) * .08; }
+    if (keyObject.visible) { keyObject.rotation.y += dt * 1.7; keyObject.position.y = surfaceHeight(keyObject.position) + .1 + Math.sin(elapsed * 3.2) * .09; keyBeaconMaterial.opacity = .42 + (Math.sin(elapsed * 4.4) + 1) * .13; }
     cells.forEach((c, i) => { if (c.visible) { c.rotation.y += dt * 1.4; c.position.y = (c.userData.surfaceHeight || 0) + .55 + Math.sin(elapsed * 2 + i) * .08; } });
     shieldPickups.forEach((pickup, i) => { if (pickup.visible) { pickup.rotation.y += dt * 1.8; pickup.position.y = (pickup.userData.surfaceHeight || 0) + Math.sin(elapsed * 2.3 + i) * .1; } });
     repairPickups.forEach((pickup, i) => { if (pickup.visible) { pickup.rotation.y -= dt * .9; pickup.position.y = (pickup.userData.surfaceHeight || 0) + Math.sin(elapsed * 1.8 + i) * .07; } });

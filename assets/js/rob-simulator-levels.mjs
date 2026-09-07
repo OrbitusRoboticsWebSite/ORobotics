@@ -1,4 +1,5 @@
 export const KEY_WORKSHOP_KEY_SPAWN = Object.freeze([-3.6, -4.8]);
+export const KEY_BEACON_HEIGHT = 5.8;
 
 export function objectiveSpawnIsClear({
   point,
