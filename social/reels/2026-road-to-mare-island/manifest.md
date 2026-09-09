@@ -1,8 +1,9 @@
 # Road to Mare Island — reel batch
 
-Format: 720 × 1280 H.264 MP4, 10.5 seconds, silent master. Add the licensed
-campaign track **“Paper Planets” by Sequels** from Meta Sound Collection during
-Facebook reel creation. Schedule one reel each day at **6:00 p.m.
+Format: 720 × 1280 H.264 MP4, 10.5 seconds, with AAC music. The rights-cleared
+campaign track is **“Paper Planets” by Sequels**, downloaded from Meta Sound
+Collection and mixed as varied excerpts. The source track is not redistributed
+separately. Schedule one reel each day at **6:00 p.m.
 America/Los_Angeles**, September 9–23, 2026.
 
 The 2019 motion recap already published on September 7 is not reused in this

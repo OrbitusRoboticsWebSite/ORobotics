@@ -6,8 +6,14 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_dir="$(cd "$script_dir/../../.." && pwd)"
 output_dir="$script_dir/output"
 font_file="/System/Library/Fonts/Supplemental/Verdana Bold.ttf"
+music_file="${META_SOUND_TRACK:-}"
 
 mkdir -p "$output_dir"
+
+if [[ -n "$music_file" && ! -f "$music_file" ]]; then
+  printf 'META_SOUND_TRACK does not exist: %s\n' "$music_file" >&2
+  exit 1
+fi
 
 make_reel() {
   local number="$1"
@@ -18,8 +24,10 @@ make_reel() {
   local image_two="$6"
   local image_three="$7"
   local output_file="$output_dir/${number}-${slug}.mp4"
+  local silent_file="$output_dir/.${number}-${slug}-silent.mp4"
   local cover_file="$output_dir/${number}-${slug}-cover.jpg"
   local overlay_file="$output_dir/.${number}-${slug}-overlay.png"
+  local music_offset=$(( (10#$number - 1) * 3 % 48 ))
 
   magick -size 720x1280 xc:none \
     -fill '#07131FCC' -draw 'rectangle 0,0 720,245' \
@@ -62,12 +70,25 @@ make_reel() {
     -crf 21 \
     -r 30 \
     -movflags +faststart \
-    "$output_file"
+    "$silent_file"
+
+  if [[ -n "$music_file" ]]; then
+    ffmpeg -y -loglevel error \
+      -ss "$music_offset" -i "$music_file" \
+      -i "$silent_file" \
+      -filter_complex "[0:a]atrim=duration=10.5,asetpts=PTS-STARTPTS,volume=0.82,afade=t=in:st=0:d=0.25,afade=t=out:st=9.75:d=0.75[music]" \
+      -map 1:v:0 -map "[music]" \
+      -c:v copy -c:a aac -b:a 192k -shortest \
+      -movflags +faststart \
+      "$output_file"
+  else
+    mv "$silent_file" "$output_file"
+  fi
 
   ffmpeg -y -loglevel error -ss 1.0 -i "$output_file" \
     -frames:v 1 -q:v 2 "$cover_file"
 
-  rm -f "$overlay_file"
+  rm -f "$overlay_file" "$silent_file"
 }
 
 make_reel "01" "cardboard-before-metal" \
