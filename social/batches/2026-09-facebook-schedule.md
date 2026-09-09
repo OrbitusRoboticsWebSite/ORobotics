@@ -1,9 +1,33 @@
 # Road to Mare Island — Facebook scheduling batch
 
-Schedule every post for **9:00 a.m. America/Los_Angeles** on the listed date.
-The 2019 motion recap was published on September 7, so this queue begins on
+Schedule every queued post for **9:00 a.m. America/Los_Angeles** on the listed
+date. The 2019 motion recap was published on September 7, followed by a
+late-night campaign kickoff on September 8. The scheduled queue begins on
 September 9 and does not repeat that reel. Event-weekend copy states only facts
 published by Maker Faire and does not claim that ROB is on-site or operating.
+
+## September 8 — The road starts tonight
+
+**Media:** `static/images/galleries/2026/display/IMG_6203.HEIC.webp`
+
+**Alt text:** ROB in the workshop with one articulated arm raised beside a
+development monitor, exposed equipment, and two red emergency-stop buttons.
+
+**Caption:**
+
+Tonight the Road to Mare Island starts for real. 🤖
+
+This is what the work looks like before a show: ROB in the workshop, one arm
+raised, code on the screen, emergency stops close at hand, and a hundred small
+checks competing for attention.
+
+Maker Faire Bay Area is September 25–27. Between now and then, we are opening
+the archive, sharing what changed, and showing the engineering behind the
+character.
+
+Follow along—and tell us which system you want to see tested next.
+
+#OrbitusRobotics #ROB #MakerFaire #MareIsland #BuildInPublic
 
 ## September 9 — Cardboard before metal
 
