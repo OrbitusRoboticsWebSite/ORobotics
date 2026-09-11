@@ -3,11 +3,11 @@ series:
   author: "Rodolfo Aramayo"
   publisher: "OrbitusRobotics LLC"
   language: "English"
-  release_status: "Prepublication review"
+  release_status: "Available on Apple Books"
   individual_total_usd: 55.92
   collection_price_usd: 24.99
   collection_savings_percent: 55
-  apple_series_url: ""
+  apple_series_url: "https://books.apple.com/us/book/complete-builders-field-manual/id6806809290"
 
 books:
   - slug: "rob-and-the-lost-yellow-ball"
@@ -19,8 +19,8 @@ books:
     position: 0
     image: "images/books/rob-and-the-lost-yellow-ball.webp"
     description: "A gentle picture story about sensing, stopping, planning, checking, counting, kindness, and feedback."
-    apple_url: ""
-    status: "Accessible EPUB 3 in preparation"
+    apple_url: "https://books.apple.com/us/book/rob-and-the-lost-yellow-ball/id6806729418"
+    status: "Available on Apple Books"
   - slug: "volume-1-meet-rob"
     title: "Meet ROB"
     subtitle: "Building R.O.B. · Volume 1"
@@ -30,8 +30,8 @@ books:
     position: 1
     image: "images/books/volume-1-meet-rob.webp"
     description: "Meet a real robot through systems thinking, structure, energy, sensors, iteration, and engineering logs."
-    apple_url: ""
-    status: "Accessible EPUB 3 in preparation"
+    apple_url: "https://books.apple.com/us/book/meet-rob/id6806730228"
+    status: "Available on Apple Books"
   - slug: "volume-2-circuits-and-signals"
     title: "Circuits & Signals"
     subtitle: "Building R.O.B. · Volume 2"
@@ -41,8 +41,8 @@ books:
     position: 2
     image: "images/books/volume-2-circuits-and-signals.webp"
     description: "Follow low-voltage circuits, digital and analog signals, PWM, Arduino pins, serial messages, sensors, and watchdogs."
-    apple_url: ""
-    status: "Accessible EPUB 3 in preparation"
+    apple_url: "https://books.apple.com/us/book/circuits-signals/id6806730681"
+    status: "Available on Apple Books"
   - slug: "volume-3-motion-workshop"
     title: "Motion Workshop"
     subtitle: "Building R.O.B. · Volume 3"
@@ -52,8 +52,8 @@ books:
     position: 3
     image: "images/books/volume-3-motion-workshop.webp"
     description: "Explore loads, differential drive, gearing, actuators, materials, fabrication, assembly, and test ladders."
-    apple_url: ""
-    status: "Accessible EPUB 3 in preparation"
+    apple_url: "https://books.apple.com/us/book/motion-workshop/id6806731300"
+    status: "Available on Apple Books"
   - slug: "volume-4-mission-control"
     title: "Mission Control"
     subtitle: "Building R.O.B. · Volume 4"
@@ -63,8 +63,8 @@ books:
     position: 4
     image: "images/books/volume-4-mission-control.webp"
     description: "Learn how computers, controllers, cameras, maps, privacy, AI boundaries, and simulations coordinate a robot."
-    apple_url: ""
-    status: "Accessible EPUB 3 in preparation"
+    apple_url: "https://books.apple.com/us/book/mission-control/id6806731600"
+    status: "Available on Apple Books"
   - slug: "volume-5-ai-robotics-with-codex"
     title: "AI, Robotics, and Codex"
     subtitle: "Building R.O.B. · Volume 5"
@@ -74,8 +74,8 @@ books:
     position: 5
     image: "images/books/volume-5-ai-robotics-with-codex.webp"
     description: "A source-based software history plus practical lessons in Swift, MLX, perception, recording, identity, shows, and spatial interfaces."
-    apple_url: ""
-    status: "Accessible EPUB 3 in preparation"
+    apple_url: "https://books.apple.com/us/book/ai-robotics-and-codex/id6806732016"
+    status: "Available on Apple Books"
   - slug: "volume-6-amber-dual-arm-robotics"
     title: "Dual-Arm Robotics"
     subtitle: "Building R.O.B. · Volume 6"
@@ -85,8 +85,8 @@ books:
     position: 6
     image: "images/books/volume-6-amber-dual-arm-robotics.webp"
     description: "Integrate two seven-joint AMBER arms through URDF, frame calibration, CAN identity, UDP/LCM, Ubuntu, diagnostics, and staged commissioning."
-    apple_url: ""
-    status: "Accessible EPUB 3 in preparation"
+    apple_url: "https://books.apple.com/us/book/dual-arm-robotics/id6806732519"
+    status: "Available on Apple Books"
   - slug: "volume-7-engineering-robcontrollervision"
     title: "Engineering ROBControllerVision"
     subtitle: "Building R.O.B. · Volume 7"
@@ -96,8 +96,8 @@ books:
     position: 7
     image: "images/books/volume-7-engineering-robcontrollervision.webp"
     description: "Study Swift 6 architecture, explicit control ownership, spatial controllers, authenticated video, immersive 360 presentation, speech, and testing."
-    apple_url: ""
-    status: "Accessible EPUB 3 in preparation"
+    apple_url: "https://books.apple.com/us/book/engineering-robcontrollervision/id6806732984"
+    status: "Available on Apple Books"
   - slug: "volume-8-engineering-cerebro"
     title: "Engineering Cerebro"
     subtitle: "Building R.O.B. · Volume 8"
@@ -107,8 +107,8 @@ books:
     position: 8
     image: "images/books/volume-8-engineering-cerebro.webp"
     description: "Examine RGB-D and panoramic perception, local and cloud AI, encrypted face context, private messaging, training capture, video, and bounded autonomy."
-    apple_url: ""
-    status: "Accessible EPUB 3 in preparation"
+    apple_url: "https://books.apple.com/us/book/engineering-cerebro/id6806807905"
+    status: "Available on Apple Books"
   - slug: "complete-builders-field-manual"
     title: "Complete Builder's Field Manual"
     subtitle: "The discounted complete digital collection"
@@ -118,8 +118,8 @@ books:
     position: 9
     image: "images/books/complete-builders-field-manual.webp"
     description: "The unified series: mechanics, circuits, software, perception, privacy, arms, AI boundaries, verification, operations, maintenance, and the open evidence queue."
-    apple_url: ""
-    status: "Accessible EPUB 3 in preparation"
+    apple_url: "https://books.apple.com/us/book/complete-builders-field-manual/id6806809290"
+    status: "Available on Apple Books"
 
 existing_apple_title:
   title: "Dark Vapor4"

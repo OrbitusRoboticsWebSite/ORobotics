@@ -291,8 +291,25 @@ try {
   }
 
   const booksPage = await readFile(path.join(destination, "books", "index.html"), "utf8");
-  if (!booksPage.includes("Prepublication catalog") || !booksPage.includes("55%") || !booksPage.includes("id1538369440")) {
+  const appleBookIds = [
+    "id6806729418",
+    "id6806730228",
+    "id6806730681",
+    "id6806731300",
+    "id6806731600",
+    "id6806732016",
+    "id6806732519",
+    "id6806732984",
+    "id6806807905",
+    "id6806809290",
+  ];
+  if (!booksPage.includes("Available now on Apple Books") || !booksPage.includes("55%") || !booksPage.includes("id1538369440")) {
     failures.push("Books catalog is missing its release status, collection discount, or existing Apple Books title.");
+  }
+  for (const appleBookId of appleBookIds) {
+    if (!booksPage.includes(appleBookId)) {
+      failures.push(`Books catalog is missing the Apple Books product link for ${appleBookId}.`);
+    }
   }
 
   if (failures.length > 0) {
