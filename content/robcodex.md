@@ -14,9 +14,9 @@ ROBCodex lets you securely view and control the Codex sessions on your Mac from 
 
 The download is a universal application for Apple silicon and Intel Macs running macOS 14 or later. It is signed with the Orbitus Robotics Developer ID, uses Apple's hardened runtime, and is notarized by Apple.
 
-- Version: `0.1.0` (build 1)
-- Size: 4,109,384 bytes
-- SHA-256: `18ad2fd222eee062154f02be183f3e8d793b3c4f98d41d178e6e50d51267baef`
+- Version: `0.1.0` (build 1005)
+- Size: 4,164,368 bytes
+- SHA-256: `751d61118f83c972139a9275748b1a5759e868e58c98fb9529f1f55a6015c01d`
 
 ## Connect your devices
 
