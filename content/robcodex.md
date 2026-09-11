@@ -13,7 +13,9 @@ ROBCodex turns the Mac bridge into a focused Codex workspace and securely carrie
 Keep several Codex conversations open in one horizontal session bar instead of spreading work across separate Terminal windows. Each tab has its own saved conversation, prompt draft, live stream, paging state, model, thinking effort, and Stop control, so sessions can work simultaneously without blocking or overwriting one another.
 
 - **Work natively on the Mac.** ROBCodex Bridge now includes a terminal-style session workspace with searchable history, live command output, approvals, prompts, and per-session controls.
-- **Continue from iPhone or iPad.** Open the same saved sessions, read their history, send or steer prompts, and stop an individual turn from a paired device.
+- **Continue from iPhone or iPad.** Open the same saved sessions, read their history, send or steer prompts, and stop an individual turn from a paired device. New sessions appear automatically while connected—no Refresh button required.
+- **See what Codex is doing.** A live activity strip and structured cards show reasoning summaries, plan steps, tool progress, commands, and response output as the turn advances.
+- **Make landscape count.** On iPhone, the session takes the full landscape width with a compact translucent title bar and composer, leaving more room for output without hiding the conversation title.
 - **Tune each session.** Pick its Codex model and thinking effort on Mac, iPhone, or iPad. A compact status bar keeps the active configuration visible.
 - **Recover cleanly.** Open tabs and their selected session survive relaunches, while bridge readiness and turn events keep every connected screen in sync.
 - **Keep Codex local.** Your Codex login stays on the Mac; the bridge exposes only a small allowlist over an encrypted, paired local connection.
@@ -21,14 +23,19 @@ Keep several Codex conversations open in one horizontal session bar instead of s
 
 ## See the multi-session workspace
 
+<figure class="not-prose my-8 overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 p-3 shadow-2xl">
+  <img src="/images/robcodex/robcodex-iphone-landscape.webp" width="1434" height="660" loading="lazy" alt="ROBCodex filling an iPhone landscape screen with a live Codex transcript, reasoning summary, progress strip, and compact translucent composer" class="mx-auto h-auto w-full rounded-xl">
+  <figcaption class="px-2 pb-1 pt-3 text-sm text-slate-300">The full-width iPhone landscape workspace keeps the title, live status, reasoning summary, and more transcript output visible at once.</figcaption>
+</figure>
+
 <div class="not-prose my-8 grid grid-cols-1 gap-6 md:grid-cols-2">
   <figure class="overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 p-3 shadow-2xl">
-    <img src="/images/robcodex/robcodex-iphone-sessions.webp" width="736" height="1600" loading="lazy" alt="ROBCodex on iPhone showing per-session Codex model, thinking effort, and Allow Full Access settings" class="mx-auto h-auto w-full rounded-xl">
-    <figcaption class="px-2 pb-1 pt-3 text-sm text-slate-300">Choose the model and thinking effort for a session while its Full Access policy remains clearly visible.</figcaption>
+    <img src="/images/robcodex/robcodex-iphone-sessions.webp" width="736" height="1600" loading="lazy" alt="ROBCodex on iPhone showing the current Codex activity, reasoning summary, command output, and session controls" class="mx-auto h-auto w-full rounded-xl">
+    <figcaption class="px-2 pb-1 pt-3 text-sm text-slate-300">Live status and reasoning-summary cards make the current work visible throughout a turn.</figcaption>
   </figure>
   <figure class="overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 p-3 shadow-2xl">
-    <img src="/images/robcodex/robcodex-ipad-sessions.webp" width="1400" height="1867" loading="lazy" alt="ROBCodex on iPad showing simultaneous session tabs and the Codex model and thinking settings sheet" class="mx-auto h-auto w-full rounded-xl">
-    <figcaption class="px-2 pb-1 pt-3 text-sm text-slate-300">iPad keeps simultaneous sessions visible while you tune the selected session's model and thinking effort.</figcaption>
+    <img src="/images/robcodex/robcodex-ipad-sessions.webp" width="1400" height="1867" loading="lazy" alt="ROBCodex on iPad showing simultaneous session tabs, live progress, reasoning summary, and command output" class="mx-auto h-auto w-full rounded-xl">
+    <figcaption class="px-2 pb-1 pt-3 text-sm text-slate-300">iPad keeps simultaneous sessions and structured Codex progress visible together.</figcaption>
   </figure>
 </div>
 
@@ -38,9 +45,9 @@ Keep several Codex conversations open in one horizontal session bar instead of s
 
 The download is a universal application for Apple silicon and Intel Macs running macOS 14 or later. It is signed with the Orbitus Robotics Developer ID, uses Apple's hardened runtime, and is notarized by Apple.
 
-- Version: `0.1.0` (build 1008)
-- Size: 4,490,344 bytes
-- SHA-256: `eb76f129a10811d27973636f0f5ca6f9c3b33a6a60b08ae9349263f954193c69`
+- Version: `0.1.0` (build 1009)
+- Size: 4,507,934 bytes
+- SHA-256: `ad26cffbb87cd46d92fdb4deae6e92e7900c36c359698bd08c11d5c87deef86f`
 
 ## Connect your devices
 
