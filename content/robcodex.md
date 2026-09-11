@@ -14,9 +14,10 @@ Keep several Codex conversations open in one horizontal session bar instead of s
 
 - **Work natively on the Mac.** ROBCodex Bridge now includes a terminal-style session workspace with searchable history, live command output, approvals, prompts, and per-session controls.
 - **Continue from iPhone or iPad.** Open the same saved sessions, read their history, send or steer prompts, and stop an individual turn from a paired device. New sessions appear automatically while connected—no Refresh button required.
-- **See what Codex is doing.** A live activity strip and structured cards show reasoning summaries, plan steps, tool progress, commands, and response output as the turn advances.
+- **See the thinking and the conclusion.** A live activity strip and structured cards show detailed reasoning summaries, plan steps, tool progress, commands, and the completed Codex answer together in the turn transcript.
 - **Make landscape count.** On iPhone, the session takes the full landscape width with a compact translucent title bar and composer, leaving more room for output without hiding the conversation title.
-- **Tune each session.** Pick its Codex model and thinking effort on Mac, iPhone, or iPad. A compact status bar keeps the active configuration visible.
+- **Choose current and future models.** A labeled menu loads the signed-in Mac account's live Codex catalog, including GPT-6 Astra when available, so new models do not require a ROBCodex update.
+- **Control thinking depth.** A neighboring menu exposes every level the selected model supports—including Max or Ultra when available—for both new and existing sessions on Mac, iPhone, and iPad.
 - **Recover cleanly.** Open tabs and their selected session survive relaunches, while bridge readiness and turn events keep every connected screen in sync.
 - **Keep Codex local.** Your Codex login stays on the Mac; the bridge exposes only a small allowlist over an encrypted, paired local connection.
 - **Allow Full Access.** ROBCodex sessions run without approval pauses so they remain usable remotely. Pair only devices you trust: a paired device can direct Codex to run commands and change files with your Mac user account's access.
@@ -24,18 +25,18 @@ Keep several Codex conversations open in one horizontal session bar instead of s
 ## See the multi-session workspace
 
 <figure class="not-prose my-8 overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 p-3 shadow-2xl">
-  <img src="/images/robcodex/robcodex-iphone-landscape.webp" width="1434" height="660" loading="lazy" alt="ROBCodex filling an iPhone landscape screen with a live Codex transcript, reasoning summary, progress strip, and compact translucent composer" class="mx-auto h-auto w-full rounded-xl">
-  <figcaption class="px-2 pb-1 pt-3 text-sm text-slate-300">The full-width iPhone landscape workspace keeps the title, live status, reasoning summary, and more transcript output visible at once.</figcaption>
+  <img src="/images/robcodex/robcodex-iphone-landscape.webp" width="1434" height="660" loading="lazy" alt="ROBCodex filling an iPhone landscape screen with GPT-6 Astra and thinking-depth menus, live progress, reasoning summary, and a compact translucent composer" class="mx-auto h-auto w-full rounded-xl">
+  <figcaption class="px-2 pb-1 pt-3 text-sm text-slate-300">The full-width iPhone landscape workspace keeps the GPT-6 Astra and thinking-depth choices beside the title while leaving more room for live output.</figcaption>
 </figure>
 
 <div class="not-prose my-8 grid grid-cols-1 gap-6 md:grid-cols-2">
   <figure class="overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 p-3 shadow-2xl">
-    <img src="/images/robcodex/robcodex-iphone-sessions.webp" width="736" height="1600" loading="lazy" alt="ROBCodex on iPhone showing the current Codex activity, reasoning summary, command output, and session controls" class="mx-auto h-auto w-full rounded-xl">
-    <figcaption class="px-2 pb-1 pt-3 text-sm text-slate-300">Live status and reasoning-summary cards make the current work visible throughout a turn.</figcaption>
+    <img src="/images/robcodex/robcodex-iphone-sessions.webp" width="736" height="1600" loading="lazy" alt="ROBCodex on iPhone showing GPT-6 Astra, Thinking High, current Codex activity, a reasoning summary, and command output" class="mx-auto h-auto w-full rounded-xl">
+    <figcaption class="px-2 pb-1 pt-3 text-sm text-slate-300">Direct model and thinking-depth menus sit above live status and detailed reasoning-summary cards.</figcaption>
   </figure>
   <figure class="overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 p-3 shadow-2xl">
-    <img src="/images/robcodex/robcodex-ipad-sessions.webp" width="1400" height="1867" loading="lazy" alt="ROBCodex on iPad showing simultaneous session tabs, live progress, reasoning summary, and command output" class="mx-auto h-auto w-full rounded-xl">
-    <figcaption class="px-2 pb-1 pt-3 text-sm text-slate-300">iPad keeps simultaneous sessions and structured Codex progress visible together.</figcaption>
+    <img src="/images/robcodex/robcodex-ipad-sessions.webp" width="1400" height="1867" loading="lazy" alt="ROBCodex on iPad showing simultaneous sessions, GPT-6 Astra and thinking-depth controls, live progress, reasoning summary, and command output" class="mx-auto h-auto w-full rounded-xl">
+    <figcaption class="px-2 pb-1 pt-3 text-sm text-slate-300">iPad keeps simultaneous sessions, model and thinking-depth controls, and structured Codex progress visible together.</figcaption>
   </figure>
 </div>
 
@@ -45,9 +46,9 @@ Keep several Codex conversations open in one horizontal session bar instead of s
 
 The download is a universal application for Apple silicon and Intel Macs running macOS 14 or later. It is signed with the Orbitus Robotics Developer ID, uses Apple's hardened runtime, and is notarized by Apple.
 
-- Version: `0.1.0` (build 1009)
-- Size: 4,507,934 bytes
-- SHA-256: `ad26cffbb87cd46d92fdb4deae6e92e7900c36c359698bd08c11d5c87deef86f`
+- Version: `0.1.0` (build 1010)
+- Size: 4,534,323 bytes
+- SHA-256: `e5371b6a98b554f49ebd1a2569386e5a124067d157ee2ec87ca764e368c71074`
 
 ## Connect your devices
 
