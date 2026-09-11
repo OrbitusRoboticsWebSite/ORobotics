@@ -302,6 +302,16 @@ try {
     "id6806732984",
     "id6806807905",
     "id6806809290",
+    "id6810959426",
+    "id6811118109",
+    "id6811120320",
+    "id6811121042",
+    "id6811121106",
+    "id6811124273",
+    "id6811125927",
+    "id6811127353",
+    "id6811128266",
+    "id6811128916",
   ];
   if (!booksPage.includes("Available now on Apple Books") || !booksPage.includes("55%") || !booksPage.includes("id1538369440")) {
     failures.push("Books catalog is missing its release status, collection discount, or existing Apple Books title.");
@@ -310,6 +320,9 @@ try {
     if (!booksPage.includes(appleBookId)) {
       failures.push(`Books catalog is missing the Apple Books product link for ${appleBookId}.`);
     }
+  }
+  if (!booksPage.includes("ROB's Little Helper Library") || !booksPage.includes("Waiting for Apple review")) {
+    failures.push("Books catalog is missing the preschool collection or its review status.");
   }
 
   if (failures.length > 0) {

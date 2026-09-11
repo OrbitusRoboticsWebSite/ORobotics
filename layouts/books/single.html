@@ -15,6 +15,10 @@
     .book-card > a img{display:block}
     .book-card h3 a,.books-offer h3 a{color:inherit;text-decoration:none}
     .book-card h3 a:hover,.books-offer h3 a:hover{text-decoration:underline}
+    .books-preschool{background:linear-gradient(180deg,#fff7ed 0%,#fdf2f8 52%,#eff6ff 100%)}
+    .books-preschool .books-kicker{color:#be123c}
+    .books-preschool__note{display:flex;gap:.7rem;align-items:flex-start;margin:0 0 2rem;padding:1rem 1.15rem;border:1px solid #f9a8d4;border-radius:1rem;background:rgba(255,255,255,.78);color:#831843;line-height:1.55}
+    .books-preschool__note strong{font-weight:1000}
   </style>
 
   <header class="books-hero">
@@ -22,9 +26,9 @@
       <div>
         <p class="books-kicker">Orbitus Robotics learning library</p>
         <h1>One robot.<br><em>Every layer.</em></h1>
-        <p class="books-hero__lede">Begin with a read-aloud adventure, grow through four youth maker volumes, then open the implementation-level books behind R.O.B.'s arms, Apple-platform controls, perception, and AI boundaries.</p>
+        <p class="books-hero__lede">Begin with illustrated read-aloud adventures, grow through four youth maker volumes, then open the implementation-level books behind R.O.B.'s arms, Apple-platform controls, perception, and AI boundaries.</p>
         <div class="books-actions">
-          <a class="books-button books-button--primary" href="#library">Explore the ten-book catalog</a>
+          <a class="books-button books-button--primary" href="#little-helper-library">Explore the full catalog</a>
           <a class="books-button" href="{{ $catalog.existing_apple_title.apple_url }}" target="_blank" rel="noopener noreferrer">See our published Apple Books title ↗</a>
         </div>
       </div>
@@ -40,7 +44,7 @@
   </header>
 
   <aside class="books-review" aria-label="Publication status">
-    <div class="books-review__inner"><strong>Available now on Apple Books:</strong> click any book cover, title, or purchase button to open that edition's product page directly in Apple's store.</div>
+    <div class="books-review__inner"><strong>Available now on Apple Books:</strong> the Building R.O.B. editions. The ten new Little Helper picture books have been submitted and are waiting for Apple review. Every cover and title links directly to its assigned Apple Books page.</div>
   </aside>
 
   <section class="books-section" aria-labelledby="collection-title">
@@ -48,6 +52,31 @@
     <div class="books-offer">
       <div class="books-offer__price"><strong>${{ printf "%.2f" $catalog.series.collection_price_usd }}</strong><span>U.S. Apple Books price</span></div>
       <div class="books-offer__copy"><h3><a href="{{ $catalog.series.apple_series_url }}" target="_blank" rel="noopener noreferrer">Complete Builder's Field Manual</a></h3><p>235 pages covering mechanics, circuits, firmware, controllers, perception, privacy, AMBER arms, spatial interfaces, AI boundaries, verification, public operation, and the open evidence queue.</p><span class="books-offer__badge">Save {{ $catalog.series.collection_savings_percent }}% vs. ${{ printf "%.2f" $catalog.series.individual_total_usd }} individually</span></div>
+    </div>
+  </section>
+
+  <section id="little-helper-library" class="books-section books-preschool" aria-labelledby="little-helper-title">
+    <div class="books-heading"><div><p class="books-kicker">New · Ages 2–5</p><h2 id="little-helper-title">ROB's Little Helper Library</h2><p>Ten gentle, fully illustrated read-alouds about routines, counting, colors, sounds, kindness, patience, Halloween, and Christmas.</p></div></div>
+    <p class="books-preschool__note"><strong>Apple Books review in progress.</strong><span>All ten editions have complete worldwide rights and $2.99 U.S. pricing. Their direct Apple Books pages may remain unavailable in some storefronts until review finishes.</span></p>
+    <div class="book-grid">
+      {{ range sort $catalog.preschool_books "position" }}
+      <article class="book-card">
+        <a href="{{ .apple_url }}" target="_blank" rel="noopener noreferrer" aria-label="Open {{ .title }} on Apple Books">
+          <img src="{{ .image | relURL }}" width="660" height="855" loading="lazy" alt="{{ .title }} cover">
+        </a>
+        <div>
+          <span class="book-card__number">Book {{ .position }} · {{ .subtitle }}</span>
+          <h3><a href="{{ .apple_url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a></h3>
+          <p class="book-card__audience">{{ .audience }} · {{ .pages }} pages</p>
+          <p class="book-card__description">{{ .description }}</p>
+          <div class="book-card__bottom">
+            <span class="book-card__price">${{ printf "%.2f" .price_usd }}</span>
+            <a class="book-card__apple" href="{{ .apple_url }}" target="_blank" rel="noopener noreferrer">View on Apple Books</a>
+            <span class="book-card__pending">{{ .status }}</span>
+          </div>
+        </div>
+      </article>
+      {{ end }}
     </div>
   </section>
 

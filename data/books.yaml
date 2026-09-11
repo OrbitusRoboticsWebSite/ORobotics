@@ -121,6 +121,126 @@ books:
     apple_url: "https://books.apple.com/us/book/complete-builders-field-manual/id6806809290"
     status: "Available on Apple Books"
 
+preschool_series:
+  title: "ROB's Little Helper Library"
+  author: "Rodolfo Aramayo"
+  publisher: "OrbitusRobotics LLC"
+  audience: "Ages 2–5 · Read aloud"
+  release_status: "Submitted to Apple Books · Waiting for Review"
+  title_count: 10
+
+preschool_books:
+  - slug: "good-morning-rob"
+    title: "Good Morning, ROB!"
+    subtitle: "A happy little morning routine"
+    audience: "Ages 2–5 · Read aloud"
+    pages: 14
+    price_usd: 2.99
+    position: 1
+    image: "images/books/preschool-good-morning-rob.webp"
+    description: "Wake, wash, tidy, and greet the day with ROB in a warm first-routine story filled with gentle repetition and movement prompts."
+    apple_url: "https://books.apple.com/us/book/id6810959426"
+    status: "Waiting for Apple review"
+  - slug: "rob-counts-the-fireflies"
+    title: "ROB Counts the Fireflies"
+    subtitle: "Count from one to five together"
+    audience: "Ages 2–5 · Read aloud"
+    pages: 14
+    price_usd: 2.99
+    position: 2
+    image: "images/books/preschool-rob-counts-the-fireflies.webp"
+    description: "Count glowing fireflies from one to five with ROB in a calm twilight garden full of finger play and cozy illustrations."
+    apple_url: "https://books.apple.com/us/book/id6811118109"
+    status: "Waiting for Apple review"
+  - slug: "robs-rainbow-lights"
+    title: "ROB's Rainbow Lights"
+    subtitle: "A gentle color adventure"
+    audience: "Ages 2–5 · Read aloud"
+    pages: 14
+    price_usd: 2.99
+    position: 3
+    image: "images/books/preschool-robs-rainbow-lights.webp"
+    description: "Discover red, yellow, and blue lanterns with ROB before all three colors glow together beneath a rainbow."
+    apple_url: "https://books.apple.com/us/book/id6811120320"
+    status: "Waiting for Apple review"
+  - slug: "rob-hears-a-little-sound"
+    title: "ROB Hears a Little Sound"
+    subtitle: "Listen, wonder, and help"
+    audience: "Ages 2–5 · Read aloud"
+    pages: 14
+    price_usd: 2.99
+    position: 4
+    image: "images/books/preschool-rob-hears-a-little-sound.webp"
+    description: "Tap, drip, swish, chirp—ROB pauses to discover the gentle sounds of a rainy day."
+    apple_url: "https://books.apple.com/us/book/id6811121042"
+    status: "Waiting for Apple review"
+  - slug: "rob-shares-the-shiny-star"
+    title: "ROB Shares the Shiny Star"
+    subtitle: "A warm story about sharing"
+    audience: "Ages 2–5 · Read aloud"
+    pages: 14
+    price_usd: 2.99
+    position: 5
+    image: "images/books/preschool-rob-shares-the-shiny-star.webp"
+    description: "ROB and Puppy discover that enjoying one shiny gold star together makes a happy feeling grow brighter."
+    apple_url: "https://books.apple.com/us/book/id6811121106"
+    status: "Waiting for Apple review"
+  - slug: "rob-waits-for-the-ducklings"
+    title: "ROB Waits for the Ducklings"
+    subtitle: "A gentle story about waiting"
+    audience: "Ages 2–5 · Read aloud"
+    pages: 14
+    price_usd: 2.99
+    position: 6
+    image: "images/books/preschool-rob-waits-for-the-ducklings.webp"
+    description: "ROB slows down, watches, and waits while a little duckling family safely crosses the path."
+    apple_url: "https://books.apple.com/us/book/id6811124273"
+    status: "Waiting for Apple review"
+  - slug: "rob-and-the-friendly-pumpkin"
+    title: "ROB and the Friendly Pumpkin"
+    subtitle: "A cozy, non-scary Halloween story"
+    audience: "Ages 2–5 · Read aloud"
+    pages: 14
+    price_usd: 2.99
+    position: 7
+    image: "images/books/preschool-rob-and-the-friendly-pumpkin.webp"
+    description: "Make a friendly pumpkin from simple shapes and a soft battery light in this reassuring Halloween story."
+    apple_url: "https://books.apple.com/us/book/id6811125927"
+    status: "Waiting for Apple review"
+  - slug: "robs-costume-parade"
+    title: "ROB's Costume Parade"
+    subtitle: "A playful Halloween dress-up story"
+    audience: "Ages 2–5 · Read aloud"
+    pages: 14
+    price_usd: 2.99
+    position: 8
+    image: "images/books/preschool-robs-costume-parade.webp"
+    description: "ROB tries a floppy hat, chooses a leaf cape, and joins Puppy in a cheerful garden costume parade."
+    apple_url: "https://books.apple.com/us/book/id6811127353"
+    status: "Waiting for Apple review"
+  - slug: "rob-lights-the-little-tree"
+    title: "ROB Lights the Little Tree"
+    subtitle: "A warm Christmas color story"
+    audience: "Ages 2–5 · Read aloud"
+    pages: 14
+    price_usd: 2.99
+    position: 9
+    image: "images/books/preschool-rob-lights-the-little-tree.webp"
+    description: "ROB and Puppy add glowing colors one by one to a little Christmas tree."
+    apple_url: "https://books.apple.com/us/book/id6811128266"
+    status: "Waiting for Apple review"
+  - slug: "robs-quiet-christmas-eve"
+    title: "ROB's Quiet Christmas Eve"
+    subtitle: "A peaceful Christmas bedtime story"
+    audience: "Ages 2–5 · Read aloud"
+    pages: 14
+    price_usd: 2.99
+    position: 10
+    image: "images/books/preschool-robs-quiet-christmas-eve.webp"
+    description: "Wind down with ROB and Puppy in a peaceful Christmas Eve story made for bedtime."
+    apple_url: "https://books.apple.com/us/book/id6811128916"
+    status: "Waiting for Apple review"
+
 existing_apple_title:
   title: "Dark Vapor4"
   subtitle: "for Xcode 12 and macOS Big Sur"

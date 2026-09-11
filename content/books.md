@@ -1,9 +1,9 @@
 ---
-title: "Building R.O.B. Books"
+title: "R.O.B. Books"
 url: "/books/"
 type: "books"
 draft: false
-description: "Explore the Building R.O.B. learning series, picture story, and advanced engineering books available from Orbitus Robotics on Apple Books."
+description: "Explore the illustrated ROB's Little Helper Library for ages 2–5 and the Building R.O.B. engineering series from Orbitus Robotics on Apple Books."
 ---
 
-The Building R.O.B. library follows one real robot from first principles through mechanics, circuits, software, spatial control, perception, and bounded autonomy.
+The Orbitus Robotics library begins with gentle illustrated read-alouds, then follows one real robot through mechanics, circuits, software, spatial control, perception, and bounded autonomy.
