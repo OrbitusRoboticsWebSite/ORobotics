@@ -56,7 +56,7 @@
   </section>
 
   <section id="little-helper-library" class="books-section books-preschool" aria-labelledby="little-helper-title">
-    <div class="books-heading"><div><p class="books-kicker">New · Ages 2–5</p><h2 id="little-helper-title">ROB's Little Helper Library</h2><p>Ten gentle, fully illustrated read-alouds about routines, counting, colors, sounds, kindness, patience, Halloween, and Christmas.</p></div></div>
+    <div class="books-heading"><div><p class="books-kicker">New · Ages 2–5</p><h2 id="little-helper-title">ROB's Little Helper Library</h2><p>Ten gentle, fully illustrated read-alouds by {{ $catalog.preschool_series.author }} about routines, counting, colors, sounds, kindness, patience, Halloween, and Christmas.</p></div></div>
     <p class="books-preschool__note"><strong>Apple Books review in progress.</strong><span>All ten editions have complete worldwide rights and $2.99 U.S. pricing. Their direct Apple Books pages may remain unavailable in some storefronts until review finishes.</span></p>
     <div class="book-grid">
       {{ range sort $catalog.preschool_books "position" }}
@@ -67,6 +67,7 @@
         <div>
           <span class="book-card__number">Book {{ .position }} · {{ .subtitle }}</span>
           <h3><a href="{{ .apple_url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a></h3>
+          <p class="book-card__audience">By {{ $catalog.preschool_series.author }}</p>
           <p class="book-card__audience">{{ .audience }} · {{ .pages }} pages</p>
           <p class="book-card__description">{{ .description }}</p>
           <div class="book-card__bottom">
@@ -95,6 +96,7 @@
         <div>
           <span class="book-card__number">{{ .subtitle }}</span>
           <h3>{{ if .apple_url }}<a href="{{ .apple_url }}" target="_blank" rel="noopener noreferrer">{{ .title }}</a>{{ else }}{{ .title }}{{ end }}</h3>
+          {{ with .authors }}<p class="book-card__audience">By {{ . }}</p>{{ end }}
           <p class="book-card__audience">{{ .audience }} · {{ .pages }} pages</p>
           <p class="book-card__description">{{ .description }}</p>
           <div class="book-card__bottom">

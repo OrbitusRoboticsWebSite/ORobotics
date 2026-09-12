@@ -12,6 +12,7 @@ series:
 books:
   - slug: "rob-and-the-lost-yellow-ball"
     title: "ROB and the Lost Yellow Ball"
+    authors: "Rodolfo Aramayo and Kierie Aramayo"
     subtitle: "A little robot stops, looks, thinks, and helps"
     audience: "Ages 5–6 · Read aloud"
     pages: 23
@@ -123,7 +124,7 @@ books:
 
 preschool_series:
   title: "ROB's Little Helper Library"
-  author: "Rodolfo Aramayo"
+  author: "Rodolfo Aramayo and Kierie Aramayo"
   publisher: "OrbitusRobotics LLC"
   audience: "Ages 2–5 · Read aloud"
   release_status: "Submitted to Apple Books · Waiting for Review"
