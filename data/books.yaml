@@ -127,7 +127,7 @@ preschool_series:
   author: "Rodolfo Aramayo and Kierie Aramayo"
   publisher: "OrbitusRobotics LLC"
   audience: "Ages 2–5 · Read aloud"
-  release_status: "Apple Books pages assigned · Co-author updates pending delivery"
+  release_status: "One co-author update submitted · Nine pending delivery"
   title_count: 10
 
 preschool_books:
@@ -141,7 +141,7 @@ preschool_books:
     image: "images/books/preschool-good-morning-rob.webp"
     description: "Wake, wash, tidy, and greet the day with ROB in a warm first-routine story filled with gentle repetition and movement prompts."
     apple_url: "https://books.apple.com/us/book/id6810959426"
-    status: "Co-author update pending"
+    status: "Co-author update submitted"
   - slug: "rob-counts-the-fireflies"
     title: "ROB Counts the Fireflies"
     subtitle: "Count from one to five together"
