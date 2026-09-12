@@ -321,8 +321,8 @@ try {
       failures.push(`Books catalog is missing the Apple Books product link for ${appleBookId}.`);
     }
   }
-  if (!booksPage.includes("ROB's Little Helper Library") || !booksPage.includes("Waiting for Apple review")) {
-    failures.push("Books catalog is missing the preschool collection or its review status.");
+  if (!booksPage.includes("ROB's Little Helper Library") || !booksPage.includes("Co-author update pending")) {
+    failures.push("Books catalog is missing the preschool collection or its co-author delivery status.");
   }
 
   if (failures.length > 0) {
