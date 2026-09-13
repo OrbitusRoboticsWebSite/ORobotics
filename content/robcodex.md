@@ -51,8 +51,6 @@ The download is a universal application for Apple silicon and Intel Macs running
 - Size: 4,584,998 bytes
 - SHA-256: `e4c2b4a12a10ed607a46d178212856a93ebf661b6bf467b6c45df2dc14aa838e`
 
-[Release notes and alternate signed download](https://github.com/RudyAramayo/ROBCodex/releases/tag/v0.1.0-build.1011).
-
 ## Connect your devices
 
 1. Download and unzip **ROBCodex Bridge** on your Mac.
