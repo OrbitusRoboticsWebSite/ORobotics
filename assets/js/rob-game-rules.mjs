@@ -1,4 +1,4 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.09.16.2';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.16.3';
 export const MAX_ROB_HEALTH = 100;
 export const MAX_ROB_SHIELDS = 40;
 export const SHIELD_ACTIVATION_DURATION = 2.5;
@@ -64,11 +64,11 @@ export const ledgeClimbProgress = ({ z, heading = 0, approachEdgeZ, scale = 1 })
   const projected = span * Math.cos(flipperGroundPitch(BASE_FLIPPER_FORWARD_ANGLE));
   return (approachEdgeZ - z + projected - span / 2) / projected;
 };
-export const baseFlipperPresentation = ({ angle, target = 'rear', onLedge = false, climbProgress, stepHeight = 0, scale = 1 }) => {
+export const baseFlipperPresentation = ({ angle, target = 'rear', onLedge = false, climbProgress, stepHeight = 0, supportHeight = onLedge ? stepHeight : 0, scale = 1 }) => {
   const climbing = Number.isFinite(climbProgress);
   const phase = baseFlipperPhase(angle), active = Math.abs(angle - baseFlipperTargetAngle(target, climbing)) > .005;
   const stabilized = onLedge && !climbing && !active && Math.abs(angle) < .005;
-  let pitch = onLedge ? 0 : flipperGroundPitch(angle), lift = onLedge ? stepHeight : 0;
+  let pitch = flipperGroundPitch(angle), lift = supportHeight;
   if (climbing) {
     const span = ROB_CONTACT_SPAN * scale;
     const supportedPitch = Math.asin(Math.min(1, stepHeight / span));

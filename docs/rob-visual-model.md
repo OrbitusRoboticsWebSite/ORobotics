@@ -65,5 +65,19 @@ The training games use front-lift, rear-support and level travel stages. The rea
 contact stays grounded during deployment; after front engagement, forward drive
 reverses the flippers automatically and raises the rear while the front stays on
 the step. This is a geometric contact approximation, not a full rigid-body solver.
+Once both tread ends reach the platform, the climb latch releases and Down/Up
+can run again against that floor. At an edge the base tips about the supported
+tread end, falls under gravity after losing support, and settles on the lower
+floor. A departed platform cannot retain a flipper lift or climb latch.
+
+`rob-support-motion.mjs` and native `ROBSupportMotion.swift` match those rules.
+The torso counter-rotates about the lower waist hinge at Y 0.37 m, Z 0.035 m in
+the existing model frame. The illustrative LACT pins follow the model's actuator
+location and have a 0.20955 m (8¼ inch) reference separation, using the labeled
+photo in ROBGeometryLab's September 15 dataset. This is a pose length, not a
+stroke or a measured hinge calibration. Pin separation is recomputed after
+torso lean; the body leans forward during front lift and backward during a
+forward descent. The visual fixture draws the two-pin linkage in orange.
+
 The browser bubble shield is button/E/gamepad activated for 2.5 seconds, matching
 the native rules. Only an active bubble absorbs damage; repeated taps do not extend it.

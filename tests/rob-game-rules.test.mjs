@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { createROBSupportMotion, stepROBSupportMotion, advanceTorsoLean, lactLengthForLean, robTorsoPresentation, ROB_LACT_REFERENCE_LENGTH, ROB_LEAN_HINGE } from '../assets/js/rob-support-motion.mjs';
 import {
   BASE_FLIPPER_DURATION,
   BASE_FLIPPER_FORWARD_ANGLE,
@@ -299,6 +300,62 @@ test('a raised deck accepts only a forward flipper approach', () => {
   assert.equal(canMountLedge({ ...approach, flipperAngle: BASE_FLIPPER_REAR_ANGLE }), false);
   assert.equal(canMountLedge({ ...approach, flipperAngle: BASE_FLIPPER_FORWARD_ANGLE }), true);
   assert.equal(canMountLedge({ start: approach.end, end: approach.start, flipperAngle: BASE_FLIPPER_FORWARD_ANGLE, approachEdgeZ: -2.2 }), false);
+});
+
+test('a platform is a new floor for repeated flipper cycles', () => {
+  for (let cycle = 0; cycle < 3; cycle++) {
+    const raised = baseFlipperPresentation({ angle: BASE_FLIPPER_FORWARD_ANGLE, target: 'forward', onLedge: true, stepHeight: .62, scale: 2.15 });
+    assert.equal(raised.lift, .62);
+    assert.ok(raised.pitch > .7, 'front can rise again on top of the platform');
+    const stowed = baseFlipperPresentation({ angle: 0, onLedge: true, stepHeight: .62, scale: 2.15 });
+    assert.equal(stowed.pitch, 0); assert.equal(stowed.stabilized, true);
+  }
+});
+
+test('edge support releases into gravity and settles on the lower floor', () => {
+  for (const scale of [1.35, 2.15]) {
+    const height = scale === 1.35 ? .34 : .62, contactSpan = .42545 * scale;
+    let motion = createROBSupportMotion(height);
+    for (let i = 0; i < 10; i++) motion = stepROBSupportMotion({ motion, frontFloor: 0, rearFloor: height, centerFloor: 0, contactSpan, scale, forward: 1, delta: .02 });
+    assert.equal(motion.phase, 'edge'); assert.equal(motion.height, height);
+    assert.ok(motion.pitch < 0, 'front tips down about supported rear');
+    motion = stepROBSupportMotion({ motion, frontFloor: 0, rearFloor: 0, centerFloor: 0, contactSpan, scale, forward: 1, delta: .02 });
+    assert.equal(motion.phase, 'falling'); assert.ok(motion.height < height && motion.height > 0);
+    assert.ok(motion.velocity < 0, 'gravity accelerates downward after the rear clears');
+    let sawLanding = false;
+    for (let i = 0; i < 50; i++) {
+      motion = stepROBSupportMotion({ motion, frontFloor: 0, rearFloor: 0, centerFloor: 0, contactSpan, scale, forward: 0, delta: .02 });
+      assert.ok(motion.height + Math.min(0, contactSpan * Math.sin(motion.pitch)) >= -1e-6, 'neither tread end penetrates the landing floor');
+      if (motion.phase === 'settling') sawLanding = true;
+    }
+    assert.ok(sawLanding); assert.equal(motion.phase, 'grounded');
+    assert.equal(motion.height, 0); assert.equal(motion.pitch, 0); assert.equal(motion.velocity, 0);
+  }
+});
+
+test('higher approaching terrain cannot raise ROB without a climb', () => {
+  const motion = stepROBSupportMotion({ motion: createROBSupportMotion(), frontFloor: .62, rearFloor: 0, centerFloor: 0, contactSpan: .9, delta: .05 });
+  assert.equal(motion.phase, 'grounded'); assert.equal(motion.height, 0);
+});
+
+test('LACT counter-leans at its lower hinge with the 8¼-inch reference pin length', () => {
+  const rest = robTorsoPresentation({ basePitch: 0, leanAngle: 0 });
+  assert.ok(Math.abs(rest.lactLength - ROB_LACT_REFERENCE_LENGTH) < 1e-12);
+  const inMotion = advanceTorsoLean(0, .8, .05);
+  assert.ok(Math.abs(lactLengthForLean(inMotion) - (ROB_LACT_REFERENCE_LENGTH - .015)) < 1e-7, 'linear actuator travel determines the intermediate lean angle');
+  for (const pitch of [.8, -.35]) {
+    const lean = advanceTorsoLean(0, pitch, 1);
+    assert.equal(Math.sign(lean), -Math.sign(pitch));
+    const pose = robTorsoPresentation({ basePitch: pitch, leanAngle: lean });
+    assert.equal(pose.pitch, 0, 'body stays upright while the tracked base pitches');
+    const uncompensated = robTorsoPresentation({ basePitch: pitch, leanAngle: 0 });
+    const hinge = ROB_LEAN_HINGE;
+    const rotate = (p, a) => ({ y: p.y * Math.cos(a) - p.z * Math.sin(a), z: p.y * Math.sin(a) + p.z * Math.cos(a) });
+    const a = rotate(hinge, pose.pitch), b = rotate(hinge, uncompensated.pitch);
+    assert.ok(Math.abs(pose.position.y + a.y - uncompensated.position.y - b.y) < 1e-12);
+    assert.ok(Math.abs(pose.position.z + a.z - uncompensated.position.z - b.z) < 1e-12, 'torso rotates about its hinge, not the origin');
+    assert.ok(Math.abs(pose.lactLength - rest.lactLength) > .001, 'pin separation changes with torso lean');
+  }
 });
 
 test('the third trial life is the terminal life', () => {

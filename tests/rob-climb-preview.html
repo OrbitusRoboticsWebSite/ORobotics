@@ -8,16 +8,20 @@
 import * as THREE from 'three';
 import { buildROBVisual } from '../assets/js/rob-visual-model.mjs';
 import { loadCapturedROB } from '../assets/js/rob-captured-model.mjs';
-import { baseFlipperPresentation, flipperGroundPitch, BASE_FLIPPER_FORWARD_ANGLE as down, BASE_FLIPPER_REAR_ASSIST_ANGLE as rear, ROB_CONTACT_SPAN } from '../assets/js/rob-game-rules.mjs';
+import { baseFlipperPresentation, flipperGroundPitch, BASE_FLIPPER_FORWARD_ANGLE as down, ROB_CONTACT_SPAN } from '../assets/js/rob-game-rules.mjs';
+import { createROBSupportMotion, stepROBSupportMotion, robTorsoPresentation } from '../assets/js/rob-support-motion.mjs';
 const scale = 1.35, stepHeight = .34, span = ROB_CONTACT_SPAN * scale;
 const projected = span * Math.cos(flipperGroundPitch(down)), reach = projected - span / 2;
+let fall = createROBSupportMotion(stepHeight);
+for (let i=0;i<10;i++) fall = stepROBSupportMotion({motion:fall,frontFloor:0,rearFloor:stepHeight,centerFloor:0,contactSpan:span,scale,forward:1,delta:.02});
+for (let i=0;i<3;i++) fall = stepROBSupportMotion({motion:fall,frontFloor:0,rearFloor:0,centerFloor:0,contactSpan:span,scale,forward:1,delta:.02});
 const states = [
-  ['Travel', 'Both tread contacts on the lower floor.', {angle:0}, span/2+.13],
-  ['Front lift', 'Rear grounded; flipper roller on the floor.', {angle:down,target:'forward'}, reach+.01],
-  ['Rear support', 'Front on the step; rear rises as ROB levels.', {angle:rear,target:'rear',climbProgress:.55}, reach-projected*.55],
-  ['Level travel', 'Both tracks on the platform; flippers stowed.', {angle:0,onLedge:true}, -span/2-.13],
+  ['Front lift', 'LACT leans forward; the torso stays upright.', {angle:down,target:'forward'}, reach+.01, 0],
+  ['Another platform flip', 'The upper floor supports a new Down / Up cycle.', {angle:down,target:'forward',onLedge:true}, -span/2-.3, 0],
+  ['Falling off the edge', 'Gravity lowers the base; LACT leans backward.', {angle:0,fall}, span/2+.08, Math.PI],
+  ['Landed', 'Base level, LACT neutral, flippers available again.', {angle:0}, span/2+.15, Math.PI],
 ];
-for (const [title, caption, state, z] of states) {
+for (const [title, caption, state, z, heading] of states) {
   const section = document.createElement('section'); section.innerHTML = `<h2>${title}</h2><canvas></canvas><p>${caption}</p>`; document.querySelector('main').append(section);
   const canvas = section.querySelector('canvas'), renderer = new THREE.WebGLRenderer({canvas,antialias:true}); renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(section.clientWidth,640,false);
   const scene = new THREE.Scene(); scene.background = new THREE.Color(0x08121b);
@@ -26,9 +30,13 @@ for (const [title, caption, state, z] of states) {
   const floor = new THREE.Mesh(new THREE.BoxGeometry(2.5,.03,3),new THREE.MeshStandardMaterial({color:0x294453})); floor.position.set(0,-.015,-.4); scene.add(floor);
   const step = new THREE.Mesh(new THREE.BoxGeometry(1.5,stepHeight,1.5),new THREE.MeshStandardMaterial({color:0x79552c})); step.position.set(0,stepHeight/2,-.75); scene.add(step);
   const rig = buildROBVisual({scale}); await loadCapturedROB(rig,'../static/models/rob/',scale);
-  const pose = baseFlipperPresentation({...state,stepHeight,scale}), pivot = .212725*scale;
-  rig.root.position.set(0,pose.lift,z); rig.baseFlipper.rotation.x=state.angle; rig.driveBase.rotation.x=pose.pitch;
-  rig.torso.rotation.x=pose.pitch; rig.torso.position.set(0,pivot*Math.sin(pose.pitch),pivot*(1-Math.cos(pose.pitch))); scene.add(rig.root);
+  const pose = state.fall ? {lift:state.fall.height,pitch:state.fall.pitch} : baseFlipperPresentation({...state,stepHeight,scale});
+  rig.root.position.set(0,pose.lift,z); rig.root.rotation.y=heading; rig.baseFlipper.rotation.x=state.angle; rig.driveBase.rotation.x=pose.pitch;
+  const body = robTorsoPresentation({basePitch:pose.pitch,leanAngle:-pose.pitch,rearHeight:pose.lift,rootHeight:pose.lift,scale});
+  rig.torso.rotation.x=body.pitch; rig.torso.position.set(body.position.x,body.position.y,body.position.z); scene.add(rig.root);
+  const points = [body.fixedPin,body.movingPin].map(p=>new THREE.Vector3(p.x,p.y,p.z).multiplyScalar(scale));
+  const linkage = new THREE.Line(new THREE.BufferGeometry().setFromPoints(points),new THREE.LineBasicMaterial({color:0xffaa33,depthTest:false}));
+  linkage.renderOrder=10; rig.root.add(linkage);
   rig.root.updateMatrixWorld(true);
   const center = new THREE.Box3().setFromObject(rig.root).getCenter(new THREE.Vector3());
   const camera = new THREE.PerspectiveCamera(42,section.clientWidth/640,.01,20); camera.position.set(4.8,center.y+.25,center.z+.5); camera.lookAt(center);

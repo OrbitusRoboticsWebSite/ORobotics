@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { loadCapturedROB } from './rob-captured-model.mjs';
 import { buildROBVisual } from './rob-visual-model.mjs';
+import { createROBSupportMotion, stepROBSupportMotion, advanceTorsoLean, robTorsoPresentation } from './rob-support-motion.mjs';
 import {
   BASE_DRIVE_SPEED,
   BASE_FLIPPER_ENERGY_COST,
@@ -23,7 +24,6 @@ import {
   advanceBaseFlipper,
   battleUpgradePoints,
   baseFlipperPresentation,
-  canMountLedge,
   bossStats,
   cameraHeading,
   circularBodiesOverlap,
@@ -89,8 +89,12 @@ if (root) {
   let energy = maximumEnergy(upgradeLevels.energyCapacity);
   let shieldTimeRemaining = 0, gamepadShieldHeld = false;
   let climbingLedge = false;
+  let supportMotion = createROBSupportMotion(), torsoLeanAngle = 0;
   const climbProgress = (point = robot.position) => ledgeClimbProgress({ z: point.z, heading: robot.rotation.y, approachEdgeZ: LEDGE.approachEdgeZ, scale: 2.15 });
-  const robotBasePose = () => baseFlipperPresentation({ angle: baseFlipperAngle, target: baseFlipperTarget, onLedge: pointOnLedge(robot.position), climbProgress: climbingLedge ? climbProgress() : undefined, stepHeight: LEDGE.height, scale: 2.15 });
+  const robotBasePose = () => {
+    const pose = baseFlipperPresentation({ angle: baseFlipperAngle, target: baseFlipperTarget, onLedge: pointOnLedge(robot.position), climbProgress: climbingLedge ? climbProgress() : undefined, stepHeight: LEDGE.height, supportHeight: robot.position.y, scale: 2.15 });
+    return !climbingLedge && supportMotion.phase !== 'grounded' ? { ...pose, pitch: supportMotion.pitch, lift: robot.position.y } : pose;
+  };
   let droidProfile = readDroidProfile();
   let selectedFinishID = droidProfile.finish, selectedFaceColorID = droidProfile.faceColor, selectedRangedID = readProgress('robRangedWeapon', 'shoulderGatling'), selectedMeleeID = readProgress('robMeleeWeapon', 'dualSabers');
   const selectedFinish = () => finishes.find(({ id }) => id === selectedFinishID) || finishes[0];
@@ -399,7 +403,7 @@ if (root) {
     level.obstacles.forEach((o, i) => box(...o, i % 2 ? 0x465262 : 0x344552, true, true));
     buildEnvironmentalFeatures(index);
     floor.material.color.setHex(level.floor); grid.material.color.setHex(level.grid); gate.position.set(level.gate[0], surfaceHeight({ x: level.gate[0], z: level.gate[1] }), level.gate[1]); dock.position.set(level.dock[0], surfaceHeight({ x: level.dock[0], z: level.dock[1] }) + .05, level.dock[1]);
-    baseFlipperAngle = BASE_FLIPPER_REAR_ANGLE; baseFlipperTarget = 'rear'; climbingLedge = false; robot.position.set(0, 0, ARENA_HALF_DEPTH - 1.6); robot.rotation.set(0, 0, 0); robotRig.driveBase.rotation.set(0, 0, 0); robotRig.baseFlipper.rotation.set(BASE_FLIPPER_REAR_ANGLE, 0, 0); robotRig.torso.position.set(0, 0, 0); robotRig.torso.rotation.set(0, 0, 0); armAssemblies.forEach((arm) => arm.rotation.set(0, 0, 0)); levelElapsed = 0; health = MAX_ROB_HEALTH; shields = MAX_ROB_SHIELDS; shieldTimeRemaining = 0; energy = maximumEnergy(upgradeLevels.energyCapacity); damageInvulnerableUntil = -Infinity; gateDone = false; cellCount = 0; levelComplete = false; hasKey = false; doorOpen = !level.key; hacking = false; hackingCamera = undefined; hackingProgress = 0; securityAlertRemaining = 0; securityMiniBossReleased = false; laserLock = undefined; secondaryLaserLock = undefined; laserChargeStarted = undefined; saberCombo = 0; lastSaberAttack = -Infinity; saberAnimation = undefined; gamepadLaserHeld = false;
+    baseFlipperAngle = BASE_FLIPPER_REAR_ANGLE; baseFlipperTarget = 'rear'; climbingLedge = false; supportMotion = createROBSupportMotion(); torsoLeanAngle = 0; robot.position.set(0, 0, ARENA_HALF_DEPTH - 1.6); robot.rotation.set(0, 0, 0); robotRig.driveBase.rotation.set(0, 0, 0); robotRig.baseFlipper.rotation.set(BASE_FLIPPER_REAR_ANGLE, 0, 0); robotRig.torso.position.set(0, 0, 0); robotRig.torso.rotation.set(0, 0, 0); armAssemblies.forEach((arm) => arm.rotation.set(0, 0, 0)); levelElapsed = 0; health = MAX_ROB_HEALTH; shields = MAX_ROB_SHIELDS; shieldTimeRemaining = 0; energy = maximumEnergy(upgradeLevels.energyCapacity); damageInvulnerableUntil = -Infinity; gateDone = false; cellCount = 0; levelComplete = false; hasKey = false; doorOpen = !level.key; hacking = false; hackingCamera = undefined; hackingProgress = 0; securityAlertRemaining = 0; securityMiniBossReleased = false; laserLock = undefined; secondaryLaserLock = undefined; laserChargeStarted = undefined; saberCombo = 0; lastSaberAttack = -Infinity; saberAnimation = undefined; gamepadLaserHeld = false;
     releaseAllInput(); keyObject.visible = Boolean(level.key); if (level.key) keyObject.position.set(level.key[0], surfaceHeight({ x: level.key[0], z: level.key[1] }) + .08, level.key[1]);
     doorObject.visible = Boolean(level.door); if (level.door) { doorObject.position.set(level.door[0], surfaceHeight({ x: level.door[0], z: level.door[1] }) + .9, level.door[1]); doorObject.scale.set(level.door[2] / 4, 1, level.door[3] / .35); }
     const initialCameraBlockers = projectileBlockers();
@@ -434,7 +438,7 @@ if (root) {
   const enemyRadius = (enemy) => (enemy.userData.type === 'spider' ? .72 : .64) * (enemy.userData.combatScale || 1);
   const collision = (p, heading = robot.rotation.y, start = robot.position) => {
     const { right, length } = robotAxes(heading), extentX = ROBOT_HALF_WIDTH * Math.abs(right.x) + ROBOT_HALF_LENGTH * Math.abs(length.x), extentZ = ROBOT_HALF_WIDTH * Math.abs(right.z) + ROBOT_HALF_LENGTH * Math.abs(length.z), door = levels[levelIndex].door, doorBox = door && { x: door[0], z: door[1], w: door[2] / 2, d: door[3] / 2 };
-    const blockedByLedge = !climbingLedge && !pointOnLedge(start) && pointOnLedge(p) && !canMountLedge({ start, end: p, flipperAngle: baseFlipperAngle, approachEdgeZ: LEDGE.approachEdgeZ });
+    const blockedByLedge = !climbingLedge && !pointOnLedge(start) && pointOnLedge(p) && !(supportMotion.phase === 'falling' && robot.position.y >= LEDGE.height);
     return blockedByLedge || Math.abs(p.x) + extentX > ARENA_HALF_WIDTH - ARENA_CLEARANCE || Math.abs(p.z) + extentZ > ARENA_HALF_DEPTH - ARENA_CLEARANCE || obstacles.some((o) => robotHitsBox(p, heading, o)) || (!doorOpen && doorBox && robotHitsBox(p, heading, doorBox)) || enemies.some((enemy) => enemy.userData.alive && robotHitsCircle(p, heading, enemy.position, enemyRadius(enemy)));
   };
   const enemyCollision = (p, radius, movingEnemy) => Math.abs(p.x) > ARENA_HALF_WIDTH - .75 || Math.abs(p.z) > ARENA_HALF_DEPTH - .75 || obstacles.some((o) => circleHitsBox(p, o, radius)) || (!doorOpen && levels[levelIndex].door && circleHitsBox(p, { x: levels[levelIndex].door[0], z: levels[levelIndex].door[1], w: levels[levelIndex].door[2] / 2, d: levels[levelIndex].door[3] / 2 }, radius)) || robotHitsCircle(robot.position, robot.rotation.y, p, radius) || enemies.some((other) => other !== movingEnemy && other.userData.alive && circularBodiesOverlap(p, radius, other.position, enemyRadius(other)));
@@ -551,10 +555,31 @@ if (root) {
   const commandBaseFlipper = (target) => {
     if (!running || complete || levelComplete || target === baseFlipperTarget) return;
     if (climbingLedge && target === 'forward') return;
+    if (supportMotion.phase !== 'grounded') return;
     if (hacking || hackingCamera) { say('Finish or cancel the security task before using the base lift.'); return; }
     if (energy < BASE_FLIPPER_ENERGY_COST) { say(`Base lift needs ${BASE_FLIPPER_ENERGY_COST} system energy. Hold position or collect a cell.`); return; }
     energy -= BASE_FLIPPER_ENERGY_COST; baseFlipperTarget = target;
     say(target === 'forward' ? 'Flippers lowering: the front rises while the rear stays grounded. Drive forward to mount the ledge.' : 'Flippers raising. Continue forward as the rear climbs and ROB levels out.');
+  };
+  const updateGroundSupport = (dt, previousPose, forward) => {
+    const halfSpan = ROB_CONTACT_SPAN * 2.15 / 2;
+    const front = { x: robot.position.x - Math.sin(robot.rotation.y) * halfSpan, z: robot.position.z - Math.cos(robot.rotation.y) * halfSpan };
+    const rear = { x: robot.position.x + Math.sin(robot.rotation.y) * halfSpan, z: robot.position.z + Math.cos(robot.rotation.y) * halfSpan };
+    const centerFloor = surfaceHeight(robot.position);
+    if (climbingLedge) {
+      if (pointOnLedge(robot.position) && pointOnLedge(rear)) {
+        climbingLedge = false; baseFlipperTarget = 'rear'; supportMotion = createROBSupportMotion(LEDGE.height);
+      } else if (climbProgress() < -.03 || Math.abs(robot.position.x - LEDGE.x) > LEDGE.w || robot.position.z < LEDGE.z - LEDGE.d) {
+        climbingLedge = false; baseFlipperTarget = 'rear';
+        supportMotion = { ...createROBSupportMotion(previousPose.lift), pitch: previousPose.pitch, supportHeight: LEDGE.height };
+      } else {
+        robot.position.y = centerFloor; supportMotion = createROBSupportMotion(centerFloor); return;
+      }
+    }
+    if (supportMotion.phase === 'grounded') supportMotion.pitch = previousPose.pitch;
+    supportMotion = stepROBSupportMotion({ motion: supportMotion, frontFloor: surfaceHeight(front), rearFloor: surfaceHeight(rear), centerFloor, contactSpan: ROB_CONTACT_SPAN * 2.15, scale: 2.15, forward, delta: dt });
+    robot.position.y = supportMotion.height;
+    if (supportMotion.phase !== 'grounded') baseFlipperTarget = 'rear';
   };
   const tick = (dt) => {
     readInput(); if (!running || complete || levelComplete) return;
@@ -565,7 +590,7 @@ if (root) {
     let resolvedHeading = oldHeading;
     for (const fraction of [1, .66, .33]) { const candidateHeading = oldHeading + yaw * fraction; if (!collision(old, candidateHeading)) { resolvedHeading = candidateHeading; break; } }
     const travelHeading = oldHeading + (resolvedHeading - oldHeading) / 2, intended = { x: old.x - Math.sin(travelHeading) * linear * dt, z: old.z - Math.cos(travelHeading) * linear * dt };
-    if (!climbingLedge && !pointOnLedge(old) && linear > 0 && Math.cos(robot.rotation.y) > .7 && flipperPose.phase >= .9) {
+    if (!climbingLedge && supportMotion.phase === 'grounded' && !pointOnLedge(old) && linear > 0 && Math.cos(robot.rotation.y) > .7 && flipperPose.phase >= .9) {
       const reach = ROB_CONTACT_SPAN * 2.15 * (Math.cos(flipperPose.pitch) - .5);
       const front = { x: intended.x - Math.sin(robot.rotation.y) * reach, z: intended.z - Math.cos(robot.rotation.y) * reach };
       if (pointOnLedge(front) && old.z >= LEDGE.approachEdgeZ && LEDGE.height <= ROB_CONTACT_SPAN * 2.15 * Math.sin(flipperPose.pitch)) {
@@ -578,15 +603,17 @@ if (root) {
       end: intended,
       canOccupy: (position) => !collision(new THREE.Vector3(position.x, old.y, position.z), resolvedHeading, old),
     });
-    const newSurfaceHeight = surfaceHeight(motion.position); robot.position.set(motion.position.x, newSurfaceHeight, motion.position.z); robot.rotation.y = resolvedHeading;
-    if (climbingLedge && climbProgress() >= 1) { climbingLedge = false; baseFlipperTarget = 'rear'; }
-    else if (climbingLedge && climbProgress() < -.03) { climbingLedge = false; baseFlipperTarget = 'forward'; }
+    robot.position.set(motion.position.x, old.y, motion.position.z); robot.rotation.y = resolvedHeading;
+    const conveyorMove = conveyorDisplacement({ point: { x: robot.position.x, z: robot.position.z }, conveyors, delta: dt });
+    const conveyorPosition = robot.position.clone(); conveyorPosition.x += conveyorMove.x; conveyorPosition.z += conveyorMove.z;
+    if (!collision(conveyorPosition, robot.rotation.y, robot.position)) robot.position.copy(conveyorPosition);
+    const newSurfaceHeight = surfaceHeight(robot.position);
+    updateGroundSupport(dt, flipperPose, linear);
+    torsoLeanAngle = advanceTorsoLean(torsoLeanAngle, robotBasePose().pitch, dt);
     const treadsPowered = Boolean(powered && Math.abs(controls.left) + Math.abs(controls.right) > .02);
     if (!flipperStep.active) energy = updateDriveEnergy({ energy, maximum: maximumEnergy(upgradeLevels.energyCapacity), moving: treadsPowered, delta: dt, capacityLevel: upgradeLevels.energyCapacity });
-    const conveyorMove = conveyorDisplacement({ point: { x: robot.position.x, z: robot.position.z }, conveyors, delta: dt });
-    const conveyorPosition = robot.position.clone(); conveyorPosition.x += conveyorMove.x; conveyorPosition.z += conveyorMove.z; if (!collision(conveyorPosition, robot.rotation.y, robot.position)) { conveyorPosition.y = surfaceHeight(conveyorPosition); robot.position.copy(conveyorPosition); }
     robotRig.treadWheels.forEach(({ wheel, side }) => { wheel.rotation.x -= controls[side] * dt * 10.5 * speedMultiplier; });
-    if (newSurfaceHeight > old.y) say('Front tracks on the ledge. Flippers are reversing automatically; keep driving to lift the rear and level ROB.');
+    if (newSurfaceHeight > surfaceHeight(old)) say('Front tracks on the ledge. Flippers are reversing automatically; keep driving to lift the rear and level ROB.');
     else if (motion.collided && Math.abs(linear) > .1) say(!pointOnLedge(old) && !pointOnLedge(robot.position) && intended.z < old.z ? 'Ledge too high for the treads. Lower the flippers to lift the front, then keep driving into the orange lip.' : robot.position.distanceTo(old) > .001 ? 'Wall assist active — ROB is sliding along the open edge.' : 'Wall contact — reverse or pivot away; ROB will release cleanly.');
     if (hackingCamera) {
       if (robot.position.distanceTo(hackingCamera.group.position) > SECURITY_CAMERA_HACK_RANGE) { hackingCamera = undefined; hackingProgress = 0; say('Camera hack interrupted. Move back within Flipper Zero range.'); }
@@ -666,7 +693,11 @@ if (root) {
   const resize = () => { const w = viewport.clientWidth, h = isFullscreen() ? viewportHeight() : Math.max(isTouch ? 460 : 420, Math.min(720, w * .58)); renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
   const animate = () => {
     requestAnimationFrame(animate); const dt = Math.min(clock.getDelta(), .05); tick(dt); updateRobotWeapons();
-    const flipperPose = robotBasePose(); robotRig.baseFlipper.rotation.x = flipperPose.angle; robotRig.driveBase.rotation.x = flipperPose.pitch; const supportHeight = flipperPose.lift - robot.position.y, rearPivotZ = .212725 * 2.15; robotRig.driveBase.position.y = supportHeight; robotRig.torso.rotation.x = flipperPose.pitch; robotRig.torso.position.y = supportHeight + rearPivotZ * Math.sin(flipperPose.pitch); robotRig.torso.position.z = rearPivotZ * (1 - Math.cos(flipperPose.pitch)); ui.flipperButtons.forEach((button) => { const target = button.dataset.flipperDirection; button.disabled = target === baseFlipperTarget || (climbingLedge && target === 'forward'); const compact = button.classList.contains('rob-sim__fire'); button.textContent = target === 'forward' ? (compact ? 'FLIPPER DOWN' : 'Flipper Down · F') : (compact ? 'FLIPPER UP' : 'Flipper Up · B'); button.setAttribute('aria-pressed', String(target === baseFlipperTarget)); });
+    const flipperPose = robotBasePose();
+    robotRig.baseFlipper.rotation.x = flipperPose.angle; robotRig.driveBase.rotation.x = flipperPose.pitch;
+    robotRig.driveBase.position.y = flipperPose.lift - robot.position.y;
+    const bodyPose = robTorsoPresentation({ basePitch: flipperPose.pitch, leanAngle: torsoLeanAngle, rearHeight: flipperPose.lift, rootHeight: robot.position.y, scale: 2.15, yaw: robotRig.torso.rotation.y });
+    robotRig.torso.rotation.x = bodyPose.pitch; robotRig.torso.position.set(bodyPose.position.x, bodyPose.position.y, bodyPose.position.z); ui.flipperButtons.forEach((button) => { const target = button.dataset.flipperDirection; button.disabled = !running || supportMotion.phase !== 'grounded' || target === baseFlipperTarget || (climbingLedge && target === 'forward'); const compact = button.classList.contains('rob-sim__fire'); button.textContent = target === 'forward' ? (compact ? 'FLIPPER DOWN' : 'Flipper Down · F') : (compact ? 'FLIPPER UP' : 'Flipper Up · B'); button.setAttribute('aria-pressed', String(target === baseFlipperTarget)); });
     const speakerPulse = musicEnabled && running ? 1 + Math.max(0, Math.sin(elapsed * Math.PI * 8)) * .13 : 1; robotRig.speakerCones.forEach((cone, index) => cone.scale.set(1 + (speakerPulse - 1) * (index ? .78 : 1), 1, 1 + (speakerPulse - 1) * (index ? .78 : 1)));
     if (keyObject.visible) { keyObject.rotation.y += dt * 1.7; keyObject.position.y = surfaceHeight(keyObject.position) + .1 + Math.sin(elapsed * 3.2) * .09; keyBeaconMaterial.opacity = .42 + (Math.sin(elapsed * 4.4) + 1) * .13; }
     cells.forEach((c, i) => { if (c.visible) { c.rotation.y += dt * 1.4; c.position.y = (c.userData.surfaceHeight || 0) + .55 + Math.sin(elapsed * 2 + i) * .08; } });
