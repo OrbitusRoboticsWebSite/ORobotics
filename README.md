@@ -92,7 +92,11 @@ The ROB Training game uses that same public CloudKit container and website token
 
 ### ROB Training gameplay sync
 
-Website gameplay rules live in `assets/js/rob-game-rules.mjs` and the Three.js implementation lives in `assets/js/rob-simulator.js`. The portable customization schema lives in `assets/js/rob-droid-profile.mjs`; its field keys, allowlists, Base64URL encoding, and FNV-1a checksum must stay byte-compatible with `Shared/ROBDroidProfile.swift`. Every gameplay change must be mirrored in the ROBTrainingGames repository's shared Swift session, renderer, platform controls, and tests so the iPhone, iPad, Vision Pro, and browser campaigns remain equivalent. Keep `GAMEPLAY_RULESET_VERSION` equal to `GameSession.gameplayRulesetVersion`; the current synchronized version is `2026.09.16.3`.
+Website gameplay rules live in `assets/js/rob-game-rules.mjs` and the Three.js implementation lives in `assets/js/rob-simulator.js`. The portable customization schema lives in `assets/js/rob-droid-profile.mjs`; its field keys, allowlists, Base64URL encoding, and FNV-1a checksum must stay byte-compatible with `Shared/ROBDroidProfile.swift`. Every gameplay change must be mirrored in the ROBTrainingGames repository's shared Swift session, renderer, platform controls, and tests so the iPhone, iPad, Vision Pro, and browser campaigns remain equivalent. Keep `GAMEPLAY_RULESET_VERSION` equal to `GameSession.gameplayRulesetVersion`; the current synchronized version is `2026.09.16.4`.
+
+Platform support uses the tread contact patch beneath ROB’s center, so an overhanging end does not lock the flipper controls while the deck still supports ROB. Leaving the deck still transitions into tipping and gravity. Equipped sabers stay extended; `assets/js/rob-melee-animation.mjs` matches native sweep, reverse recovery, and spin poses without repeating attack damage.
+
+The body lean hinge sits above the upper tread wheel. LACT animation swings the entire torso assembly (including arms and head), keeping an estimated upper-body mass center within the tread support span during lifts. This uses illustrative mass and linkage values for the game, not physical robot calibration.
 
 For this custom GitHub Actions deployment, the custom domain configured under
 **Settings → Pages** is authoritative. `static/CNAME` mirrors that value in the

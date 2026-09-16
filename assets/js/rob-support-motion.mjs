@@ -1,8 +1,10 @@
-// Game presentation geometry, in meters before renderer scaling. The lower
-// waist frame supplies the lean hinge. The pictured LACT is 8¼ inches between
-// its pins in the reference pose; that length is not its stroke or joint limit.
+// Game geometry, in meters before renderer scaling. The lean hinge sits above
+// the upper (third) tread wheel. The pictured LACT is 8¼ inches between its pins
+// in the reference pose; that length is not its stroke or joint limit.
 export const ROB_LACT_REFERENCE_LENGTH = .20955;
-export const ROB_LEAN_HINGE = Object.freeze({ x: 0, y: .37, z: .035 });
+export const ROB_LEAN_HINGE = Object.freeze({ x: 0, y: .302 + .073, z: .065 });
+// Approximate upper-body mass center for the game, not measured mass properties.
+export const ROB_TORSO_MASS_CENTER = Object.freeze({ x: 0, y: .78, z: .012 });
 export const ROB_LACT_FIXED_PIN = Object.freeze({ x: 0, y: .30, z: -.08 });
 export const ROB_LACT_MOVING_PIN = Object.freeze({ x: 0, y: .30 + Math.sqrt(ROB_LACT_REFERENCE_LENGTH ** 2 - .135 ** 2), z: .055 });
 const moveToward = (value, target, step) => value + Math.sign(target - value) * Math.min(Math.abs(target - value), step);
@@ -17,14 +19,28 @@ export const lactLengthForLean = (angle) => {
   const difference = subtract(moving, ROB_LACT_FIXED_PIN);
   return Math.hypot(difference.x, difference.y, difference.z);
 };
+export const targetTorsoLean = (basePitch) => {
+  const rearZ = .212725, frontZ = rearZ - .42545 * Math.cos(basePitch);
+  const hinge = add(rotateX(subtract(ROB_LEAN_HINGE, { x: 0, y: 0, z: rearZ }), basePitch), { x: 0, y: 0, z: rearZ });
+  const arm = subtract(ROB_TORSO_MASS_CENTER, ROB_LEAN_HINGE);
+  const uprightZ = hinge.z + arm.z;
+  const supportedZ = Math.max(frontZ + .07, Math.min(rearZ - .07, uprightZ));
+  // Upright alone is insufficient: pitching the base moves this hinge aft.
+  // Swing the entire upper body forward until its mass projects over the tracks.
+  const bodyPitch = Math.abs(supportedZ - uprightZ) < 1e-9 ? 0
+    : Math.asin(Math.max(-1, Math.min(1, (supportedZ - hinge.z) / Math.hypot(arm.y, arm.z)))) - Math.atan2(arm.z, arm.y);
+  return Math.max(-1.45, Math.min(1.15, bodyPitch - basePitch));
+};
 export const advanceTorsoLean = (angle, basePitch, delta) => {
-  const target = Math.max(-.85, Math.min(.65, -basePitch));
-  const length = lactLengthForLean(angle), targetLength = lactLengthForLean(target), step = .30 * Math.max(0, delta);
+  const target = targetTorsoLean(basePitch);
+  // Game linkage travel keeps pace with the flipper motor instead of leaving
+  // the upper body behind the rear support during the transition.
+  const length = lactLengthForLean(angle), targetLength = lactLengthForLean(target), step = .90 * Math.max(0, delta);
   if (Math.abs(targetLength - length) <= step) return target;
   const nextLength = moveToward(length, targetLength, step);
   // Stay on the monotonic branch of the illustrated two-pin linkage. These
   // angle bounds and linear speed are game presentation values.
-  let low = -.85, high = .65;
+  let low = -1.45, high = 1.15;
   for (let i = 0; i < 24; i++) { const mid = (low + high) / 2; if (lactLengthForLean(mid) < nextLength) low = mid; else high = mid; }
   return (low + high) / 2;
 };
@@ -38,7 +54,8 @@ export const robTorsoPresentation = ({ basePitch, leanAngle, rearHeight = 0, roo
   const fixedPin = basePoint(ROB_LACT_FIXED_PIN);
   const movingPin = add(offset, rotateBody(ROB_LACT_MOVING_PIN));
   const difference = subtract(movingPin, fixedPin);
-  return { position, pitch, fixedPin, movingPin, lactLength: Math.hypot(difference.x, difference.y, difference.z) };
+  const massCenter = add(offset, rotateBody(ROB_TORSO_MASS_CENTER));
+  return { position, pitch, fixedPin, movingPin, massCenter, lactLength: Math.hypot(difference.x, difference.y, difference.z) };
 };
 
 export const createROBSupportMotion = (height = 0) => ({ height, velocity: 0, pitch: 0, phase: 'grounded', supportHeight: height, fallDirection: 0 });
@@ -48,7 +65,11 @@ export const createROBSupportMotion = (height = 0) => ({ height, velocity: 0, pi
 export const stepROBSupportMotion = ({ motion, frontFloor, rearFloor, centerFloor, contactSpan, scale = 1, forward = 0, delta }) => {
   const next = { ...motion }, dt = Math.max(0, delta), epsilon = .0001;
   const high = Math.max(frontFloor, rearFloor), low = Math.min(frontFloor, rearFloor, centerFloor);
-  const mixedSupport = high - Math.min(frontFloor, rearFloor) > epsilon;
+  // Treads have a continuous contact patch. An overhanging end does not
+  // remove support while the center is still above the current deck. Only
+  // accept an already-reached plane; this must not lift ROB onto a new step.
+  const centerSupported = centerFloor >= high - epsilon && centerFloor <= motion.supportHeight + epsilon;
+  const mixedSupport = high - Math.min(frontFloor, rearFloor) > epsilon && !centerSupported;
   if (mixedSupport && high <= motion.supportHeight + epsilon && motion.phase !== 'falling' && motion.phase !== 'settling') {
     // Tip around the tread end still on the platform. Retain the platform as
     // the support level until the trailing end also clears the edge.

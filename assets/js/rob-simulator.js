@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { loadCapturedROB } from './rob-captured-model.mjs';
 import { buildROBVisual } from './rob-visual-model.mjs';
+import { meleeDuration, meleePose } from './rob-melee-animation.mjs';
 import { createROBSupportMotion, stepROBSupportMotion, advanceTorsoLean, robTorsoPresentation } from './rob-support-motion.mjs';
 import {
   BASE_DRIVE_SPEED,
@@ -271,7 +272,7 @@ if (root) {
       const side = arm.userData.side;
       const grip = mesh(new THREE.CylinderGeometry(.035, .035, .20, 12), dark, arm, side * .18, -1.22, -.08); grip.rotation.x = Math.PI / 2;
       const saber = mesh(new THREE.CylinderGeometry(.035, .035, 1.55, 10), side < 0 ? green : cyan, arm, side * .18, -1.22, -.94);
-      saber.rotation.x = Math.PI / 2; saber.visible = false; robotRig.sabers.push(saber);
+      saber.rotation.x = Math.PI / 2; saber.visible = selectedMeleeID === 'dualSabers'; robotRig.sabers.push(saber);
     });
     const hacker = mesh(new THREE.BoxGeometry(.16, .25, .06), mat(0xf2872f), torso, .39, 1.54, -.19); hacker.name = 'Flipper Zero Hacker';
     mesh(new THREE.BoxGeometry(.11, .075, .018), mat(0x35c56e), torso, .39, 1.57, -.229);
@@ -391,7 +392,7 @@ if (root) {
     robotRig.finishMaterials.forEach((material) => { material.color.setHex(material.userData.captured && selectedFinishID === 'graphite' ? 0xffffff : selectedFinish().color); material.metalness = housingMaterial.metalness; material.roughness = housingMaterial.roughness; material.needsUpdate = true; });
     robotRig.faceMaterials.forEach((material) => { material.color.setHex(selectedFaceColor().color); material.emissive.setHex(selectedFaceColor().color); });
     robotRig.gatling.visible = selectedRangedID === 'shoulderGatling'; robotRig.twinBlasters.visible = selectedRangedID === 'twinBlasters'; robotRig.arcCannon.visible = selectedRangedID === 'arcCannon'; robotRig.hammer.visible = selectedMeleeID === 'powerHammer';
-    robotRig.sabers.forEach((saber) => { saber.visible = selectedMeleeID === 'dualSabers' && Boolean(saberAnimation); });
+    robotRig.sabers.forEach((saber) => { saber.visible = selectedMeleeID === 'dualSabers'; });
     ui.laserButtons.forEach((button) => { button.setAttribute('aria-label', `Hold to charge ROB's ${selectedRanged().name}`); });
     ui.saberButtons.forEach((button) => { button.setAttribute('aria-label', `Attack with ROB's ${selectedMelee().name}`); });
     updateWorkshop();
@@ -507,18 +508,23 @@ if (root) {
     const now = combatNow(), weapon = selectedMelee(), forward = new THREE.Vector3(0, 0, -1).applyQuaternion(robot.quaternion).normalize(), origin = { x: robot.position.x, z: robot.position.z };
     if (weapon.id === 'powerHammer') {
       const radius = 3.8;
-      saberCombo = 0; lastSaberAttack = now; saberAnimation = { style: 'hammer', started: now, duration: .65 };
+      saberCombo = 0; lastSaberAttack = now; saberAnimation = { style: 'hammer', started: now, duration: meleeDuration('hammer') };
       const hits = enemies.filter((enemy) => enemy.userData.alive).filter((enemy) => { const offset = enemy.position.clone().sub(robot.position), enemyPoint = { x: enemy.position.x, z: enemy.position.z }; return offset.length() <= radius && offset.clone().normalize().dot(forward) > .08 && meleeAnimationIsClear({ origin, target: enemyPoint, blockers: projectileBlockers() }); });
       hits.forEach((enemy) => damageEnemy(enemy, 'power hammer', 2)); playSound('laser'); say(hits.length ? `Power hammer smash struck ${hits.length} ${hits.length === 1 ? 'target' : 'targets'}.` : 'Power hammer smash missed. Face a target within reach.'); return;
     }
     saberCombo = now - lastSaberAttack <= 1.15 ? saberCombo + 1 : 1; const style = saberCombo >= 3 ? 'spin' : saberCombo % 2 ? 'left' : 'right', radius = style === 'spin' ? 4.1 : 3.15;
-    lastSaberAttack = now; if (style === 'spin') saberCombo = 0; saberAnimation = { style, started: now, duration: style === 'spin' ? .82 : .48 }; playSound('laser');
+    lastSaberAttack = now; if (style === 'spin') saberCombo = 0; saberAnimation = { style, started: now, duration: meleeDuration(style) }; playSound('laser');
     const hits = enemies.filter((enemy) => enemy.userData.alive).filter((enemy) => { const offset = enemy.position.clone().sub(robot.position), enemyPoint = { x: enemy.position.x, z: enemy.position.z }; return offset.length() <= radius && (style === 'spin' || offset.clone().normalize().dot(forward) > -.08) && meleeAnimationIsClear({ origin, target: enemyPoint, blockers: projectileBlockers() }); }); hits.forEach((enemy) => damageEnemy(enemy, style === 'spin' ? 'dual-saber spin' : `dual-saber ${style} sweep`)); say(style === 'spin' ? `Spin attack! ROB extended both sabers and struck ${hits.length} ${hits.length === 1 ? 'enemy' : 'enemies'}.` : hits.length ? `${style === 'left' ? 'Left' : 'Right'} dual-arm sweep connected.` : `${style === 'left' ? 'Left' : 'Right'} sweep missed. Close the distance, then chain three attacks for a spin.`);
   };
   const updateRobotWeapons = () => {
     scanForLaserTarget(); const now = combatNow(), charge = laserChargeAmount(); robotRig.torso.rotation.set(0, 0, 0); armAssemblies.forEach((arm) => arm.rotation.set(0, 0, 0));
-    if (saberAnimation) { const progress = THREE.MathUtils.clamp((now - saberAnimation.started) / saberAnimation.duration, 0, 1), eased = .5 - Math.cos(progress * Math.PI) / 2; if (saberAnimation.style === 'spin') { robotRig.torso.rotation.y = eased * Math.PI * 2; armAssemblies.forEach((arm) => { arm.rotation.z = arm.userData.side * Math.PI / 2; }); } else if (saberAnimation.style === 'hammer') { robotRig.hammer.rotation.x = -Math.sin(progress * Math.PI) * 1.5; } else { const direction = saberAnimation.style === 'left' ? 1 : -1, sweep = direction * (-1.18 + eased * 2.36); armAssemblies.forEach((arm) => { arm.rotation.y = sweep; arm.rotation.z = arm.userData.side * (.28 + Math.sin(progress * Math.PI) * .5); }); } if (progress >= 1) { saberAnimation = undefined; robotRig.hammer.rotation.set(0, 0, 0); } }
-    robotRig.sabers.forEach((saber) => { saber.visible = selectedMeleeID === 'dualSabers' && Boolean(saberAnimation); });
+    const progress = saberAnimation ? (now - saberAnimation.started) / saberAnimation.duration : 1;
+    const pose = meleePose(saberAnimation?.style, progress);
+    robotRig.torso.rotation.y = pose.torsoYaw;
+    robotRig.hammer.rotation.x = pose.hammerPitch;
+    armAssemblies.forEach((arm) => { arm.rotation.y = pose.armYaw; arm.rotation.z = arm.userData.side * pose.armRoll; });
+    if (progress >= 1) saberAnimation = undefined;
+    robotRig.sabers.forEach((saber) => { saber.visible = selectedMeleeID === 'dualSabers'; });
     const aimAt = (rig, target, scanPhase = 0) => { if (target) { const offset = target.position.clone().sub(robot.position), worldYaw = Math.atan2(-offset.x, -offset.z), localYaw = Math.atan2(Math.sin(worldYaw - robot.rotation.y), Math.cos(worldYaw - robot.rotation.y)); rig.rotation.y += (localYaw - rig.rotation.y) * .18; } else rig.rotation.y = Math.sin(now * 1.35 + scanPhase) * .9; };
     if (selectedRangedID === 'twinBlasters') { aimAt(robotRig.twinBlasterMounts[0], laserLock, 0); aimAt(robotRig.twinBlasterMounts[1], secondaryLaserLock || laserLock, .5); }
     else aimAt(selectedRangedID === 'arcCannon' ? robotRig.arcCannon : robotRig.gatling, laserLock);

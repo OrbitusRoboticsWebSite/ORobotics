@@ -9,14 +9,14 @@ import * as THREE from 'three';
 import { buildROBVisual } from '../assets/js/rob-visual-model.mjs';
 import { loadCapturedROB } from '../assets/js/rob-captured-model.mjs';
 import { baseFlipperPresentation, flipperGroundPitch, BASE_FLIPPER_FORWARD_ANGLE as down, ROB_CONTACT_SPAN } from '../assets/js/rob-game-rules.mjs';
-import { createROBSupportMotion, stepROBSupportMotion, robTorsoPresentation } from '../assets/js/rob-support-motion.mjs';
+import { createROBSupportMotion, stepROBSupportMotion, robTorsoPresentation, targetTorsoLean, ROB_LEAN_HINGE } from '../assets/js/rob-support-motion.mjs';
 const scale = 1.35, stepHeight = .34, span = ROB_CONTACT_SPAN * scale;
 const projected = span * Math.cos(flipperGroundPitch(down)), reach = projected - span / 2;
 let fall = createROBSupportMotion(stepHeight);
 for (let i=0;i<10;i++) fall = stepROBSupportMotion({motion:fall,frontFloor:0,rearFloor:stepHeight,centerFloor:0,contactSpan:span,scale,forward:1,delta:.02});
 for (let i=0;i<3;i++) fall = stepROBSupportMotion({motion:fall,frontFloor:0,rearFloor:0,centerFloor:0,contactSpan:span,scale,forward:1,delta:.02});
 const states = [
-  ['Front lift', 'LACT leans forward; the torso stays upright.', {angle:down,target:'forward'}, reach+.01, 0],
+  ['Front lift', 'Whole body swings forward above the upper tread wheel.', {angle:down,target:'forward'}, reach+.01, 0],
   ['Another platform flip', 'The upper floor supports a new Down / Up cycle.', {angle:down,target:'forward',onLedge:true}, -span/2-.3, 0],
   ['Falling off the edge', 'Gravity lowers the base; LACT leans backward.', {angle:0,fall}, span/2+.08, Math.PI],
   ['Landed', 'Base level, LACT neutral, flippers available again.', {angle:0}, span/2+.15, Math.PI],
@@ -32,11 +32,17 @@ for (const [title, caption, state, z, heading] of states) {
   const rig = buildROBVisual({scale}); await loadCapturedROB(rig,'../static/models/rob/',scale);
   const pose = state.fall ? {lift:state.fall.height,pitch:state.fall.pitch} : baseFlipperPresentation({...state,stepHeight,scale});
   rig.root.position.set(0,pose.lift,z); rig.root.rotation.y=heading; rig.baseFlipper.rotation.x=state.angle; rig.driveBase.rotation.x=pose.pitch;
-  const body = robTorsoPresentation({basePitch:pose.pitch,leanAngle:-pose.pitch,rearHeight:pose.lift,rootHeight:pose.lift,scale});
+  const body = robTorsoPresentation({basePitch:pose.pitch,leanAngle:targetTorsoLean(pose.pitch),rearHeight:pose.lift,rootHeight:pose.lift,scale});
   rig.torso.rotation.x=body.pitch; rig.torso.position.set(body.position.x,body.position.y,body.position.z); scene.add(rig.root);
   const points = [body.fixedPin,body.movingPin].map(p=>new THREE.Vector3(p.x,p.y,p.z).multiplyScalar(scale));
   const linkage = new THREE.Line(new THREE.BufferGeometry().setFromPoints(points),new THREE.LineBasicMaterial({color:0xffaa33,depthTest:false}));
   linkage.renderOrder=10; rig.root.add(linkage);
+  const hinge = new THREE.Vector3(ROB_LEAN_HINGE.x,ROB_LEAN_HINGE.y,ROB_LEAN_HINGE.z).multiplyScalar(scale);
+  const transformedHinge = hinge.clone().applyQuaternion(rig.torso.quaternion).add(rig.torso.position);
+  const pivot = new THREE.Mesh(new THREE.SphereGeometry(.028),new THREE.MeshBasicMaterial({color:0x55eaff,depthTest:false}));
+  pivot.position.copy(transformedHinge); pivot.renderOrder=11; rig.root.add(pivot);
+  const mass = new THREE.Mesh(new THREE.SphereGeometry(.035),new THREE.MeshBasicMaterial({color:0xffbb44,depthTest:false}));
+  mass.position.set(body.massCenter.x,body.massCenter.y,body.massCenter.z).multiplyScalar(scale); mass.renderOrder=11; rig.root.add(mass);
   rig.root.updateMatrixWorld(true);
   const center = new THREE.Box3().setFromObject(rig.root).getCenter(new THREE.Vector3());
   const camera = new THREE.PerspectiveCamera(42,section.clientWidth/640,.01,20); camera.position.set(4.8,center.y+.25,center.z+.5); camera.lookAt(center);

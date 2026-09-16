@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createROBSupportMotion, stepROBSupportMotion, advanceTorsoLean, lactLengthForLean, robTorsoPresentation, ROB_LACT_REFERENCE_LENGTH, ROB_LEAN_HINGE } from '../assets/js/rob-support-motion.mjs';
+import { meleeDuration, meleePose } from '../assets/js/rob-melee-animation.mjs';
+import { createROBSupportMotion, stepROBSupportMotion, advanceTorsoLean, targetTorsoLean, lactLengthForLean, robTorsoPresentation, ROB_LACT_REFERENCE_LENGTH, ROB_LEAN_HINGE } from '../assets/js/rob-support-motion.mjs';
 import {
   BASE_FLIPPER_DURATION,
   BASE_FLIPPER_FORWARD_ANGLE,
@@ -312,6 +313,55 @@ test('a platform is a new floor for repeated flipper cycles', () => {
   }
 });
 
+test('a supported platform center permits flippers with either tread end overhanging', () => {
+  for (const scale of [1.35, 2.15]) {
+    const height = scale === 1.35 ? .34 : .62, contactSpan = .42545 * scale;
+    for (const [frontFloor, rearFloor] of [[height, 0], [0, height]]) {
+      let motion = createROBSupportMotion(height);
+      for (let cycle = 0; cycle < 3; cycle++) {
+        for (const target of ['forward', 'rear']) {
+          let angle = target === 'forward' ? 0 : BASE_FLIPPER_FORWARD_ANGLE;
+          for (let frame = 0; frame < 20; frame++) {
+            angle = advanceBaseFlipper({ angle, target, delta: .02 }).angle;
+            motion = stepROBSupportMotion({ motion, frontFloor, rearFloor, centerFloor: height, contactSpan, scale, delta: .02 });
+            assert.equal(motion.phase, 'grounded', 'the platform must keep the controls available');
+            assert.equal(motion.height, height);
+          }
+          const pose = baseFlipperPresentation({ angle, target, supportHeight: motion.height, scale });
+          assert.equal(pose.lift, height);
+          assert.equal(target === 'forward' ? pose.pitch > .7 : pose.pitch === 0, true);
+        }
+      }
+      // Moving the center off the deck still tips the base and then drops it.
+      motion = stepROBSupportMotion({ motion, frontFloor, rearFloor, centerFloor: 0, contactSpan, scale, delta: .02 });
+      assert.equal(motion.phase, 'edge');
+      motion = stepROBSupportMotion({ motion, frontFloor: 0, rearFloor: 0, centerFloor: 0, contactSpan, scale, delta: .02 });
+      assert.equal(motion.phase, 'falling');
+    }
+  }
+});
+
+test('sabers reverse smoothly and finish at the idle pose', () => {
+  for (const style of ['left', 'right']) {
+    const start = meleePose(style, 0), strike = meleePose(style, .45), recovery = meleePose(style, .75), end = meleePose(style, 1);
+    assert.deepEqual(start, end);
+    assert.ok(Math.abs(strike.armYaw) > 1.2);
+    assert.ok(Math.abs(recovery.armYaw) > 0 && Math.abs(recovery.armYaw) < Math.abs(strike.armYaw));
+    assert.equal(Math.sign(strike.armYaw), Math.sign(recovery.armYaw), 'return retraces the swing');
+    for (let frame = 1; frame <= 120; frame++) {
+      const a = meleePose(style, (frame - 1) / 120), b = meleePose(style, frame / 120);
+      for (const key of ['armYaw', 'armRoll', 'torsoYaw']) assert.ok(Math.abs(b[key] - a[key]) < .04, `${key} stays continuous`);
+    }
+    assert.ok(meleeDuration(style) < 1.15, 'recovery leaves time to chain the combo');
+  }
+  for (const style of ['spin', 'hammer']) {
+    const a = meleePose(style, .9999), b = meleePose(style, 1);
+    assert.ok(Math.abs(a.armRoll - b.armRoll) < .001);
+    assert.ok(Math.abs(a.hammerPitch - b.hammerPitch) < .001);
+    assert.ok(Math.abs(Math.sin(a.torsoYaw - b.torsoYaw)) < .001, 'a full spin ends at the same orientation');
+  }
+});
+
 test('edge support releases into gravity and settles on the lower floor', () => {
   for (const scale of [1.35, 2.15]) {
     const height = scale === 1.35 ? .34 : .62, contactSpan = .42545 * scale;
@@ -342,12 +392,13 @@ test('LACT counter-leans at its lower hinge with the 8¼-inch reference pin leng
   const rest = robTorsoPresentation({ basePitch: 0, leanAngle: 0 });
   assert.ok(Math.abs(rest.lactLength - ROB_LACT_REFERENCE_LENGTH) < 1e-12);
   const inMotion = advanceTorsoLean(0, .8, .05);
-  assert.ok(Math.abs(lactLengthForLean(inMotion) - (ROB_LACT_REFERENCE_LENGTH - .015)) < 1e-7, 'linear actuator travel determines the intermediate lean angle');
+  assert.ok(Math.abs(lactLengthForLean(inMotion) - (ROB_LACT_REFERENCE_LENGTH - .045)) < 1e-7, 'linear actuator travel determines the intermediate lean angle');
   for (const pitch of [.8, -.35]) {
     const lean = advanceTorsoLean(0, pitch, 1);
     assert.equal(Math.sign(lean), -Math.sign(pitch));
     const pose = robTorsoPresentation({ basePitch: pitch, leanAngle: lean });
-    assert.equal(pose.pitch, 0, 'body stays upright while the tracked base pitches');
+    assert.ok(pose.massCenter.z <= .212725 && pose.massCenter.z >= .212725 - .42545 * Math.cos(pitch), 'upper body remains over the tracks');
+    assert.equal(pose.pitch, pitch + targetTorsoLean(pitch));
     const uncompensated = robTorsoPresentation({ basePitch: pitch, leanAngle: 0 });
     const hinge = ROB_LEAN_HINGE;
     const rotate = (p, a) => ({ y: p.y * Math.cos(a) - p.z * Math.sin(a), z: p.y * Math.sin(a) + p.z * Math.cos(a) });
@@ -356,6 +407,24 @@ test('LACT counter-leans at its lower hinge with the 8¼-inch reference pin leng
     assert.ok(Math.abs(pose.position.z + a.z - uncompensated.position.z - b.z) < 1e-12, 'torso rotates about its hinge, not the origin');
     assert.ok(Math.abs(pose.lactLength - rest.lactLength) > .001, 'pin separation changes with torso lean');
   }
+});
+
+test('LACT moves the whole body fast enough to remain over the tread support during a flip', () => {
+  for (const delta of [1 / 120, 1 / 60, .02, .05]) {
+    let angle = 0, lean = 0;
+    for (const target of ['forward', 'rear']) {
+      for (let frame = 0; frame < Math.ceil(.6 / delta); frame++) {
+        angle = advanceBaseFlipper({ angle, target, delta }).angle;
+        const pitch = baseFlipperPresentation({ angle, target }).pitch;
+        lean = advanceTorsoLean(lean, pitch, delta);
+        const body = robTorsoPresentation({ basePitch: pitch, leanAngle: lean });
+        assert.ok(body.massCenter.z <= .212725 + 1e-6, 'body must not lean behind the rear tread');
+        assert.ok(body.massCenter.z >= .212725 - .42545 * Math.cos(pitch) - 1e-6, 'body must not tip ahead of the front tread');
+      }
+    }
+  }
+  const raised = robTorsoPresentation({ basePitch: .8, leanAngle: targetTorsoLean(.8) });
+  assert.ok(raised.pitch < -.35, 'body visibly swings forward beyond merely staying vertical');
 });
 
 test('the third trial life is the terminal life', () => {
