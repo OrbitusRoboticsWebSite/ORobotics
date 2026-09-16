@@ -32,6 +32,9 @@ import {
   firstProjectileImpact,
   isUnlocked,
   laserEnergyCost,
+  laserAimHeading,
+  targetingComputerStats,
+  LASER_RECHARGE_DELAY,
   maximumEnergy,
   maximumLaserLocks,
   meleeAnimationIsClear,
@@ -161,14 +164,38 @@ test('laser shots spend system energy and charged weapons cost more', () => {
   assert.deepEqual(consumeLaserEnergy({ energy: 20, weapon: arcCannon, charge: 1 }), { fired: false, cost: 22, energy: 20 });
 });
 
-test('Twin Blasters require the targeting computer upgrade for two independent locks', () => {
+test('all laser auto-locks require the targeting computer upgrade', () => {
   const twinBlasters = rangedWeapons.find(({ id }) => id === 'twinBlasters');
-  assert.equal(maximumLaserLocks(twinBlasters, 0), 1);
+  for (const weapon of rangedWeapons) assert.equal(maximumLaserLocks(weapon, 0), 0);
   assert.equal(maximumLaserLocks(twinBlasters, 1), 2);
   assert.equal(maximumLaserLocks(rangedWeapons[0], 1), 1);
   const targetingComputer = upgrades.find(({ id }) => id === 'targetingComputer');
   assert.equal(upgradeCost(targetingComputer, 0), 1200);
   assert.equal(upgradeCost(targetingComputer, 1), undefined);
+});
+
+test('the starter computer keeps manual aim and a slower firing and charging cycle', () => {
+  const basic = targetingComputerStats(0), upgraded = targetingComputerStats(1);
+  assert.equal(basic.autoLock, false); assert.equal(upgraded.autoLock, true);
+  assert.ok(basic.cycleDuration > upgraded.cycleDuration);
+  assert.ok(basic.chargeDuration > upgraded.chargeDuration);
+  const aim = { origin: { x: 0, z: 0 }, heading: 0, target: { x: 5, z: 0 } };
+  assert.equal(laserAimHeading({ ...aim, targetingComputerLevel: 0 }), 0, 'a nearby enemy cannot redirect a manual shot');
+  assert.equal(laserAimHeading({ ...aim, targetingComputerLevel: 1 }), -Math.PI / 2);
+  assert.equal(laserAimHeading({ ...aim, target: undefined, targetingComputerLevel: 1 }), 0, 'without a lock the upgraded laser can still fire forward');
+});
+
+test('laser energy cannot recharge while charging or immediately after firing', () => {
+  for (const weapon of rangedWeapons) {
+    const shot = consumeLaserEnergy({ energy: 100, weapon, charge: 1 });
+    const idle = { energy: shot.energy, maximum: 100, moving: false, delta: .1 };
+    assert.equal(updateDriveEnergy({ ...idle, secondsSinceShot: .5 }), shot.energy);
+    assert.equal(updateDriveEnergy({ ...idle, charging: true, secondsSinceShot: 5 }), shot.energy);
+    assert.ok(updateDriveEnergy({ ...idle, secondsSinceShot: LASER_RECHARGE_DELAY }) > shot.energy);
+    assert.ok(updateDriveEnergy({ ...idle, moving: true, charging: true }) < shot.energy, 'driving still consumes energy');
+    const empty = consumeLaserEnergy({ energy: weapon.baseEnergy - .1, weapon, charge: 0 });
+    assert.equal(empty.fired, false); assert.equal(empty.energy, weapon.baseEnergy - .1);
+  }
 });
 
 test('performance upgrades match the Apple game economy', () => {

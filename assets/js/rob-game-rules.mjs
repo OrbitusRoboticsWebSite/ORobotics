@@ -1,4 +1,4 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.09.16.4';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.16.5';
 export const MAX_ROB_HEALTH = 100;
 export const MAX_ROB_SHIELDS = 40;
 export const SHIELD_ACTIVATION_DURATION = 2.5;
@@ -27,9 +27,10 @@ export const maximumEnergy = (level) => BASE_ROB_ENERGY + Math.max(0, level) * 6
 export const energyPickupAmount = (capacityLevel = 0) => 70 + Math.max(0, capacityLevel) * 20;
 export const passiveEnergyRecharge = (capacityLevel = 0) => 6 + Math.max(0, capacityLevel) * 3;
 export const upgradedWeaponDamage = (damage, level) => damage + Math.max(0, level);
-export const updateDriveEnergy = ({ energy, maximum, moving, delta, capacityLevel = 0 }) => Math.max(0, Math.min(
+export const LASER_RECHARGE_DELAY = 1.5;
+export const updateDriveEnergy = ({ energy, maximum, moving, delta, capacityLevel = 0, charging = false, secondsSinceShot = Infinity }) => Math.max(0, Math.min(
   maximum,
-  energy + delta * (moving ? -6.6 : passiveEnergyRecharge(capacityLevel)),
+  energy + delta * (moving ? -6.6 : charging || secondsSinceShot < LASER_RECHARGE_DELAY ? 0 : passiveEnergyRecharge(capacityLevel)),
 ));
 export const consumeTrialLife = (lives) => {
   const remaining = Math.max(0, Math.min(MAX_TRIAL_LIVES, Math.floor(lives)) - 1);
@@ -213,8 +214,14 @@ export const consumeLaserEnergy = ({ energy, weapon, charge }) => {
   const cost = laserEnergyCost(weapon, charge);
   return energy >= cost ? { fired: true, cost, energy: energy - cost } : { fired: false, cost, energy };
 };
+export const targetingComputerStats = (level = 0) => level > 0
+  ? { autoLock: true, cycleDuration: .25, chargeDuration: 1.25 }
+  : { autoLock: false, cycleDuration: .8, chargeDuration: 1.8 };
 export const maximumLaserLocks = (weapon, targetingComputerLevel = 0) => (
-  weapon?.id === 'twinBlasters' && targetingComputerLevel > 0 ? 2 : 1
+  targetingComputerLevel <= 0 ? 0 : weapon?.id === 'twinBlasters' ? 2 : 1
+);
+export const laserAimHeading = ({ origin, heading, target, targetingComputerLevel = 0 }) => (
+  targetingComputerLevel > 0 && target ? Math.atan2(-(target.x - origin.x), -(target.z - origin.z)) : heading
 );
 
 export const bossStats = (levelNumber, baseShields) => {

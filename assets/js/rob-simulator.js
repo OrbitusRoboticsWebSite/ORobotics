@@ -39,6 +39,8 @@ import {
   firstProjectileImpact,
   isUnlocked,
   laserEnergyCost,
+  laserAimHeading,
+  targetingComputerStats,
   meleeAnimationIsClear,
   meleeWeapons,
   maximumEnergy,
@@ -101,6 +103,7 @@ if (root) {
   const selectedFinish = () => finishes.find(({ id }) => id === selectedFinishID) || finishes[0];
   const selectedFaceColor = () => faceColors.find(({ id }) => id === selectedFaceColorID) || faceColors[0];
   const selectedRanged = () => rangedWeapons.find((weapon) => weapon.id === selectedRangedID && isUnlocked(weapon, highestCompletedLevel)) || rangedWeapons[0];
+  const targetingComputer = () => targetingComputerStats(upgradeLevels.targetingComputer);
   const selectedMelee = () => meleeWeapons.find((weapon) => weapon.id === selectedMeleeID && isUnlocked(weapon, highestCompletedLevel)) || meleeWeapons[0];
   const levels = [
     { name: 'Calibration Ledge', floor: 0x172734, grid: 0x2ca4bb, gate: [0, -3.6], dock: [7.8, 5.7], cells: [[-7.5, -4.8], [.8, 3.3], [7.5, -.8]], enemies: [['spider', -7.2, .2], ['dalek', 6.8, -5.4], ['spider', 0, -4.8]], health: 2, speed: 0, bonus: 900, obstacles: [[-3.2, -.8, 2.7, 1.3, 1.1], [3.8, 1.6, 1.5, 3.2, 1.35], [-1.3, 4.7, 3.1, 1.2, .85], [6.6, -3.6, 1.2, 2.1, 1.6]] },
@@ -385,7 +388,7 @@ if (root) {
     ui.workshopPoints.textContent = `${upgradePoints.toLocaleString()} points`;
     ui.intermissionPoints.textContent = `${upgradePoints.toLocaleString()} battle points available`;
     ui.upgradeButtons.forEach((button) => { const upgrade = upgrades.find(({ id }) => id === button.dataset.upgrade), level = upgradeLevels[upgrade.id], cost = upgradeCost(upgrade, level); button.textContent = cost === undefined ? `${upgrade.name} · MAX` : `${upgrade.name} L${level} · ${cost}`; button.disabled = cost === undefined || upgradePoints < cost; });
-    ui.loadoutStatus.textContent = `${selectedFinish().name} finish · ${selectedFaceColor().name} smile · ${selectedRanged().name} · ${selectedMelee().name} · Speed L${upgradeLevels.speedBoost} (${Math.round(driveSpeedMultiplier(upgradeLevels.speedBoost) * 100)}%) · Energy L${upgradeLevels.energyCapacity} (${maximumEnergy(upgradeLevels.energyCapacity)} max) · Power L${upgradeLevels.weaponPower} · Targeting L${upgradeLevels.targetingComputer}`;
+    ui.loadoutStatus.textContent = `${selectedFinish().name} finish · ${selectedFaceColor().name} smile · ${selectedRanged().name} · ${selectedMelee().name} · Speed L${upgradeLevels.speedBoost} (${Math.round(driveSpeedMultiplier(upgradeLevels.speedBoost) * 100)}%) · Energy L${upgradeLevels.energyCapacity} (${maximumEnergy(upgradeLevels.energyCapacity)} max) · Power L${upgradeLevels.weaponPower} · ${targetingComputer().autoLock ? 'Auto Targeting · 0.25s cycle' : 'Basic Manual Aim · 0.8s cycle'}`;
   };
   const applyLoadout = () => {
     const housingMaterial = droidHousingMaterials.find(({ id }) => id === droidProfile.material) || droidHousingMaterials[0];
@@ -404,7 +407,7 @@ if (root) {
     level.obstacles.forEach((o, i) => box(...o, i % 2 ? 0x465262 : 0x344552, true, true));
     buildEnvironmentalFeatures(index);
     floor.material.color.setHex(level.floor); grid.material.color.setHex(level.grid); gate.position.set(level.gate[0], surfaceHeight({ x: level.gate[0], z: level.gate[1] }), level.gate[1]); dock.position.set(level.dock[0], surfaceHeight({ x: level.dock[0], z: level.dock[1] }) + .05, level.dock[1]);
-    baseFlipperAngle = BASE_FLIPPER_REAR_ANGLE; baseFlipperTarget = 'rear'; climbingLedge = false; supportMotion = createROBSupportMotion(); torsoLeanAngle = 0; robot.position.set(0, 0, ARENA_HALF_DEPTH - 1.6); robot.rotation.set(0, 0, 0); robotRig.driveBase.rotation.set(0, 0, 0); robotRig.baseFlipper.rotation.set(BASE_FLIPPER_REAR_ANGLE, 0, 0); robotRig.torso.position.set(0, 0, 0); robotRig.torso.rotation.set(0, 0, 0); armAssemblies.forEach((arm) => arm.rotation.set(0, 0, 0)); levelElapsed = 0; health = MAX_ROB_HEALTH; shields = MAX_ROB_SHIELDS; shieldTimeRemaining = 0; energy = maximumEnergy(upgradeLevels.energyCapacity); damageInvulnerableUntil = -Infinity; gateDone = false; cellCount = 0; levelComplete = false; hasKey = false; doorOpen = !level.key; hacking = false; hackingCamera = undefined; hackingProgress = 0; securityAlertRemaining = 0; securityMiniBossReleased = false; laserLock = undefined; secondaryLaserLock = undefined; laserChargeStarted = undefined; saberCombo = 0; lastSaberAttack = -Infinity; saberAnimation = undefined; gamepadLaserHeld = false;
+    baseFlipperAngle = BASE_FLIPPER_REAR_ANGLE; baseFlipperTarget = 'rear'; climbingLedge = false; supportMotion = createROBSupportMotion(); torsoLeanAngle = 0; robot.position.set(0, 0, ARENA_HALF_DEPTH - 1.6); robot.rotation.set(0, 0, 0); robotRig.driveBase.rotation.set(0, 0, 0); robotRig.baseFlipper.rotation.set(BASE_FLIPPER_REAR_ANGLE, 0, 0); robotRig.torso.position.set(0, 0, 0); robotRig.torso.rotation.set(0, 0, 0); armAssemblies.forEach((arm) => arm.rotation.set(0, 0, 0)); levelElapsed = 0; health = MAX_ROB_HEALTH; shields = MAX_ROB_SHIELDS; shieldTimeRemaining = 0; energy = maximumEnergy(upgradeLevels.energyCapacity); damageInvulnerableUntil = -Infinity; gateDone = false; cellCount = 0; levelComplete = false; hasKey = false; doorOpen = !level.key; hacking = false; hackingCamera = undefined; hackingProgress = 0; securityAlertRemaining = 0; securityMiniBossReleased = false; laserLock = undefined; secondaryLaserLock = undefined; laserChargeStarted = undefined; lastShot = -Infinity; saberCombo = 0; lastSaberAttack = -Infinity; saberAnimation = undefined; gamepadLaserHeld = false;
     releaseAllInput(); keyObject.visible = Boolean(level.key); if (level.key) keyObject.position.set(level.key[0], surfaceHeight({ x: level.key[0], z: level.key[1] }) + .08, level.key[1]);
     doorObject.visible = Boolean(level.door); if (level.door) { doorObject.position.set(level.door[0], surfaceHeight({ x: level.door[0], z: level.door[1] }) + .9, level.door[1]); doorObject.scale.set(level.door[2] / 4, 1, level.door[3] / .35); }
     const initialCameraBlockers = projectileBlockers();
@@ -478,27 +481,45 @@ if (root) {
     levelIndex = 0; complete = false; loadLevel(0); running = false; ui.start.hidden = false; ui.start.textContent = 'Start new three-life trial'; stopMusic(); updateWorkshop(); say(`Trial over after ${attack}. All points and installed upgrades were lost. Start Level 1 to try again with three lives.`); return true;
   };
   const combatNow = () => performance.now() / 1000;
-  const laserChargeAmount = () => laserChargeStarted === undefined ? 0 : THREE.MathUtils.clamp((combatNow() - laserChargeStarted) / 1.5, 0, 1);
+  const laserChargeAmount = () => laserChargeStarted === undefined ? 0 : THREE.MathUtils.clamp((combatNow() - laserChargeStarted) / targetingComputer().chargeDuration, 0, 1);
   const scanForLaserTarget = () => {
-    if (!running || complete) { laserLock = undefined; secondaryLaserLock = undefined; return; }
+    if (!running || complete || !targetingComputer().autoLock) { laserLock = undefined; secondaryLaserLock = undefined; return; }
     const active = enemies.filter((enemy) => enemy.userData.alive && enemy.visible).map((enemy) => ({ enemy, distance: enemy.position.distanceTo(robot.position) })).filter(({ distance }) => distance <= 28).sort((a, b) => a.distance - b.distance);
     laserLock = active[0]?.enemy;
     secondaryLaserLock = maximumLaserLocks(selectedRanged(), upgradeLevels.targetingComputer) > 1 ? active[1]?.enemy : undefined;
   };
   const fireLaser = (charge = 0) => {
-    scanForLaserTarget(); if (!running || complete || elapsed - lastShot < .25) return;
-    const weapon = selectedRanged(); if (!laserLock) { say(`${weapon.name} scanning — no enemy lock yet.`); return; }
+    scanForLaserTarget(); if (!running || complete || elapsed - lastShot < targetingComputer().cycleDuration) return;
+    const weapon = selectedRanged(); charge = THREE.MathUtils.clamp(charge, 0, 1);
     const discharge = consumeLaserEnergy({ energy, weapon, charge }), energyCost = discharge.cost;
     if (!discharge.fired) { say(`${weapon.name} needs ${Math.ceil(energyCost)} system energy. Hold position or collect an energy cell.`); return; }
     energy = discharge.energy;
     lastShot = elapsed; const targets = weapon.id === 'twinBlasters' ? [laserLock, secondaryLaserLock || laserLock] : [laserLock], lateralOffsets = weapon.id === 'twinBlasters' ? [-.62, .62] : [.78], shotHeight = weapon.id === 'twinBlasters' ? 1.25 : 1.65, radius = .04 + charge * .11 + (weapon.id === 'arcCannon' ? .06 : 0), length = .95 + charge * 1.9;
     const color = weapon.id === 'arcCannon' ? 0xa66cff : 0x38dfff;
-    playLaserShot(charge); targets.forEach((lockedTarget, index) => { const start = selectedRangedID === 'shoulderGatling' ? robotRig.laserMuzzle.getWorldPosition(new THREE.Vector3()) : new THREE.Vector3(lateralOffsets[index], shotHeight, -.58).applyQuaternion(robot.quaternion).add(robot.position), target = lockedTarget.position.clone().add(new THREE.Vector3(0, 1, 0)), direction = target.sub(start).normalize(), bolt = mesh(new THREE.CylinderGeometry(radius, radius, length, 12), mat(color, color), scene); bolt.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction); bolt.position.copy(start).addScaledVector(direction, .7 + charge * .55); bolt.userData.velocity = direction.multiplyScalar(weapon.projectileSpeed + charge * 3.5); bolt.userData.damage = weaponDamage(weapon, charge); bolt.userData.charge = charge; bolt.userData.weapon = weapon; bolt.userData.target = lockedTarget; bolts.push(bolt); });
-    if (weapon.id === 'twinBlasters' && secondaryLaserLock) say(`Twin Blasters dual lock confirmed — two beams fired at ${laserLock.userData.name} and ${secondaryLaserLock.userData.name} for ${Math.ceil(energyCost)} energy.`);
-    else if (weapon.id === 'twinBlasters') say(`Twin Blasters fired both beams at ${laserLock.userData.name}. Upgrade the Targeting Computer for independent locks.`);
-    else say(charge > .72 ? `Charged ${weapon.name} blast fired for ${Math.ceil(energyCost)} energy at ${laserLock.userData.name}!` : `${weapon.name} lock confirmed — projectile fired for ${Math.ceil(energyCost)} energy at ${laserLock.userData.name}.`);
+    playLaserShot(charge);
+    targets.forEach((lockedTarget, index) => {
+      const start = selectedRangedID === 'shoulderGatling' ? robotRig.laserMuzzle.getWorldPosition(new THREE.Vector3()) : new THREE.Vector3(lateralOffsets[index], shotHeight, -.58).applyQuaternion(robot.quaternion).add(robot.position);
+      const target = lockedTarget?.position.clone().add(new THREE.Vector3(0, 1, 0));
+      const heading = laserAimHeading({ origin: start, heading: robot.rotation.y, target, targetingComputerLevel: upgradeLevels.targetingComputer });
+      const verticalAim = target ? (target.y - start.y) / Math.max(.001, Math.hypot(target.x - start.x, target.z - start.z)) : 0;
+      const direction = new THREE.Vector3(-Math.sin(heading), verticalAim, -Math.cos(heading)).normalize();
+      const bolt = mesh(new THREE.CylinderGeometry(radius, radius, length, 12), mat(color, color), scene);
+      bolt.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction); bolt.position.copy(start).addScaledVector(direction, .7 + charge * .55);
+      bolt.userData.velocity = direction.multiplyScalar(weapon.projectileSpeed + charge * 3.5); bolt.userData.damage = weaponDamage(weapon, charge); bolt.userData.charge = charge; bolt.userData.weapon = weapon; bolts.push(bolt);
+    });
+    if (weapon.id === 'twinBlasters' && secondaryLaserLock) say(`Twin Blasters dual lock — two beams fired for ${Math.ceil(energyCost)} energy.`);
+    else if (laserLock) say(`${weapon.name} fired at ${laserLock.userData.name} for ${Math.ceil(energyCost)} energy.`);
+    else say(`${weapon.name} manual shot fired forward for ${Math.ceil(energyCost)} energy. ${targetingComputer().autoLock ? 'No target in range.' : 'Upgrade the Targeting Computer for automatic lock-on.'}`);
   };
-  const beginLaserCharge = () => { if (!running || complete || laserChargeStarted !== undefined) return; const weapon = selectedRanged(); if (energy < laserEnergyCost(weapon, 0)) { say(`Not enough system energy for the ${weapon.name}. Hold position or collect an energy cell.`); return; } scanForLaserTarget(); laserChargeStarted = combatNow(); if (secondaryLaserLock) say(`Dual lock: ${laserLock.userData.name} and ${secondaryLaserLock.userData.name}. Hold to charge the ${weapon.name}.`); else if (laserLock) say(`Red lock: ${laserLock.userData.name}. Hold to charge the ${weapon.name}.`); else say(`${weapon.name} scanning for a target…`); };
+  const beginLaserCharge = () => {
+    if (!running || complete || laserChargeStarted !== undefined || elapsed - lastShot < targetingComputer().cycleDuration) return;
+    const weapon = selectedRanged();
+    if (energy < laserEnergyCost(weapon, 0)) { say(`Not enough system energy for the ${weapon.name}. Hold position or collect an energy cell.`); return; }
+    scanForLaserTarget(); laserChargeStarted = combatNow();
+    say(laserLock ? `${secondaryLaserLock ? 'Dual lock' : 'Red lock'}: hold to charge ${weapon.name}.`
+      : targetingComputer().autoLock ? `${weapon.name} scanning. Without a lock, shots fire forward.`
+      : `Basic computer: steer ROB to aim forward. Hold to charge ${weapon.name}; upgrade for faster automatic targeting.`);
+  };
   const releaseLaserCharge = () => { if (laserChargeStarted === undefined) return; const charge = laserChargeAmount(); laserChargeStarted = undefined; fireLaser(charge); };
   const cancelLaserCharge = () => { laserChargeStarted = undefined; ui.laserButtons.forEach((button) => button.classList.remove('is-charging')); };
   const enemyBoltGeometry = new THREE.CylinderGeometry(.055, .055, 1.05, 8), enemyBoltMaterial = mat(0x70c8ff, 0x194ec4);
@@ -525,11 +546,26 @@ if (root) {
     armAssemblies.forEach((arm) => { arm.rotation.y = pose.armYaw; arm.rotation.z = arm.userData.side * pose.armRoll; });
     if (progress >= 1) saberAnimation = undefined;
     robotRig.sabers.forEach((saber) => { saber.visible = selectedMeleeID === 'dualSabers'; });
-    const aimAt = (rig, target, scanPhase = 0) => { if (target) { const offset = target.position.clone().sub(robot.position), worldYaw = Math.atan2(-offset.x, -offset.z), localYaw = Math.atan2(Math.sin(worldYaw - robot.rotation.y), Math.cos(worldYaw - robot.rotation.y)); rig.rotation.y += (localYaw - rig.rotation.y) * .18; } else rig.rotation.y = Math.sin(now * 1.35 + scanPhase) * .9; };
+    const aimAt = (rig, target, scanPhase = 0) => { if (target) { const offset = target.position.clone().sub(robot.position), worldYaw = Math.atan2(-offset.x, -offset.z), localYaw = Math.atan2(Math.sin(worldYaw - robot.rotation.y), Math.cos(worldYaw - robot.rotation.y)); rig.rotation.y += (localYaw - rig.rotation.y) * .18; } else rig.rotation.y = targetingComputer().autoLock ? Math.sin(now * 1.35 + scanPhase) * .9 : -robotRig.torso.rotation.y; };
     if (selectedRangedID === 'twinBlasters') { aimAt(robotRig.twinBlasterMounts[0], laserLock, 0); aimAt(robotRig.twinBlasterMounts[1], secondaryLaserLock || laserLock, .5); }
     else aimAt(selectedRangedID === 'arcCannon' ? robotRig.arcCannon : robotRig.gatling, laserLock);
-    robotRig.gatlingTilt.rotation.x = laserLock ? -.06 : Math.sin(now * .7) * .13; robotRig.lockLamp.visible = Boolean(laserLock); robotRig.targetBeam.visible = Boolean(laserLock && selectedRangedID === 'shoulderGatling'); robotRig.lockLamp.scale.setScalar(laserLock ? 1 + Math.sin(now * 12) * .24 : 1); if (ui.lock) { const lockLabel = secondaryLaserLock ? `DUAL LOCK · ${laserLock.userData.name} + ${secondaryLaserLock.userData.name}` : laserLock && selectedRangedID === 'twinBlasters' && !upgradeLevels.targetingComputer ? `RED LOCK · ${laserLock.userData.name} · TARGETING UPGRADE REQUIRED` : laserLock ? `RED LOCK · ${laserLock.userData.name}` : 'SCANNING'; if (ui.lock.textContent !== lockLabel) ui.lock.textContent = lockLabel; ui.lock.classList.toggle('is-locked', Boolean(laserLock)); }
-    ui.laserButtons.forEach((button) => { button.classList.toggle('is-charging', laserChargeStarted !== undefined); button.style.setProperty('--laser-charge', `${Math.round(charge * 100)}%`); const compact = button.classList.contains('rob-sim__fire'); button.textContent = laserChargeStarted !== undefined ? `CHARGE ${Math.round(charge * 100)}%` : laserLock ? (compact ? `${selectedRanged().shortName.toUpperCase()} LOCK` : `${selectedRanged().name} locked · hold Q`) : (compact ? `${selectedRanged().shortName.toUpperCase()} SCAN` : `${selectedRanged().name} scanning · hold Q`); });
+    robotRig.gatlingTilt.rotation.x = laserLock ? -.06 : targetingComputer().autoLock ? Math.sin(now * .7) * .13 : 0;
+    robotRig.lockLamp.visible = Boolean(laserLock); robotRig.targetBeam.visible = Boolean(laserLock && selectedRangedID === 'shoulderGatling'); robotRig.lockLamp.scale.setScalar(laserLock ? 1 + Math.sin(now * 12) * .24 : 1);
+    if (ui.lock) {
+      const lockLabel = !targetingComputer().autoLock ? 'BASIC COMPUTER · MANUAL AIM'
+        : secondaryLaserLock ? `DUAL LOCK · ${laserLock.userData.name} + ${secondaryLaserLock.userData.name}`
+        : laserLock ? `AUTO LOCK · ${laserLock.userData.name}` : 'AUTO TARGETING · SCANNING';
+      if (ui.lock.textContent !== lockLabel) ui.lock.textContent = lockLabel;
+      ui.lock.classList.toggle('is-locked', Boolean(laserLock));
+    }
+    ui.laserButtons.forEach((button) => {
+      const charging = laserChargeStarted !== undefined, cooldown = Math.max(0, targetingComputer().cycleDuration - (elapsed - lastShot));
+      const cost = Math.ceil(laserEnergyCost(selectedRanged(), charge)), compact = button.classList.contains('rob-sim__fire');
+      button.classList.toggle('is-charging', charging); button.style.setProperty('--laser-charge', `${Math.round(charge * 100)}%`);
+      button.disabled = !running || (!charging && (energy < laserEnergyCost(selectedRanged(), 0) || cooldown > 0));
+      button.textContent = charging ? `CHARGE ${Math.round(charge * 100)}% · ${cost} E`
+        : cooldown > 0 ? `COMPUTER ${cooldown.toFixed(1)}s` : `${compact ? selectedRanged().shortName.toUpperCase() : selectedRanged().name} · ${cost} E${compact ? '' : ' · hold Q'}`;
+    });
     ui.saberButtons.forEach((button) => { button.textContent = button.classList.contains('rob-sim__fire') ? selectedMelee().shortName.toUpperCase() : `${selectedMelee().name} · Space`; });
   };
   const activateShield = () => {
@@ -617,7 +653,7 @@ if (root) {
     updateGroundSupport(dt, flipperPose, linear);
     torsoLeanAngle = advanceTorsoLean(torsoLeanAngle, robotBasePose().pitch, dt);
     const treadsPowered = Boolean(powered && Math.abs(controls.left) + Math.abs(controls.right) > .02);
-    if (!flipperStep.active) energy = updateDriveEnergy({ energy, maximum: maximumEnergy(upgradeLevels.energyCapacity), moving: treadsPowered, delta: dt, capacityLevel: upgradeLevels.energyCapacity });
+    if (!flipperStep.active) energy = updateDriveEnergy({ energy, maximum: maximumEnergy(upgradeLevels.energyCapacity), moving: treadsPowered, delta: dt, capacityLevel: upgradeLevels.energyCapacity, charging: laserChargeStarted !== undefined, secondsSinceShot: elapsed - lastShot });
     robotRig.treadWheels.forEach(({ wheel, side }) => { wheel.rotation.x -= controls[side] * dt * 10.5 * speedMultiplier; });
     if (newSurfaceHeight > surfaceHeight(old)) say('Front tracks on the ledge. Flippers are reversing automatically; keep driving to lift the rear and level ROB.');
     else if (motion.collided && Math.abs(linear) > .1) say(!pointOnLedge(old) && !pointOnLedge(robot.position) && intended.z < old.z ? 'Ledge too high for the treads. Lower the flippers to lift the front, then keep driving into the orange lip.' : robot.position.distanceTo(old) > .001 ? 'Wall assist active — ROB is sliding along the open edge.' : 'Wall contact — reverse or pivot away; ROB will release cleanly.');
