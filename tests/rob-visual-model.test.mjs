@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import * as THREE from 'three';
 import { buildROBVisual, robFlipperSupportHeight, ROB_VISUAL_DIMENSIONS } from '../assets/js/rob-visual-model.mjs';
+import { loadCapturedROB } from '../assets/js/rob-captured-model.mjs';
 
 test('ROB has rear wheel flipper pivots, separate end rollers and actual perforations', () => {
   const { root, baseFlipper } = buildROBVisual(); root.updateMatrixWorld(true);
@@ -49,7 +50,57 @@ test('all six published scans have valid GLB buffers and original scan provenanc
     const binaryStart = 28 + jsonLength;
     for (const view of doc.bufferViews) assert.ok(view.byteOffset + view.byteLength <= bytes.length - binaryStart);
     assert.equal(doc.accessors[0].count, scan.vertices);
-    assert.equal(doc.accessors[2].count, scan.triangles * 3);
+    assert.equal(doc.accessors[doc.meshes[0].primitives[0].indices].count, scan.triangles * 3);
     assert.equal(scan.sourceSHA256.length, 64); assert.equal(scan.originalUnmodified, true);
   }
+});
+
+test('captured surfaces load at both game scales and follow head motion without moving the base', async (t) => {
+  const directory = new URL('../static/models/rob/', import.meta.url);
+  t.mock.method(globalThis, 'fetch', async (url) => new Response(readFileSync(new URL(url.split('?')[0], directory))));
+  t.mock.method(THREE.TextureLoader.prototype, 'loadAsync', async () => new THREE.Texture());
+  for (const scale of [1, 2.15]) {
+    const rig = buildROBVisual({ scale });
+    const flipper = rig.baseFlipper, pivot = flipper.position.clone();
+    const capture = await loadCapturedROB(rig, '', scale);
+    rig.root.updateMatrixWorld(true);
+    assert.ok(capture.triangles > 100000 && capture.triangles < 150000);
+    assert.equal(rig.baseFlipper, flipper);
+    assert.ok(flipper.position.equals(pivot));
+    let triangles = 0;
+    rig.root.traverse(node => {
+      if (!node.material?.map) return;
+      const geometry = node.geometry, positions = geometry.attributes.position;
+      assert.equal(geometry.attributes.uv.count, positions.count);
+      assert.ok(positions.array.every(Number.isFinite));
+      triangles += positions.count / 3;
+      for (let parent = node; parent; parent = parent.parent) assert.ok(parent.visible, node.name);
+    });
+    assert.equal(triangles, capture.triangles);
+    assert.equal(rig.captureMaterial.map.colorSpace, THREE.SRGBColorSpace);
+    assert.equal(rig.captureMaterial.color.getHex(), 0xffffff);
+    const shoulder = rig.root.getObjectByName('Captured Shoulder Laser');
+    assert.ok(shoulder.children.some(child => child.material?.map));
+    assert.equal(shoulder.parent.name, 'Gatling Tilt Servo');
+    assert.equal(rig.root.getObjectByName('Shoulder Laser Muzzle').parent, shoulder.parent);
+    const head = rig.root.getObjectByName('Camera Head');
+    const neck = rig.root.getObjectByName('Neck Pan');
+    const base = rig.root.getObjectByName('Tri-Wheel Chassis');
+    const sample = new THREE.Vector3().fromBufferAttribute(head.geometry.attributes.position, 0);
+    const before = head.localToWorld(sample.clone()), baseBefore = base.matrixWorld.clone();
+    neck.rotation.y += 0.6; rig.root.updateMatrixWorld(true);
+    assert.ok(before.distanceTo(head.localToWorld(sample.clone())) > .01 * scale);
+    assert.ok(base.matrixWorld.equals(baseBefore));
+    assert.ok(rig.root.getObjectByName('Left Perforated UHMW Flipper').visible);
+  }
+});
+
+test('a truncated capture leaves the complete fallback rig usable', async (t) => {
+  const document = JSON.parse(readFileSync(new URL('../static/models/rob/rob-visual.json', import.meta.url)));
+  t.mock.method(globalThis, 'fetch', async (url) => new Response(url.includes('.json') ? JSON.stringify(document) : new Uint8Array(8)));
+  t.mock.method(THREE.TextureLoader.prototype, 'loadAsync', async () => new THREE.Texture());
+  const rig = buildROBVisual(), head = rig.root.getObjectByName('Camera Head'), geometry = head.geometry;
+  await assert.rejects(loadCapturedROB(rig, ''), /Invalid captured ROB buffer/);
+  assert.equal(head.geometry, geometry);
+  rig.root.traverse(node => assert.equal(node.visible, true));
 });

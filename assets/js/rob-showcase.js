@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { loadCapturedROB } from './rob-captured-model.mjs';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { buildROBVisual, robFlipperSupportHeight } from './rob-visual-model.mjs';
@@ -42,7 +43,8 @@ document.querySelectorAll('[data-rob-showcase]').forEach((root) => {
     viewport.setAttribute('aria-busy', 'true');
     flipper.closest('label').hidden = select.value !== 'rig';
     if (select.value === 'rig') {
-      rig = buildROBVisual(); show(rig.root); flipper.value = '0'; root.querySelector('[data-model-angle]').textContent = '0°';
+      rig = buildROBVisual(); const capturedRig = rig; show(rig.root);
+      loadCapturedROB(capturedRig, root.dataset.modelBase).then(() => { if (current !== request || stopped) dispose(capturedRig.root); }).catch(() => {}); flipper.value = '0'; root.querySelector('[data-model-angle]').textContent = '0°';
       status.textContent = 'Drag to orbit · scroll or pinch to zoom. Move the slider to turn the flippers.';
       viewport.setAttribute('aria-busy', 'false'); return;
     }

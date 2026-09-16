@@ -4094,3 +4094,8 @@ body.rob-game-open{overflow:hidden;overscroll-behavior:none}.rob-sim__shell.is-f
         transform: none !important;
     }
 }
+
+/* Keep the timed shield reachable on narrow screens and in fullscreen. */
+.rob-sim__top-actions{flex-wrap:wrap;justify-content:flex-end;max-width:calc(100% - 1.5rem)}
+.rob-sim__top-actions [data-sim-shield][aria-pressed="true"]{background:#17647a;border-color:#5ce6ff}
+.rob-sim__top-actions [data-sim-shield]:disabled{opacity:.65}

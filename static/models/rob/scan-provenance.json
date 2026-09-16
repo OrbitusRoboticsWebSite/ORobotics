@@ -1,150 +1,120 @@
 {
-  "date": "2026-09-15",
-  "note": "Display crops retain original photographic texture. Scans are static poses and are not calibrated joint models.",
+  "date": "2026-09-16",
+  "note": "Display meshes reconstructed from reviewed Gaussian-splat crops. Display orientation and surface partitions are not robot calibration. Full splats and editable masters remain local.",
   "scans": [
     {
-      "source": "ROB chess board on box.usdz",
-      "sourceSHA256": "6062bf4c2fe57bed67d718d492660b103d77915d46a63b1783416de56a061b54",
-      "file": "rob-chess-board-on-box.glb",
-      "sha256": "dc1c6618bb03b834b78768ee8894968b89110ef8bab7d3cfb28d8f27400a6368",
-      "bytes": 6026360,
-      "vertices": 125647,
-      "triangles": 221431,
-      "cropCenterXZ": [
-        0.03242769464850426,
-        0.2110069990158081
-      ],
-      "floorOffset": 0.07118356227874756,
-      "cropHalfWidthDepth": [
-        0.64,
-        0.68
-      ],
-      "minimumSourceY": 0.045,
-      "textureSize": [
-        2048,
-        2048
-      ],
-      "originalUnmodified": true
-    },
-    {
-      "source": "ROB flipper lifted head upright.usdz",
-      "sourceSHA256": "ffcb2a34fba6a16f305c6d7d232a93cbbb60d7fba3f32bd862722c9ebcbbbdb5",
-      "file": "rob-flipper-lifted-head-upright.glb",
-      "sha256": "3e6421f8f3325130d82ce881472d6876aa80886bef4b76b0005290f71c367057",
-      "bytes": 4775292,
-      "vertices": 95224,
-      "triangles": 167425,
-      "cropCenterXZ": [
-        0.17137983441352844,
-        0.19656336307525635
-      ],
-      "floorOffset": 0.045002877712249756,
-      "cropHalfWidthDepth": [
-        0.64,
-        0.68
-      ],
-      "minimumSourceY": 0.045,
-      "textureSize": [
-        2048,
-        2048
-      ],
-      "originalUnmodified": true
-    },
-    {
-      "source": "ROB flipper lifted wood head back.usdz",
-      "sourceSHA256": "3eadca1b1d48ffad8913b9085e26466bb0e5d6418ec199d8a0613d6ef3811d65",
-      "file": "rob-flipper-lifted-wood-head-back.glb",
-      "sha256": "bddb9d469eff906694226e9a2aaad744caf23e058f83cf988b3dd3ebb33c043d",
-      "bytes": 8679036,
-      "vertices": 188516,
-      "triangles": 333204,
-      "cropCenterXZ": [
-        -0.03368633985519409,
-        0.6416199207305908
-      ],
-      "floorOffset": 0.04500019550323486,
-      "cropHalfWidthDepth": [
-        0.64,
-        0.68
-      ],
-      "minimumSourceY": 0.045,
-      "textureSize": [
-        2048,
-        2048
-      ],
-      "originalUnmodified": true
-    },
-    {
-      "source": "ROB flipper upright wood head forward.usdz",
-      "sourceSHA256": "7616e5c5f3eed69e554b8981758d57f9cb6666cbfbe5441984bf59b11ad30745",
-      "file": "rob-flipper-upright-wood-head-forward.glb",
-      "sha256": "cf4ab6a9b089da2db3690973bf0409fadc3080cb10c75bea29b0ff83f14c6bc3",
-      "bytes": 7949284,
-      "vertices": 170970,
-      "triangles": 301280,
-      "cropCenterXZ": [
-        0.12841397523880005,
-        -0.013960480690002441
-      ],
-      "floorOffset": 0.04500335454940796,
-      "cropHalfWidthDepth": [
-        0.64,
-        0.68
-      ],
-      "minimumSourceY": 0.045,
-      "textureSize": [
-        2048,
-        2048
-      ],
-      "originalUnmodified": true
-    },
-    {
-      "source": "ROB treads up.usdz",
-      "sourceSHA256": "c1152f2645de39972dc488ae3a7ff330f0f10686117ca9764eba97be8e417b4c",
-      "file": "rob-treads-up.glb",
-      "sha256": "aedb5cc9317c604836dbd7b34b78b540cf1e404244e3f1414213ea40831d4469",
-      "bytes": 10099772,
-      "vertices": 221229,
-      "triangles": 397116,
-      "cropCenterXZ": [
-        0.44419607520103455,
-        -0.23173630237579346
-      ],
-      "floorOffset": 0.04502570629119873,
-      "cropHalfWidthDepth": [
-        0.64,
-        0.68
-      ],
-      "minimumSourceY": 0.045,
-      "textureSize": [
-        2048,
-        2048
-      ],
-      "originalUnmodified": true
-    },
-    {
-      "source": "ROB upright.usdz",
-      "sourceSHA256": "40c8d29ab8575a18b51e68106b72645c37064870ce19d359066d254b7099892e",
+      "source": "ROB head upright.ply",
+      "sourceSHA256": "521d67853f1e6ff4072e96f9ae0f088f50d96d54237d1f7a0aa4b9f74986e913",
+      "reconstructedMeshSHA256": "573b232e0b4a9801eef49503a8aa10789f130fc36fc8260461a1c1d1a3dbc6f2",
       "file": "rob-upright.glb",
-      "sha256": "5872dc2ab2d0ffbd121f5d64a427b8b33b1010599358a84260691a2f05aa0f52",
-      "bytes": 8299888,
-      "vertices": 180329,
-      "triangles": 315538,
-      "cropCenterXZ": [
-        -0.02112559974193573,
-        0.2949337959289551
+      "sha256": "d260036261cf9cf783caf2c81d9c8bb7ff7c85926bbd754c3b767d2817d1596f",
+      "bytes": 7446460,
+      "vertices": 126811,
+      "triangles": 239999,
+      "originalUnmodified": true,
+      "displayTranslation": [
+        0.09469433128833771,
+        1.0127547979354858,
+        0.8018081188201904
       ],
-      "floorOffset": 0.045000314712524414,
-      "cropHalfWidthDepth": [
-        0.64,
-        0.68
+      "displayYawDegrees": -20,
+      "units": "meters assumed; not calibrated",
+      "color": "Captured SH DC vertex color; unlit linear glTF colors"
+    },
+    {
+      "source": "ROBchessscene.ply",
+      "sourceSHA256": "02d6b6b984fdd0b5f578ba034cd678bc1323ae646109c05a6cc0084adfc0618d",
+      "reconstructedMeshSHA256": "f1b4083c3ab904a153880871c40957563f7dc9fc285be262ed1ac167a45389d8",
+      "file": "rob-chess-scene.glb",
+      "sha256": "d614e0db156c41e21d7bfd5207305c2750c690120095dbbaf670392dc8376c8e",
+      "bytes": 7445280,
+      "vertices": 126778,
+      "triangles": 239999,
+      "originalUnmodified": true,
+      "displayTranslation": [
+        0.281181275844574,
+        1.2438498735427856,
+        0.8810198605060577
       ],
-      "minimumSourceY": 0.045,
-      "textureSize": [
-        2048,
-        2048
+      "displayYawDegrees": -90,
+      "units": "meters assumed; not calibrated",
+      "color": "Captured SH DC vertex color; unlit linear glTF colors"
+    },
+    {
+      "source": "ROBflipperupheadforward.ply",
+      "sourceSHA256": "68ecb9d5e77b0c816053342b3e540320ee96b59b29718bb9adfc338709c3205d",
+      "reconstructedMeshSHA256": "8063ca6549f5f2f5a037cf550aca831c12ea9d1ca596dddad9d8c82c7ddc007c",
+      "file": "rob-flipper-up-head-forward.glb",
+      "sha256": "9e16b723c6a5aa530ad3b5cccbbf747ebce0d8713ffb0638f3e9dcdca5655a5f",
+      "bytes": 7514640,
+      "vertices": 128704,
+      "triangles": 240000,
+      "originalUnmodified": true,
+      "displayTranslation": [
+        -0.26129038631916046,
+        1.3572102785110474,
+        1.0347995162010193
       ],
-      "originalUnmodified": true
+      "displayYawDegrees": -106,
+      "units": "meters assumed; not calibrated",
+      "color": "Captured SH DC vertex color; unlit linear glTF colors"
+    },
+    {
+      "source": "ROB head backward flipper lifted.ply",
+      "sourceSHA256": "025c3568ed1195288f155c6b48f5171e22a588bef5de0423f2dd79af67f9527b",
+      "reconstructedMeshSHA256": "a239dc5c84d6a98137c2c8f55cdd13d0ba0c1bcf2d55a942804efcc93b502de3",
+      "file": "rob-head-backward-flipper-lifted.glb",
+      "sha256": "2e0d515e9c7071bdd2877d9b583799dabd788ca0dc36b5dd3e88340e3133f946",
+      "bytes": 7455104,
+      "vertices": 127050,
+      "triangles": 240000,
+      "originalUnmodified": true,
+      "displayTranslation": [
+        -1.2300590574741364,
+        1.3828626871109009,
+        1.3463173508644104
+      ],
+      "displayYawDegrees": -25,
+      "units": "meters assumed; not calibrated",
+      "color": "Captured SH DC vertex color; unlit linear glTF colors"
+    },
+    {
+      "source": "ROB head forward flipper lifted.ply",
+      "sourceSHA256": "a861344897bf91144b2fc20c9af94a01d74d5670107416208c380d41a8d1e335",
+      "reconstructedMeshSHA256": "87b7a3882f973d0c42bb6042fd20e7760e8ae4d17721af3044b9c611503d3f56",
+      "file": "rob-head-forward-flipper-lifted.glb",
+      "sha256": "0ca988b8eb4469217d846d7d8d42be0584081f85a8b2c7864e9676fa1abea31a",
+      "bytes": 7452500,
+      "vertices": 126978,
+      "triangles": 239999,
+      "originalUnmodified": true,
+      "displayTranslation": [
+        0.11472400836646557,
+        1.1040741205215454,
+        0.9557394981384277
+      ],
+      "displayYawDegrees": -8,
+      "units": "meters assumed; not calibrated",
+      "color": "Captured SH DC vertex color; unlit linear glTF colors"
+    },
+    {
+      "source": "ROBheaduprightflipperlifted.ply",
+      "sourceSHA256": "e9ce65329b0e698a59b4158acce2a864ff81717cbdcfdbcc8933d320e55ac1a4",
+      "reconstructedMeshSHA256": "3e12820af891503b1d5cc85b0696f0dff7c0f84bb9b84b44cb53f288077d20b2",
+      "file": "rob-head-upright-flipper-lifted.glb",
+      "sha256": "7465a68dd6a2382b7ec409e4b3ff49150b588db2b85e5faadd8ceec0bc5dae7a",
+      "bytes": 7465136,
+      "vertices": 127329,
+      "triangles": 239999,
+      "originalUnmodified": true,
+      "displayTranslation": [
+        -0.12807810306549072,
+        1.410964846611023,
+        1.2170607298612595
+      ],
+      "displayYawDegrees": -19,
+      "units": "meters assumed; not calibrated",
+      "color": "Captured SH DC vertex color; unlit linear glTF colors"
     }
   ]
 }

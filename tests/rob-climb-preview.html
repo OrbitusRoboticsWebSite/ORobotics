@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>ROB climb pose review</title>
+<style>body{margin:0;background:#08121b;color:#e4f5ff;font:16px system-ui}main{display:grid;grid-template-columns:repeat(4,1fr)}section{min-width:0;border-right:1px solid #284153}h2,p{margin:16px}h2{font-size:20px}canvas{width:100%;height:640px;display:block}p{color:#a8c5d2}</style>
+<script type="importmap">{"imports":{"three":"../node_modules/three/build/three.module.js"}}</script>
+<main></main>
+<script type="module">
+// Manual visual fixture: serve the repository with a localhost HTTP server.
+import * as THREE from 'three';
+import { buildROBVisual } from '../assets/js/rob-visual-model.mjs';
+import { loadCapturedROB } from '../assets/js/rob-captured-model.mjs';
+import { baseFlipperPresentation, flipperGroundPitch, BASE_FLIPPER_FORWARD_ANGLE as down, BASE_FLIPPER_REAR_ASSIST_ANGLE as rear, ROB_CONTACT_SPAN } from '../assets/js/rob-game-rules.mjs';
+const scale = 1.35, stepHeight = .34, span = ROB_CONTACT_SPAN * scale;
+const projected = span * Math.cos(flipperGroundPitch(down)), reach = projected - span / 2;
+const states = [
+  ['Travel', 'Both tread contacts on the lower floor.', {angle:0}, span/2+.13],
+  ['Front lift', 'Rear grounded; flipper roller on the floor.', {angle:down,target:'forward'}, reach+.01],
+  ['Rear support', 'Front on the step; rear rises as ROB levels.', {angle:rear,target:'rear',climbProgress:.55}, reach-projected*.55],
+  ['Level travel', 'Both tracks on the platform; flippers stowed.', {angle:0,onLedge:true}, -span/2-.13],
+];
+for (const [title, caption, state, z] of states) {
+  const section = document.createElement('section'); section.innerHTML = `<h2>${title}</h2><canvas></canvas><p>${caption}</p>`; document.querySelector('main').append(section);
+  const canvas = section.querySelector('canvas'), renderer = new THREE.WebGLRenderer({canvas,antialias:true}); renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(section.clientWidth,640,false);
+  const scene = new THREE.Scene(); scene.background = new THREE.Color(0x08121b);
+  scene.add(new THREE.HemisphereLight(0xffffff,0x688fa6,3));
+  const light = new THREE.DirectionalLight(0xffffff,4); light.position.set(2,3,-2); scene.add(light);
+  const floor = new THREE.Mesh(new THREE.BoxGeometry(2.5,.03,3),new THREE.MeshStandardMaterial({color:0x294453})); floor.position.set(0,-.015,-.4); scene.add(floor);
+  const step = new THREE.Mesh(new THREE.BoxGeometry(1.5,stepHeight,1.5),new THREE.MeshStandardMaterial({color:0x79552c})); step.position.set(0,stepHeight/2,-.75); scene.add(step);
+  const rig = buildROBVisual({scale}); await loadCapturedROB(rig,'../static/models/rob/',scale);
+  const pose = baseFlipperPresentation({...state,stepHeight,scale}), pivot = .212725*scale;
+  rig.root.position.set(0,pose.lift,z); rig.baseFlipper.rotation.x=state.angle; rig.driveBase.rotation.x=pose.pitch;
+  rig.torso.rotation.x=pose.pitch; rig.torso.position.set(0,pivot*Math.sin(pose.pitch),pivot*(1-Math.cos(pose.pitch))); scene.add(rig.root);
+  rig.root.updateMatrixWorld(true);
+  const center = new THREE.Box3().setFromObject(rig.root).getCenter(new THREE.Vector3());
+  const camera = new THREE.PerspectiveCamera(42,section.clientWidth/640,.01,20); camera.position.set(4.8,center.y+.25,center.z+.5); camera.lookAt(center);
+  renderer.render(scene,camera);
+}
+document.title += ' — ready';
+</script></html>

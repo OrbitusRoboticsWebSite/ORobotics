@@ -1,6 +1,13 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.09.16';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.16.2';
 export const MAX_ROB_HEALTH = 100;
 export const MAX_ROB_SHIELDS = 40;
+export const SHIELD_ACTIVATION_DURATION = 2.5;
+// Match the native game's bounded defensive window. Repeated taps cannot extend it.
+export const stepBubbleShield = ({ remaining = 0, shields, running, delta = 0, activate = false }) => {
+  if (!running || shields <= 0) return { remaining: 0, active: false, fraction: 0 };
+  const next = activate && remaining <= 0 ? SHIELD_ACTIVATION_DURATION : Math.max(0, remaining - Math.max(0, delta));
+  return { remaining: next, active: next > 0, fraction: Math.min(1, next / SHIELD_ACTIVATION_DURATION) };
+};
 export const MAX_TRIAL_LIVES = 3;
 export const BASE_ROB_ENERGY = 100;
 export const BASE_DRIVE_SPEED = 4.5;
@@ -30,23 +37,60 @@ export const consumeTrialLife = (lives) => {
 };
 
 export const BASE_FLIPPER_ENERGY_COST = 4;
-export const BASE_FLIPPER_FORWARD_ANGLE = -Math.PI * 2;
+export const BASE_FLIPPER_FORWARD_ANGLE = -Math.PI * .30;
 export const BASE_FLIPPER_REAR_ANGLE = 0;
+export const BASE_FLIPPER_REAR_ASSIST_ANGLE = Math.PI * 1.15;
+export const ROB_CONTACT_SPAN = .42545;
 export const BASE_FLIPPER_MOTOR_SPEED = 4.8;
 export const BASE_FLIPPER_DURATION = Math.abs(BASE_FLIPPER_REAR_ANGLE - BASE_FLIPPER_FORWARD_ANGLE) / BASE_FLIPPER_MOTOR_SPEED;
-export const baseFlipperTargetAngle = (target) => target === 'forward' ? BASE_FLIPPER_FORWARD_ANGLE : BASE_FLIPPER_REAR_ANGLE;
+export const baseFlipperTargetAngle = (target, climbing = false) => target === 'forward' ? BASE_FLIPPER_FORWARD_ANGLE : climbing ? BASE_FLIPPER_REAR_ASSIST_ANGLE : BASE_FLIPPER_REAR_ANGLE;
 export const baseFlipperPhase = (angle) => Math.max(0, Math.min(1,
   (angle - BASE_FLIPPER_REAR_ANGLE) / (BASE_FLIPPER_FORWARD_ANGLE - BASE_FLIPPER_REAR_ANGLE),
 ));
-export const advanceBaseFlipper = ({ angle, target, delta }) => {
-  const targetAngle = baseFlipperTargetAngle(target), difference = targetAngle - angle, maximumStep = BASE_FLIPPER_MOTOR_SPEED * Math.max(0, delta);
+export const advanceBaseFlipper = ({ angle, target, delta, climbing = false }) => {
+  const targetAngle = baseFlipperTargetAngle(target, climbing), difference = targetAngle - angle, maximumStep = BASE_FLIPPER_MOTOR_SPEED * Math.max(0, delta);
   const nextAngle = Math.abs(difference) <= maximumStep ? targetAngle : angle + Math.sign(difference) * maximumStep;
   return { angle: nextAngle, active: Math.abs(nextAngle - targetAngle) > .005 };
 };
-export const baseFlipperPresentation = ({ angle, target = 'rear', onLedge = false }) => {
-  const phase = baseFlipperPhase(angle), active = Math.abs(angle - baseFlipperTargetAngle(target)) > .005;
-  const stabilized = onLedge && phase <= .1 && !active;
-  return { active, phase, angle, lift: stabilized ? 0 : .16 * phase, pitch: stabilized ? 0 : .19 * phase, stabilized };
+export const flipperGroundPitch = (angle) => {
+  // Rear tread contact stays on the floor. Solve the flipper roller's floor
+  // contact for chassis pitch instead of translating the whole robot upward.
+  const a = .11 + .33655 * Math.sin(angle), b = .33655 * Math.cos(angle);
+  if (a >= .029 || b <= 0 || angle >= 0) return 0;
+  return Math.max(0, Math.min(.85, Math.asin(.029 / Math.hypot(a, b)) - Math.atan2(a, b)));
+};
+export const ledgeClimbProgress = ({ z, heading = 0, approachEdgeZ, scale = 1 }) => {
+  const span = ROB_CONTACT_SPAN * scale * Math.max(.1, Math.cos(heading));
+  const projected = span * Math.cos(flipperGroundPitch(BASE_FLIPPER_FORWARD_ANGLE));
+  return (approachEdgeZ - z + projected - span / 2) / projected;
+};
+export const baseFlipperPresentation = ({ angle, target = 'rear', onLedge = false, climbProgress, stepHeight = 0, scale = 1 }) => {
+  const climbing = Number.isFinite(climbProgress);
+  const phase = baseFlipperPhase(angle), active = Math.abs(angle - baseFlipperTargetAngle(target, climbing)) > .005;
+  const stabilized = onLedge && !climbing && !active && Math.abs(angle) < .005;
+  let pitch = onLedge ? 0 : flipperGroundPitch(angle), lift = onLedge ? stepHeight : 0;
+  if (climbing) {
+    const span = ROB_CONTACT_SPAN * scale;
+    const supportedPitch = Math.asin(Math.min(1, stepHeight / span));
+    // The front lands on the step while the rear is still grounded. When the
+    // returning flipper contacts the lower floor, it raises the rear around
+    // that front contact. The trailing tracks finish the climb at the edge.
+    const t = Math.max(0, Math.min(1, (climbProgress - .75) / .25));
+    const terrainPitch = supportedPitch * (1 - t * t * (3 - 2 * t));
+    if (angle <= 0) pitch = Math.max(terrainPitch, flipperGroundPitch(angle));
+    else {
+      let contactPitch = supportedPitch;
+      const clearance = (p) => stepHeight - span * Math.sin(p) + scale * (.11 * Math.cos(p) + .33655 * Math.sin(angle + p) - .029);
+      if (angle > Math.PI / 2 && clearance(contactPitch) < 0) {
+        let low = 0, high = contactPitch;
+        for (let i = 0; i < 24; i++) { const mid = (low + high) / 2; if (clearance(mid) >= 0) low = mid; else high = mid; }
+        contactPitch = low;
+      }
+      pitch = Math.min(terrainPitch, contactPitch);
+    }
+    lift = Math.max(0, stepHeight - ROB_CONTACT_SPAN * scale * Math.sin(pitch));
+  }
+  return { active, phase, angle, lift, pitch, stabilized, climbing };
 };
 export const canMountLedge = ({ start, end, flipperAngle, approachEdgeZ }) => (
   end.z < start.z && start.z >= approachEdgeZ && baseFlipperPhase(flipperAngle) >= .9
@@ -267,9 +311,9 @@ export const applyROBHealthDamage = (health, damage) => {
   return { appliedDamage, health: Math.max(0, health - appliedDamage), scorePenalty: appliedDamage * 20 };
 };
 
-export const applyROBDamage = ({ health, shields, damage }) => {
+export const applyROBDamage = ({ health, shields, damage, shieldActive = false }) => {
   const appliedDamage = Math.max(0, Math.floor(damage));
-  const shieldDamage = Math.min(Math.max(0, shields), appliedDamage);
+  const shieldDamage = shieldActive ? Math.min(Math.max(0, shields), appliedDamage) : 0;
   const healthDamage = appliedDamage - shieldDamage;
   return {
     appliedDamage,

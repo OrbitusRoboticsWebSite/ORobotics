@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 // Visual reconstruction from the September 15, 2026 ROB scans. Coordinates are
 // Y-up, forward -Z. This is presentation geometry, not calibrated robot kinematics.
-export const ROB_VISUAL_VERSION = '2026.09.15';
+export const ROB_VISUAL_VERSION = '2026.09.16';
 export const ROB_VISUAL_DIMENSIONS = Object.freeze({
   wheelSpacing: .42545, rearAxleZ: .212725, axleHeight: .11,
   flipperLength: .33655, flipperRollerRadius: .029, trackCenterX: .205,
@@ -92,6 +92,12 @@ export function buildROBVisual({ scale = 1, finish = 0x45515d, faceColor = 0x5cf
     cyl(`${prefix} Flipper Roller Hub`, .012, .041, [0, 0, -flipperLength], 'aluminum', arm, 'x');
   }
   const torso = group('Torso Assembly', root);
+  // Visual attachment points on the existing captured shoulder laser. No second
+  // housing is added; these pivots only animate the game's captured surface.
+  const shoulderLaser = group('Right Shoulder Gatling', torso, [.20, .95, .13]);
+  const laserTilt = group('Gatling Tilt Servo', shoulderLaser);
+  group('Captured Shoulder Laser', laserTilt);
+  group('Shoulder Laser Muzzle', laserTilt, [0, .105, -.055]);
   cyl('Waist Bearing', .104, .044, [0, .51, .035], 'aluminum', torso);
   for (const x of [-.09, .09]) {
     rod('Open Waist Frame', [x, .31, .02], [x, .53, .07], .015, 'aluminum', torso);

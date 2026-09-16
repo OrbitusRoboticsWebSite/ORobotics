@@ -7,6 +7,8 @@ import {
   MAX_TRIAL_LIVES,
   MAX_ROB_HEALTH,
   MAX_ROB_SHIELDS,
+  SHIELD_ACTIVATION_DURATION,
+  stepBubbleShield,
   BASE_ROB_ENERGY,
   BASE_DRIVE_SPEED,
   applyROBDamage,
@@ -89,7 +91,7 @@ test('ROB takes regular damage without forcing a restart at positive health', ()
 });
 
 test('ROB shields absorb hits before damage reaches the hull', () => {
-  assert.deepEqual(applyROBDamage({ health: MAX_ROB_HEALTH, shields: MAX_ROB_SHIELDS, damage: 6 }), {
+  assert.deepEqual(applyROBDamage({ health: MAX_ROB_HEALTH, shields: MAX_ROB_SHIELDS, damage: 6, shieldActive: true }), {
     appliedDamage: 6,
     shieldDamage: 6,
     healthDamage: 0,
@@ -97,7 +99,7 @@ test('ROB shields absorb hits before damage reaches the hull', () => {
     health: 100,
     scorePenalty: 120,
   });
-  assert.deepEqual(applyROBDamage({ health: MAX_ROB_HEALTH, shields: 4, damage: 10 }), {
+  assert.deepEqual(applyROBDamage({ health: MAX_ROB_HEALTH, shields: 4, damage: 10, shieldActive: true }), {
     appliedDamage: 10,
     shieldDamage: 4,
     healthDamage: 6,
@@ -105,6 +107,22 @@ test('ROB shields absorb hits before damage reaches the hull', () => {
     health: 94,
     scorePenalty: 200,
   });
+});
+
+test('bubble shield requires activation, expires, and cannot be extended by holding its button', () => {
+  const input = { remaining: 0, shields: MAX_ROB_SHIELDS, running: true };
+  assert.equal(stepBubbleShield(input).active, false);
+  assert.deepEqual(applyROBDamage({ health: 100, shields: 40, damage: 6 }), {
+    appliedDamage: 6, shieldDamage: 0, healthDamage: 6, health: 94, shields: 40, scorePenalty: 120,
+  });
+  const active = stepBubbleShield({ ...input, activate: true });
+  assert.equal(active.remaining, SHIELD_ACTIVATION_DURATION);
+  const halfway = stepBubbleShield({ ...input, remaining: active.remaining, delta: SHIELD_ACTIVATION_DURATION / 2 });
+  assert.equal(halfway.fraction, .5);
+  assert.equal(stepBubbleShield({ ...input, remaining: halfway.remaining, activate: true }).remaining, halfway.remaining);
+  assert.equal(stepBubbleShield({ ...input, remaining: halfway.remaining, delta: SHIELD_ACTIVATION_DURATION / 2 }).active, false);
+  assert.equal(stepBubbleShield({ ...input, shields: 0, activate: true }).active, false);
+  assert.equal(stepBubbleShield({ ...input, running: false, remaining: 2 }).remaining, 0);
 });
 
 test('map pickups replenish shields and repair hull damage without overfilling', () => {
@@ -247,21 +265,33 @@ test('a camera releases one lightweight mini boss profile', () => {
   });
 });
 
-test('the rear flipper completes a full turn and reverses for stabilization', () => {
-  const moving = advanceBaseFlipper({ angle: BASE_FLIPPER_REAR_ANGLE, target: 'forward', delta: BASE_FLIPPER_DURATION / 2 });
-  const forward = advanceBaseFlipper({ angle: BASE_FLIPPER_REAR_ANGLE, target: 'forward', delta: BASE_FLIPPER_DURATION + .01 });
-  const climbingPose = baseFlipperPresentation({ angle: forward.angle, target: 'forward', onLedge: true });
-  const rear = advanceBaseFlipper({ angle: forward.angle, target: 'rear', delta: BASE_FLIPPER_DURATION + .01 });
-  const stablePose = baseFlipperPresentation({ angle: rear.angle, target: 'rear', onLedge: true });
-
-  assert.equal(moving.active, true);
-  assert.equal(moving.angle, -Math.PI);
-  assert.equal(forward.angle, -Math.PI * 2);
-  assert.equal(forward.angle, BASE_FLIPPER_FORWARD_ANGLE);
-  assert.equal(climbingPose.phase, 1);
-  assert.ok(climbingPose.lift > 0 && climbingPose.pitch > 0);
-  assert.equal(rear.angle, BASE_FLIPPER_REAR_ANGLE);
-  assert.deepEqual(stablePose, { active: false, phase: 0, angle: BASE_FLIPPER_REAR_ANGLE, lift: 0, pitch: 0, stabilized: true });
+test('flipper down pitches the front with the rear grounded; rear support levels the step climb', () => {
+  const moving = advanceBaseFlipper({ angle: 0, target: 'forward', delta: BASE_FLIPPER_DURATION / 2 });
+  assert.equal(moving.angle, BASE_FLIPPER_FORWARD_ANGLE / 2);
+  const down = advanceBaseFlipper({ angle: 0, target: 'forward', delta: BASE_FLIPPER_DURATION + .01 });
+  const raised = baseFlipperPresentation({ angle: down.angle, target: 'forward' });
+  assert.equal(raised.lift, 0, 'rear support stays at floor height');
+  assert.ok(raised.pitch > .7 && raised.pitch < .85);
+  const rollerHeight = .11 * Math.cos(raised.pitch) + .33655 * Math.sin(down.angle + raised.pitch);
+  assert.ok(Math.abs(rollerHeight - .029) < 1e-6, 'flipper roller contacts the floor');
+  for (const [scale, stepHeight] of [[1.35, .34], [2.15, .62]]) {
+    let previousRear = 0, previousPitch = raised.pitch;
+    for (let step = 0; step <= 20; step++) {
+      const pose = baseFlipperPresentation({ angle: 0, target: 'rear', climbProgress: step / 20, stepHeight, scale });
+      const frontHeight = pose.lift + .42545 * scale * Math.sin(pose.pitch);
+      assert.ok(frontHeight >= stepHeight - 1e-6, 'front stays on or above the step');
+      assert.ok(pose.lift >= previousRear && pose.pitch <= previousPitch, 'rear rises while chassis levels');
+      previousRear = pose.lift; previousPitch = pose.pitch;
+    }
+    assert.equal(previousRear, stepHeight); assert.equal(previousPitch, 0);
+  }
+  const rear = advanceBaseFlipper({ angle: down.angle, target: 'rear', climbing: true, delta: 2 });
+  assert.ok(rear.angle > Math.PI, 'opposite rotation reaches the rear support pose');
+  const contact = baseFlipperPresentation({ angle: rear.angle, target: 'rear', climbProgress: .55, stepHeight: .34, scale: 1.35 });
+  const rearRollerHeight = contact.lift + 1.35 * (.11 * Math.cos(contact.pitch) + .33655 * Math.sin(rear.angle + contact.pitch));
+  assert.ok(Math.abs(rearRollerHeight - .029 * 1.35) < 1e-6, 'rear flipper supports the robot against the lower floor');
+  const stowed = advanceBaseFlipper({ angle: rear.angle, target: 'rear', delta: 2 });
+  assert.equal(stowed.angle, 0);
 });
 
 test('a raised deck accepts only a forward flipper approach', () => {

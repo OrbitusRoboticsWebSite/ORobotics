@@ -1,7 +1,8 @@
-// Regenerate the engine-neutral rig consumed by RealityKit and SceneKit.
+// Export the procedural scaffold used by prepare-captured-rob.py.
 import { writeFile } from 'node:fs/promises';
 import { buildROBVisual, ROB_VISUAL_DIMENSIONS, ROB_VISUAL_VERSION } from '../assets/js/rob-visual-model.mjs';
 const { root, materials } = buildROBVisual();
+if (!process.argv[2]) throw new Error('Supply a scaffold output path. Use prepare-captured-rob.py to regenerate the published model.');
 const geometries = [], geometryKeys = new Map();
 const rounded = (values) => Array.from(values, (v) => Math.round(v * 1e6) / 1e6);
 function nodeJSON(node) {
@@ -18,5 +19,5 @@ function nodeJSON(node) {
 const hierarchy = nodeJSON(root);
 const result = { version: ROB_VISUAL_VERSION, units: 'meters', purpose: 'Scan-informed visual approximation; not calibrated kinematics', dimensions: ROB_VISUAL_DIMENSIONS,
   materials: Object.fromEntries(Object.entries(materials).map(([name, m]) => [name, { color: rounded(m.color.clone().convertLinearToSRGB().toArray()), metalness: m.metalness, roughness: m.roughness }])), geometries, root: hierarchy };
-await writeFile(new URL('../static/models/rob/rob-visual.json', import.meta.url), JSON.stringify(result) + '\n');
+await writeFile(process.argv[2], JSON.stringify(result) + '\n');
 console.log(`ROB ${result.version}: ${geometries.length} shared geometries`);
