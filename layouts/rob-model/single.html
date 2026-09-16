@@ -1,0 +1,13 @@
+{{ define "main" }}
+<main id="main" class="rob-model-page text-gray-950 dark:text-white">
+  <p class="section-eyebrow">Orbitus Robotics</p>
+  <h1>Meet ROB in 3D.</h1>
+  <p class="rob-model-page__intro">Get close to the real robot. Explore six captured poses, inspect the twin speaker chest and camera head, or move the rear axle flippers on the interactive model.</p>
+  {{ partial "rob-showcase.html" . }}
+  <div class="rob-model-page__links">
+    <a class="text-link" href="{{ "rob-simulator/" | relURL }}">Drive ROB in Training</a>
+    <a class="text-link" href="{{ "rob-training-apps/" | relURL }}">ROB Training apps</a>
+  </div>
+  <p class="text-gray-600 dark:text-gray-300">Original scans captured September 15, 2026. The interactive robot follows the scans’ appearance; its movement is a visual demonstration.</p>
+</main>
+{{ end }}

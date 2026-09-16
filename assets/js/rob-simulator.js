@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { buildROBVisual, robFlipperSupportHeight } from './rob-visual-model.mjs';
 import {
   BASE_DRIVE_SPEED,
   BASE_FLIPPER_ENERGY_COST,
@@ -237,38 +238,22 @@ if (root) {
 
   const armAssemblies = [], robotRig = { treadWheels: [], finishMaterials: [], faceMaterials: [], sabers: [], speakerCones: [] };
   const buildROB = () => {
-    const r = new THREE.Group(), dark = mat(0x111820), body = mat(selectedFinish().color, 0, .58), steel = mat(0x45515d, 0, .75), cyan = mat(0x38dfff, 0x087995), green = mat(0x4cff76, 0x168c32), tire = mat(0x030405, 0, .8), hub = mat(0xf1a43c, 0x5b2c05, .72); robotRig.finishMaterials.push(body);
-    const driveBase = new THREE.Group(); driveBase.name = 'Drive Base Assembly'; driveBase.position.z = .68; r.add(driveBase); robotRig.driveBase = driveBase;
-    [-1, 1].forEach((side) => {
-      const tread = new THREE.Group(); tread.name = side < 0 ? 'Left Tri-Wheel Tread' : 'Right Tri-Wheel Tread'; tread.position.set(side * .7, 0, -.68); driveBase.add(tread);
-      mesh(new THREE.BoxGeometry(.46, .15, 1.58), tire, tread, 0, .18);
-      [-1, 1].forEach((end) => { const belt = mesh(new THREE.BoxGeometry(.46, .15, .78), tire, tread, 0, .535, end * .34); belt.rotation.x = end * .43; });
-      [{ z: -.68, y: .39, radius: .28 }, { z: 0, y: .7, radius: .32 }, { z: .68, y: .39, radius: .28 }].forEach(({ z, y, radius }, index) => {
-        const wheel = new THREE.Group(); wheel.name = `${side < 0 ? 'Left' : 'Right'} Tri-Wheel ${index + 1}`; wheel.position.set(0, y, z); tread.add(wheel); robotRig.treadWheels.push({ wheel, side: side < 0 ? 'left' : 'right' });
-        const rubber = mesh(new THREE.CylinderGeometry(radius, radius, .48, 24), tire, wheel); rubber.rotation.z = Math.PI / 2;
-        const rim = mesh(new THREE.CylinderGeometry(radius * .67, radius * .67, .5, 20), steel, wheel); rim.rotation.z = Math.PI / 2;
-        const cap = mesh(new THREE.CylinderGeometry(radius * .24, radius * .24, .52, 16), hub, wheel); cap.rotation.z = Math.PI / 2;
-      });
+    const visual = buildROBVisual({ scale: 2.15, finish: selectedFinish().color, faceColor: selectedFaceColor().color });
+    const r = visual.root, torso = visual.torso;
+    const dark = mat(0x111820), steel = visual.materials.aluminum, cyan = mat(0x38dfff, 0x087995), green = mat(0x4cff76, 0x168c32);
+    Object.assign(robotRig, { driveBase: visual.driveBase, baseFlipper: visual.baseFlipper, torso,
+      treadWheels: visual.treadWheels, speakerCones: visual.speakerCones });
+    robotRig.finishMaterials.push(visual.materials.body); robotRig.faceMaterials.push(visual.materials.face);
+    robotRig.baseFlipper.rotation.x = BASE_FLIPPER_REAR_ANGLE;
+    armAssemblies.push(...visual.arms);
+    visual.arms.forEach((arm) => {
+      const side = arm.userData.side;
+      const grip = mesh(new THREE.CylinderGeometry(.035, .035, .20, 12), dark, arm, side * .18, -1.22, -.08); grip.rotation.x = Math.PI / 2;
+      const saber = mesh(new THREE.CylinderGeometry(.035, .035, 1.55, 10), side < 0 ? green : cyan, arm, side * .18, -1.22, -.94);
+      saber.rotation.x = Math.PI / 2; saber.visible = false; robotRig.sabers.push(saber);
     });
-    mesh(new THREE.BoxGeometry(1.12, .3, 1.08), body, driveBase, 0, .57, -.68);
-    const baseFlipper = new THREE.Group(); baseFlipper.name = 'Base Lift Flipper Assembly'; baseFlipper.position.set(0, .39, 0); baseFlipper.rotation.x = BASE_FLIPPER_REAR_ANGLE; driveBase.add(baseFlipper); robotRig.baseFlipper = baseFlipper;
-    const flipperMotor = mesh(new THREE.CylinderGeometry(.17, .17, 1.35, 18), hub, baseFlipper, 0, 0, 0); flipperMotor.name = 'Base Lift Flipper Motor'; flipperMotor.rotation.z = Math.PI / 2;
-    [-1, 1].forEach((side) => { const arm = mesh(new THREE.BoxGeometry(.12, .12, 1.9), steel, baseFlipper, side * .58, 0, -.95); arm.name = side < 0 ? 'Left Base Lift Flipper Arm' : 'Right Base Lift Flipper Arm'; });
-    const flipperBlade = mesh(new THREE.BoxGeometry(1.28, .13, .18), steel, baseFlipper, 0, 0, -1.9); flipperBlade.name = 'Base Lift Flipper Blade';
-    const flipperRoller = mesh(new THREE.CylinderGeometry(.17, .17, 1.34, 18), mat(0xff8b2f, 0x652504), baseFlipper, 0, 0, -1.98); flipperRoller.name = 'Base Lift Flipper Floor Roller'; flipperRoller.rotation.z = Math.PI / 2;
-    const torso = new THREE.Group(); torso.name = 'Torso Assembly'; r.add(torso); robotRig.torso = torso;
-    const actuator = mesh(new THREE.BoxGeometry(.28, .78, .28), steel, torso, 0, .6, .12); actuator.name = 'Torso Linear Actuator';
-    mesh(new THREE.BoxGeometry(.4, .16, .4), hub, torso, 0, .72, .12).name = 'Torso Linear Actuator Collar';
-    mesh(new THREE.BoxGeometry(1.05, 1.25, 1.55), body, torso, 0, .95);
-    [-.31, .31].forEach((x, i) => { const ring = mesh(new THREE.TorusGeometry(.2, .055, 10, 24), i ? cyan : mat(0x3299ff, 0x0b477e), torso, x, 1.08, -.79); ring.name = `${i ? 'Right' : 'Left'} ROB Speaker Ring`; const cone = mesh(new THREE.CylinderGeometry(.135, .135, .025, 24), mat(0x071019), torso, x, 1.08, -.805); cone.name = `${i ? 'Right' : 'Left'} ROB Speaker Cone`; cone.rotation.x = Math.PI / 2; robotRig.speakerCones.push(cone); });
-    mesh(new THREE.BoxGeometry(.22, .12, .07), steel, torso, 0, .79, -.81); mesh(new THREE.SphereGeometry(.045, 10, 8), green, torso, 0, .79, -.86);
-    const flipper = mesh(new THREE.BoxGeometry(.2, .32, .075), mat(0xf2872f, 0x5e2208), torso, .43, 1.02, -.78); flipper.name = 'Flipper Zero Hacker'; mesh(new THREE.BoxGeometry(.12, .1, .018), mat(0x35c56e, 0x0b6b32), torso, .43, 1.05, -.825);
-    mesh(new THREE.CylinderGeometry(.08, .11, .72, 10), steel, torso, 0, 1.87); const head = mesh(new THREE.SphereGeometry(.35, 18, 12), body, torso, 0, 2.3, -.02); head.scale.z = .82;
-    const conferenceMic = new THREE.Group(); conferenceMic.name = 'Conference Microphone'; conferenceMic.position.set(0, 2.72, -.02); torso.add(conferenceMic); mesh(new THREE.CylinderGeometry(.13, .13, .12, 18), mat(0xf0b846, 0x553900), conferenceMic).rotation.z = Math.PI / 2; mesh(new THREE.CylinderGeometry(.025, .025, .28, 8), steel, conferenceMic, 0, -.18); mesh(new THREE.CylinderGeometry(.17, .17, .035, 16), dark, conferenceMic, 0, -.33);
-    const smileMaterial = mat(selectedFaceColor().color, selectedFaceColor().color, .05); robotRig.faceMaterials.push(smileMaterial);
-    [[-.12, 2.38], [.12, 2.38], [-.15, 2.25], [-.075, 2.215], [0, 2.2], [.075, 2.215], [.15, 2.25]].forEach(([x, y], index) => { const pixel = mesh(new THREE.SphereGeometry(index < 2 ? .047 : .037, 12, 8), smileMaterial, torso, x, y, -.34); pixel.name = index === 0 ? 'Face Smiley Left Eye' : index === 1 ? 'Face Smiley Right Eye' : index === 4 ? 'Face Smiley Center Smile' : 'Face Smiley Pixel'; });
-    [-.16, .16].forEach((x) => { const antenna = mesh(new THREE.CylinderGeometry(.018, .018, .55, 8), steel, torso, x * 1.5, 2.77); antenna.rotation.z = x > 0 ? -.3 : .3; });
-    [-1, 1].forEach((side) => { const arm = new THREE.Group(); arm.name = side < 0 ? 'Left Arm Assembly' : 'Right Arm Assembly'; arm.position.set(side * .62, 1.45, 0); arm.userData.side = side; torso.add(arm); armAssemblies.push(arm); let x = 0, y = 0, z = 0; for (let j = 0; j < 7; j += 1) { mesh(new THREE.SphereGeometry(j < 3 ? .1 : .07, 12, 8), j % 2 ? body : steel, arm, x, y, z); if (j < 6) { const link = mesh(new THREE.BoxGeometry(.13, .28, .13), steel, arm, x, y - .15, z - .04); link.rotation.z = side * (j < 2 ? -.2 : .08); } x += side * .045; y -= j < 3 ? .25 : .09; z -= j < 3 ? .04 : .12; } const grip = mesh(new THREE.CylinderGeometry(.055, .055, .28, 12), dark, arm, x, Math.max(-.9, y), z - .12); grip.rotation.x = Math.PI / 2; const saber = mesh(new THREE.CylinderGeometry(.035, .035, 1.55, 10), side < 0 ? green : cyan, arm, x, Math.max(-.9, y), z - .92); saber.rotation.x = Math.PI / 2; saber.visible = false; robotRig.sabers.push(saber); });
+    const hacker = mesh(new THREE.BoxGeometry(.16, .25, .06), mat(0xf2872f), torso, .39, 1.54, -.19); hacker.name = 'Flipper Zero Hacker';
+    mesh(new THREE.BoxGeometry(.11, .075, .018), mat(0x35c56e), torso, .39, 1.57, -.229);
     const gatling = new THREE.Group(); gatling.name = 'Right Pan Servo'; gatling.position.set(.68, 1.65, -.1); torso.add(gatling); robotRig.gatling = gatling;
     mesh(new THREE.CylinderGeometry(.18, .22, .12, 18), steel, gatling, 0, -.2, .02);
     const gatlingTilt = new THREE.Group(); gatlingTilt.name = 'Gatling Tilt Servo'; gatling.add(gatlingTilt); robotRig.gatlingTilt = gatlingTilt;
@@ -649,7 +634,7 @@ if (root) {
   const resize = () => { const w = viewport.clientWidth, h = isFullscreen() ? viewportHeight() : Math.max(isTouch ? 460 : 420, Math.min(720, w * .58)); renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
   const animate = () => {
     requestAnimationFrame(animate); const dt = Math.min(clock.getDelta(), .05); tick(dt); updateRobotWeapons();
-    const flipperPose = baseFlipperPresentation({ angle: baseFlipperAngle, target: baseFlipperTarget, onLedge: pointOnLedge(robot.position) }); robotRig.baseFlipper.rotation.x = flipperPose.angle; robotRig.driveBase.rotation.x = flipperPose.pitch; robotRig.torso.position.y = flipperPose.lift; ui.flipperButtons.forEach((button) => { const target = button.dataset.flipperDirection; button.disabled = target === baseFlipperTarget; const compact = button.classList.contains('rob-sim__fire'); button.textContent = target === 'forward' ? (compact ? 'FLIPPER FWD' : 'Flipper Forward · F') : (compact ? 'FLIPPER REAR' : 'Flipper Rear · B'); button.setAttribute('aria-pressed', String(target === baseFlipperTarget)); });
+    const flipperPose = baseFlipperPresentation({ angle: baseFlipperAngle, target: baseFlipperTarget, onLedge: pointOnLedge(robot.position) }); robotRig.baseFlipper.rotation.x = flipperPose.angle; robotRig.driveBase.rotation.x = flipperPose.pitch; const supportHeight = robFlipperSupportHeight(flipperPose.angle, flipperPose.pitch, 2.15); robotRig.driveBase.position.y = supportHeight; robotRig.torso.position.y = flipperPose.lift + supportHeight; ui.flipperButtons.forEach((button) => { const target = button.dataset.flipperDirection; button.disabled = target === baseFlipperTarget; const compact = button.classList.contains('rob-sim__fire'); button.textContent = target === 'forward' ? (compact ? 'FLIPPER FWD' : 'Flipper Forward · F') : (compact ? 'FLIPPER REAR' : 'Flipper Rear · B'); button.setAttribute('aria-pressed', String(target === baseFlipperTarget)); });
     const speakerPulse = musicEnabled && running ? 1 + Math.max(0, Math.sin(elapsed * Math.PI * 8)) * .13 : 1; robotRig.speakerCones.forEach((cone, index) => cone.scale.set(1 + (speakerPulse - 1) * (index ? .78 : 1), 1, 1 + (speakerPulse - 1) * (index ? .78 : 1)));
     if (keyObject.visible) { keyObject.rotation.y += dt * 1.7; keyObject.position.y = surfaceHeight(keyObject.position) + .1 + Math.sin(elapsed * 3.2) * .09; keyBeaconMaterial.opacity = .42 + (Math.sin(elapsed * 4.4) + 1) * .13; }
     cells.forEach((c, i) => { if (c.visible) { c.rotation.y += dt * 1.4; c.position.y = (c.userData.surfaceHeight || 0) + .55 + Math.sin(elapsed * 2 + i) * .08; } });

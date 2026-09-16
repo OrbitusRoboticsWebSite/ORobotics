@@ -247,7 +247,7 @@ test('a camera releases one lightweight mini boss profile', () => {
   });
 });
 
-test('the rear flipper moves to persistent forward and rear stabilization positions', () => {
+test('the rear flipper completes a full turn and reverses for stabilization', () => {
   const moving = advanceBaseFlipper({ angle: BASE_FLIPPER_REAR_ANGLE, target: 'forward', delta: BASE_FLIPPER_DURATION / 2 });
   const forward = advanceBaseFlipper({ angle: BASE_FLIPPER_REAR_ANGLE, target: 'forward', delta: BASE_FLIPPER_DURATION + .01 });
   const climbingPose = baseFlipperPresentation({ angle: forward.angle, target: 'forward', onLedge: true });
@@ -255,7 +255,8 @@ test('the rear flipper moves to persistent forward and rear stabilization positi
   const stablePose = baseFlipperPresentation({ angle: rear.angle, target: 'rear', onLedge: true });
 
   assert.equal(moving.active, true);
-  assert.ok(moving.angle > BASE_FLIPPER_REAR_ANGLE && moving.angle < BASE_FLIPPER_FORWARD_ANGLE);
+  assert.equal(moving.angle, -Math.PI);
+  assert.equal(forward.angle, -Math.PI * 2);
   assert.equal(forward.angle, BASE_FLIPPER_FORWARD_ANGLE);
   assert.equal(climbingPose.phase, 1);
   assert.ok(climbingPose.lift > 0 && climbingPose.pitch > 0);

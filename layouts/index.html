@@ -34,25 +34,10 @@
                     </dl>
                 </div>
 
-                <figure class="site-hero__media">
-                    {{ $hero := resources.GetMatch "images/pages/ROB & R2D2.jpeg" }}
-                    {{ $heroSmall := $hero.Fill "480x600 webp q80" }}
-                    {{ $heroMedium := $hero.Fill "720x900 webp q80" }}
-                    {{ $heroLarge := $hero.Fill "960x1200 webp q82" }}
-                    <img src="{{ $heroMedium.RelPermalink }}"
-                         srcset="{{ $heroSmall.RelPermalink }} 480w, {{ $heroMedium.RelPermalink }} 720w, {{ $heroLarge.RelPermalink }} 960w"
-                         sizes="(min-width: 1024px) 42vw, calc(100vw - 3rem)"
-                         width="{{ $heroMedium.Width }}"
-                         height="{{ $heroMedium.Height }}"
-                         fetchpriority="high"
-                         decoding="async"
-                         alt="R.O.B., Orbitus Robotics' tracked humanoid robot"
-                         class="site-hero__image" />
-                    <figcaption class="site-hero__caption">
-                        <span>R.O.B.</span>
-                        <span>Field prototype</span>
-                    </figcaption>
-                </figure>
+                <div>
+                    {{ partial "rob-showcase.html" . }}
+                    <a href="{{ "rob-model/" | relURL }}" class="text-link mt-5 inline-flex text-white">Explore ROB’s six scan poses</a>
+                </div>
             </div>
         </div>
     </section>

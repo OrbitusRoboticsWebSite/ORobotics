@@ -1,4 +1,4 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.09.13';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.16';
 export const MAX_ROB_HEALTH = 100;
 export const MAX_ROB_SHIELDS = 40;
 export const MAX_TRIAL_LIVES = 3;
@@ -30,9 +30,9 @@ export const consumeTrialLife = (lives) => {
 };
 
 export const BASE_FLIPPER_ENERGY_COST = 4;
-export const BASE_FLIPPER_FORWARD_ANGLE = -.72;
-export const BASE_FLIPPER_REAR_ANGLE = -2.42;
-export const BASE_FLIPPER_MOTOR_SPEED = 2.15;
+export const BASE_FLIPPER_FORWARD_ANGLE = -Math.PI * 2;
+export const BASE_FLIPPER_REAR_ANGLE = 0;
+export const BASE_FLIPPER_MOTOR_SPEED = 4.8;
 export const BASE_FLIPPER_DURATION = Math.abs(BASE_FLIPPER_REAR_ANGLE - BASE_FLIPPER_FORWARD_ANGLE) / BASE_FLIPPER_MOTOR_SPEED;
 export const baseFlipperTargetAngle = (target) => target === 'forward' ? BASE_FLIPPER_FORWARD_ANGLE : BASE_FLIPPER_REAR_ANGLE;
 export const baseFlipperPhase = (angle) => Math.max(0, Math.min(1,

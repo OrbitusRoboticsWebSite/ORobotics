@@ -1,0 +1,150 @@
+{
+  "date": "2026-09-15",
+  "note": "Display crops retain original photographic texture. Scans are static poses and are not calibrated joint models.",
+  "scans": [
+    {
+      "source": "ROB chess board on box.usdz",
+      "sourceSHA256": "6062bf4c2fe57bed67d718d492660b103d77915d46a63b1783416de56a061b54",
+      "file": "rob-chess-board-on-box.glb",
+      "sha256": "dc1c6618bb03b834b78768ee8894968b89110ef8bab7d3cfb28d8f27400a6368",
+      "bytes": 6026360,
+      "vertices": 125647,
+      "triangles": 221431,
+      "cropCenterXZ": [
+        0.03242769464850426,
+        0.2110069990158081
+      ],
+      "floorOffset": 0.07118356227874756,
+      "cropHalfWidthDepth": [
+        0.64,
+        0.68
+      ],
+      "minimumSourceY": 0.045,
+      "textureSize": [
+        2048,
+        2048
+      ],
+      "originalUnmodified": true
+    },
+    {
+      "source": "ROB flipper lifted head upright.usdz",
+      "sourceSHA256": "ffcb2a34fba6a16f305c6d7d232a93cbbb60d7fba3f32bd862722c9ebcbbbdb5",
+      "file": "rob-flipper-lifted-head-upright.glb",
+      "sha256": "3e6421f8f3325130d82ce881472d6876aa80886bef4b76b0005290f71c367057",
+      "bytes": 4775292,
+      "vertices": 95224,
+      "triangles": 167425,
+      "cropCenterXZ": [
+        0.17137983441352844,
+        0.19656336307525635
+      ],
+      "floorOffset": 0.045002877712249756,
+      "cropHalfWidthDepth": [
+        0.64,
+        0.68
+      ],
+      "minimumSourceY": 0.045,
+      "textureSize": [
+        2048,
+        2048
+      ],
+      "originalUnmodified": true
+    },
+    {
+      "source": "ROB flipper lifted wood head back.usdz",
+      "sourceSHA256": "3eadca1b1d48ffad8913b9085e26466bb0e5d6418ec199d8a0613d6ef3811d65",
+      "file": "rob-flipper-lifted-wood-head-back.glb",
+      "sha256": "bddb9d469eff906694226e9a2aaad744caf23e058f83cf988b3dd3ebb33c043d",
+      "bytes": 8679036,
+      "vertices": 188516,
+      "triangles": 333204,
+      "cropCenterXZ": [
+        -0.03368633985519409,
+        0.6416199207305908
+      ],
+      "floorOffset": 0.04500019550323486,
+      "cropHalfWidthDepth": [
+        0.64,
+        0.68
+      ],
+      "minimumSourceY": 0.045,
+      "textureSize": [
+        2048,
+        2048
+      ],
+      "originalUnmodified": true
+    },
+    {
+      "source": "ROB flipper upright wood head forward.usdz",
+      "sourceSHA256": "7616e5c5f3eed69e554b8981758d57f9cb6666cbfbe5441984bf59b11ad30745",
+      "file": "rob-flipper-upright-wood-head-forward.glb",
+      "sha256": "cf4ab6a9b089da2db3690973bf0409fadc3080cb10c75bea29b0ff83f14c6bc3",
+      "bytes": 7949284,
+      "vertices": 170970,
+      "triangles": 301280,
+      "cropCenterXZ": [
+        0.12841397523880005,
+        -0.013960480690002441
+      ],
+      "floorOffset": 0.04500335454940796,
+      "cropHalfWidthDepth": [
+        0.64,
+        0.68
+      ],
+      "minimumSourceY": 0.045,
+      "textureSize": [
+        2048,
+        2048
+      ],
+      "originalUnmodified": true
+    },
+    {
+      "source": "ROB treads up.usdz",
+      "sourceSHA256": "c1152f2645de39972dc488ae3a7ff330f0f10686117ca9764eba97be8e417b4c",
+      "file": "rob-treads-up.glb",
+      "sha256": "aedb5cc9317c604836dbd7b34b78b540cf1e404244e3f1414213ea40831d4469",
+      "bytes": 10099772,
+      "vertices": 221229,
+      "triangles": 397116,
+      "cropCenterXZ": [
+        0.44419607520103455,
+        -0.23173630237579346
+      ],
+      "floorOffset": 0.04502570629119873,
+      "cropHalfWidthDepth": [
+        0.64,
+        0.68
+      ],
+      "minimumSourceY": 0.045,
+      "textureSize": [
+        2048,
+        2048
+      ],
+      "originalUnmodified": true
+    },
+    {
+      "source": "ROB upright.usdz",
+      "sourceSHA256": "40c8d29ab8575a18b51e68106b72645c37064870ce19d359066d254b7099892e",
+      "file": "rob-upright.glb",
+      "sha256": "5872dc2ab2d0ffbd121f5d64a427b8b33b1010599358a84260691a2f05aa0f52",
+      "bytes": 8299888,
+      "vertices": 180329,
+      "triangles": 315538,
+      "cropCenterXZ": [
+        -0.02112559974193573,
+        0.2949337959289551
+      ],
+      "floorOffset": 0.045000314712524414,
+      "cropHalfWidthDepth": [
+        0.64,
+        0.68
+      ],
+      "minimumSourceY": 0.045,
+      "textureSize": [
+        2048,
+        2048
+      ],
+      "originalUnmodified": true
+    }
+  ]
+}

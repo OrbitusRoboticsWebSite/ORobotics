@@ -1,0 +1,30 @@
+<div class="rob-showcase" data-rob-showcase data-model-base="{{ "models/rob/" | relURL }}">
+  <div class="rob-showcase__viewport" data-model-viewport aria-busy="true">
+    <span class="rob-showcase__badge">R.O.B. · Explore in 3D</span>
+    <img class="rob-showcase__poster" data-model-poster src="{{ "models/rob/rob-upright.webp" | relURL }}" srcset="{{ "models/rob/rob-upright-small.webp" | relURL }} 480w, {{ "models/rob/rob-upright.webp" | relURL }} 960w" sizes="(min-width: 1024px) 50vw, 100vw" fetchpriority="high" alt="3D scan of ROB with twin chest speakers, a long camera neck, articulated arms and triangular treads" width="960" height="720" />
+  </div>
+  <div class="rob-showcase__controls" data-model-controls>
+    <label>Explore ROB
+      <select data-model-pose aria-label="ROB model or scan pose">
+        <option value="rob-upright">Original scan · upright</option>
+        <option value="rig">Interactive robot · move the flippers</option>
+        <option value="rob-flipper-upright-wood-head-forward">Flipper &amp; head forward</option>
+        <option value="rob-flipper-lifted-head-upright">Flipper lifted · head upright</option>
+        <option value="rob-flipper-lifted-wood-head-back">Flipper lifted · head back</option>
+        <option value="rob-treads-up">Treads raised</option>
+        <option value="rob-chess-board-on-box">At the chessboard</option>
+      </select>
+    </label>
+    <button type="button" data-model-rotate aria-pressed="false">Rotate</button>
+    <button type="button" data-model-reset>Reset view</button>
+    <label hidden>Flipper rotation <output data-model-angle>0°</output>
+      <input data-model-flipper type="range" min="-360" max="0" step="1" value="0" aria-label="Flipper rotation in degrees" />
+    </label>
+  </div>
+  <p class="rob-showcase__status" role="status" data-model-status>Loading ROB’s 3D view…</p>
+  <noscript><p class="rob-showcase__status">Enable JavaScript to rotate and zoom the model.</p></noscript>
+</div>
+{{ $css := resources.Get "css/rob-showcase.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}" />
+{{ $js := resources.Get "js/rob-showcase.js" | js.Build (dict "targetPath" "js/rob-showcase.js" "format" "esm" "minify" hugo.IsProduction) | fingerprint }}
+<script type="module" src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>
