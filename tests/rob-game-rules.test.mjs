@@ -138,10 +138,10 @@ test('map pickups replenish shields and repair hull damage without overfilling',
 });
 
 test('every fifth level adds an escalating reinforced ten-damage boss', () => {
-  assert.deepEqual(bossStats(4, 3), { isBoss: false, shields: 3, contactDamage: undefined, projectileDamage: undefined });
-  assert.deepEqual(bossStats(5, 3), { isBoss: true, shields: 30, contactDamage: 10, projectileDamage: 10 });
-  assert.equal(bossStats(10, 4).shields, 45);
-  assert.equal(bossStats(15, 5).shields, 60);
+  assert.deepEqual(bossStats(4, 4), { isBoss: false, shields: 4, contactDamage: undefined, projectileDamage: undefined });
+  assert.deepEqual(bossStats(5, 6), { isBoss: true, shields: 60, contactDamage: 10, projectileDamage: 10 });
+  assert.equal(bossStats(10, 8).shields, 90);
+  assert.equal(bossStats(15, 10).shields, 120);
 });
 
 test('weapon progression matches iOS and visionOS milestones', () => {
@@ -156,12 +156,14 @@ test('weapon progression matches iOS and visionOS milestones', () => {
 
 test('laser shots spend system energy and charged weapons cost more', () => {
   const [gatling, twinBlasters, arcCannon] = rangedWeapons;
-  assert.equal(laserEnergyCost(gatling, 0), 4);
-  assert.equal(laserEnergyCost(gatling, 1), 12);
-  assert.equal(laserEnergyCost(twinBlasters, 1), 14);
-  assert.equal(laserEnergyCost(arcCannon, 1), 22);
-  assert.deepEqual(consumeLaserEnergy({ energy: 30, weapon: arcCannon, charge: 1 }), { fired: true, cost: 22, energy: 8 });
-  assert.deepEqual(consumeLaserEnergy({ energy: 20, weapon: arcCannon, charge: 1 }), { fired: false, cost: 22, energy: 20 });
+  assert.equal(laserEnergyCost(gatling, 0), 8);
+  assert.equal(laserEnergyCost(gatling, 1), 24);
+  assert.equal(laserEnergyCost(twinBlasters, 0), 10);
+  assert.equal(laserEnergyCost(twinBlasters, 1), 28);
+  assert.equal(laserEnergyCost(arcCannon, 0), 16);
+  assert.equal(laserEnergyCost(arcCannon, 1), 44);
+  assert.deepEqual(consumeLaserEnergy({ energy: 60, weapon: arcCannon, charge: 1 }), { fired: true, cost: 44, energy: 16 });
+  assert.deepEqual(consumeLaserEnergy({ energy: 40, weapon: arcCannon, charge: 1 }), { fired: false, cost: 44, energy: 40 });
 });
 
 test('all laser auto-locks require the targeting computer upgrade', () => {
@@ -286,7 +288,7 @@ test('a camera releases one lightweight mini boss profile', () => {
   assert.deepEqual(securityMiniBossStats(), {
     isBoss: true,
     isMiniBoss: true,
-    shields: 3,
+    shields: 6,
     contactDamage: 4,
     projectileDamage: 3,
     scale: 1.15,

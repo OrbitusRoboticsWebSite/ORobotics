@@ -1,4 +1,4 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.09.16.5';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.16.6';
 export const MAX_ROB_HEALTH = 100;
 export const MAX_ROB_SHIELDS = 40;
 export const SHIELD_ACTIVATION_DURATION = 2.5;
@@ -198,9 +198,9 @@ export const faceColors = [
 ];
 
 export const rangedWeapons = [
-  { id: 'shoulderGatling', name: 'Pan-Tilt Gatling', shortName: 'Gatling', requiredLevel: 0, projectileSpeed: 13, baseDamage: 1, chargeDamage: 2, baseEnergy: 4, chargeEnergy: 8 },
-  { id: 'twinBlasters', name: 'Twin Blasters', shortName: 'Blasters', requiredLevel: 5, projectileSpeed: 18, baseDamage: 1, chargeDamage: 1, baseEnergy: 5, chargeEnergy: 9 },
-  { id: 'arcCannon', name: 'Arc Cannon', shortName: 'Arc Cannon', requiredLevel: 15, projectileSpeed: 11, baseDamage: 2, chargeDamage: 3, baseEnergy: 8, chargeEnergy: 14 },
+  { id: 'shoulderGatling', name: 'Pan-Tilt Gatling', shortName: 'Gatling', requiredLevel: 0, projectileSpeed: 13, baseDamage: 1, chargeDamage: 2, baseEnergy: 8, chargeEnergy: 16 },
+  { id: 'twinBlasters', name: 'Twin Blasters', shortName: 'Blasters', requiredLevel: 5, projectileSpeed: 18, baseDamage: 1, chargeDamage: 1, baseEnergy: 10, chargeEnergy: 18 },
+  { id: 'arcCannon', name: 'Arc Cannon', shortName: 'Arc Cannon', requiredLevel: 15, projectileSpeed: 11, baseDamage: 2, chargeDamage: 3, baseEnergy: 16, chargeEnergy: 28 },
 ];
 
 export const meleeWeapons = [
@@ -228,7 +228,7 @@ export const bossStats = (levelNumber, baseShields) => {
   const isBoss = levelNumber % 5 === 0;
   return {
     isBoss,
-    shields: isBoss ? 15 + (levelNumber / 5) * 15 : baseShields,
+    shields: isBoss ? 30 + (levelNumber / 5) * 30 : baseShields,
     contactDamage: isBoss ? 10 : undefined,
     projectileDamage: isBoss ? 10 : undefined,
   };
@@ -237,7 +237,7 @@ export const bossStats = (levelNumber, baseShields) => {
 export const securityMiniBossStats = () => ({
   isBoss: true,
   isMiniBoss: true,
-  shields: 3,
+  shields: 6,
   contactDamage: 4,
   projectileDamage: 3,
   scale: 1.15,
