@@ -313,7 +313,7 @@ try {
     "id6811128266",
     "id6811128916",
   ];
-  if (!booksPage.includes("Available now on Apple Books") || !booksPage.includes("55%") || !booksPage.includes("id1538369440")) {
+  if (!booksPage.includes("Motor-workshop update submitted") || !booksPage.includes("subject to Apple processing") || !booksPage.includes("55%") || !booksPage.includes("id1538369440")) {
     failures.push("Books catalog is missing its release status, collection discount, or existing Apple Books title.");
   }
   for (const appleBookId of appleBookIds) {
