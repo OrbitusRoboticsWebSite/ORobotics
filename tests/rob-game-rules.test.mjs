@@ -502,3 +502,41 @@ test('legacy balances convert once and old tabs cannot replace the new balance',
   assert.equal(skillPointBalance(0, 99999), 0);
   assert.equal(skillPointBalance(null, -100), 0);
 });
+
+import { createRocketFlight, stepRocketFlight } from '../assets/js/rob-rocket-flight.mjs';
+import { resolveWallTurn, robotWallPenetration } from '../assets/js/rob-game-rules.mjs';
+
+test('booster requires an upgrade, spends fuel, coasts down and lands on a raised deck', () => {
+  let state = { motion: createRocketFlight(), height: 0, energy: 100 };
+  assert.equal(stepRocketFlight({ ...state, floor: 0, installed: false, held: true, delta: .1 }).height, 0);
+  for (let i = 0; i < 120; i++) state = stepRocketFlight({ ...state, floor: 0, installed: true, held: true, delta: 1 / 60 });
+  assert.ok(state.height > 2);
+  assert.ok(Math.abs(state.energy - 64) < .001);
+  for (let i = 0; i < 180; i++) state = stepRocketFlight({ ...state, floor: 1.8, installed: true, held: false, delta: 1 / 60 });
+  assert.equal(state.height, 1.8);
+  assert.equal(state.motion.airborne, false);
+  assert.equal(state.motion.thrusting, false);
+  assert.ok(Math.abs(state.energy - 64) < .001);
+});
+
+test('empty rocket battery cannot hover or climb forever', () => {
+  let state = { motion: createRocketFlight(), height: 0, energy: 20 };
+  let peak = 0;
+  for (let i = 0; i < 600; i++) { state = stepRocketFlight({ ...state, floor: 0, installed: true, held: true, delta: 1 / 60 }); peak = Math.max(peak, state.height); }
+  assert.ok(peak > .5 && peak <= 3);
+  assert.equal(state.energy, 0);
+  assert.equal(state.height, 0);
+  assert.equal(state.motion.airborne, false);
+});
+
+test('turning beside two walls separates ROB instead of trapping or crossing a wall', () => {
+  const walls = [{ x: 0, z: 0, w: 2.5, d: .2 }, { x: 2.3, z: -1, w: .2, d: 1.2 }];
+  const point = { x: 1.1, z: 1.29 }, heading = .15;
+  const canOccupy = (p) => walls.every((wall) => !robotWallPenetration({ point: p, heading, wall }));
+  assert.equal(canOccupy(point), false);
+  const recovered = resolveWallTurn({ point, heading, walls, canOccupy });
+  assert.ok(recovered);
+  assert.equal(canOccupy(recovered), true);
+  assert.ok(recovered.z > point.z);
+  assert.ok(Math.hypot(recovered.x - point.x, recovered.z - point.z) <= .3);
+});

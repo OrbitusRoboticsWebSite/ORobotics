@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { createRocketFlight, stepRocketFlight, ROCKET_ENERGY_PER_SECOND } from './rob-rocket-flight.mjs';
 import { loadCapturedROB } from './rob-captured-model.mjs';
 import { buildROBVisual } from './rob-visual-model.mjs';
 import { meleeDuration, meleePose } from './rob-melee-animation.mjs';
@@ -55,6 +56,7 @@ import {
   repairROBHealth,
   replenishROBShields,
   resolveAxisSlidingMotion,
+  resolveWallTurn,
   securityCameraSees,
   securityCameraVisionDistances,
   securityMiniBossStats,
@@ -71,7 +73,7 @@ import {
   sanitizeDroidProfile,
   writeDroidProfile,
 } from './rob-droid-profile.mjs';
-import { KEY_BEACON_HEIGHT, KEY_WORKSHOP_KEY_SPAWN } from './rob-simulator-levels.mjs';
+import { KEY_BEACON_HEIGHT, ARENA_HALF_WIDTH, ARENA_HALF_DEPTH, createCampaignLevels } from './rob-simulator-levels.mjs';
 import { shooterTurretYaw, shooterWheelAngle, spiderLegPose } from './rob-enemy-animation.mjs';
 
 const root = document.querySelector('[data-rob-simulator]');
@@ -85,14 +87,16 @@ if (root) {
   const camera = new THREE.PerspectiveCamera(55, 1, .1, 90); const clock = new THREE.Clock();
   const controls = { left: 0, right: 0 }, touch = { forward: 0, steering: 0, left: 0, right: 0, leftActive: false, rightActive: false }; const keys = new Set(), activeDrivePointers = new Map(), activeTreadPointers = new Map();
   const obstacles = [], cells = [], shieldPickups = [], repairPickups = [], bolts = [], enemyBolts = [], enemies = [], levelParts = [], conveyors = [], securityCameras = [], shadowZones = [];
-  const ARENA_HALF_WIDTH = 16, ARENA_HALF_DEPTH = 12, LEVEL_SCALE = 1.38, ROBOT_HALF_WIDTH = .95, ROBOT_HALF_LENGTH = 1.08, ARENA_CLEARANCE = .18;
-  const LEDGE = { x: 0, z: -7.1, w: 15.82, d: 4.9, height: .62, approachEdgeZ: -2.2 };
+  const levels = createCampaignLevels();
+  const ROBOT_HALF_WIDTH = .95, ROBOT_HALF_LENGTH = 1.08, ARENA_CLEARANCE = .18;
+  const LEDGE = { x: 0, z: -12.1, w: 15.82, d: 7.9, height: .62, approachEdgeZ: -4.2 };
   const pointOnLedge = (point) => Math.abs(point.x - LEDGE.x) <= LEDGE.w && Math.abs(point.z - LEDGE.z) <= LEDGE.d;
-  const surfaceHeight = (point) => pointOnLedge(point) ? LEDGE.height : 0;
+  const platformAt = (point) => levels[levelIndex]?.platforms.find((p) => Math.abs(point.x - p.x) <= p.w && Math.abs(point.z - p.z) <= p.d);
+  const surfaceHeight = (point) => platformAt(point)?.height ?? (pointOnLedge(point) ? LEDGE.height : 0);
   const readProgress = (key, fallback) => { try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; } };
   const saveProgress = (key, value) => { try { localStorage.setItem(key, String(value)); } catch {} };
   let running = false, complete = false, levelComplete = false, elapsed = 0, levelElapsed = 0, score = 0, gateDone = false, cellCount = 0, lastShot = -Infinity, levelIndex = 0, hasKey = false, doorOpen = true, hacking = false, hackingCamera, hackingProgress = 0, securityAlertRemaining = 0, securityMiniBossReleased = false, laserLock, secondaryLaserLock, laserChargeStarted, saberCombo = 0, lastSaberAttack = -Infinity, saberAnimation, gamepadLaserHeld = false, baseFlipperAngle = BASE_FLIPPER_REAR_ANGLE, baseFlipperTarget = 'rear';
-  let health = MAX_ROB_HEALTH, shields = MAX_ROB_SHIELDS, lives = MAX_TRIAL_LIVES, damageInvulnerableUntil = -Infinity, highestCompletedLevel = Math.max(0, Math.min(15, Number(readProgress('robHighestCompletedLevel', 0)) || 0));
+  let health = MAX_ROB_HEALTH, shields = MAX_ROB_SHIELDS, lives = MAX_TRIAL_LIVES, damageInvulnerableUntil = -Infinity, highestCompletedLevel = Math.max(0, Math.min(levels.length, Number(readProgress('robHighestCompletedLevel', 0)) || 0));
   const savedSkillPoints = readProgress('robSkillPoints', null), legacyPoints = Number(readProgress('robUpgradePoints', 0)) || 0;
   let upgradePoints = skillPointBalance(savedSkillPoints, legacyPoints);
   if (savedSkillPoints === null) saveProgress('robSkillPoints', upgradePoints);
@@ -100,11 +104,13 @@ if (root) {
   const upgradeLevels = Object.fromEntries(upgrades.map((upgrade) => [upgrade.id, Math.max(0, Math.min(upgrade.maximumLevel, Number(readProgress(`rob${upgrade.id}Level`, 0)) || 0))]));
   let energy = maximumEnergy(upgradeLevels.energyCapacity);
   let shieldTimeRemaining = 0, gamepadShieldHeld = false;
+  let rocketFlight = createRocketFlight(), rocketHeld = false, gamepadRocketHeld = false;
   let climbingLedge = false;
   let supportMotion = createROBSupportMotion(), torsoLeanAngle = 0;
   const climbProgress = (point = robot.position) => ledgeClimbProgress({ z: point.z, heading: robot.rotation.y, approachEdgeZ: LEDGE.approachEdgeZ, scale: 2.15 });
   const robotBasePose = () => {
     const pose = baseFlipperPresentation({ angle: baseFlipperAngle, target: baseFlipperTarget, onLedge: pointOnLedge(robot.position), climbProgress: climbingLedge ? climbProgress() : undefined, stepHeight: LEDGE.height, supportHeight: robot.position.y, scale: 2.15 });
+    if (rocketFlight.airborne) return { ...pose, pitch: 0, lift: robot.position.y };
     return !climbingLedge && supportMotion.phase !== 'grounded' ? { ...pose, pitch: supportMotion.pitch, lift: robot.position.y } : pose;
   };
   let droidProfile = readDroidProfile();
@@ -114,64 +120,6 @@ if (root) {
   const selectedRanged = () => rangedWeapons.find((weapon) => weapon.id === selectedRangedID && isUnlocked(weapon, highestCompletedLevel)) || rangedWeapons[0];
   const targetingComputer = () => targetingComputerStats(upgradeLevels.targetingComputer);
   const selectedMelee = () => meleeWeapons.find((weapon) => weapon.id === selectedMeleeID && isUnlocked(weapon, highestCompletedLevel)) || meleeWeapons[0];
-  const levels = [
-    { name: 'Calibration Ledge', floor: 0x172734, grid: 0x2ca4bb, gate: [0, -3.6], dock: [7.8, 5.7], cells: [[-7.5, -4.8], [.8, 3.3], [7.5, -.8]], enemies: [['spider', -7.2, .2], ['dalek', 6.8, -5.4], ['spider', 0, -4.8]], health: 4, speed: 0, bonus: 900, obstacles: [[-3.2, -.8, 2.7, 1.3, 1.1], [3.8, 1.6, 1.5, 3.2, 1.35], [-1.3, 4.7, 3.1, 1.2, .85], [6.6, -3.6, 1.2, 2.1, 1.6]] },
-    { name: 'Key Workshop', floor: 0x241b32, grid: 0xc548e8, gate: [-7.8, 1.7], dock: [7.7, -5.7], key: KEY_WORKSHOP_KEY_SPAWN, door: [2.8, 0, .5, 5], cells: [[-1.3, -2.3], [7.2, 1.5], [4.5, -4.8]], enemies: [['spider', -4.8, 3.8], ['dalek', 6, -4], ['spider', -1, -4.6]], health: 4, speed: .18, bonus: 1100, obstacles: [[-5.5, -.5, 1.1, 5.8, 1.5], [-.4, 2.1, 5.2, 1, 1.1]] },
-    { name: 'Crossroads', floor: 0x1c2924, grid: 0x55dd88, gate: [7.5, 3.8], dock: [-7.8, -5.8], key: [8, 5], door: [-2, 1.5, 5, .5], cells: [[-8, 4.7], [-3.7, -.8], [0, -5.8], [7, -3]], enemies: [['spider', -6.8, 1.1], ['dalek', -1.5, -4.6], ['spider', 6, 3.8]], health: 4, speed: .24, bonus: 1300, obstacles: [[-6.2, -2.4, 5.5, .9, 1.2], [0, -.8, 4.8, .9, 1.1], [6.2, .1, 4.8, .9, 1.3]] },
-    { name: 'Sensor Hall', floor: 0x152b35, grid: 0x38dfff, gate: [-7, -4], dock: [8, 5.5], cells: [[-7, 5], [-1, -4], [4, 4], [7, -4]], enemies: [['spider', -4, 1], ['dalek', 5, -2], ['spider', -7, -4], ['dalek', 7, 4]], health: 4, speed: .25, bonus: 1500, obstacles: [[-4, -2, 1, 6, 1], [0, 2, 1, 6, 1], [4, -2, 1, 6, 1]] },
-    { name: 'Amber Armory', floor: 0x30251a, grid: 0xf1b93a, gate: [0, -5], dock: [8, -5], key: [-8, 5], door: [0, 1, 4, .5], cells: [[-6, 4], [2, -4], [7, -2], [5, 4]], enemies: [['dalek', -3, 3], ['spider', 5, -3], ['dalek', 7, 4], ['spider', -7, -4]], health: 6, speed: .3, bonus: 1700, obstacles: [[-4, 0, 1, 5, 1], [4, -2, 1, 3, 1]] },
-    { name: 'Switchback Foundry', floor: 0x2b1830, grid: 0xd65cff, gate: [-8, 0], dock: [8, -5], key: [0, 5], door: [5, -2, .5, 5], cells: [[-7, -5], [-3, 3], [3, -4], [7, 4], [0, 0]], enemies: [['spider', -4, 0], ['dalek', 2, 2], ['spider', 6, -4], ['dalek', -7, 4], ['spider', 7, 4]], health: 6, speed: .35, bonus: 1900, obstacles: [[-5, -2, 5, .7, 1], [-1, 2, 5, .7, 1], [3, -2, 5, .7, 1]] },
-    { name: 'Twin Sentinel Bay', floor: 0x17282a, grid: 0x55dd88, gate: [0, -5], dock: [0, 5.5], cells: [[-7, -4], [7, -4], [-7, 4], [7, 4], [0, 0]], enemies: [['dalek', -5, 0], ['dalek', 5, 0], ['spider', 0, -3], ['spider', -7, 4], ['dalek', 7, 4]], health: 6, speed: .4, bonus: 2100, obstacles: [[-2.5, 0, .7, 5, 1], [2.5, 0, .7, 5, 1]] },
-    { name: 'Power Relay', floor: 0x2e2614, grid: 0xffc83d, gate: [-8, 5], dock: [8, -5], key: [-8, -5], door: [1, 0, .5, 5], cells: [[-5, 2], [2, -4], [5, 0], [7, -4], [0, 4]], enemies: [['spider', -3, -2], ['dalek', 3, 3], ['spider', 7, 0], ['dalek', -7, 4], ['spider', 7, -4]], health: 8, speed: .42, bonus: 2300, obstacles: [[-4, 0, .8, 5, 1], [4, 2.5, .8, 2, 1]] },
-    { name: 'Guardian Maze', floor: 0x1a2430, grid: 0x5aa8ff, gate: [8, -5], dock: [-8, -5], key: [8, 5], door: [-5, 1, 4, .5], cells: [[-8, -5], [-3, -3], [0, 4], [4, -2], [7, 2], [-7, 4]], enemies: [['spider', -6, 0], ['dalek', -1, -4], ['spider', 3, 3], ['dalek', 7, -3], ['spider', -7, 4], ['dalek', 6, 4]], health: 8, speed: .46, bonus: 2600, obstacles: [[-5, -2, 5, .7, 1], [-1, -2, .7, 4, 1], [3, -2, 5, .7, 1], [6, 3.5, .7, 2, 1]] },
-    { name: 'Mission Control', floor: 0x132a25, grid: 0x2bdf8a, gate: [0, -5], dock: [0, -5.5], key: [-8, 5], door: [0, 2, 5, .5], cells: [[-8, 5], [-5, -2], [0, -3], [5, -2], [8, -5], [7, 4]], enemies: [['dalek', -6, -2], ['spider', -2, 3], ['dalek', 3, -2], ['spider', 7, 3], ['dalek', -7, 4], ['spider', 6, -5]], health: 8, speed: .5, bonus: 3000, obstacles: [[-5, -2, .8, 4, 1], [0, -1, .8, 4, 1], [5, -2, .8, 4, 1]] },
-    { name: 'Reactor Run', floor: 0x25151a, grid: 0xff5c72, gate: [-8, -5], dock: [8, 5], cells: [[-8, 5], [-5, -4], [-1, 3], [3, -4], [7, 0], [8, 5]], enemies: [['spider', -7, 0], ['spider', -3, 4], ['dalek', 1, -4], ['spider', 5, 3], ['dalek', 7, -3], ['dalek', 0, 1]], health: 8, speed: .54, bonus: 3300, obstacles: [[-6, -2, 4, .8, 1.2], [-1, 2, 5, .8, 1.2], [5, -2, 4, .8, 1.2]] },
-    { name: 'Eclipse Hangar', floor: 0x17152d, grid: 0xa876ff, gate: [8, 5], dock: [-8, -5], key: [-8, 5], door: [2, 0, .5, 5], cells: [[-7, -4], [-5, 3], [-1, -3], [3, 4], [6, -4], [8, 2]], enemies: [['dalek', -7, 0], ['spider', -4, -4], ['dalek', -1, 4], ['spider', 3, -3], ['dalek', 6, 4], ['spider', 8, -2]], health: 8, speed: .58, bonus: 3600, obstacles: [[-5, 0, 1, 6, 1.2], [5, 2, 1, 4, 1.2]] },
-    { name: 'Quantum Causeway', floor: 0x10293a, grid: 0x38dfff, gate: [0, -5], dock: [8, 5], key: [-8, 5], door: [-2, 1, 5, .5], cells: [[-8, -4], [-6, 4], [-3, -1], [0, 4], [3, -4], [6, 1], [8, 5]], enemies: [['spider', -8, 0], ['dalek', -5, -4], ['spider', -2, 4], ['dalek', 1, -3], ['spider', 4, 4], ['dalek', 7, -2], ['spider', 8, 4]], health: 10, speed: .62, bonus: 3900, obstacles: [[-6, -2, 4, .7, 1], [-1, 2, 4, .7, 1], [4, -2, 4, .7, 1]] },
-    { name: 'Siege Foundry', floor: 0x301b12, grid: 0xff9b45, gate: [-8, 0], dock: [8, -5], key: [0, 5], door: [4, -1, .5, 5], cells: [[-8, -5], [-6, 3], [-3, -3], [0, 4], [3, -4], [6, 3], [8, -2]], enemies: [['dalek', -8, 1], ['dalek', -5, -4], ['spider', -2, 3], ['dalek', 1, -3], ['spider', 4, 4], ['spider', 7, -4], ['dalek', 8, 2]], health: 10, speed: .66, bonus: 4200, obstacles: [[-6, 0, 1, 6, 1.4], [-1, -2, 1, 4, 1.2], [4, 2, 1, 4, 1.2]] },
-    { name: 'Final Citadel', floor: 0x10261d, grid: 0x2bdf8a, gate: [0, -5], dock: [0, 5.5], key: [-8, 5], door: [0, 1, 5, .5], cells: [[-8, -5], [-8, 5], [-5, 0], [-2, -4], [2, 4], [5, 0], [8, -5], [8, 5]], enemies: [['spider', -8, 0], ['dalek', -6, -4], ['spider', -4, 4], ['dalek', -1, -3], ['spider', 2, 4], ['dalek', 5, -4], ['spider', 8, 1], ['dalek', 7, 5]], health: 10, speed: .7, bonus: 4800, obstacles: [[-6, -2, 4, .8, 1.3], [-1, 2, 4, .8, 1.3], [4, -2, 4, .8, 1.3], [7, 3, 1, 3, 1.3]] },
-  ].map((level) => ({ ...level, gate: level.gate.map((value) => value * LEVEL_SCALE), dock: [level.dock[0] * LEVEL_SCALE, -10.1], key: level.key?.map((value) => value * LEVEL_SCALE), door: level.door?.map((value, index) => index < 4 ? value * LEVEL_SCALE : value), cells: level.cells.map((point) => point.map((value) => value * LEVEL_SCALE)), enemies: level.enemies.map(([type, x, z]) => [type, x * LEVEL_SCALE, z * LEVEL_SCALE]), obstacles: level.obstacles.map(([x, z, w, d, h]) => [x * LEVEL_SCALE, z * LEVEL_SCALE, w * LEVEL_SCALE, d * LEVEL_SCALE, h]) }));
-  // A locked door is a real partition, not a decorative panel that can be driven around.
-  // Complete the wall on both sides of every doorway while leaving the door-sized opening.
-  levels.forEach((level) => {
-    if (!level.door) return;
-    const [x, z, w, d] = level.door;
-    if (w > d) {
-      const leftWidth = x - w / 2 + ARENA_HALF_WIDTH, rightWidth = ARENA_HALF_WIDTH - (x + w / 2);
-      if (leftWidth > .05) level.obstacles.push([-ARENA_HALF_WIDTH + leftWidth / 2, z, leftWidth, d, 1.8]);
-      if (rightWidth > .05) level.obstacles.push([x + w / 2 + rightWidth / 2, z, rightWidth, d, 1.8]);
-    } else {
-      const nearDepth = z - d / 2 + ARENA_HALF_DEPTH, farDepth = ARENA_HALF_DEPTH - (z + d / 2);
-      if (nearDepth > .05) level.obstacles.push([x, -ARENA_HALF_DEPTH + nearDepth / 2, w, nearDepth, 1.8]);
-      if (farDepth > .05) level.obstacles.push([x, z + d / 2 + farDepth / 2, w, farDepth, 1.8]);
-    }
-  });
-  const itemCandidates = [
-    [-13.2, -9.2], [13.2, -9.2], [-13.2, 7.8], [13.2, 7.8],
-    [-8.8, -7.2], [8.8, -7.2], [-10.5, 2.4], [10.5, 2.4],
-    [-4.5, 7.4], [4.5, 7.4], [0, -8.2], [0, 5.8],
-    [-6.7, -.2], [6.7, -.2],
-  ];
-  const pointIsClear = (level, point, reserved, padding = .85) => (
-    Math.abs(point[0]) < ARENA_HALF_WIDTH - 1.4
-      && Math.abs(point[1]) < ARENA_HALF_DEPTH - 1.4
-      && level.obstacles.every(([x, z, width, depth]) => Math.abs(point[0] - x) > width / 2 + padding || Math.abs(point[1] - z) > depth / 2 + padding)
-      && (!level.door || Math.abs(point[0] - level.door[0]) > level.door[2] / 2 + padding || Math.abs(point[1] - level.door[1]) > level.door[3] / 2 + padding)
-      && reserved.every((candidate) => Math.hypot(point[0] - candidate[0], point[1] - candidate[1]) > 1.35)
-  );
-  levels.forEach((level, index) => {
-    const rotation = (index + 1) % itemCandidates.length, ordered = [...itemCandidates.slice(rotation), ...itemCandidates.slice(0, rotation)];
-    const reserved = [...level.cells, level.dock, ...(level.key ? [level.key] : [])];
-    const takePoint = () => {
-      const pointIndex = ordered.findIndex((point) => pointIsClear(level, point, reserved));
-      const point = pointIndex >= 0 ? ordered.splice(pointIndex, 1)[0] : ordered.shift();
-      reserved.push(point);
-      return point;
-    };
-    level.cells.push(takePoint(), takePoint());
-    level.shieldPickups = Array.from({ length: index + 1 >= 8 ? 2 : 1 }, takePoint);
-    level.repairPickups = Array.from({ length: index + 1 >= 10 ? 2 : 1 }, takePoint);
-  });
   const isTouch = matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
   root.classList.toggle('is-touch', isTouch);
   let soundEnabled = true;
@@ -301,6 +249,18 @@ if (root) {
     const hammer = new THREE.Group(); hammer.name = 'Power Hammer'; hammer.position.set(.82, .5, -.68); torso.add(hammer); robotRig.hammer = hammer; const hammerHandle = mesh(new THREE.CylinderGeometry(.045, .055, 1.15, 10), steel, hammer); hammerHandle.rotation.z = -.28; mesh(new THREE.BoxGeometry(.65, .28, .28), mat(0xf1a43c, 0x5b2c05), hammer, .16, .5, 0);
     const shieldField = mesh(new THREE.SphereGeometry(1.72, 24, 16), new THREE.MeshBasicMaterial({ color: 0x56eaff, transparent: true, opacity: .13, wireframe: true, depthWrite: false }), r, 0, 1.35);
     shieldField.scale.y = .9; shieldField.castShadow = false; shieldField.receiveShadow = false; robotRig.shieldField = shieldField;
+    const boosters = new THREE.Group(); boosters.name = 'Plasma Booster'; r.add(boosters);
+    const jets = [];
+    [-1, 1].forEach((side) => {
+      mesh(new THREE.CylinderGeometry(.16, .2, .65, 16), steel, boosters, side * .62, 1.05, .58);
+      mesh(new THREE.TorusGeometry(.17, .04, 8, 20), cyan, boosters, side * .62, .73, .58).rotation.x = Math.PI / 2;
+      const jet = new THREE.Group(); jet.position.set(side * .62, .7, .58); boosters.add(jet);
+      const plasma = mesh(new THREE.ConeGeometry(.19, 1.0, 16), new THREE.MeshBasicMaterial({ color: 0x167bff, transparent: true, opacity: .65, depthWrite: false, blending: THREE.AdditiveBlending }), jet, 0, -.5);
+      plasma.rotation.z = Math.PI;
+      mesh(new THREE.ConeGeometry(.095, .78, 12), new THREE.MeshBasicMaterial({ color: 0xc4f5ff, transparent: true, opacity: .95, depthWrite: false, blending: THREE.AdditiveBlending }), jet, 0, -.34).rotation.z = Math.PI;
+      jet.add(new THREE.PointLight(0x168bff, 2.4, 4)); jets.push(jet);
+    });
+    Object.assign(robotRig, { boosters, jets });
     return r;
   };
   const robot = buildROB(); scene.add(robot);
@@ -376,13 +336,14 @@ if (root) {
   };
   for (let i = 0; i < 8; i += 1) { const spider = buildSpider(); spider.userData.type = 'spider'; scene.add(spider); enemies.push(spider); const dalek = buildDalek(); dalek.userData.type = 'dalek'; scene.add(dalek); enemies.push(dalek); }
 
-  const ui = { shieldButtons: [...root.querySelectorAll('[data-sim-shield]')], time: root.querySelector('[data-sim-time]'), score: root.querySelector('[data-sim-score]'), points: root.querySelector('[data-sim-points]'), lives: root.querySelector('[data-sim-lives]'), level: root.querySelector('[data-sim-level]'), levelName: root.querySelector('[data-sim-level-name]'), left: root.querySelector('[data-sim-left]'), right: root.querySelector('[data-sim-right]'), enemies: root.querySelector('[data-sim-enemies]'), lock: root.querySelector('[data-sim-lock]'), message: root.querySelector('[data-sim-message]'), start: root.querySelector('[data-sim-start]'), reset: root.querySelector('[data-sim-reset]'), fullscreen: root.querySelector('[data-sim-fullscreen]'), hack: root.querySelector('[data-sim-hack]'), laserButtons: [...root.querySelectorAll('[data-sim-laser]')], saberButtons: [...root.querySelectorAll('[data-sim-saber]')], flipperButtons: [...root.querySelectorAll('[data-sim-flipper]')], health: root.querySelector('[data-sim-health]'), healthText: root.querySelector('[data-sim-health-text]'), shields: root.querySelector('[data-sim-shields]'), shieldsText: root.querySelector('[data-sim-shields-text]'), energy: root.querySelector('[data-sim-energy]'), energyText: root.querySelector('[data-sim-energy-text]'), security: root.querySelector('[data-sim-security]'), boss: root.querySelector('[data-sim-boss]'), bossName: root.querySelector('[data-sim-boss-name]'), bossText: root.querySelector('[data-sim-boss-text]'), bossHealth: root.querySelector('[data-sim-boss-health]'), progress: root.querySelector('[data-sim-progress]'), nextUnlock: root.querySelector('[data-sim-next-unlock]'), finish: root.querySelector('[data-sim-finish]'), faceColor: root.querySelector('[data-sim-face-color]'), ranged: root.querySelector('[data-sim-ranged]'), melee: root.querySelector('[data-sim-melee]'), workshopPoints: root.querySelector('[data-sim-workshop-points]'), upgradeButtons: [...root.querySelectorAll('[data-upgrade]')], loadoutStatus: root.querySelector('[data-sim-loadout-status]') };
+  const ui = { rocketButtons: [...root.querySelectorAll('[data-sim-rocket]')], shieldButtons: [...root.querySelectorAll('[data-sim-shield]')], time: root.querySelector('[data-sim-time]'), score: root.querySelector('[data-sim-score]'), points: root.querySelector('[data-sim-points]'), lives: root.querySelector('[data-sim-lives]'), level: root.querySelector('[data-sim-level]'), levelName: root.querySelector('[data-sim-level-name]'), left: root.querySelector('[data-sim-left]'), right: root.querySelector('[data-sim-right]'), enemies: root.querySelector('[data-sim-enemies]'), lock: root.querySelector('[data-sim-lock]'), message: root.querySelector('[data-sim-message]'), start: root.querySelector('[data-sim-start]'), reset: root.querySelector('[data-sim-reset]'), fullscreen: root.querySelector('[data-sim-fullscreen]'), hack: root.querySelector('[data-sim-hack]'), laserButtons: [...root.querySelectorAll('[data-sim-laser]')], saberButtons: [...root.querySelectorAll('[data-sim-saber]')], flipperButtons: [...root.querySelectorAll('[data-sim-flipper]')], health: root.querySelector('[data-sim-health]'), healthText: root.querySelector('[data-sim-health-text]'), shields: root.querySelector('[data-sim-shields]'), shieldsText: root.querySelector('[data-sim-shields-text]'), energy: root.querySelector('[data-sim-energy]'), energyText: root.querySelector('[data-sim-energy-text]'), security: root.querySelector('[data-sim-security]'), boss: root.querySelector('[data-sim-boss]'), bossName: root.querySelector('[data-sim-boss-name]'), bossText: root.querySelector('[data-sim-boss-text]'), bossHealth: root.querySelector('[data-sim-boss-health]'), progress: root.querySelector('[data-sim-progress]'), nextUnlock: root.querySelector('[data-sim-next-unlock]'), finish: root.querySelector('[data-sim-finish]'), faceColor: root.querySelector('[data-sim-face-color]'), ranged: root.querySelector('[data-sim-ranged]'), melee: root.querySelector('[data-sim-melee]'), workshopPoints: root.querySelector('[data-sim-workshop-points]'), upgradeButtons: [...root.querySelectorAll('[data-upgrade]')], loadoutStatus: root.querySelector('[data-sim-loadout-status]') };
   Object.assign(ui, {
     intermission: root.querySelector('[data-sim-intermission]'),
     intermissionTitle: root.querySelector('[data-sim-intermission-title]'),
     intermissionPoints: root.querySelector('[data-sim-intermission-points]'),
     intermissionStatus: root.querySelector('[data-sim-intermission-status]'),
     intermissionContinue: root.querySelector('[data-sim-intermission-continue]'),
+    replay: root.querySelector('[data-sim-replay]'),
   });
   const awardMissionPoints = (points, skillPoints = 0) => { score += Math.max(0, points); if (skillPoints <= 0) return; upgradePoints += skillPoints; saveProgress('robSkillPoints', upgradePoints); updateWorkshop(); };
   const objectives = Object.fromEntries([...root.querySelectorAll('[data-objective]')].map((item) => [item.dataset.objective, item])); const say = (t) => { ui.message.textContent = t; ui.intermissionStatus.textContent = t; }; const mark = (n, t, p, skillPoints = 0) => { if (objectives[n].classList.contains('is-complete')) return; objectives[n].classList.add('is-complete'); awardMissionPoints(p, skillPoints); say(t); };
@@ -390,10 +351,13 @@ if (root) {
   const updateWorkshop = () => {
     selectedFinishID = selectedFinish().id; selectedFaceColorID = selectedFaceColor().id; selectedRangedID = selectedRanged().id; selectedMeleeID = selectedMelee().id;
     ui.progress.textContent = `${highestCompletedLevel} / ${levels.length} levels complete`;
-    ui.nextUnlock.textContent = highestCompletedLevel < 5 ? 'Next unlock: Twin Blasters after Level 5.' : highestCompletedLevel < 10 ? 'Next unlock: Power Hammer after Level 10.' : highestCompletedLevel < 15 ? 'Next unlock: Arc Cannon after Level 15.' : 'Every workshop weapon is unlocked.';
+    ui.nextUnlock.textContent = highestCompletedLevel < 3 ? 'Next unlock: Plasma Booster after Level 3.' : highestCompletedLevel < 5 ? 'Next unlock: Twin Blasters after Level 5.' : highestCompletedLevel < 10 ? 'Next unlock: Power Hammer after Level 10.' : highestCompletedLevel < 15 ? 'Next unlock: Arc Cannon after Level 15.' : 'Every workshop weapon is unlocked.';
     ui.finish.value = selectedFinishID; ui.faceColor.value = selectedFaceColorID; ui.ranged.value = selectedRangedID; ui.melee.value = selectedMeleeID;
     [...ui.ranged.options].forEach((option) => { const weapon = rangedWeapons.find(({ id }) => id === option.value); option.disabled = Boolean(weapon && !isUnlocked(weapon, highestCompletedLevel)); });
     [...ui.melee.options].forEach((option) => { const weapon = meleeWeapons.find(({ id }) => id === option.value); option.disabled = Boolean(weapon && !isUnlocked(weapon, highestCompletedLevel)); });
+    ui.replay.hidden = !(levelComplete && levels[levelIndex + 1]?.requiresBooster && !upgradeLevels.rocketBooster);
+    ui.intermissionContinue.disabled = Boolean(levels[levelIndex + 1]?.requiresBooster && !upgradeLevels.rocketBooster);
+    robotRig.boosters.visible = upgradeLevels.rocketBooster > 0;
     ui.workshopPoints.textContent = `${upgradePoints.toLocaleString()} skill points`;
     ui.intermissionPoints.textContent = `${upgradePoints.toLocaleString()} skill points available`;
     ui.upgradeButtons.forEach((button) => {
@@ -402,7 +366,7 @@ if (root) {
       button.textContent = cost === undefined ? `${upgrade.name} · MAX` : `${upgrade.name} L${level} · ${cost}${locked ? ` · Clear Level ${requiredLevel}` : ''}`;
       button.disabled = cost === undefined || upgradePoints < cost || locked;
     });
-    ui.loadoutStatus.textContent = `${selectedFinish().name} finish · ${selectedFaceColor().name} smile · ${selectedRanged().name} · ${selectedMelee().name} · Speed L${upgradeLevels.speedBoost} (${Math.round(driveSpeedMultiplier(upgradeLevels.speedBoost) * 100)}%) · Energy L${upgradeLevels.energyCapacity} (${maximumEnergy(upgradeLevels.energyCapacity)} max) · Laser L${upgradeLevels.weaponPower} · Kyber L${upgradeLevels.kyberCrystals} (${saberDamage(upgradeLevels.kyberCrystals)} saber damage) · ${targetingComputer().autoLock ? 'Auto Targeting · 0.25s cycle' : 'Basic Manual Aim · 0.8s cycle'}`;
+    ui.loadoutStatus.textContent = `${selectedFinish().name} finish · ${selectedFaceColor().name} smile · ${selectedRanged().name} · ${selectedMelee().name} · Speed L${upgradeLevels.speedBoost} (${Math.round(driveSpeedMultiplier(upgradeLevels.speedBoost) * 100)}%) · Energy L${upgradeLevels.energyCapacity} (${maximumEnergy(upgradeLevels.energyCapacity)} max) · Laser L${upgradeLevels.weaponPower} · ${upgradeLevels.rocketBooster ? 'Plasma Booster · 18 E/s' : 'Booster locked · 900 points after Level 3'} · Kyber L${upgradeLevels.kyberCrystals} (${saberDamage(upgradeLevels.kyberCrystals)} saber damage) · ${targetingComputer().autoLock ? 'Auto Targeting · 0.25s cycle' : 'Basic Manual Aim · 0.8s cycle'}`;
   };
   const applyLoadout = () => {
     const housingMaterial = droidHousingMaterials.find(({ id }) => id === droidProfile.material) || droidHousingMaterials[0];
@@ -419,9 +383,15 @@ if (root) {
     ui.intermission.hidden = true;
     levelParts.splice(0).forEach((part) => scene.remove(part)); obstacles.length = 0;
     level.obstacles.forEach((o, i) => box(...o, i % 2 ? 0x465262 : 0x344552, true, true));
+    level.platforms.forEach((platform, i) => {
+      const base = mesh(new THREE.BoxGeometry(platform.w * 2, platform.height, platform.d * 2), mat(0x223952), scene, platform.x, platform.height / 2, platform.z);
+      const deck = mesh(new THREE.BoxGeometry(platform.w * 2, .07, platform.d * 2), mat(0x178dcc, 0x063257), scene, platform.x, platform.height + .035, platform.z);
+      base.name = `Booster Platform ${i + 1}`; deck.name = `Blue Landing Pad ${i + 1}`;
+      levelParts.push(base, deck);
+    });
     buildEnvironmentalFeatures(index);
     floor.material.color.setHex(level.floor); grid.material.color.setHex(level.grid); gate.position.set(level.gate[0], surfaceHeight({ x: level.gate[0], z: level.gate[1] }), level.gate[1]); dock.position.set(level.dock[0], surfaceHeight({ x: level.dock[0], z: level.dock[1] }) + .05, level.dock[1]);
-    baseFlipperAngle = BASE_FLIPPER_REAR_ANGLE; baseFlipperTarget = 'rear'; climbingLedge = false; supportMotion = createROBSupportMotion(); torsoLeanAngle = 0; robot.position.set(0, 0, ARENA_HALF_DEPTH - 1.6); robot.rotation.set(0, 0, 0); robotRig.driveBase.rotation.set(0, 0, 0); robotRig.baseFlipper.rotation.set(BASE_FLIPPER_REAR_ANGLE, 0, 0); robotRig.torso.position.set(0, 0, 0); robotRig.torso.rotation.set(0, 0, 0); armAssemblies.forEach((arm) => arm.rotation.set(0, 0, 0)); levelElapsed = 0; health = MAX_ROB_HEALTH; shields = MAX_ROB_SHIELDS; shieldTimeRemaining = 0; energy = maximumEnergy(upgradeLevels.energyCapacity); damageInvulnerableUntil = -Infinity; gateDone = false; cellCount = 0; levelComplete = false; hasKey = false; doorOpen = !level.key; hacking = false; hackingCamera = undefined; hackingProgress = 0; securityAlertRemaining = 0; securityMiniBossReleased = false; laserLock = undefined; secondaryLaserLock = undefined; laserChargeStarted = undefined; lastShot = -Infinity; saberCombo = 0; lastSaberAttack = -Infinity; saberAnimation = undefined; gamepadLaserHeld = false;
+    rocketFlight = createRocketFlight(); rocketHeld = gamepadRocketHeld = false; baseFlipperAngle = BASE_FLIPPER_REAR_ANGLE; baseFlipperTarget = 'rear'; climbingLedge = false; supportMotion = createROBSupportMotion(); torsoLeanAngle = 0; robot.position.set(level.spawn[0], 0, level.spawn[1]); robot.rotation.set(0, 0, 0); robotRig.driveBase.rotation.set(0, 0, 0); robotRig.baseFlipper.rotation.set(BASE_FLIPPER_REAR_ANGLE, 0, 0); robotRig.torso.position.set(0, 0, 0); robotRig.torso.rotation.set(0, 0, 0); armAssemblies.forEach((arm) => arm.rotation.set(0, 0, 0)); levelElapsed = 0; health = MAX_ROB_HEALTH; shields = MAX_ROB_SHIELDS; shieldTimeRemaining = 0; energy = maximumEnergy(upgradeLevels.energyCapacity); damageInvulnerableUntil = -Infinity; gateDone = false; cellCount = 0; levelComplete = false; hasKey = false; doorOpen = !level.key; hacking = false; hackingCamera = undefined; hackingProgress = 0; securityAlertRemaining = 0; securityMiniBossReleased = false; laserLock = undefined; secondaryLaserLock = undefined; laserChargeStarted = undefined; lastShot = -Infinity; saberCombo = 0; lastSaberAttack = -Infinity; saberAnimation = undefined; gamepadLaserHeld = false;
     releaseAllInput(); keyObject.visible = Boolean(level.key); if (level.key) keyObject.position.set(level.key[0], surfaceHeight({ x: level.key[0], z: level.key[1] }) + .08, level.key[1]);
     doorObject.visible = Boolean(level.door); if (level.door) { doorObject.position.set(level.door[0], surfaceHeight({ x: level.door[0], z: level.door[1] }) + .9, level.door[1]); doorObject.scale.set(level.door[2] / 4, 1, level.door[3] / .35); }
     const initialCameraBlockers = projectileBlockers();
@@ -439,7 +409,7 @@ if (root) {
       enemy.visible = true; enemy.userData.alive = true; enemy.userData.isBoss = stats.isBoss; enemy.userData.isMiniBoss = false; enemy.userData.health = stats.shields; enemy.userData.maxHealth = stats.shields; enemy.userData.contactDamage = enemyContactDamage({ kind: spec[0], isBoss: stats.isBoss }); enemy.userData.projectileDamage = stats.projectileDamage || 4; enemy.userData.combatScale = stats.isBoss ? 1.35 : 1; enemy.userData.defeatReward = stats.isBoss ? 1000 : 300; enemy.userData.name = `${stats.isBoss ? 'Boss ' : ''}${spec[0] === 'spider' ? 'Spider bot' : 'Dalek-style sentry robot'}`; enemy.scale.setScalar(enemy.userData.combatScale);
       enemy.position.set(spec[1], surfaceHeight({ x: spec[1], z: spec[2] }), spec[2]); enemy.userData.origin = enemy.position.clone(); enemy.userData.patrolPhase = enemyIndex * 2.17; enemy.userData.nextAttack = elapsed + 1.6 + enemyIndex * .65; enemy.userData.nextSkitterSound = elapsed + .8 + enemyIndex * .38; enemy.userData.lungeUntil = 0; enemy.userData.travelDistance = 0;
     });
-    Object.values(objectives).forEach((objective) => objective.classList.remove('is-complete')); objectives.cells.querySelector('[data-objective-text]').textContent = `Collect ${level.cells.length} energy cells`; objectives.enemies.querySelector('[data-objective-text]').textContent = `Disable ${level.enemies.length} hostile robots`; objectives.dock.querySelector('[data-objective-text]').textContent = level.key ? 'Find the key, hack the door, use the flipper ledge, then dock' : 'Use the flipper to mount the ledge, then dock';
+    Object.values(objectives).forEach((objective) => objective.classList.remove('is-complete')); objectives.cells.querySelector('[data-objective-text]').textContent = `Energy cells: 0 / ${level.cells.length}`; objectives.enemies.querySelector('[data-objective-text]').textContent = `Disable ${level.enemies.length} hostile robots`; objectives.dock.querySelector('[data-objective-text]').textContent = level.requiresBooster ? 'Use the Plasma Booster to collect elevated cells and land at the summit dock' : level.key ? 'Find the key, hack the door, use the flipper ledge, then dock' : 'Use the flipper to mount the ledge, then dock';
     ui.level.textContent = `${index + 1} / ${levels.length}`; ui.levelName.textContent = `Level ${index + 1} · ${level.name}`; ui.start.hidden = false; ui.start.textContent = index ? `Start level ${index + 1}` : 'Begin campaign'; applyLoadout(); say(`${level.name}: ${index ? 'difficulty increased' : 'systems ready'}.`);
   };
   const reset = () => { running = complete = false; elapsed = score = 0; lives = MAX_TRIAL_LIVES; levelIndex = 0; root.dispatchEvent(new CustomEvent('rob:campaign-reset')); loadLevel(0); };
@@ -456,10 +426,12 @@ if (root) {
   const enemyRadius = (enemy) => (enemy.userData.type === 'spider' ? .72 : .64) * (enemy.userData.combatScale || 1);
   const collision = (p, heading = robot.rotation.y, start = robot.position) => {
     const { right, length } = robotAxes(heading), extentX = ROBOT_HALF_WIDTH * Math.abs(right.x) + ROBOT_HALF_LENGTH * Math.abs(length.x), extentZ = ROBOT_HALF_WIDTH * Math.abs(right.z) + ROBOT_HALF_LENGTH * Math.abs(length.z), door = levels[levelIndex].door, doorBox = door && { x: door[0], z: door[1], w: door[2] / 2, d: door[3] / 2 };
-    const blockedByLedge = !climbingLedge && !pointOnLedge(start) && pointOnLedge(p) && !(supportMotion.phase === 'falling' && robot.position.y >= LEDGE.height);
-    return blockedByLedge || Math.abs(p.x) + extentX > ARENA_HALF_WIDTH - ARENA_CLEARANCE || Math.abs(p.z) + extentZ > ARENA_HALF_DEPTH - ARENA_CLEARANCE || obstacles.some((o) => robotHitsBox(p, heading, o)) || (!doorOpen && doorBox && robotHitsBox(p, heading, doorBox)) || enemies.some((enemy) => enemy.userData.alive && robotHitsCircle(p, heading, enemy.position, enemyRadius(enemy)));
+    const destinationHeight = surfaceHeight(p);
+    const blockedByLedge = destinationHeight > p.y + .03 && destinationHeight > surfaceHeight(start) + .03 && !(climbingLedge && destinationHeight <= LEDGE.height);
+    const blockedByTower = levels[levelIndex].platforms.some((platform) => p.y < platform.height - .03 && robotHitsBox(p, heading, platform));
+    return blockedByLedge || blockedByTower || Math.abs(p.x) + extentX > ARENA_HALF_WIDTH - ARENA_CLEARANCE || Math.abs(p.z) + extentZ > ARENA_HALF_DEPTH - ARENA_CLEARANCE || obstacles.some((o) => robotHitsBox(p, heading, o)) || (!doorOpen && doorBox && robotHitsBox(p, heading, doorBox)) || enemies.some((enemy) => enemy.userData.alive && Math.abs(p.y - enemy.position.y) < 1.1 && robotHitsCircle(p, heading, enemy.position, enemyRadius(enemy)));
   };
-  const enemyCollision = (p, radius, movingEnemy) => Math.abs(p.x) > ARENA_HALF_WIDTH - .75 || Math.abs(p.z) > ARENA_HALF_DEPTH - .75 || obstacles.some((o) => circleHitsBox(p, o, radius)) || (!doorOpen && levels[levelIndex].door && circleHitsBox(p, { x: levels[levelIndex].door[0], z: levels[levelIndex].door[1], w: levels[levelIndex].door[2] / 2, d: levels[levelIndex].door[3] / 2 }, radius)) || robotHitsCircle(robot.position, robot.rotation.y, p, radius) || enemies.some((other) => other !== movingEnemy && other.userData.alive && circularBodiesOverlap(p, radius, other.position, enemyRadius(other)));
+  const enemyCollision = (p, radius, movingEnemy) => levels[levelIndex].platforms.some((platform) => circleHitsBox(p, platform, radius)) || Math.abs(p.x) > ARENA_HALF_WIDTH - .75 || Math.abs(p.z) > ARENA_HALF_DEPTH - .75 || obstacles.some((o) => circleHitsBox(p, o, radius)) || (!doorOpen && levels[levelIndex].door && circleHitsBox(p, { x: levels[levelIndex].door[0], z: levels[levelIndex].door[1], w: levels[levelIndex].door[2] / 2, d: levels[levelIndex].door[3] / 2 }, radius)) || robotHitsCircle(robot.position, robot.rotation.y, p, radius) || enemies.some((other) => other !== movingEnemy && other.userData.alive && circularBodiesOverlap(p, radius, other.position, enemyRadius(other)));
   const projectileBlockers = () => {
     const blockers = [...obstacles, { x: 0, z: -ARENA_HALF_DEPTH, w: ARENA_HALF_WIDTH, d: .09 }, { x: 0, z: ARENA_HALF_DEPTH, w: ARENA_HALF_WIDTH, d: .09 }, { x: -ARENA_HALF_WIDTH, z: 0, w: .09, d: ARENA_HALF_DEPTH }, { x: ARENA_HALF_WIDTH, z: 0, w: .09, d: ARENA_HALF_DEPTH }];
     const door = levels[levelIndex].door; if (!doorOpen && door) blockers.push({ x: door[0], z: door[1], w: door[2] / 2, d: door[3] / 2 });
@@ -602,7 +574,12 @@ if (root) {
     shieldTimeRemaining = stepBubbleShield({ remaining: shieldTimeRemaining, shields, running, activate: true }).remaining;
     say(`Bubble shield active for ${SHIELD_ACTIVATION_DURATION.toFixed(1)} seconds.`);
   };
-  const readInput = () => { let forward = touch.forward || (((keys.has('ArrowUp') || keys.has('KeyW')) ? 1 : 0) - ((keys.has('ArrowDown') || keys.has('KeyS')) ? 1 : 0)), steering = touch.steering || (((keys.has('ArrowLeft') || keys.has('KeyA')) ? 1 : 0) - ((keys.has('ArrowRight') || keys.has('KeyD')) ? 1 : 0)), leftTarget, rightTarget; const pad = [...(navigator.getGamepads?.() || [])].find(Boolean); if (pad && (Math.abs(pad.axes[0] || 0) > .12 || Math.abs(pad.axes[1] || 0) > .12)) { forward = -(pad.axes[1] || 0); steering = -(pad.axes[0] || 0); } leftTarget = THREE.MathUtils.clamp(forward - steering * .72, -1, 1); rightTarget = THREE.MathUtils.clamp(forward + steering * .72, -1, 1); if (touch.leftActive || touch.rightActive) { leftTarget = touch.leftActive ? touch.left : 0; rightTarget = touch.rightActive ? touch.right : 0; } const gamepadLaserPressed = Boolean(pad?.buttons.some((b, i) => (i === 0 || i === 6 || i === 7) && b.pressed)); if (gamepadLaserPressed && !gamepadLaserHeld) beginLaserCharge(); else if (!gamepadLaserPressed && gamepadLaserHeld) releaseLaserCharge(); gamepadLaserHeld = gamepadLaserPressed; const shieldPressed = Boolean(pad?.buttons[3]?.pressed); if (shieldPressed && !gamepadShieldHeld) activateShield(); gamepadShieldHeld = shieldPressed; controls.left += (leftTarget - controls.left) * .28; controls.right += (rightTarget - controls.right) * .28; };
+  const setRocketHeld = (held) => {
+    if (!held) { rocketHeld = false; return; }
+    if (!running || !upgradeLevels.rocketBooster || energy < 1 || hacking || hackingCamera) return;
+    rocketHeld = true; climbingLedge = false; baseFlipperAngle = BASE_FLIPPER_REAR_ANGLE; baseFlipperTarget = 'rear';
+  };
+  const readInput = () => { let forward = touch.forward || (((keys.has('ArrowUp') || keys.has('KeyW')) ? 1 : 0) - ((keys.has('ArrowDown') || keys.has('KeyS')) ? 1 : 0)), steering = touch.steering || (((keys.has('ArrowLeft') || keys.has('KeyA')) ? 1 : 0) - ((keys.has('ArrowRight') || keys.has('KeyD')) ? 1 : 0)), leftTarget, rightTarget; const pad = [...(navigator.getGamepads?.() || [])].find(Boolean); if (pad && (Math.abs(pad.axes[0] || 0) > .12 || Math.abs(pad.axes[1] || 0) > .12)) { forward = -(pad.axes[1] || 0); steering = -(pad.axes[0] || 0); } leftTarget = THREE.MathUtils.clamp(forward - steering * .72, -1, 1); rightTarget = THREE.MathUtils.clamp(forward + steering * .72, -1, 1); if (touch.leftActive || touch.rightActive) { leftTarget = touch.leftActive ? touch.left : 0; rightTarget = touch.rightActive ? touch.right : 0; } const gamepadLaserPressed = Boolean(pad?.buttons.some((b, i) => (i === 0 || i === 6 || i === 7) && b.pressed)); if (gamepadLaserPressed && !gamepadLaserHeld) beginLaserCharge(); else if (!gamepadLaserPressed && gamepadLaserHeld) releaseLaserCharge(); gamepadLaserHeld = gamepadLaserPressed; const shieldPressed = Boolean(pad?.buttons[3]?.pressed); if (shieldPressed && !gamepadShieldHeld) activateShield(); gamepadShieldHeld = shieldPressed; const rocketPressed = Boolean(pad?.buttons[4]?.pressed); if (rocketPressed !== gamepadRocketHeld) setRocketHeld(rocketPressed); gamepadRocketHeld = rocketPressed; controls.left += (leftTarget - controls.left) * .28; controls.right += (rightTarget - controls.right) * .28; };
   const nearestHackableCamera = (range = SECURITY_CAMERA_HACK_RANGE) => securityCameras
     .filter((securityCamera) => !securityCamera.disabled)
     .map((securityCamera) => ({ securityCamera, distance: robot.position.distanceTo(securityCamera.group.position) }))
@@ -626,7 +603,7 @@ if (root) {
   const commandBaseFlipper = (target) => {
     if (!running || complete || levelComplete || target === baseFlipperTarget) return;
     if (climbingLedge && target === 'forward') return;
-    if (supportMotion.phase !== 'grounded') return;
+    if (supportMotion.phase !== 'grounded' || rocketFlight.airborne || rocketHeld) return;
     if (hacking || hackingCamera) { say('Finish or cancel the security task before using the base lift.'); return; }
     if (energy < BASE_FLIPPER_ENERGY_COST) { say(`Base lift needs ${BASE_FLIPPER_ENERGY_COST} system energy. Hold position or collect a cell.`); return; }
     energy -= BASE_FLIPPER_ENERGY_COST; baseFlipperTarget = target;
@@ -659,9 +636,17 @@ if (root) {
     const flipperStep = advanceBaseFlipper({ angle: baseFlipperAngle, target: baseFlipperTarget, delta: dt, climbing: climbingLedge }); baseFlipperAngle = flipperStep.angle;
     const level = levels[levelIndex], old = robot.position.clone(), oldHeading = robot.rotation.y, powered = energy > .05 ? 1 : 0, speedMultiplier = driveSpeedMultiplier(upgradeLevels.speedBoost), flipperPose = robotBasePose(), ledgeDriveScale = climbingLedge ? Math.min(1, ROB_CONTACT_SPAN * 2.15 * Math.cos(flipperGroundPitch(BASE_FLIPPER_FORWARD_ANGLE)) / ((BASE_FLIPPER_REAR_ASSIST_ANGLE - BASE_FLIPPER_FORWARD_ANGLE) / BASE_FLIPPER_MOTOR_SPEED * BASE_DRIVE_SPEED * speedMultiplier) * .75) : 1, left = controls.left * BASE_DRIVE_SPEED * speedMultiplier * powered * ledgeDriveScale, right = controls.right * BASE_DRIVE_SPEED * speedMultiplier * powered * ledgeDriveScale, linear = (left + right) / 2, yaw = (right - left) / 1.55 * dt, targetHeading = oldHeading + yaw;
     let resolvedHeading = oldHeading;
-    for (const fraction of [1, .66, .33]) { const candidateHeading = oldHeading + yaw * fraction; if (!collision(old, candidateHeading)) { resolvedHeading = candidateHeading; break; } }
+    for (const fraction of [1, .66, .33]) {
+      const candidateHeading = oldHeading + yaw * fraction;
+      if (!collision(old, candidateHeading)) { resolvedHeading = candidateHeading; break; }
+      const door = level.door;
+      const walls = [...obstacles, ...(!doorOpen && door ? [{ x: door[0], z: door[1], w: door[2] / 2, d: door[3] / 2 }] : [])];
+      const recovered = resolveWallTurn({ point: { x: old.x, z: old.z }, heading: candidateHeading, walls,
+        canOccupy: (p) => !collision(new THREE.Vector3(p.x, old.y, p.z), candidateHeading, old) });
+      if (recovered) { old.x = recovered.x; old.z = recovered.z; resolvedHeading = candidateHeading; break; }
+    }
     const travelHeading = oldHeading + (resolvedHeading - oldHeading) / 2, intended = { x: old.x - Math.sin(travelHeading) * linear * dt, z: old.z - Math.cos(travelHeading) * linear * dt };
-    if (!climbingLedge && supportMotion.phase === 'grounded' && !pointOnLedge(old) && linear > 0 && Math.cos(robot.rotation.y) > .7 && flipperPose.phase >= .9) {
+    if (!rocketFlight.airborne && !rocketHeld && !climbingLedge && supportMotion.phase === 'grounded' && !pointOnLedge(old) && linear > 0 && Math.cos(robot.rotation.y) > .7 && flipperPose.phase >= .9) {
       const reach = ROB_CONTACT_SPAN * 2.15 * (Math.cos(flipperPose.pitch) - .5);
       const front = { x: intended.x - Math.sin(robot.rotation.y) * reach, z: intended.z - Math.cos(robot.rotation.y) * reach };
       if (pointOnLedge(front) && old.z >= LEDGE.approachEdgeZ && LEDGE.height <= ROB_CONTACT_SPAN * 2.15 * Math.sin(flipperPose.pitch)) {
@@ -675,16 +660,22 @@ if (root) {
       canOccupy: (position) => !collision(new THREE.Vector3(position.x, old.y, position.z), resolvedHeading, old),
     });
     robot.position.set(motion.position.x, old.y, motion.position.z); robot.rotation.y = resolvedHeading;
-    const conveyorMove = conveyorDisplacement({ point: { x: robot.position.x, z: robot.position.z }, conveyors, delta: dt });
+    const conveyorMove = rocketFlight.airborne || rocketHeld ? { x: 0, z: 0 } : conveyorDisplacement({ point: { x: robot.position.x, z: robot.position.z }, conveyors, delta: dt });
     const conveyorPosition = robot.position.clone(); conveyorPosition.x += conveyorMove.x; conveyorPosition.z += conveyorMove.z;
     if (!collision(conveyorPosition, robot.rotation.y, robot.position)) robot.position.copy(conveyorPosition);
     const newSurfaceHeight = surfaceHeight(robot.position);
-    updateGroundSupport(dt, flipperPose, linear);
+    const wasFlying = rocketFlight.airborne || rocketHeld;
+    if (wasFlying) {
+      const result = stepRocketFlight({ motion: rocketFlight, height: robot.position.y, floor: surfaceHeight(robot.position), energy, held: rocketHeld, installed: upgradeLevels.rocketBooster > 0, delta: dt, scale: 2.15 });
+      rocketFlight = result.motion; robot.position.y = result.height; energy = result.energy;
+      supportMotion = createROBSupportMotion(robot.position.y);
+      if (energy <= .05) rocketHeld = false;
+    } else updateGroundSupport(dt, flipperPose, linear);
     torsoLeanAngle = advanceTorsoLean(torsoLeanAngle, robotBasePose().pitch, dt);
     const treadsPowered = Boolean(powered && Math.abs(controls.left) + Math.abs(controls.right) > .02);
-    if (!flipperStep.active) energy = updateDriveEnergy({ energy, maximum: maximumEnergy(upgradeLevels.energyCapacity), moving: treadsPowered, delta: dt, capacityLevel: upgradeLevels.energyCapacity, charging: laserChargeStarted !== undefined, secondsSinceShot: elapsed - lastShot });
+    if (!flipperStep.active && !wasFlying && supportMotion.phase === 'grounded') energy = updateDriveEnergy({ energy, maximum: maximumEnergy(upgradeLevels.energyCapacity), moving: treadsPowered, delta: dt, capacityLevel: upgradeLevels.energyCapacity, charging: laserChargeStarted !== undefined, secondsSinceShot: elapsed - lastShot });
     robotRig.treadWheels.forEach(({ wheel, side }) => { wheel.rotation.x -= controls[side] * dt * 10.5 * speedMultiplier; });
-    if (newSurfaceHeight > surfaceHeight(old)) say('Front tracks on the ledge. Flippers are reversing automatically; keep driving to lift the rear and level ROB.');
+    if (!wasFlying && newSurfaceHeight > surfaceHeight(old)) say('Front tracks on the ledge. Flippers are reversing automatically; keep driving to lift the rear and level ROB.');
     else if (motion.collided && Math.abs(linear) > .1) say(!pointOnLedge(old) && !pointOnLedge(robot.position) && intended.z < old.z ? 'Ledge too high for the treads. Lower the flippers to lift the front, then keep driving into the orange lip.' : robot.position.distanceTo(old) > .001 ? 'Wall assist active — ROB is sliding along the open edge.' : 'Wall contact — reverse or pivot away; ROB will release cleanly.');
     if (hackingCamera) {
       if (robot.position.distanceTo(hackingCamera.group.position) > SECURITY_CAMERA_HACK_RANGE) { hackingCamera = undefined; hackingProgress = 0; say('Camera hack interrupted. Move back within Flipper Zero range.'); }
@@ -731,16 +722,16 @@ if (root) {
         enemy.userData.turret.rotation.y = shooterTurretYaw(elapsed, i);
       }
       enemy.position.y = surfaceHeight(enemy.position) + (isSpider ? Math.sin(elapsed * 10 + i) * .055 : Math.sin(elapsed * 2.4 + i) * .028);
-      if (robotHitsCircle(robot.position, robot.rotation.y, enemy.position, enemyRadius(enemy) + .08)) { if (isSpider) playSpiderSound('impact'); else playDalekSentry(); if (damageROB(isSpider ? `${enemy.userData.name} lunge` : `${enemy.userData.name} collision`, enemy.userData.contactDamage)) return; }
+      if (Math.abs(robot.position.y - enemy.position.y) < 1.1 && robotHitsCircle(robot.position, robot.rotation.y, enemy.position, enemyRadius(enemy) + .08)) { if (isSpider) playSpiderSound('impact'); else playDalekSentry(); if (damageROB(isSpider ? `${enemy.userData.name} lunge` : `${enemy.userData.name} collision`, enemy.userData.contactDamage)) return; }
     }
-    for (let i = enemyBolts.length - 1; i >= 0; i -= 1) { const bolt = enemyBolts[i], start = bolt.position.clone(); bolt.position.addScaledVector(bolt.userData.velocity, dt); const impact = firstProjectileImpact({ start: { x: start.x, z: start.z }, end: { x: bolt.position.x, z: bolt.position.z }, blockers: projectileBlockers(), targets: [{ id: 'rob', x: robot.position.x, z: robot.position.z, radius: .72 }] }); if (impact || bolt.position.distanceTo(robot.position) > 42) { scene.remove(bolt); enemyBolts.splice(i, 1); if (impact?.kind === 'target') { playDalekSentry(); if (damageROB(bolt.userData.sourceName, bolt.userData.damage)) return; } } }
+    for (let i = enemyBolts.length - 1; i >= 0; i -= 1) { const bolt = enemyBolts[i], start = bolt.position.clone(); bolt.position.addScaledVector(bolt.userData.velocity, dt); const impact = firstProjectileImpact({ start: { x: start.x, z: start.z }, end: { x: bolt.position.x, z: bolt.position.z }, blockers: projectileBlockers(), targets: Math.abs(bolt.position.y - (robot.position.y + 1)) < 1.1 ? [{ id: 'rob', x: robot.position.x, z: robot.position.z, radius: .72 }] : [] }); if (impact || bolt.position.distanceTo(robot.position) > 42) { scene.remove(bolt); enemyBolts.splice(i, 1); if (impact?.kind === 'target') { playDalekSentry(); if (damageROB(bolt.userData.sourceName, bolt.userData.damage)) return; } } }
     for (let i = bolts.length - 1; i >= 0; i -= 1) { const bolt = bolts[i], start = bolt.position.clone(); bolt.position.addScaledVector(bolt.userData.velocity, dt); const targets = enemies.filter((enemy) => enemy.userData.alive).map((enemy) => ({ enemy, x: enemy.position.x, z: enemy.position.z, radius: (enemy.userData.type === 'spider' ? .72 : .8) * (enemy.userData.combatScale || 1) })), impact = firstProjectileImpact({ start: { x: start.x, z: start.z }, end: { x: bolt.position.x, z: bolt.position.z }, blockers: projectileBlockers(), targets }); if (impact) { scene.remove(bolt); bolts.splice(i, 1); if (impact.kind === 'wall') { say(`${bolt.userData.weapon.name} struck the wall. Reposition for a clear shot.`); continue; } const hit = impact.target.enemy, weaponLabel = bolt.userData.charge > .72 ? `charged ${bolt.userData.weapon.name.toLowerCase()}` : bolt.userData.weapon.name.toLowerCase(); damageEnemy(hit, weaponLabel, bolt.userData.damage || 1); if (bolt.userData.weapon.id === 'arcCannon') { const secondary = enemies.find((enemy) => enemy.userData.alive && enemy !== hit && enemy.position.distanceTo(hit.position) <= 2.2); if (secondary) damageEnemy(secondary, 'arc cannon chain', Math.max(1, Math.floor((bolt.userData.damage || 1) / 2))); } } else if (bolt.position.distanceTo(robot.position) > 42) { scene.remove(bolt); bolts.splice(i, 1); } }
     if (!gateDone && robot.position.distanceTo(gate.position) < 1.55) { gateDone = true; awardMissionPoints(250); say('Calibration gate bonus collected. Continue with the shared mission objectives.'); }
     if (keyObject.visible && robot.position.distanceTo(keyObject.position) < 1.45) { hasKey = true; keyObject.visible = false; awardMissionPoints(250); playSound('pickup'); say('Access key secured. Reach the orange panel and start ROB’s Flipper Zero hack.'); }
-    cells.forEach((c) => { if (c.visible && !c.userData.got && robot.position.distanceTo(c.position) < 1) { c.userData.got = true; c.visible = false; cellCount += 1; const restoredEnergy = energyPickupAmount(upgradeLevels.energyCapacity); energy = Math.min(maximumEnergy(upgradeLevels.energyCapacity), energy + restoredEnergy); awardMissionPoints(150); playSound('pickup'); say(`Energy cell ${cellCount} of ${level.cells.length} secured. Battery boosted by up to ${restoredEnergy}.`); if (cellCount === level.cells.length) mark('cells', 'All cells secured. Dock after the room is safe.', 300); } });
+    cells.forEach((c) => { if (c.visible && !c.userData.got && robot.position.distanceTo(c.position) < 1) { c.userData.got = true; c.visible = false; cellCount += 1; objectives.cells.querySelector('[data-objective-text]').textContent = `Energy cells: ${cellCount} / ${level.cells.length}`; const restoredEnergy = energyPickupAmount(upgradeLevels.energyCapacity); energy = Math.min(maximumEnergy(upgradeLevels.energyCapacity), energy + restoredEnergy); awardMissionPoints(150); playSound('pickup'); say(`Energy cell ${cellCount} of ${level.cells.length} secured. Battery boosted by up to ${restoredEnergy}.`); if (cellCount === level.cells.length) mark('cells', 'All cells secured. Dock after the room is safe.', 300); } });
     shieldPickups.forEach((pickup) => { if (pickup.visible && !pickup.userData.got && shields < MAX_ROB_SHIELDS && robot.position.distanceTo(pickup.position) < 1.1) { const before = shields; shields = replenishROBShields(shields); pickup.userData.got = true; pickup.visible = false; awardMissionPoints(100); playSound('pickup'); say(`Shield capacitor restored ${shields - before} points. ROB shields: ${shields}/${MAX_ROB_SHIELDS}.`); } });
     repairPickups.forEach((pickup) => { if (pickup.visible && !pickup.userData.got && health < MAX_ROB_HEALTH && robot.position.distanceTo(pickup.position) < 1.1) { const before = health; health = repairROBHealth(health); pickup.userData.got = true; pickup.visible = false; awardMissionPoints(100); playSound('pickup'); say(`Repair kit restored ${health - before} hull points. ROB health: ${health}/${MAX_ROB_HEALTH}.`); } });
-    if (cellCount === level.cells.length && enemies.every((e) => !e.userData.alive) && doorOpen && robot.position.distanceTo(dock.position) < 1.15) {
+    if (!rocketFlight.airborne && Math.abs(robot.position.y - surfaceHeight(robot.position)) < .2 && cellCount === level.cells.length && enemies.every((e) => !e.userData.alive) && doorOpen && robot.position.distanceTo(dock.position) < 1.15) {
       const timeBonus = Math.max(0, level.bonus - Math.floor(levelElapsed) * 10), completedLevel = levelIndex + 1, earnedProgress = completedLevel > highestCompletedLevel, reward = earnedProgress ? unlockReward(completedLevel) : undefined;
       highestCompletedLevel = Math.max(highestCompletedLevel, completedLevel); saveProgress('robHighestCompletedLevel', highestCompletedLevel); updateWorkshop();
       const skillPoints = levelSkillReward(completedLevel);
@@ -769,7 +760,7 @@ if (root) {
     robotRig.baseFlipper.rotation.x = flipperPose.angle; robotRig.driveBase.rotation.x = flipperPose.pitch;
     robotRig.driveBase.position.y = flipperPose.lift - robot.position.y;
     const bodyPose = robTorsoPresentation({ basePitch: flipperPose.pitch, leanAngle: torsoLeanAngle, rearHeight: flipperPose.lift, rootHeight: robot.position.y, scale: 2.15, yaw: robotRig.torso.rotation.y });
-    robotRig.torso.rotation.x = bodyPose.pitch; robotRig.torso.position.set(bodyPose.position.x, bodyPose.position.y, bodyPose.position.z); ui.flipperButtons.forEach((button) => { const target = button.dataset.flipperDirection; button.disabled = !running || supportMotion.phase !== 'grounded' || target === baseFlipperTarget || (climbingLedge && target === 'forward'); const compact = button.classList.contains('rob-sim__fire'); button.textContent = target === 'forward' ? (compact ? 'FLIPPER DOWN' : 'Flipper Down · F') : (compact ? 'FLIPPER UP' : 'Flipper Up · B'); button.setAttribute('aria-pressed', String(target === baseFlipperTarget)); });
+    robotRig.torso.rotation.x = bodyPose.pitch; robotRig.torso.position.set(bodyPose.position.x, bodyPose.position.y, bodyPose.position.z); ui.flipperButtons.forEach((button) => { const target = button.dataset.flipperDirection; button.disabled = !running || rocketFlight.airborne || rocketHeld || supportMotion.phase !== 'grounded' || target === baseFlipperTarget || (climbingLedge && target === 'forward'); const compact = button.classList.contains('rob-sim__fire'); button.textContent = target === 'forward' ? (compact ? 'FLIPPER DOWN' : 'Flipper Down · F') : (compact ? 'FLIPPER UP' : 'Flipper Up · B'); button.setAttribute('aria-pressed', String(target === baseFlipperTarget)); });
     const speakerPulse = musicEnabled && running ? 1 + Math.max(0, Math.sin(elapsed * Math.PI * 8)) * .13 : 1; robotRig.speakerCones.forEach((cone, index) => cone.scale.set(1 + (speakerPulse - 1) * (index ? .78 : 1), 1, 1 + (speakerPulse - 1) * (index ? .78 : 1)));
     if (keyObject.visible) { keyObject.rotation.y += dt * 1.7; keyObject.position.y = surfaceHeight(keyObject.position) + .1 + Math.sin(elapsed * 3.2) * .09; keyBeaconMaterial.opacity = .42 + (Math.sin(elapsed * 4.4) + 1) * .13; }
     cells.forEach((c, i) => { if (c.visible) { c.rotation.y += dt * 1.4; c.position.y = (c.userData.surfaceHeight || 0) + .55 + Math.sin(elapsed * 2 + i) * .08; } });
@@ -782,6 +773,14 @@ if (root) {
     }));
     const shield = stepBubbleShield({ remaining: shieldTimeRemaining, shields, running });
     shieldTimeRemaining = shield.remaining;
+    robotRig.boosters.visible = upgradeLevels.rocketBooster > 0;
+    robotRig.jets.forEach((jet, i) => { jet.visible = running && rocketFlight.thrusting; jet.scale.y = .8 + Math.sin(elapsed * 37 + i * 2) * .12; });
+    ui.rocketButtons.forEach((button) => {
+      button.disabled = !running || !upgradeLevels.rocketBooster;
+      button.textContent = !upgradeLevels.rocketBooster ? 'BOOSTER · UPGRADE' : rocketFlight.thrusting ? 'BOOST ON · TAP TO LAND' : rocketFlight.airborne ? 'DESCENDING · TAP TO RISE' : 'BOOST · R / TAP · 18 E/s';
+      if (button.hasAttribute('data-rocket-compact')) button.textContent = !upgradeLevels.rocketBooster ? 'Boost · Upgrade' : rocketFlight.thrusting ? 'Land · 18 E/s' : 'Boost · R';
+      button.setAttribute('aria-pressed', String(rocketFlight.thrusting));
+    });
     robotRig.shieldField.visible = shield.active;
     robotRig.shieldField.rotation.y += dt * .35;
     robotRig.shieldField.material.opacity = .22 * shield.fraction;
@@ -791,11 +790,12 @@ if (root) {
       button.textContent = shield.active ? `Shield ${shield.remaining.toFixed(1)}s` : 'Shield · E';
       button.setAttribute('aria-label', shield.active ? 'Bubble shield active' : 'Activate bubble shield');
     });
-    camera.position.lerp(new THREE.Vector3(robot.position.x + 6.2, 11.2, robot.position.z + 8.2), .06); camera.lookAt(robot.position.x, .65, robot.position.z - 1.8);
+    camera.position.lerp(new THREE.Vector3(robot.position.x + 6.2, robot.position.y + 11.2, robot.position.z + 8.2), .06); camera.lookAt(robot.position.x, robot.position.y + .65, robot.position.z - 1.8);
     ui.time.textContent = new Date(elapsed * 1000).toISOString().slice(14, 22); ui.score.textContent = score; ui.points.textContent = upgradePoints; ui.lives.textContent = `${lives} / ${MAX_TRIAL_LIVES}`; ui.left.textContent = controls.left.toFixed(2); ui.right.textContent = controls.right.toFixed(2); ui.enemies.textContent = enemies.filter((e) => e.userData.alive).length;
     ui.health.value = health; ui.healthText.textContent = `${health} / ${MAX_ROB_HEALTH}`; ui.shields.value = shields; ui.shieldsText.textContent = `${shields} / ${MAX_ROB_SHIELDS}`; const energyMaximum = maximumEnergy(upgradeLevels.energyCapacity); ui.energy.max = energyMaximum; ui.energy.value = energy; ui.energyText.textContent = `${Math.floor(energy)} / ${energyMaximum}`; ui.security.hidden = securityAlertRemaining <= 0;
     const level = levels[levelIndex], hackDistance = robot.position.distanceTo(hackTerminal.position), doorHackAvailable = Boolean(level.door && !doorOpen && hackDistance <= 2.7), nearbyCamera = nearestHackableCamera(), hasActiveCamera = securityCameras.some((securityCamera) => !securityCamera.disabled), hackAvailable = doorHackAvailable || hasActiveCamera || hacking || Boolean(hackingCamera); ui.hack.hidden = !hackAvailable; ui.hack.disabled = hacking || Boolean(hackingCamera) || (!nearbyCamera && !doorHackAvailable); ui.hack.textContent = hackingCamera ? `▣ Hacking camera ${Math.round(hackingProgress * 100)}%` : hacking ? `▣ Hacking door ${Math.round(hackingProgress * 100)}%` : nearbyCamera ? '▣ Hack camera' : doorHackAvailable ? hasKey ? '▣ Hack door' : '▣ Key required' : '▣ Reach security camera';
     hackTerminalLamp.material.color.setHex(hacking ? 0xffcf33 : hasKey ? 0x37e887 : 0xff3030); hackTerminalLamp.material.emissive.setHex(hacking ? 0xb37700 : hasKey ? 0x087a35 : 0x8b0505);
+    if (ui.resume) { ui.resume.hidden = running || highestCompletedLevel < 1; ui.resume.textContent = `Continue at Level ${Math.min(highestCompletedLevel + 1, levels.length)}`; }
     ui.workshopPoints.textContent = `${upgradePoints.toLocaleString()} skill points`;
     const boss = currentBoss(); ui.boss.hidden = !boss; if (boss) { ui.bossName.textContent = `${boss.userData.name} shields`; ui.bossText.textContent = `${boss.userData.health} / ${boss.userData.maxHealth}`; ui.bossHealth.max = boss.userData.maxHealth; ui.bossHealth.value = Math.max(0, boss.userData.health); }
     renderer.render(scene, camera);
@@ -806,11 +806,13 @@ if (root) {
   const resetTreadStick = (stick, side) => { touch[side] = 0; touch[`${side}Active`] = false; stick.style.setProperty('--stick-x', '0px'); stick.style.setProperty('--stick-y', '0px'); stick.setAttribute('aria-valuenow', '0'); stick.setAttribute('aria-valuetext', 'Stopped'); stick.classList.remove('is-active'); };
   const updateTreadStick = (stick, side, clientX, clientY) => { const rect = stick.getBoundingClientRect(), x = clientX - rect.left - rect.width / 2, y = clientY - rect.top - rect.height / 2, visualLimit = Math.min(rect.width, rect.height) * .31, distance = Math.hypot(x, y), visualScale = distance > visualLimit ? visualLimit / distance : 1, rawValue = THREE.MathUtils.clamp(-y / (rect.height * .34), -1, 1), value = Math.abs(rawValue) < .06 ? 0 : rawValue; touch[side] = value; touch[`${side}Active`] = true; stick.style.setProperty('--stick-x', `${x * visualScale}px`); stick.style.setProperty('--stick-y', `${y * visualScale}px`); stick.setAttribute('aria-valuenow', value.toFixed(2)); stick.setAttribute('aria-valuetext', value === 0 ? 'Stopped' : `${Math.round(Math.abs(value) * 100)}% ${value > 0 ? 'forward' : 'reverse'}`); stick.classList.add('is-active'); };
   const releaseTread = (pointerId) => { const input = activeTreadPointers.get(pointerId); if (!input) return; activeTreadPointers.delete(pointerId); resetTreadStick(input.stick, input.side); };
-  const releaseAllInput = () => { keys.clear(); [...activeDrivePointers.keys()].forEach(releaseDrive); [...activeTreadPointers.keys()].forEach(releaseTread); root.querySelectorAll('[data-tread-stick]').forEach((stick) => resetTreadStick(stick, stick.dataset.treadStick)); touch.forward = touch.steering = controls.left = controls.right = 0; gamepadLaserHeld = false; gamepadShieldHeld = false; shieldTimeRemaining = 0; cancelLaserCharge(); };
-  addEventListener('keydown', (e) => { if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space', 'KeyQ', 'KeyF', 'KeyB', 'KeyE'].includes(e.code)) e.preventDefault(); const firstPress = !keys.has(e.code); keys.add(e.code); if (firstPress && e.code === 'KeyE') activateShield(); if (firstPress && e.code === 'Space') saberSlash(); if (firstPress && e.code === 'KeyQ') beginLaserCharge(); if (firstPress && e.code === 'KeyF') commandBaseFlipper('forward'); if (firstPress && e.code === 'KeyB') commandBaseFlipper('rear'); }); addEventListener('keyup', (e) => { keys.delete(e.code); if (e.code === 'KeyQ') releaseLaserCharge(); }); addEventListener('blur', releaseAllInput);
+  const releaseAllInput = () => { keys.clear(); [...activeDrivePointers.keys()].forEach(releaseDrive); [...activeTreadPointers.keys()].forEach(releaseTread); root.querySelectorAll('[data-tread-stick]').forEach((stick) => resetTreadStick(stick, stick.dataset.treadStick)); touch.forward = touch.steering = controls.left = controls.right = 0; gamepadLaserHeld = false; gamepadShieldHeld = false; rocketHeld = gamepadRocketHeld = false; shieldTimeRemaining = 0; cancelLaserCharge(); };
+  addEventListener('keydown', (e) => { if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space', 'KeyQ', 'KeyF', 'KeyB', 'KeyE', 'KeyR'].includes(e.code)) e.preventDefault(); const firstPress = !keys.has(e.code); keys.add(e.code); if (firstPress && e.code === 'KeyR') setRocketHeld(true); if (firstPress && e.code === 'KeyE') activateShield(); if (firstPress && e.code === 'Space') saberSlash(); if (firstPress && e.code === 'KeyQ') beginLaserCharge(); if (firstPress && e.code === 'KeyF') commandBaseFlipper('forward'); if (firstPress && e.code === 'KeyB') commandBaseFlipper('rear'); }); addEventListener('keyup', (e) => { keys.delete(e.code); if (e.code === 'KeyR') setRocketHeld(false); if (e.code === 'KeyQ') releaseLaserCharge(); }); addEventListener('blur', releaseAllInput);
   root.querySelectorAll('[data-drive]').forEach((button) => { const forward = Number(button.dataset.forward || 0), steering = Number(button.dataset.steering || 0); button.setAttribute('aria-pressed', 'false'); button.addEventListener('pointerdown', (e) => { e.preventDefault(); activeDrivePointers.set(e.pointerId, { forward, steering, button }); updateTouchDrive(); button.classList.add('is-pressed'); button.setAttribute('aria-pressed', 'true'); button.setPointerCapture?.(e.pointerId); }); ['pointerup', 'pointercancel', 'lostpointercapture'].forEach((eventName) => button.addEventListener(eventName, (e) => releaseDrive(e.pointerId))); });
   root.querySelectorAll('[data-tread-stick]').forEach((stick) => { const side = stick.dataset.treadStick; stick.addEventListener('pointerdown', (e) => { e.preventDefault(); if (touch[`${side}Active`]) return; activeTreadPointers.set(e.pointerId, { side, stick }); stick.setPointerCapture?.(e.pointerId); updateTreadStick(stick, side, e.clientX, e.clientY); }); stick.addEventListener('pointermove', (e) => { if (activeTreadPointers.get(e.pointerId)?.stick === stick) updateTreadStick(stick, side, e.clientX, e.clientY); }); ['pointerup', 'pointercancel', 'lostpointercapture'].forEach((eventName) => stick.addEventListener(eventName, (e) => { e.preventDefault(); releaseTread(e.pointerId); })); stick.addEventListener('keydown', (e) => { if (!['ArrowUp', 'ArrowDown'].includes(e.code)) return; e.preventDefault(); e.stopPropagation(); const value = e.code === 'ArrowUp' ? 1 : -1, rect = stick.getBoundingClientRect(); updateTreadStick(stick, side, rect.left + rect.width / 2, rect.top + rect.height * (.5 - value * .34)); }); stick.addEventListener('keyup', (e) => { if (!['ArrowUp', 'ArrowDown'].includes(e.code)) return; e.preventDefault(); e.stopPropagation(); resetTreadStick(stick, side); }); });
   ui.laserButtons.forEach((button) => { button.addEventListener('pointerdown', (e) => { e.preventDefault(); beginLaserCharge(); button.setPointerCapture?.(e.pointerId); }); button.addEventListener('pointerup', (e) => { e.preventDefault(); releaseLaserCharge(); }); button.addEventListener('pointercancel', (e) => { e.preventDefault(); cancelLaserCharge(); }); button.addEventListener('lostpointercapture', releaseLaserCharge); }); root.querySelectorAll('[data-sim-saber]').forEach((button) => button.addEventListener('pointerdown', (e) => { e.preventDefault(); saberSlash(); }));
+  ui.rocketButtons.forEach((button) => button.addEventListener('click', () => setRocketHeld(!rocketHeld)));
+  ui.replay.addEventListener('click', () => { if (!levelComplete) return; loadLevel(levelIndex); running = true; ui.start.hidden = true; startMusic(); });
   ui.flipperButtons.forEach((button) => button.addEventListener('click', () => commandBaseFlipper(button.dataset.flipperDirection)));
   ui.shieldButtons.forEach((button) => button.addEventListener('click', activateShield));
   ui.hack.addEventListener('click', startFlipperHack);
@@ -818,13 +820,18 @@ if (root) {
   const leavePseudoFullscreen = () => { shell.classList.remove('is-pseudo-fullscreen'); document.body.classList.remove('rob-game-open'); };
   const syncFullscreen = () => { const open = Boolean(fullscreenElement()) || shell.classList.contains('is-pseudo-fullscreen'); shell.classList.toggle('is-fullscreen', open); ui.fullscreen.textContent = open ? '× Exit' : '⛶ Fullscreen'; ui.fullscreen.setAttribute('aria-label', open ? 'Exit fullscreen' : 'Enter fullscreen'); releaseAllInput(); requestAnimationFrame(resize); };
   ui.fullscreen.addEventListener('click', async () => { try { if (fullscreenElement()) await (document.exitFullscreen?.() || document.webkitExitFullscreen?.()); else if (shell.classList.contains('is-pseudo-fullscreen')) leavePseudoFullscreen(); else if (shell.requestFullscreen) await shell.requestFullscreen({ navigationUI: 'hide' }); else if (shell.webkitRequestFullscreen) shell.webkitRequestFullscreen(); else enterPseudoFullscreen(); if (isFullscreen()) screen.orientation?.lock?.('landscape')?.catch?.(() => {}); syncFullscreen(); } catch { enterPseudoFullscreen(); syncFullscreen(); } }); ['fullscreenchange', 'webkitfullscreenchange'].forEach((eventName) => document.addEventListener(eventName, syncFullscreen)); window.visualViewport?.addEventListener('resize', resize); addEventListener('orientationchange', () => requestAnimationFrame(resize));
+  const levelStartMessage = () => levels[levelIndex].requiresBooster
+    ? `Level ${levelIndex + 1}: hold R / gamepad LB, or tap Boost, to rise. Release or tap Land to descend onto the blue pads. Collect the elevated cells and land at the summit dock; rockets use 18 energy per second.`
+    : `Level ${levelIndex + 1}: lower the flippers with F to lift the front, then drive onto the step for automatic rear support. Use B to raise them manually. ${levels[levelIndex].key ? 'Find the key and use the orange hack panel.' : 'Clear the targets and collect every cell.'}`;
   ui.intermissionContinue.addEventListener('click', () => {
     if (!levelComplete || levelIndex >= levels.length - 1) return;
+    if (levels[levelIndex + 1]?.requiresBooster && !upgradeLevels.rocketBooster) { say('Install the 900-point Plasma Booster before deploying. Replay this level if you need more skill points.'); return; }
     levelIndex += 1; loadLevel(levelIndex); running = true; startMusic(); playSound('mission-start'); ui.start.hidden = true;
-    say(`Level ${levelIndex + 1}: upgrades installed. Use F to lower the flippers and lift the front, then drive forward for automatic rear support. B raises the flippers manually. ${levels[levelIndex].key ? 'Follow the KEY beacon and use the orange hack panel.' : 'Clear the targets and collect every cell.'}`);
+    say(levelStartMessage());
     viewport.focus();
   });
-  ui.start.addEventListener('click', () => { if (complete) reset(); else if (levelComplete) { levelIndex += 1; loadLevel(levelIndex); } if (lives === 0) lives = MAX_TRIAL_LIVES; running = true; startMusic(); playSound('mission-start'); ui.start.hidden = true; say(`Level ${levelIndex + 1}: lower the flippers with F to lift the front, then drive onto the step for automatic rear support. Use B to raise them manually. ${levels[levelIndex].key ? 'Find the key and use the orange hack panel.' : 'Clear the targets and collect every cell.'}`); viewport.focus(); }); ui.reset.addEventListener('click', reset); root.querySelector('[data-sim-sound]').addEventListener('click', (event) => { soundEnabled = !soundEnabled; if (!soundEnabled) window.speechSynthesis?.cancel?.(); event.currentTarget.setAttribute('aria-pressed', String(soundEnabled)); event.currentTarget.textContent = soundEnabled ? '♪ Effects' : 'Effects off'; }); root.querySelector('[data-sim-music]').addEventListener('click', (event) => { musicEnabled = !musicEnabled; event.currentTarget.setAttribute('aria-pressed', String(musicEnabled)); event.currentTarget.textContent = musicEnabled ? '♫ Techno' : 'Music off'; if (musicEnabled && running) startMusic(); else stopMusic(); });
+  ui.start.addEventListener('click', () => { if (complete) reset(); else if (levelComplete) { if (levels[levelIndex + 1]?.requiresBooster && !upgradeLevels.rocketBooster) return; levelIndex += 1; loadLevel(levelIndex); } if (lives === 0) lives = MAX_TRIAL_LIVES; running = true; startMusic(); playSound('mission-start'); ui.start.hidden = true; say(levelStartMessage()); viewport.focus(); }); ui.reset.addEventListener('click', reset); root.querySelector('[data-sim-sound]').addEventListener('click', (event) => { soundEnabled = !soundEnabled; if (!soundEnabled) window.speechSynthesis?.cancel?.(); event.currentTarget.setAttribute('aria-pressed', String(soundEnabled)); event.currentTarget.textContent = soundEnabled ? '♪ Effects' : 'Effects off'; }); root.querySelector('[data-sim-music]').addEventListener('click', (event) => { musicEnabled = !musicEnabled; event.currentTarget.setAttribute('aria-pressed', String(musicEnabled)); event.currentTarget.textContent = musicEnabled ? '♫ Techno' : 'Music off'; if (musicEnabled && running) startMusic(); else stopMusic(); });
+  ui.resume = root.querySelector('[data-sim-resume]'); ui.resume.hidden = highestCompletedLevel < 1; ui.resume.textContent = `Continue at Level ${Math.min(highestCompletedLevel + 1, levels.length)}`; ui.resume.addEventListener('click', () => { running = false; levelIndex = Math.min(highestCompletedLevel, levels.length - 1); if (levels[levelIndex].requiresBooster && !upgradeLevels.rocketBooster) levelIndex = 14; loadLevel(levelIndex); viewport.focus(); });
   ui.finish.addEventListener('change', () => { selectedFinishID = ui.finish.value; droidProfile = writeDroidProfile({ ...droidProfile, finish: selectedFinishID }); applyLoadout(); say(`${selectedFinish().name} finish equipped.`); });
   ui.faceColor.addEventListener('change', () => { selectedFaceColorID = ui.faceColor.value; droidProfile = writeDroidProfile({ ...droidProfile, faceColor: selectedFaceColorID }); applyLoadout(); say(`${selectedFaceColor().name} smile equipped.`); });
   ui.ranged.addEventListener('change', () => { const requested = rangedWeapons.find(({ id }) => id === ui.ranged.value); if (!requested || !isUnlocked(requested, highestCompletedLevel)) { say(`Complete Level ${requested?.requiredLevel ?? 0} to unlock ${requested?.name ?? 'that weapon'}.`); updateWorkshop(); return; } selectedRangedID = requested.id; saveProgress('robRangedWeapon', selectedRangedID); applyLoadout(); say(`${requested.name} equipped.`); });

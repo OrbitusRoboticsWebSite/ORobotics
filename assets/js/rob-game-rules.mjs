@@ -1,4 +1,4 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.09.16.7';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.16.8';
 export const MAX_ROB_HEALTH = 100;
 export const MAX_ROB_SHIELDS = 40;
 export const SHIELD_ACTIVATION_DURATION = 2.5;
@@ -20,10 +20,11 @@ export const upgrades = [
   { id: 'weaponPower', name: 'Laser Power', maximumLevel: 3, baseCost: 900, costStep: 800 },
   { id: 'targetingComputer', name: 'Targeting Computer', maximumLevel: 1, baseCost: 1200, costStep: 0 },
   { id: 'kyberCrystals', name: 'Kyber Crystals', maximumLevel: 3, baseCost: 600, costStep: 1000 },
+  { id: 'rocketBooster', name: 'Plasma Booster', maximumLevel: 1, baseCost: 900, costStep: 0 },
 ];
 
 export const upgradeCost = (upgrade, level) => level < upgrade.maximumLevel ? upgrade.baseCost + level * upgrade.costStep : undefined;
-export const upgradeRequiredCompletedLevel = (upgrade, level) => upgrade.id === 'kyberCrystals' ? level * 5 : 0;
+export const upgradeRequiredCompletedLevel = (upgrade, level) => upgrade.id === 'rocketBooster' ? 3 : upgrade.id === 'kyberCrystals' ? level * 5 : 0;
 export const saberDamage = (crystalLevel = 0) => 1 + Math.max(0, Math.min(3, Math.floor(crystalLevel)));
 export const enemyContactDamage = ({ kind, isBoss = false, isMiniBoss = false }) => isMiniBoss ? 12 : isBoss ? 30 : kind === 'spider' ? 18 : 15;
 export const enemySkillReward = ({ isBoss = false, isMiniBoss = false }) => isMiniBoss ? 60 : isBoss ? 200 : 40;
@@ -34,6 +35,36 @@ export const skillPointBalance = (savedBalance, legacyBalance = 0) => {
   const balance = Number.isFinite(raw) ? Math.max(0, Math.floor(raw)) : 0;
   return savedBalance == null ? Math.floor(balance / 10) : balance;
 };
+
+export function robotWallPenetration({ point, heading, wall, halfWidth = .95, halfLength = 1.08 }) {
+  const right = { x: Math.cos(heading), z: -Math.sin(heading) }, forward = { x: Math.sin(heading), z: Math.cos(heading) };
+  let best;
+  for (const axis of [right, forward, { x: 1, z: 0 }, { x: 0, z: 1 }]) {
+    const separation = (point.x - wall.x) * axis.x + (point.z - wall.z) * axis.z;
+    const radius = halfWidth * Math.abs(right.x * axis.x + right.z * axis.z) + halfLength * Math.abs(forward.x * axis.x + forward.z * axis.z);
+    const depth = radius + wall.w * Math.abs(axis.x) + wall.d * Math.abs(axis.z) - Math.abs(separation);
+    if (depth <= 0) return undefined;
+    if (!best || depth < best.depth) best = { depth, x: axis.x * Math.sign(separation || 1), z: axis.z * Math.sign(separation || 1) };
+  }
+  return best;
+}
+
+// Small separating shifts let the chassis rotate out of a corner without
+// admitting a pose inside either wall or teleporting across a partition.
+export function resolveWallTurn({ point, heading, walls, canOccupy, maximumShift = .3, halfWidth = .95, halfLength = 1.08 }) {
+  const candidate = { ...point };
+  for (let pass = 0; pass < 12; pass += 1) {
+    let moved = false;
+    for (const wall of walls) {
+      const overlap = robotWallPenetration({ point: candidate, heading, wall, halfWidth, halfLength });
+      if (!overlap) continue;
+      candidate.x += overlap.x * (overlap.depth + .002); candidate.z += overlap.z * (overlap.depth + .002); moved = true;
+    }
+    if (Math.hypot(candidate.x - point.x, candidate.z - point.z) > maximumShift) return undefined;
+    if (!moved) return canOccupy(candidate) ? candidate : undefined;
+  }
+  return undefined;
+}
 export const driveSpeedMultiplier = (level) => 1 + Math.max(0, level) * .6;
 export const maximumEnergy = (level) => BASE_ROB_ENERGY + Math.max(0, level) * 60;
 export const energyPickupAmount = (capacityLevel = 0) => 70 + Math.max(0, capacityLevel) * 20;
@@ -257,6 +288,7 @@ export const securityMiniBossStats = () => ({
 });
 
 export const unlockReward = (completedLevel) => ({
+  3: 'Plasma Booster available: 900 skill points in the workshop!',
   5: 'Twin Blasters unlocked in the ROB workshop!',
   10: 'Power Hammer unlocked in the ROB workshop!',
   15: 'Arc Cannon unlocked in the ROB workshop!',
