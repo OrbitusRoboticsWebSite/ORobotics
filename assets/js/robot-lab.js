@@ -32,6 +32,7 @@ import {
 import { createRobElectronFlows, createRobSystemsMissions } from './robot-lab-rob-missions.mjs';
 import { createRobFieldElectronFlows, createRobFieldMissions } from './robot-lab-field-missions.mjs';
 import { createRobExpressionElectronFlows, createRobExpressionMissions } from './robot-lab-expression-missions.mjs';
+import { createRobMotorElectronFlows, createRobMotorMissions } from './robot-lab-motor-missions.mjs';
 
 const root = document.querySelector('[data-circuit-lab]');
 
@@ -544,6 +545,7 @@ if (root) {
   missions.push(...createRobSystemsMissions(edge));
   missions.push(...createRobFieldMissions(edge));
   missions.push(...createRobExpressionMissions(edge));
+  missions.push(...createRobMotorMissions(edge));
 
   // White particles show electron drift: negative-to-positive in DC metal paths and
   // back-and-forth oscillation in AC paths. Dim source segments represent the mechanism
@@ -672,6 +674,7 @@ if (root) {
   electronFlows.push(...createRobElectronFlows(edge));
   electronFlows.push(...createRobFieldElectronFlows(edge));
   electronFlows.push(...createRobExpressionElectronFlows(edge));
+  electronFlows.push(...createRobMotorElectronFlows(edge));
 
   const wireColors = ['#ff4fa3', '#2ee5eb', '#ffe43b', '#35d985', '#ff8a32', '#a27cff', '#ff4967', '#5bb6ff'];
 
@@ -1608,9 +1611,9 @@ if (root) {
 
   function robotMetrics(mission) {
     const readout = state.experiment.lastRobotControl?.readout || ['—', '—', 'WAITING'];
-    let voltage = state.exact ? mission.supply || 5 : 0;
+    let voltage = state.exact && mission.robot.mode !== 'interface' ? mission.supply || 5 : 0;
     let currentMilliAmps = 0;
-    let loadOhms = mission.resistance || 100;
+    let loadOhms = mission.robot.mode === 'interface' ? 0 : mission.resistance || 100;
     if (['motor', 'protection'].includes(mission.robot.mode)) {
       const motor = calculateDcMotor({ supplyVoltage: mission.supply, pwmValue: state.experiment.pwmValue, direction: state.experiment.direction });
       voltage = state.exact ? Math.abs(motor.averageVoltage) : 0;
@@ -1658,9 +1661,10 @@ if (root) {
       const metrics = robotMetrics(mission);
       const energyMode = ['motor', 'dual', 'protection', 'safety', 'flipper'].includes(mission.robot.mode);
       const audioMode = ['audio', 'acoustic'].includes(mission.robot.mode);
-      if (els.voltageLabel) els.voltageLabel.textContent = energyMode ? 'MOTOR BUS' : audioMode ? 'AUDIO / DATA' : 'LOGIC / LINK';
-      if (els.currentLabel) els.currentLabel.textContent = energyMode ? 'EST. MOTOR FLOW' : audioMode ? 'SIGNAL / SOUND' : 'SIGNAL FLOW';
-      if (els.resistanceLabel) els.resistanceLabel.textContent = energyMode ? 'EST. LOAD' : audioMode ? 'BOUNDED PATH' : 'LINK LOAD';
+      if (mission.robot.mode === 'interface' && els.scopeLabel) els.scopeLabel.textContent = 'SYMBOLIC PATH · NOT AN ELECTRICAL SIGNAL TRACE';
+      if (els.voltageLabel) els.voltageLabel.textContent = mission.robot.mode === 'interface' ? 'NO LIVE VOLTAGE' : energyMode ? 'MOTOR BUS' : audioMode ? 'AUDIO / DATA' : 'LOGIC / LINK';
+      if (els.currentLabel) els.currentLabel.textContent = mission.robot.mode === 'interface' ? 'NO LIVE CURRENT' : energyMode ? 'EST. MOTOR FLOW' : audioMode ? 'SIGNAL / SOUND' : 'SIGNAL FLOW';
+      if (els.resistanceLabel) els.resistanceLabel.textContent = mission.robot.mode === 'interface' ? 'NO LIVE LOAD' : energyMode ? 'EST. LOAD' : audioMode ? 'BOUNDED PATH' : 'LINK LOAD';
       voltage = metrics.voltage;
       current = metrics.currentMilliAmps;
       resistance = metrics.loadOhms;

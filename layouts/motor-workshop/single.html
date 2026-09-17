@@ -1,0 +1,38 @@
+{{ define "main" }}
+{{ $css := resources.Get "css/motor-workshop.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+<main id="main" class="motor-workshop">
+  <header class="motor-hero">
+    <div>
+      <p class="motor-eyebrow">ROB FIELD NOTES / 01 — MOTION</p>
+      <h1>A signal.<br>A motor.<br><em>A moving robot.</em></h1>
+      <p>Follow electricity from a line of code to ROB’s moving parts. Start with the mechanism, explore a signal, then read the exact bytes.</p>
+      <nav aria-label="Workshop sections"><a class="motor-button" href="#signal-bench">Try the signal bench ↗</a><a href="{{ "robot-lab/" | relURL }}">Circuit Quest · 102 builds</a></nav>
+      <p class="motor-fine">Explore on screen. This workshop never connects to a physical robot.</p>
+    </div>
+    <figure><img src="{{ "images/lessons/rob-front-upper-right.png" | relURL }}" width="1800" height="2100" alt="ROB’s actual 3D scan viewed from above its front right corner, with the right-shoulder laser visible on the left side of the picture."><figcaption>ROB / Front upper right<br><span>Rendered from the robot’s 3D model</span></figcaption></figure>
+  </header>
+
+  <nav class="motor-index" aria-label="Learning path"><a href="#motor-families">01 · Meet the motors</a><a href="#lact">02 · ROB’s body lean</a><a href="#signal-bench">03 · Explore a signal</a><a href="#interfaces">04 · Trace the interfaces</a><a href="#engineer-notes">05 · Engineer notes</a></nav>
+
+  <section id="signal-bench" class="signal-bench" aria-labelledby="signal-title" data-motor-workshop>
+    <header><p class="motor-eyebrow">CHANGE A NUMBER. READ THE RESULT.</p><h2 id="signal-title">The signal bench</h2><p>These are different kinds of messages. Choose an interface and see what the receiver actually gets.</p></header>
+    <div class="signal-controls">
+      <label for="signal-mode">Interface<select id="signal-mode" data-signal-mode><option value="smc">LACT · Simple Motor Controller</option><option value="bldc">BLDC · active-low PWM</option><option value="servo">Servo · Mini Maestro 24</option><option value="tic">Stepper · Tic serial alternative</option><option value="amber">AMBER · UDP status request</option></select></label>
+      <label for="signal-value"><span data-value-label>Signed speed request</span><input id="signal-value" data-signal-value type="range" min="-3200" max="3200" step="1" value="1600"><output for="signal-value" data-value-output>+1600 / 3200</output></label>
+    </div>
+    <div class="signal-display">
+      <div class="signal-scope"><p data-wave-title>UART framing of the first byte · 19200 baud, 8N1</p><svg viewBox="0 0 800 220" role="img" aria-labelledby="wave-title wave-desc"><title id="wave-title">Signal waveform</title><desc id="wave-desc" data-wave-description>Enable JavaScript to explore the signal. Static diagrams and code are provided below.</desc><g data-wave-grid></g><path data-wave-path fill="none" stroke="currentColor" stroke-width="4"/><g data-wave-labels></g></svg><p data-wave-note>One bit is 52.08 µs. The three-byte packet takes 1.5625 ms with no gaps.</p></div>
+      <div class="signal-packet"><p class="motor-eyebrow">RECEIVER GETS</p><output data-packet aria-live="polite">85 00 32</output><p data-packet-note>Binary bytes in hexadecimal, not the characters “85 00 32”.</p></div>
+    </div>
+    <div class="signal-code"><h3>Read the code, one line at a time</h3><ol data-code-lines></ol></div>
+    <noscript><p>The sliders need JavaScript. Every lesson, diagram, and downloadable code example below is available without it.</p></noscript>
+    <form class="signal-check" data-signal-check><fieldset><legend>Before you scroll: does a +1600 LACT command mean “extend 1600 mm”?</legend><label><input type="radio" name="prediction" value="distance"> Yes, it is a distance.</label><label><input type="radio" name="prediction" value="effort"> No, it requests half-scale motor effort.</label><button class="motor-button" type="submit">Check my thinking</button></fieldset><p data-check-result role="status"></p></form>
+  </section>
+
+  <article class="motor-notes">{{ .Content }}</article>
+  <footer class="motor-next"><p class="motor-eyebrow">KEEP BUILDING</p><h2>Take the idea to the next bench.</h2><a class="motor-button" href="{{ "robot-lab/" | relURL }}">Build the 12 motor missions ↗</a><a href="{{ "books/" | relURL }}">Explore the ROB books</a></footer>
+</main>
+{{ $js := resources.Get "js/motor-workshop.js" | js.Build (dict "targetPath" "js/motor-workshop.js" "format" "esm" "minify" hugo.IsProduction) | fingerprint }}
+<script type="module" src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>
+{{ end }}

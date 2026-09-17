@@ -51,7 +51,7 @@
     <div class="books-heading"><div><p class="books-kicker">Complete digital collection</p><h2 id="collection-title">The whole series for one discounted price.</h2><p>The Complete Builder's Field Manual unifies the eight numbered volumes into one digital reference at a price far below buying every volume separately.</p></div></div>
     <div class="books-offer">
       <div class="books-offer__price"><strong>${{ printf "%.2f" $catalog.series.collection_price_usd }}</strong><span>U.S. Apple Books price</span></div>
-      <div class="books-offer__copy"><h3><a href="{{ $catalog.series.apple_series_url }}" target="_blank" rel="noopener noreferrer">Complete Builder's Field Manual</a></h3><p>235 pages covering mechanics, circuits, firmware, controllers, perception, privacy, AMBER arms, spatial interfaces, AI boundaries, verification, public operation, and the open evidence queue.</p><span class="books-offer__badge">Save {{ $catalog.series.collection_savings_percent }}% vs. ${{ printf "%.2f" $catalog.series.individual_total_usd }} individually</span></div>
+      <div class="books-offer__copy"><h3><a href="{{ $catalog.series.apple_series_url }}" target="_blank" rel="noopener noreferrer">Complete Builder's Field Manual</a></h3><p>An illustrated reference covering mechanics, circuits, firmware, controllers, perception, privacy, AMBER arms, spatial interfaces, AI boundaries, verification, public operation, and the open evidence queue.</p><span class="books-offer__badge">Save {{ $catalog.series.collection_savings_percent }}% vs. ${{ printf "%.2f" $catalog.series.individual_total_usd }} individually</span></div>
     </div>
   </section>
 
@@ -142,5 +142,6 @@
       <article class="books-poster"><img src="{{ "images/posters/building-rob-books-36x60.webp" | relURL }}" width="900" height="1500" loading="lazy" alt="Building ROB book series campaign poster preview"><div><h3>Building R.O.B. Books</h3><p>36×60 inches · PDF · scan to /books/</p><a href="{{ "downloads/posters/building-rob-books-36x60.pdf" | relURL }}">Download print PDF</a></div></article>
     </div>
   </section>
+  <section class="books-section"><div class="books-heading"><div><p class="books-kicker">The companion signal bench</p><h2>See the command become a waveform.</h2><p>Explore motor mechanisms, ROB’s body-lean actuator, verified controller identities, and line-by-line packet examples in the <a href="{{ "motor-workshop/" | relURL }}">interactive Motor Workshop</a>.</p></div></div></section>
 </main>
 {{ end }}

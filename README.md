@@ -128,3 +128,9 @@ Browser objectives are checked against a connected route with full chassis turni
 Steering uses a separate 1.1-radian-per-second tread-differential rate: about 91°/s with keyboard steering and 126°/s with fully opposed joysticks. Speed upgrades increase forward/reverse travel while the turn rate stays the same.
 
 The home-page and `/rob-model/` showcases share `rob-showcase.js`. Their default interactive capture exposes the existing shoulder laser's pan/tilt pivots, an optional gentle scan, and balanced front/rear flipper poses. `rob-showcase-motion.mjs` reuses the training game's flipper contact and upper-wheel torso-hinge math for an 11.5-second ledge climb: approach, front lift, mount, counter-rotate for rear support, level/stow, then drive onto the deck. Playback can pause or scrub and holds its completed pose. Reduced-motion visitors get manual laser controls until they explicitly start animation; the six static captured poses remain available.
+
+## Motor and interface curriculum
+
+`/motor-workshop/` links ROB's purchased MD122004 actuator, Mini Maestro 24, and Tic 36v4 to original diagrams and offline byte/pulse experiments. Circuit Quest builds 91–102 follow the same topics. The SMC's exact 18v suffix is intentionally unconfirmed. Product identities were checked against purchase evidence; private correspondence and vendor PDFs are not site assets.
+
+The workshop imports pure encoders from `assets/js/motor-workshop-core.mjs`; it does not open Web Serial or network connections to robot hardware. `npm run test:lab` checks all SMC speeds, signed Tic boundaries, Maestro units, Base framing, AMBER headers and mission reachability. `npm test` also runs the existing game, build, gallery and subpath checks. Shared original artwork and the model-render source are maintained in the ROBBooks repository.
