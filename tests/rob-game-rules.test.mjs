@@ -485,13 +485,15 @@ test('enemy contact hits punish closing into melee range', () => {
 });
 
 test('skill rewards require defeats and level clears instead of matching arcade score', () => {
-  assert.equal(enemySkillReward({}), 40);
-  assert.equal(enemySkillReward({ isBoss: true }), 200);
-  assert.equal(enemySkillReward({ isBoss: true, isMiniBoss: true }), 60);
-  assert.equal(levelSkillReward(1), 100);
-  assert.equal(levelSkillReward(15), 450);
+  assert.equal(enemySkillReward({}), 20);
+  assert.equal(enemySkillReward({ isBoss: true }), 100);
+  assert.equal(enemySkillReward({ isBoss: true, isMiniBoss: true }), 30);
+  assert.equal(levelSkillReward(1), 50);
+  assert.equal(levelSkillReward(15), 190);
+  assert.equal(levelSkillReward(24), 190);
   const firstThreeLevels = [1, 2, 3].reduce((points, level) => points + 3 * enemySkillReward({}) + levelSkillReward(level), 0);
-  assert.equal(firstThreeLevels, 735);
+  assert.equal(firstThreeLevels, 360);
+  assert.ok(firstThreeLevels < Math.min(...upgrades.map((upgrade) => upgradeCost(upgrade, 0))), 'First three levels require saving toward an upgrade');
   assert.ok(firstThreeLevels < upgradeCost(upgrades.find(({ id }) => id === 'targetingComputer'), 0));
 });
 

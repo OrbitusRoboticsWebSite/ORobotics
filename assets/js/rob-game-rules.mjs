@@ -1,4 +1,4 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.09.16.8';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.17.1';
 export const MAX_ROB_HEALTH = 100;
 export const MAX_ROB_SHIELDS = 40;
 export const SHIELD_ACTIVATION_DURATION = 2.5;
@@ -11,6 +11,8 @@ export const stepBubbleShield = ({ remaining = 0, shields, running, delta = 0, a
 export const MAX_TRIAL_LIVES = 3;
 export const BASE_ROB_ENERGY = 100;
 export const BASE_DRIVE_SPEED = 4.5;
+// Radians per second for one unit of tread differential; speed upgrades affect travel only.
+export const BASE_TURN_SPEED = 1.1;
 export const SHIELD_PICKUP_STRENGTH = 24;
 export const REPAIR_PICKUP_STRENGTH = 35;
 
@@ -27,8 +29,8 @@ export const upgradeCost = (upgrade, level) => level < upgrade.maximumLevel ? up
 export const upgradeRequiredCompletedLevel = (upgrade, level) => upgrade.id === 'rocketBooster' ? 3 : upgrade.id === 'kyberCrystals' ? level * 5 : 0;
 export const saberDamage = (crystalLevel = 0) => 1 + Math.max(0, Math.min(3, Math.floor(crystalLevel)));
 export const enemyContactDamage = ({ kind, isBoss = false, isMiniBoss = false }) => isMiniBoss ? 12 : isBoss ? 30 : kind === 'spider' ? 18 : 15;
-export const enemySkillReward = ({ isBoss = false, isMiniBoss = false }) => isMiniBoss ? 60 : isBoss ? 200 : 40;
-export const levelSkillReward = (levelNumber) => 100 + Math.max(0, Math.min(14, levelNumber - 1)) * 25;
+export const enemySkillReward = ({ isBoss = false, isMiniBoss = false }) => isMiniBoss ? 30 : isBoss ? 100 : 20;
+export const levelSkillReward = (levelNumber) => 50 + Math.max(0, Math.min(14, levelNumber - 1)) * 10;
 // A separate balance key prevents old open game tabs from restoring the old economy.
 export const skillPointBalance = (savedBalance, legacyBalance = 0) => {
   const raw = Number(savedBalance ?? legacyBalance);

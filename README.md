@@ -92,7 +92,7 @@ The ROB Training game uses that same public CloudKit container and website token
 
 ### ROB Training gameplay sync
 
-Website gameplay rules live in `assets/js/rob-game-rules.mjs` and the Three.js implementation lives in `assets/js/rob-simulator.js`. The portable customization schema lives in `assets/js/rob-droid-profile.mjs`; its field keys, allowlists, Base64URL encoding, and FNV-1a checksum must stay byte-compatible with `Shared/ROBDroidProfile.swift`. Every gameplay change must be mirrored in the ROBTrainingGames repository's shared Swift session, renderer, platform controls, and tests so the iPhone, iPad, Vision Pro, and browser campaigns remain equivalent. Keep `GAMEPLAY_RULESET_VERSION` equal to `GameSession.gameplayRulesetVersion`; the current synchronized version is `2026.09.16.8`.
+Website gameplay rules live in `assets/js/rob-game-rules.mjs` and the Three.js implementation lives in `assets/js/rob-simulator.js`. The portable customization schema lives in `assets/js/rob-droid-profile.mjs`; its field keys, allowlists, Base64URL encoding, and FNV-1a checksum must stay byte-compatible with `Shared/ROBDroidProfile.swift`. Every gameplay change must be mirrored in the ROBTrainingGames repository's shared Swift session, renderer, platform controls, and tests so the iPhone, iPad, Vision Pro, and browser campaigns remain equivalent. Keep `GAMEPLAY_RULESET_VERSION` equal to `GameSession.gameplayRulesetVersion`; the current synchronized version is `2026.09.17.1`.
 
 Platform support uses the tread contact patch beneath ROB’s center, so an overhanging end does not lock the flipper controls while the deck still supports ROB. Leaving the deck still transitions into tipping and gravity. Equipped sabers stay extended; `assets/js/rob-melee-animation.mjs` matches native sweep, reverse recovery, and spin poses without repeating attack damage.
 
@@ -104,7 +104,7 @@ Enemy durability is doubled: original campaign robots have 4–10 shield hit poi
 
 Basic sabers deal 1 damage regardless of Laser Power. Kyber Crystal ranks cost 600, 1,600, and 2,600 skill points and raise saber damage to 2, 3, and 4; ranks 2 and 3 require clearing levels 5 and 10. Enemy contact deals 18 damage from spiders, 15 from sentries, 12 from security mini bosses, and 30 from bosses.
 
-Skill points are separate from arcade score: normal defeats award 40, mini bosses 60, bosses 200, and clearing level N awards 100 + 25 × (N − 1), up to 450. Hits, pickups, hacks, and time bonuses add score only. The first three full normal waves and level clears earn 735 skill points total. Existing unspent balances migrate once at 10:1 into `robSkillPoints`, keeping the legacy balance and installed upgrades; old clients writing `robUpgradePoints` cannot overwrite the new currency.
+Skill points are separate from arcade score: normal defeats award 20, mini bosses 30, bosses 100, and clearing level N awards 50 + 10 × (N − 1), up to 190. Hits, pickups, hacks, and time bonuses add score only. The first three full normal waves and level clears earn 360 skill points total. Existing unspent balances migrate once at 10:1 into `robSkillPoints`, keeping the legacy balance and installed upgrades; old clients writing `robUpgradePoints` cannot overwrite the new currency.
 
 For this custom GitHub Actions deployment, the custom domain configured under
 **Settings → Pages** is authoritative. `static/CNAME` mirrors that value in the
@@ -124,3 +124,5 @@ builders.
 The campaign now has 24 levels with longer routes and additional slalom obstacles. Levels 16–24 require the Plasma Booster: one 900-skill-point upgrade available after clearing Level 3. Hold R or gamepad LB to ascend, release to descend, or tap Boost/Land to toggle thrust while steering. The dual rockets show blue plasma only under thrust, use 18 energy per second, stop at an altitude ceiling, and cannot recharge until landed. Each rocket stage has two elevated cell pads and a higher summit dock. Pilots without the booster can replay the previous stage to earn its cost before deploying.
 
 Browser objectives are checked against a connected route with full chassis turning clearance; cells previously authored inside walls are relocated. Door partitions retain wide approach lanes, the cell objective displays a collected/required count, and wall-turn separation prevents corner traps. The Continue button resumes at the next unlocked level after loading an update.
+
+Steering uses a separate 1.1-radian-per-second tread-differential rate: about 91°/s with keyboard steering and 126°/s with fully opposed joysticks. Speed upgrades increase forward/reverse travel while the turn rate stays the same.

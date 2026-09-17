@@ -6,6 +6,7 @@ import { meleeDuration, meleePose } from './rob-melee-animation.mjs';
 import { createROBSupportMotion, stepROBSupportMotion, advanceTorsoLean, robTorsoPresentation } from './rob-support-motion.mjs';
 import {
   BASE_DRIVE_SPEED,
+  BASE_TURN_SPEED,
   BASE_FLIPPER_ENERGY_COST,
   BASE_FLIPPER_REAR_ANGLE,
   BASE_FLIPPER_FORWARD_ANGLE,
@@ -634,7 +635,7 @@ if (root) {
     shieldTimeRemaining = stepBubbleShield({ remaining: shieldTimeRemaining, shields, running, delta: dt }).remaining;
     elapsed += dt; levelElapsed += dt; securityAlertRemaining = Math.max(0, securityAlertRemaining - dt);
     const flipperStep = advanceBaseFlipper({ angle: baseFlipperAngle, target: baseFlipperTarget, delta: dt, climbing: climbingLedge }); baseFlipperAngle = flipperStep.angle;
-    const level = levels[levelIndex], old = robot.position.clone(), oldHeading = robot.rotation.y, powered = energy > .05 ? 1 : 0, speedMultiplier = driveSpeedMultiplier(upgradeLevels.speedBoost), flipperPose = robotBasePose(), ledgeDriveScale = climbingLedge ? Math.min(1, ROB_CONTACT_SPAN * 2.15 * Math.cos(flipperGroundPitch(BASE_FLIPPER_FORWARD_ANGLE)) / ((BASE_FLIPPER_REAR_ASSIST_ANGLE - BASE_FLIPPER_FORWARD_ANGLE) / BASE_FLIPPER_MOTOR_SPEED * BASE_DRIVE_SPEED * speedMultiplier) * .75) : 1, left = controls.left * BASE_DRIVE_SPEED * speedMultiplier * powered * ledgeDriveScale, right = controls.right * BASE_DRIVE_SPEED * speedMultiplier * powered * ledgeDriveScale, linear = (left + right) / 2, yaw = (right - left) / 1.55 * dt, targetHeading = oldHeading + yaw;
+    const level = levels[levelIndex], old = robot.position.clone(), oldHeading = robot.rotation.y, powered = energy > .05 ? 1 : 0, speedMultiplier = driveSpeedMultiplier(upgradeLevels.speedBoost), flipperPose = robotBasePose(), ledgeDriveScale = climbingLedge ? Math.min(1, ROB_CONTACT_SPAN * 2.15 * Math.cos(flipperGroundPitch(BASE_FLIPPER_FORWARD_ANGLE)) / ((BASE_FLIPPER_REAR_ASSIST_ANGLE - BASE_FLIPPER_FORWARD_ANGLE) / BASE_FLIPPER_MOTOR_SPEED * BASE_DRIVE_SPEED * speedMultiplier) * .75) : 1, left = controls.left * BASE_DRIVE_SPEED * speedMultiplier * powered * ledgeDriveScale, right = controls.right * BASE_DRIVE_SPEED * speedMultiplier * powered * ledgeDriveScale, linear = (left + right) / 2, yaw = (controls.right - controls.left) * BASE_TURN_SPEED * powered * ledgeDriveScale * dt;
     let resolvedHeading = oldHeading;
     for (const fraction of [1, .66, .33]) {
       const candidateHeading = oldHeading + yaw * fraction;
