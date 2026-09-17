@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-16",
+  "date": "2026-09-17",
   "note": "Display meshes reconstructed from reviewed Gaussian-splat crops. Display orientation and surface partitions are not robot calibration. Full splats and editable masters remain local.",
   "scans": [
     {
@@ -115,6 +115,56 @@
       "displayYawDegrees": -19,
       "units": "meters assumed; not calibrated",
       "color": "Captured SH DC vertex color; unlit linear glTF colors"
+    },
+    {
+      "source": "ROB lean back.ply",
+      "sourceSHA256": "f825697e76254d99193d85cd3d5138ed01d05a1d3c11e951351369a6fafa1149",
+      "reconstructedMeshSHA256": "ed1a02ed4941083ab5c3f3cb599a368b2936616b18fac7cf7d3de577bca4740d",
+      "file": "rob-lean-back.glb",
+      "sha256": "106dc2953b22cc00d1e0a53ac3c8277d6be6503ffac1c6a61db30ba41497edea",
+      "bytes": 7060956,
+      "vertices": 121774,
+      "triangles": 222984,
+      "originalUnmodified": true,
+      "displayTranslation": [
+        -0.055687904357910156,
+        1.1761586666107178,
+        0.6799637675285339
+      ],
+      "displayYawDegrees": -8,
+      "units": "meters assumed; not calibrated",
+      "color": "Captured SH DC vertex color; unlit linear glTF colors",
+      "poseObservation": {
+        "lactPinToPinMillimeters": 200,
+        "lactEndpoint": "fully retracted",
+        "evidence": "Operator explicitly paired ROB lean forward with 302 mm fully extended and ROB lean back with 200 mm fully retracted on 2026-09-17.",
+        "coordinateConvention": "Actuator attachment-pivot center distance; independent physical verification and joint-frame registration pending."
+      }
+    },
+    {
+      "source": "ROB lean forward.ply",
+      "sourceSHA256": "149f2db79d048f9d915daeb456fa4c5d533c6c10b239d47f8b331c32db89e90a",
+      "reconstructedMeshSHA256": "331bfafadf144da20024b6cb78edfb61f0c0a7eba51241f99a339440d08c06e3",
+      "file": "rob-lean-forward.glb",
+      "sha256": "d501f90e75e77bcd03243486ae66b50f2f4727c466ad6c1801bd73d583cd271c",
+      "bytes": 7475352,
+      "vertices": 127613,
+      "triangles": 240000,
+      "originalUnmodified": true,
+      "displayTranslation": [
+        -0.10636335611343384,
+        1.039418339729309,
+        1.1025387644767761
+      ],
+      "displayYawDegrees": -8,
+      "units": "meters assumed; not calibrated",
+      "color": "Captured SH DC vertex color; unlit linear glTF colors",
+      "poseObservation": {
+        "lactPinToPinMillimeters": 302,
+        "lactEndpoint": "fully extended",
+        "evidence": "Operator explicitly paired ROB lean forward with 302 mm fully extended and ROB lean back with 200 mm fully retracted on 2026-09-17.",
+        "coordinateConvention": "Actuator attachment-pivot center distance; independent physical verification and joint-frame registration pending."
+      }
     }
   ]
 }

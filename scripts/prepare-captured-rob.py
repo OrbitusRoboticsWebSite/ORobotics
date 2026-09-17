@@ -23,27 +23,37 @@ def compact_mesh(path, target):
  mesh.remove_degenerate_triangles(); mesh.remove_duplicated_triangles(); mesh.remove_unreferenced_vertices(); mesh.compute_vertex_normals()
  return mesh
 
-def build(source, output, runtime_only=False):
+def build(source, output, runtime_only=False, catalog_path=None, display_only=False, stems=None):
  output.mkdir(parents=True,exist_ok=True)
- catalog=json.loads((ROOT.parent/'ROBGeometryLab/Datasets/2026-09-16/extracted-scan-catalog.json').read_text())['scans']
+ catalog=json.loads((catalog_path or ROOT.parent/'ROBGeometryLab/Datasets/2026-09-17/extracted-scan-catalog.json').read_text())['scans']
  yaw={'rob-upright':-20,'rob-chess-scene':-90,'rob-flipper-up-head-forward':-106,'rob-head-backward-flipper-lifted':-25,'rob-head-forward-flipper-lifted':-8,'rob-head-upright-flipper-lifted':-19}
- records=[]
- for scan in ([] if runtime_only else catalog):
+ selected=[scan for scan in catalog if not stems or scan['stem'] in stems]
+ if stems and set(stems) != {scan['stem'] for scan in selected}: raise ValueError('Unknown scan stem')
+ provenance=output/'scan-provenance.json'
+ records=json.loads(provenance.read_text())['scans'] if (stems or runtime_only) and provenance.exists() else []
+ for scan in ([] if runtime_only else selected):
   folder=source/scan['folder']; manifest=json.loads((folder/'manifest.json').read_text()); path=folder/(scan['stem']+'-mesh.ply')
   assert export.digest(path)==manifest['files'][path.name]['sha256']
   mesh=compact_mesh(path,240000); p=np.asarray(mesh.vertices)
   center=(p.min(0)+p.max(0))/2; center[1]=p[:,1].min()
-  angle=np.deg2rad(yaw[scan['stem']]); rotation=o3d.geometry.get_rotation_matrix_from_xyz([0,angle,0])
+  display_yaw=scan.get('displayYawDegrees',yaw.get(scan['stem']))
+  if display_yaw is None: raise ValueError(f"Missing reviewed display yaw for {scan['stem']}")
+  angle=np.deg2rad(display_yaw); rotation=o3d.geometry.get_rotation_matrix_from_xyz([0,angle,0])
   mesh.translate(-center); mesh.rotate(rotation,center=[0,0,0]); mesh.compute_vertex_normals()
   target=output/(scan['stem']+'.glb')
   if target.exists(): target.unlink()
   export.write_glb(mesh,target,scan['name'])
-  records.append({'source':Path(manifest['sourcePath']).name,'sourceSHA256':manifest['sourceSHA256'],'reconstructedMeshSHA256':manifest['files'][path.name]['sha256'],'file':target.name,'sha256':export.digest(target),'bytes':target.stat().st_size,'vertices':len(mesh.vertices),'triangles':len(mesh.triangles),'originalUnmodified':True,'displayTranslation':(-center).tolist(),'displayYawDegrees':yaw[scan['stem']],'units':'meters assumed; not calibrated','color':'Captured SH DC vertex color; unlit linear glTF colors'})
+  records=[record for record in records if record['file'] != target.name]
+  record={'source':Path(manifest['sourcePath']).name,'sourceSHA256':manifest['sourceSHA256'],'reconstructedMeshSHA256':manifest['files'][path.name]['sha256'],'file':target.name,'sha256':export.digest(target),'bytes':target.stat().st_size,'vertices':len(mesh.vertices),'triangles':len(mesh.triangles),'originalUnmodified':True,'displayTranslation':(-center).tolist(),'displayYawDegrees':display_yaw,'units':'meters assumed; not calibrated','color':'Captured SH DC vertex color; unlit linear glTF colors'}
+  if 'poseObservation' in manifest['crop']: record['poseObservation']=manifest['crop']['poseObservation']
+  records.append(record)
   print(target.name,len(mesh.triangles),target.stat().st_size,flush=True)
  if runtime_only:
   records=json.loads((output/'scan-provenance.json').read_text())['scans']
  else:
-  (output/'scan-provenance.json').write_text(json.dumps({'date':'2026-09-16','note':'Display meshes reconstructed from reviewed Gaussian-splat crops. Display orientation and surface partitions are not robot calibration. Full splats and editable masters remain local.','scans':records},indent=2)+'\n')
+  records.sort(key=lambda record: next(i for i,scan in enumerate(catalog) if record['file']==scan['stem']+'.glb'))
+  provenance.write_text(json.dumps({'date':'2026-09-17','note':'Display meshes reconstructed from reviewed Gaussian-splat crops. Display orientation and surface partitions are not robot calibration. Full splats and editable masters remain local.','scans':records},indent=2)+'\n')
+ if display_only: return
  # Preserve all animation and feature nodes from the procedural rig, replacing its
  # surfaces with captured pieces while retaining the working flippers and face LEDs.
  with tempfile.TemporaryDirectory() as temporary:
@@ -99,4 +109,7 @@ def build(source, output, runtime_only=False):
  print('Runtime capture:',len(faces),'triangles',len(binary),'bytes',flush=True)
 
 if __name__=='__main__':
- parser=argparse.ArgumentParser(description=__doc__); parser.add_argument('source',type=Path); parser.add_argument('output',type=Path); parser.add_argument('--runtime-only',action='store_true'); a=parser.parse_args(); build(a.source.resolve(),a.output.resolve(),a.runtime_only)
+ parser=argparse.ArgumentParser(description=__doc__); parser.add_argument('source',type=Path); parser.add_argument('output',type=Path)
+ mode=parser.add_mutually_exclusive_group(); mode.add_argument('--runtime-only',action='store_true'); mode.add_argument('--display-only',action='store_true')
+ parser.add_argument('--catalog',type=Path); parser.add_argument('--stems',nargs='+')
+ a=parser.parse_args(); build(a.source.resolve(),a.output.resolve(),a.runtime_only,a.catalog,a.display_only,a.stems)

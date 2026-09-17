@@ -1,7 +1,7 @@
 # ROB captured models
 
-The homepage and `/rob-model/` use six detailed reconstructions extracted from
-the new Gaussian-splat PLY captures. Each display GLB contains about 240,000
+The homepage and `/rob-model/` use eight detailed reconstructions extracted from
+the new Gaussian-splat PLY captures. Each display GLB contains up to about 240,000
 triangles and loads only when selected. `static/models/rob/scan-provenance.json`
 records source and reconstructed-mesh hashes, display transforms, triangle
 counts and output hashes. Original PLYs, visual splats and editable masters
@@ -36,7 +36,10 @@ npm ci
 ../ROBGeometryLab/build/splat-venv/bin/python scripts/prepare-captured-rob.py '../ROB Scans/Extracted' static/models/rob
 ```
 
-Use `--runtime-only` to rebuild only the shared runtime bundle. The preparation
+Use `--display-only --stems rob-lean-back rob-lean-forward` to rebuild just the
+clean lean display meshes. `--catalog` selects an explicit extraction catalog;
+the default is the September 17 eight-pose catalog. Use `--runtime-only` to
+rebuild only the shared runtime bundle. The preparation
 script invokes `export-rob-visual.mjs` with a temporary destination to obtain the
 procedural scaffold; do not use that scaffold as the published captured model.
 Copy all three runtime files to `ROBTrainingGames/Shared/Resources/` and
@@ -45,8 +48,8 @@ run XcodeGen in ROBTrainingGames when adding resources.
 
 Presentation coordinates are Y-up, forward -Z, with 1.35× RealityKit, 1.2×
 SceneKit and 2.15× browser-game scaling. Surface partitions and pivots are
-illustrative. The flipper scaffold uses the earlier 13.25-inch length; a
-13.5-inch scan reading still has unresolved endpoints. These assets do not
+illustrative. The flipper scaffold uses the earlier 13.25-inch length; the current operator
+selection is 350 mm center-to-center, pending a physical check. These assets do not
 replace calibrated URDFs, geometry profiles, encoder references or joint limits.
 Cerebro leaves flippers at their reference pose without measured angle feedback.
 
@@ -86,3 +89,26 @@ and estimated body mass center in amber.
 
 The browser bubble shield is button/E/gamepad activated for 2.5 seconds, matching
 the native rules. Only an active bubble absorbs damage; repeated taps do not extend it.
+
+## Lean captures and pickup missions
+
+`rob-lean-forward.glb` is the operator-confirmed 302 mm fully extended LACT
+pose; `rob-lean-back.glb` is the 200 mm fully retracted pose. Their source
+reconstructions use the `-clean-floor` extraction revisions. Near-floor masks
+remove the yellow workshop floor patch while preserving the yellow grippers.
+They remain independently unregistered; the display yaw is presentation only.
+
+The game keeps the existing articulated upright capture. Each of its 24 missions
+now adds a supply crate, battery module or chess pawn and a matching delivery
+pad/square. C toggles the pickup lean; G grasps/places. Browser gamepad B/X and
+on-screen Lean/Grab buttons expose the same actions. Drive slowly to align the
+right hand, release both treads, grasp, carry, lean and place on the destination.
+Dropping elsewhere leaves the object available for another attempt. Delivery
+adds 350 arcade points once and is required before finishing the level.
+
+`rob-pickup.mjs` and native `ROBPickup.swift` share the interaction guards, reward,
+lean rate, carry states and drive scaling. `rob-pickup-visual.mjs` keeps the arms
+hanging as the torso leans; the right hand carries the object during travel.
+The -0.85 rad game lean and 0.22 × presentation-scale grasp tolerance are
+illustrative, not an actuator calibration or solved physical arm trajectory.
+The current rule version is `2026.09.17.2`.

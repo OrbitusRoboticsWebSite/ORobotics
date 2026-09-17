@@ -134,3 +134,15 @@ The home-page and `/rob-model/` showcases share `rob-showcase.js`. Their default
 `/motor-workshop/` links ROB's purchased MD122004 actuator, Mini Maestro 24, and Tic 36v4 to original diagrams and offline byte/pulse experiments. Circuit Quest builds 91–102 follow the same topics. The SMC's exact 18v suffix is intentionally unconfirmed. Product identities were checked against purchase evidence; private correspondence and vendor PDFs are not site assets.
 
 The workshop imports pure encoders from `assets/js/motor-workshop-core.mjs`; it does not open Web Serial or network connections to robot hardware. `npm run test:lab` checks all SMC speeds, signed Tic boundaries, Maestro units, Base framing, AMBER headers and mission reachability. `npm test` also runs the existing game, build, gallery and subpath checks. Shared original artwork and the model-render source are maintained in the ROBBooks repository.
+
+### Lean, grasp and delivery
+
+Every campaign level has a crate, battery module or chess pawn delivery. Press
+`C` (Lean) to lower the right hand, align with slow tread movements, stop and
+press `G` (Grab / Place). Carry to the marked destination, lean and place; an
+incorrect drop can be picked up again. Browser gamepad B/X and touch buttons
+provide the same actions. Delivery awards 350 arcade points once and is required
+for mission completion. Native games use the same `2026.09.17.2` rules.
+
+The model gallery includes the cleaned 200 mm retracted and 302 mm extended
+LACT scans. Their labels are operator observations, not calibrated lean angles.

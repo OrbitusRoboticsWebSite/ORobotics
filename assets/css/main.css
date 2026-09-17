@@ -4099,3 +4099,9 @@ body.rob-game-open{overflow:hidden;overscroll-behavior:none}.rob-sim__shell.is-f
 .rob-sim__top-actions{flex-wrap:wrap;justify-content:flex-end;max-width:calc(100% - 1.5rem)}
 .rob-sim__top-actions [data-sim-shield][aria-pressed="true"]{background:#17647a;border-color:#5ce6ff}
 .rob-sim__top-actions [data-sim-shield]:disabled{opacity:.65}
+
+/* Cargo actions share the game controls on narrow touch screens. */
+.rob-sim__mobile-weapons{grid-template-columns:repeat(2,minmax(0,1fr));gap:.3rem}
+[data-sim-lean],[data-sim-grab]{background:#0d4c49;border-color:#5eead4;color:#fff}
+.rob-sim__fire[data-sim-lean],.rob-sim__fire[data-sim-grab]{font-size:.875rem;min-height:44px;padding:.25rem}
+@media(max-width:380px){.rob-sim__tread-stick{width:72px}.rob-sim__mobile-controls{inset-inline:.5rem;gap:.3rem}.rob-sim__fire{width:54px}}

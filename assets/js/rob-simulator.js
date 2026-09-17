@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import { createPickupTask, advancePickupLean, pickupDriveMultiplier, interactWithCargo } from './rob-pickup.mjs';
+import { makeCargoVisual, makeCargoDestination, applyPickupArms, pickupLeanTarget } from './rob-pickup-visual.mjs';
 import { createRocketFlight, stepRocketFlight, ROCKET_ENERGY_PER_SECOND } from './rob-rocket-flight.mjs';
 import { loadCapturedROB } from './rob-captured-model.mjs';
 import { buildROBVisual } from './rob-visual-model.mjs';
@@ -108,6 +110,9 @@ if (root) {
   let rocketFlight = createRocketFlight(), rocketHeld = false, gamepadRocketHeld = false;
   let climbingLedge = false;
   let supportMotion = createROBSupportMotion(), torsoLeanAngle = 0;
+  let pickupTask = createPickupTask({ x: 0, y: 0, z: 0 }), pickupLeanRequested = false, pickupLeanAmount = 0;
+  let cargoVisual, cargoDestination, gamepadLeanHeld = false, gamepadGrabHeld = false;
+  const cargoScale = 2.15;
   const climbProgress = (point = robot.position) => ledgeClimbProgress({ z: point.z, heading: robot.rotation.y, approachEdgeZ: LEDGE.approachEdgeZ, scale: 2.15 });
   const robotBasePose = () => {
     const pose = baseFlipperPresentation({ angle: baseFlipperAngle, target: baseFlipperTarget, onLedge: pointOnLedge(robot.position), climbProgress: climbingLedge ? climbProgress() : undefined, stepHeight: LEDGE.height, supportHeight: robot.position.y, scale: 2.15 });
@@ -381,6 +386,20 @@ if (root) {
   };
   const loadLevel = (index) => {
     const level = levels[index];
+    pickupLeanRequested = false; pickupLeanAmount = 0;
+    gamepadLeanHeld = gamepadGrabHeld = false;
+    for (const object of [cargoVisual, cargoDestination]) {
+      if (!object) continue;
+      scene.remove(object);
+      object.traverse((node) => { node.geometry?.dispose(); if (Array.isArray(node.material)) node.material.forEach((material) => material.dispose()); else node.material?.dispose(); });
+    }
+    const [cargoX, cargoZ] = level.cargo.pickup;
+    pickupTask = createPickupTask({ x: cargoX, y: surfaceHeight({ x: cargoX, z: cargoZ }) + .12 * cargoScale, z: cargoZ });
+    cargoVisual = makeCargoVisual(level.cargo.id, cargoScale); scene.add(cargoVisual);
+    cargoVisual.position.copy(pickupTask.position);
+    cargoDestination = makeCargoDestination(level.cargo.id, cargoScale);
+    const [padX, padZ] = level.cargo.destinationPoint;
+    cargoDestination.position.set(padX, surfaceHeight({ x: padX, z: padZ }) + .1, padZ); scene.add(cargoDestination);
     ui.intermission.hidden = true;
     levelParts.splice(0).forEach((part) => scene.remove(part)); obstacles.length = 0;
     level.obstacles.forEach((o, i) => box(...o, i % 2 ? 0x465262 : 0x344552, true, true));
@@ -414,6 +433,38 @@ if (root) {
     ui.level.textContent = `${index + 1} / ${levels.length}`; ui.levelName.textContent = `Level ${index + 1} · ${level.name}`; ui.start.hidden = false; ui.start.textContent = index ? `Start level ${index + 1}` : 'Begin campaign'; applyLoadout(); say(`${level.name}: ${index ? 'difficulty increased' : 'systems ready'}.`);
   };
   const reset = () => { running = complete = false; elapsed = score = 0; lives = MAX_TRIAL_LIVES; levelIndex = 0; root.dispatchEvent(new CustomEvent('rob:campaign-reset')); loadLevel(0); };
+  const pickupIsGrounded = () => !rocketFlight.airborne && !rocketHeld && !climbingLedge && supportMotion.phase === 'grounded' && Math.abs(robotBasePose().pitch) < .08;
+  const togglePickupLean = () => {
+    if (!running) return;
+    if (!pickupIsGrounded() || hacking || hackingCamera || saberAnimation) { say('Finish the current action and settle on level ground before leaning to grasp.'); return; }
+    pickupLeanRequested = !pickupLeanRequested;
+    say(pickupLeanRequested ? 'Leaning down. Use slow tread movements to bring the right hand beside the object, stop, then Grab.' : 'Standing for travel. Carried cargo stays in the right hand.');
+  };
+  const graspPoint = () => { robot.updateMatrixWorld(true); return robot.getObjectByName('Right Gripper Palm').getWorldPosition(new THREE.Vector3()); };
+  const interactCargo = () => {
+    const hand = graspPoint(), cargo = levels[levelIndex].cargo;
+    const destination = { x: cargo.destinationPoint[0], y: cargoDestination.position.y + .12 * cargoScale, z: cargo.destinationPoint[1] };
+    const dropPosition = { x: hand.x, y: surfaceHeight(hand) + .12 * cargoScale, z: hand.z };
+    const target = pickupTask.phase === 'waiting' ? pickupTask.position : dropPosition;
+    const blockers = projectileBlockers();
+    const result = interactWithCargo(pickupTask, { running: running && !hacking && !hackingCamera && !saberAnimation,
+      grounded: pickupIsGrounded(), leanAmount: pickupLeanAmount, speed: Math.max(Math.abs(controls.left), Math.abs(controls.right)),
+      hand, destination, dropPosition, scale: cargoScale,
+      clear: meleeAnimationIsClear({ origin: robot.position, target, blockers }),
+      dropClear: Math.abs(hand.x) < ARENA_HALF_WIDTH - .4 && Math.abs(hand.z) < ARENA_HALF_DEPTH - .4 && blockers.every((blocker) => !circleHitsBox(hand, blocker, .14 * cargoScale)) });
+    pickupTask = result.state;
+    const messages = {
+      land: 'Settle on level ground before picking up or placing cargo.', stop: 'Release both treads before grasping or placing.',
+      lean: 'Lean down with C or Lean, then use Grab / Place.', outOfReach: 'Bring the right hand closer to the object. Crouched driving moves slowly for alignment.',
+      blocked: 'A wall or closed door blocks the grasp.', unsafeDrop: 'Move to a clear floor or the marked destination before placing.',
+      pickedUp: `${cargo.name} grasped. Carry it to the ${cargo.destination}, then lean and Place.`,
+      dropped: `${cargo.name} set down. Pick it up again to finish the delivery.`, delivered: `${cargo.name} placed on the ${cargo.destination}. Delivery complete!`,
+    };
+    if (result.event === 'delivered') mark('cargo', messages.delivered, result.reward);
+    else if (messages[result.event]) say(messages[result.event]);
+    if (['pickedUp', 'delivered'].includes(result.event)) playSound('pickup');
+    if (result.event === 'pickedUp') pickupLeanRequested = false;
+  };
   const circleHitsBox = (p, o, radius = .48) => { const dx = p.x - THREE.MathUtils.clamp(p.x, o.x - o.w, o.x + o.w), dz = p.z - THREE.MathUtils.clamp(p.z, o.z - o.d, o.z + o.d); return dx * dx + dz * dz < radius * radius; };
   const robotAxes = (heading) => ({ right: { x: Math.cos(heading), z: -Math.sin(heading) }, length: { x: Math.sin(heading), z: Math.cos(heading) } });
   const robotHitsBox = (p, heading, o) => {
@@ -528,6 +579,7 @@ if (root) {
   const fireEnemyLaser = (enemy) => { const start = enemy.position.clone().add(new THREE.Vector3(0, enemy.userData.type === 'dalek' ? 1.55 : .9, 0)), target = robot.position.clone().add(new THREE.Vector3(0, .9, 0)), direction = target.sub(start).normalize(), bolt = mesh(enemyBoltGeometry, enemyBoltMaterial, scene); bolt.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction); bolt.position.copy(start).addScaledVector(direction, .85); bolt.userData.velocity = direction.multiplyScalar(7.5 + levelIndex * .18); bolt.userData.damage = enemy.userData.projectileDamage; bolt.userData.sourceName = `${enemy.userData.name} laser`; enemyBolts.push(bolt); };
   const saberSlash = () => {
     if (!running || complete || saberAnimation) return;
+    if (pickupTask.phase === 'carrying' || pickupLeanAmount > .02) { say('Place the cargo and stand upright before using melee weapons.'); return; }
     const now = combatNow(), weapon = selectedMelee(), forward = new THREE.Vector3(0, 0, -1).applyQuaternion(robot.quaternion).normalize(), origin = { x: robot.position.x, z: robot.position.z };
     if (weapon.id === 'powerHammer') {
       const radius = 3.8;
@@ -548,6 +600,7 @@ if (root) {
     armAssemblies.forEach((arm) => { arm.rotation.y = pose.armYaw; arm.rotation.z = arm.userData.side * pose.armRoll; });
     if (progress >= 1) saberAnimation = undefined;
     robotRig.sabers.forEach((saber) => { saber.visible = selectedMeleeID === 'dualSabers'; });
+    robotRig.hammer.visible = selectedMeleeID === 'powerHammer';
     const aimAt = (rig, target, scanPhase = 0) => { if (target) { const offset = target.position.clone().sub(robot.position), worldYaw = Math.atan2(-offset.x, -offset.z), localYaw = Math.atan2(Math.sin(worldYaw - robot.rotation.y), Math.cos(worldYaw - robot.rotation.y)); rig.rotation.y += (localYaw - rig.rotation.y) * .18; } else rig.rotation.y = targetingComputer().autoLock ? Math.sin(now * 1.35 + scanPhase) * .9 : -robotRig.torso.rotation.y; };
     if (selectedRangedID === 'twinBlasters') { aimAt(robotRig.twinBlasterMounts[0], laserLock, 0); aimAt(robotRig.twinBlasterMounts[1], secondaryLaserLock || laserLock, .5); }
     else aimAt(selectedRangedID === 'arcCannon' ? robotRig.arcCannon : robotRig.gatling, laserLock);
@@ -578,9 +631,11 @@ if (root) {
   const setRocketHeld = (held) => {
     if (!held) { rocketHeld = false; return; }
     if (!running || !upgradeLevels.rocketBooster || energy < 1 || hacking || hackingCamera) return;
+    pickupLeanRequested = false;
+    if (pickupLeanAmount > .05) { say('Standing upright before boost. Press Boost again when ready.'); return; }
     rocketHeld = true; climbingLedge = false; baseFlipperAngle = BASE_FLIPPER_REAR_ANGLE; baseFlipperTarget = 'rear';
   };
-  const readInput = () => { let forward = touch.forward || (((keys.has('ArrowUp') || keys.has('KeyW')) ? 1 : 0) - ((keys.has('ArrowDown') || keys.has('KeyS')) ? 1 : 0)), steering = touch.steering || (((keys.has('ArrowLeft') || keys.has('KeyA')) ? 1 : 0) - ((keys.has('ArrowRight') || keys.has('KeyD')) ? 1 : 0)), leftTarget, rightTarget; const pad = [...(navigator.getGamepads?.() || [])].find(Boolean); if (pad && (Math.abs(pad.axes[0] || 0) > .12 || Math.abs(pad.axes[1] || 0) > .12)) { forward = -(pad.axes[1] || 0); steering = -(pad.axes[0] || 0); } leftTarget = THREE.MathUtils.clamp(forward - steering * .72, -1, 1); rightTarget = THREE.MathUtils.clamp(forward + steering * .72, -1, 1); if (touch.leftActive || touch.rightActive) { leftTarget = touch.leftActive ? touch.left : 0; rightTarget = touch.rightActive ? touch.right : 0; } const gamepadLaserPressed = Boolean(pad?.buttons.some((b, i) => (i === 0 || i === 6 || i === 7) && b.pressed)); if (gamepadLaserPressed && !gamepadLaserHeld) beginLaserCharge(); else if (!gamepadLaserPressed && gamepadLaserHeld) releaseLaserCharge(); gamepadLaserHeld = gamepadLaserPressed; const shieldPressed = Boolean(pad?.buttons[3]?.pressed); if (shieldPressed && !gamepadShieldHeld) activateShield(); gamepadShieldHeld = shieldPressed; const rocketPressed = Boolean(pad?.buttons[4]?.pressed); if (rocketPressed !== gamepadRocketHeld) setRocketHeld(rocketPressed); gamepadRocketHeld = rocketPressed; controls.left += (leftTarget - controls.left) * .28; controls.right += (rightTarget - controls.right) * .28; };
+  const readInput = () => { let forward = touch.forward || (((keys.has('ArrowUp') || keys.has('KeyW')) ? 1 : 0) - ((keys.has('ArrowDown') || keys.has('KeyS')) ? 1 : 0)), steering = touch.steering || (((keys.has('ArrowLeft') || keys.has('KeyA')) ? 1 : 0) - ((keys.has('ArrowRight') || keys.has('KeyD')) ? 1 : 0)), leftTarget, rightTarget; const pad = [...(navigator.getGamepads?.() || [])].find(Boolean); if (pad && (Math.abs(pad.axes[0] || 0) > .12 || Math.abs(pad.axes[1] || 0) > .12)) { forward = -(pad.axes[1] || 0); steering = -(pad.axes[0] || 0); } leftTarget = THREE.MathUtils.clamp(forward - steering * .72, -1, 1); rightTarget = THREE.MathUtils.clamp(forward + steering * .72, -1, 1); if (touch.leftActive || touch.rightActive) { leftTarget = touch.leftActive ? touch.left : 0; rightTarget = touch.rightActive ? touch.right : 0; } const gamepadLaserPressed = Boolean(pad?.buttons.some((b, i) => (i === 0 || i === 6 || i === 7) && b.pressed)); if (gamepadLaserPressed && !gamepadLaserHeld) beginLaserCharge(); else if (!gamepadLaserPressed && gamepadLaserHeld) releaseLaserCharge(); gamepadLaserHeld = gamepadLaserPressed; const shieldPressed = Boolean(pad?.buttons[3]?.pressed); if (shieldPressed && !gamepadShieldHeld) activateShield(); gamepadShieldHeld = shieldPressed; const rocketPressed = Boolean(pad?.buttons[4]?.pressed); if (rocketPressed !== gamepadRocketHeld) setRocketHeld(rocketPressed); gamepadRocketHeld = rocketPressed; const leanPressed = Boolean(pad?.buttons[1]?.pressed), grabPressed = Boolean(pad?.buttons[2]?.pressed); if (leanPressed && !gamepadLeanHeld) togglePickupLean(); if (grabPressed && !gamepadGrabHeld) interactCargo(); gamepadLeanHeld = leanPressed; gamepadGrabHeld = grabPressed; controls.left += (leftTarget - controls.left) * .28; controls.right += (rightTarget - controls.right) * .28; };
   const nearestHackableCamera = (range = SECURITY_CAMERA_HACK_RANGE) => securityCameras
     .filter((securityCamera) => !securityCamera.disabled)
     .map((securityCamera) => ({ securityCamera, distance: robot.position.distanceTo(securityCamera.group.position) }))
@@ -602,6 +657,7 @@ if (root) {
     else startDoorHack();
   };
   const commandBaseFlipper = (target) => {
+    pickupLeanRequested = false;
     if (!running || complete || levelComplete || target === baseFlipperTarget) return;
     if (climbingLedge && target === 'forward') return;
     if (supportMotion.phase !== 'grounded' || rocketFlight.airborne || rocketHeld) return;
@@ -635,7 +691,7 @@ if (root) {
     shieldTimeRemaining = stepBubbleShield({ remaining: shieldTimeRemaining, shields, running, delta: dt }).remaining;
     elapsed += dt; levelElapsed += dt; securityAlertRemaining = Math.max(0, securityAlertRemaining - dt);
     const flipperStep = advanceBaseFlipper({ angle: baseFlipperAngle, target: baseFlipperTarget, delta: dt, climbing: climbingLedge }); baseFlipperAngle = flipperStep.angle;
-    const level = levels[levelIndex], old = robot.position.clone(), oldHeading = robot.rotation.y, powered = energy > .05 ? 1 : 0, speedMultiplier = driveSpeedMultiplier(upgradeLevels.speedBoost), flipperPose = robotBasePose(), ledgeDriveScale = climbingLedge ? Math.min(1, ROB_CONTACT_SPAN * 2.15 * Math.cos(flipperGroundPitch(BASE_FLIPPER_FORWARD_ANGLE)) / ((BASE_FLIPPER_REAR_ASSIST_ANGLE - BASE_FLIPPER_FORWARD_ANGLE) / BASE_FLIPPER_MOTOR_SPEED * BASE_DRIVE_SPEED * speedMultiplier) * .75) : 1, left = controls.left * BASE_DRIVE_SPEED * speedMultiplier * powered * ledgeDriveScale, right = controls.right * BASE_DRIVE_SPEED * speedMultiplier * powered * ledgeDriveScale, linear = (left + right) / 2, yaw = (controls.right - controls.left) * BASE_TURN_SPEED * powered * ledgeDriveScale * dt;
+    const level = levels[levelIndex], old = robot.position.clone(), oldHeading = robot.rotation.y, powered = energy > .05 ? 1 : 0, speedMultiplier = driveSpeedMultiplier(upgradeLevels.speedBoost) * pickupDriveMultiplier(pickupLeanAmount, pickupTask.phase === 'carrying'), flipperPose = robotBasePose(), ledgeDriveScale = climbingLedge ? Math.min(1, ROB_CONTACT_SPAN * 2.15 * Math.cos(flipperGroundPitch(BASE_FLIPPER_FORWARD_ANGLE)) / ((BASE_FLIPPER_REAR_ASSIST_ANGLE - BASE_FLIPPER_FORWARD_ANGLE) / BASE_FLIPPER_MOTOR_SPEED * BASE_DRIVE_SPEED * speedMultiplier) * .75) : 1, left = controls.left * BASE_DRIVE_SPEED * speedMultiplier * powered * ledgeDriveScale, right = controls.right * BASE_DRIVE_SPEED * speedMultiplier * powered * ledgeDriveScale, linear = (left + right) / 2, yaw = (controls.right - controls.left) * BASE_TURN_SPEED * powered * ledgeDriveScale * dt;
     let resolvedHeading = oldHeading;
     for (const fraction of [1, .66, .33]) {
       const candidateHeading = oldHeading + yaw * fraction;
@@ -672,7 +728,9 @@ if (root) {
       supportMotion = createROBSupportMotion(robot.position.y);
       if (energy <= .05) rocketHeld = false;
     } else updateGroundSupport(dt, flipperPose, linear);
-    torsoLeanAngle = advanceTorsoLean(torsoLeanAngle, robotBasePose().pitch, dt);
+    if (!pickupIsGrounded()) pickupLeanRequested = false;
+    pickupLeanAmount = advancePickupLean(pickupLeanAmount, pickupLeanRequested, dt);
+    torsoLeanAngle = pickupLeanTarget(advanceTorsoLean(torsoLeanAngle, robotBasePose().pitch, dt), pickupLeanAmount);
     const treadsPowered = Boolean(powered && Math.abs(controls.left) + Math.abs(controls.right) > .02);
     if (!flipperStep.active && !wasFlying && supportMotion.phase === 'grounded') energy = updateDriveEnergy({ energy, maximum: maximumEnergy(upgradeLevels.energyCapacity), moving: treadsPowered, delta: dt, capacityLevel: upgradeLevels.energyCapacity, charging: laserChargeStarted !== undefined, secondsSinceShot: elapsed - lastShot });
     robotRig.treadWheels.forEach(({ wheel, side }) => { wheel.rotation.x -= controls[side] * dt * 10.5 * speedMultiplier; });
@@ -732,7 +790,7 @@ if (root) {
     cells.forEach((c) => { if (c.visible && !c.userData.got && robot.position.distanceTo(c.position) < 1) { c.userData.got = true; c.visible = false; cellCount += 1; objectives.cells.querySelector('[data-objective-text]').textContent = `Energy cells: ${cellCount} / ${level.cells.length}`; const restoredEnergy = energyPickupAmount(upgradeLevels.energyCapacity); energy = Math.min(maximumEnergy(upgradeLevels.energyCapacity), energy + restoredEnergy); awardMissionPoints(150); playSound('pickup'); say(`Energy cell ${cellCount} of ${level.cells.length} secured. Battery boosted by up to ${restoredEnergy}.`); if (cellCount === level.cells.length) mark('cells', 'All cells secured. Dock after the room is safe.', 300); } });
     shieldPickups.forEach((pickup) => { if (pickup.visible && !pickup.userData.got && shields < MAX_ROB_SHIELDS && robot.position.distanceTo(pickup.position) < 1.1) { const before = shields; shields = replenishROBShields(shields); pickup.userData.got = true; pickup.visible = false; awardMissionPoints(100); playSound('pickup'); say(`Shield capacitor restored ${shields - before} points. ROB shields: ${shields}/${MAX_ROB_SHIELDS}.`); } });
     repairPickups.forEach((pickup) => { if (pickup.visible && !pickup.userData.got && health < MAX_ROB_HEALTH && robot.position.distanceTo(pickup.position) < 1.1) { const before = health; health = repairROBHealth(health); pickup.userData.got = true; pickup.visible = false; awardMissionPoints(100); playSound('pickup'); say(`Repair kit restored ${health - before} hull points. ROB health: ${health}/${MAX_ROB_HEALTH}.`); } });
-    if (!rocketFlight.airborne && Math.abs(robot.position.y - surfaceHeight(robot.position)) < .2 && cellCount === level.cells.length && enemies.every((e) => !e.userData.alive) && doorOpen && robot.position.distanceTo(dock.position) < 1.15) {
+    if (!rocketFlight.airborne && Math.abs(robot.position.y - surfaceHeight(robot.position)) < .2 && pickupTask.phase === 'delivered' && cellCount === level.cells.length && enemies.every((e) => !e.userData.alive) && doorOpen && robot.position.distanceTo(dock.position) < 1.15) {
       const timeBonus = Math.max(0, level.bonus - Math.floor(levelElapsed) * 10), completedLevel = levelIndex + 1, earnedProgress = completedLevel > highestCompletedLevel, reward = earnedProgress ? unlockReward(completedLevel) : undefined;
       highestCompletedLevel = Math.max(highestCompletedLevel, completedLevel); saveProgress('robHighestCompletedLevel', highestCompletedLevel); updateWorkshop();
       const skillPoints = levelSkillReward(completedLevel);
@@ -762,6 +820,12 @@ if (root) {
     robotRig.driveBase.position.y = flipperPose.lift - robot.position.y;
     const bodyPose = robTorsoPresentation({ basePitch: flipperPose.pitch, leanAngle: torsoLeanAngle, rearHeight: flipperPose.lift, rootHeight: robot.position.y, scale: 2.15, yaw: robotRig.torso.rotation.y });
     robotRig.torso.rotation.x = bodyPose.pitch; robotRig.torso.position.set(bodyPose.position.x, bodyPose.position.y, bodyPose.position.z); ui.flipperButtons.forEach((button) => { const target = button.dataset.flipperDirection; button.disabled = !running || rocketFlight.airborne || rocketHeld || supportMotion.phase !== 'grounded' || target === baseFlipperTarget || (climbingLedge && target === 'forward'); const compact = button.classList.contains('rob-sim__fire'); button.textContent = target === 'forward' ? (compact ? 'FLIPPER DOWN' : 'Flipper Down · F') : (compact ? 'FLIPPER UP' : 'Flipper Up · B'); button.setAttribute('aria-pressed', String(target === baseFlipperTarget)); });
+    applyPickupArms(robotRig, pickupLeanAmount, pickupTask.phase === 'carrying', bodyPose.pitch);
+    if (cargoVisual) cargoVisual.position.copy(pickupTask.phase === 'carrying' ? graspPoint() : pickupTask.position);
+    const cargo = levels[levelIndex].cargo;
+    objectives.cargo.querySelector('[data-objective-text]').textContent = pickupTask.phase === 'delivered' ? `${cargo.name} delivered` : pickupTask.phase === 'carrying' ? `Place the ${cargo.name} on the ${cargo.destination}` : `Grasp the ${cargo.name} and deliver it`;
+    root.querySelectorAll('[data-sim-lean]').forEach((button) => { button.disabled = !running || !pickupIsGrounded(); button.textContent = pickupLeanRequested ? 'Stand · C' : 'Lean · C'; button.setAttribute('aria-pressed', String(pickupLeanRequested)); });
+    root.querySelectorAll('[data-sim-grab]').forEach((button) => { button.disabled = !running || pickupTask.phase === 'delivered'; button.textContent = pickupTask.phase === 'carrying' ? 'Place · G' : pickupTask.phase === 'delivered' ? 'Delivered' : 'Grab · G'; });
     const speakerPulse = musicEnabled && running ? 1 + Math.max(0, Math.sin(elapsed * Math.PI * 8)) * .13 : 1; robotRig.speakerCones.forEach((cone, index) => cone.scale.set(1 + (speakerPulse - 1) * (index ? .78 : 1), 1, 1 + (speakerPulse - 1) * (index ? .78 : 1)));
     if (keyObject.visible) { keyObject.rotation.y += dt * 1.7; keyObject.position.y = surfaceHeight(keyObject.position) + .1 + Math.sin(elapsed * 3.2) * .09; keyBeaconMaterial.opacity = .42 + (Math.sin(elapsed * 4.4) + 1) * .13; }
     cells.forEach((c, i) => { if (c.visible) { c.rotation.y += dt * 1.4; c.position.y = (c.userData.surfaceHeight || 0) + .55 + Math.sin(elapsed * 2 + i) * .08; } });
@@ -807,13 +871,15 @@ if (root) {
   const resetTreadStick = (stick, side) => { touch[side] = 0; touch[`${side}Active`] = false; stick.style.setProperty('--stick-x', '0px'); stick.style.setProperty('--stick-y', '0px'); stick.setAttribute('aria-valuenow', '0'); stick.setAttribute('aria-valuetext', 'Stopped'); stick.classList.remove('is-active'); };
   const updateTreadStick = (stick, side, clientX, clientY) => { const rect = stick.getBoundingClientRect(), x = clientX - rect.left - rect.width / 2, y = clientY - rect.top - rect.height / 2, visualLimit = Math.min(rect.width, rect.height) * .31, distance = Math.hypot(x, y), visualScale = distance > visualLimit ? visualLimit / distance : 1, rawValue = THREE.MathUtils.clamp(-y / (rect.height * .34), -1, 1), value = Math.abs(rawValue) < .06 ? 0 : rawValue; touch[side] = value; touch[`${side}Active`] = true; stick.style.setProperty('--stick-x', `${x * visualScale}px`); stick.style.setProperty('--stick-y', `${y * visualScale}px`); stick.setAttribute('aria-valuenow', value.toFixed(2)); stick.setAttribute('aria-valuetext', value === 0 ? 'Stopped' : `${Math.round(Math.abs(value) * 100)}% ${value > 0 ? 'forward' : 'reverse'}`); stick.classList.add('is-active'); };
   const releaseTread = (pointerId) => { const input = activeTreadPointers.get(pointerId); if (!input) return; activeTreadPointers.delete(pointerId); resetTreadStick(input.stick, input.side); };
-  const releaseAllInput = () => { keys.clear(); [...activeDrivePointers.keys()].forEach(releaseDrive); [...activeTreadPointers.keys()].forEach(releaseTread); root.querySelectorAll('[data-tread-stick]').forEach((stick) => resetTreadStick(stick, stick.dataset.treadStick)); touch.forward = touch.steering = controls.left = controls.right = 0; gamepadLaserHeld = false; gamepadShieldHeld = false; rocketHeld = gamepadRocketHeld = false; shieldTimeRemaining = 0; cancelLaserCharge(); };
-  addEventListener('keydown', (e) => { if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space', 'KeyQ', 'KeyF', 'KeyB', 'KeyE', 'KeyR'].includes(e.code)) e.preventDefault(); const firstPress = !keys.has(e.code); keys.add(e.code); if (firstPress && e.code === 'KeyR') setRocketHeld(true); if (firstPress && e.code === 'KeyE') activateShield(); if (firstPress && e.code === 'Space') saberSlash(); if (firstPress && e.code === 'KeyQ') beginLaserCharge(); if (firstPress && e.code === 'KeyF') commandBaseFlipper('forward'); if (firstPress && e.code === 'KeyB') commandBaseFlipper('rear'); }); addEventListener('keyup', (e) => { keys.delete(e.code); if (e.code === 'KeyR') setRocketHeld(false); if (e.code === 'KeyQ') releaseLaserCharge(); }); addEventListener('blur', releaseAllInput);
+  const releaseAllInput = () => { keys.clear(); [...activeDrivePointers.keys()].forEach(releaseDrive); [...activeTreadPointers.keys()].forEach(releaseTread); root.querySelectorAll('[data-tread-stick]').forEach((stick) => resetTreadStick(stick, stick.dataset.treadStick)); touch.forward = touch.steering = controls.left = controls.right = 0; gamepadLaserHeld = false; gamepadShieldHeld = false; gamepadLeanHeld = gamepadGrabHeld = false; rocketHeld = gamepadRocketHeld = false; shieldTimeRemaining = 0; cancelLaserCharge(); };
+  addEventListener('keydown', (e) => { if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space', 'KeyQ', 'KeyF', 'KeyB', 'KeyE', 'KeyR', 'KeyC', 'KeyG'].includes(e.code)) e.preventDefault(); const firstPress = !keys.has(e.code); keys.add(e.code); if (firstPress && e.code === 'KeyC') togglePickupLean(); if (firstPress && e.code === 'KeyG') interactCargo(); if (firstPress && e.code === 'KeyR') setRocketHeld(true); if (firstPress && e.code === 'KeyE') activateShield(); if (firstPress && e.code === 'Space') saberSlash(); if (firstPress && e.code === 'KeyQ') beginLaserCharge(); if (firstPress && e.code === 'KeyF') commandBaseFlipper('forward'); if (firstPress && e.code === 'KeyB') commandBaseFlipper('rear'); }); addEventListener('keyup', (e) => { keys.delete(e.code); if (e.code === 'KeyR') setRocketHeld(false); if (e.code === 'KeyQ') releaseLaserCharge(); }); addEventListener('blur', releaseAllInput);
   root.querySelectorAll('[data-drive]').forEach((button) => { const forward = Number(button.dataset.forward || 0), steering = Number(button.dataset.steering || 0); button.setAttribute('aria-pressed', 'false'); button.addEventListener('pointerdown', (e) => { e.preventDefault(); activeDrivePointers.set(e.pointerId, { forward, steering, button }); updateTouchDrive(); button.classList.add('is-pressed'); button.setAttribute('aria-pressed', 'true'); button.setPointerCapture?.(e.pointerId); }); ['pointerup', 'pointercancel', 'lostpointercapture'].forEach((eventName) => button.addEventListener(eventName, (e) => releaseDrive(e.pointerId))); });
   root.querySelectorAll('[data-tread-stick]').forEach((stick) => { const side = stick.dataset.treadStick; stick.addEventListener('pointerdown', (e) => { e.preventDefault(); if (touch[`${side}Active`]) return; activeTreadPointers.set(e.pointerId, { side, stick }); stick.setPointerCapture?.(e.pointerId); updateTreadStick(stick, side, e.clientX, e.clientY); }); stick.addEventListener('pointermove', (e) => { if (activeTreadPointers.get(e.pointerId)?.stick === stick) updateTreadStick(stick, side, e.clientX, e.clientY); }); ['pointerup', 'pointercancel', 'lostpointercapture'].forEach((eventName) => stick.addEventListener(eventName, (e) => { e.preventDefault(); releaseTread(e.pointerId); })); stick.addEventListener('keydown', (e) => { if (!['ArrowUp', 'ArrowDown'].includes(e.code)) return; e.preventDefault(); e.stopPropagation(); const value = e.code === 'ArrowUp' ? 1 : -1, rect = stick.getBoundingClientRect(); updateTreadStick(stick, side, rect.left + rect.width / 2, rect.top + rect.height * (.5 - value * .34)); }); stick.addEventListener('keyup', (e) => { if (!['ArrowUp', 'ArrowDown'].includes(e.code)) return; e.preventDefault(); e.stopPropagation(); resetTreadStick(stick, side); }); });
   ui.laserButtons.forEach((button) => { button.addEventListener('pointerdown', (e) => { e.preventDefault(); beginLaserCharge(); button.setPointerCapture?.(e.pointerId); }); button.addEventListener('pointerup', (e) => { e.preventDefault(); releaseLaserCharge(); }); button.addEventListener('pointercancel', (e) => { e.preventDefault(); cancelLaserCharge(); }); button.addEventListener('lostpointercapture', releaseLaserCharge); }); root.querySelectorAll('[data-sim-saber]').forEach((button) => button.addEventListener('pointerdown', (e) => { e.preventDefault(); saberSlash(); }));
   ui.rocketButtons.forEach((button) => button.addEventListener('click', () => setRocketHeld(!rocketHeld)));
   ui.replay.addEventListener('click', () => { if (!levelComplete) return; loadLevel(levelIndex); running = true; ui.start.hidden = true; startMusic(); });
+  root.querySelectorAll('[data-sim-lean]').forEach((button) => button.addEventListener('click', togglePickupLean));
+  root.querySelectorAll('[data-sim-grab]').forEach((button) => button.addEventListener('click', interactCargo));
   ui.flipperButtons.forEach((button) => button.addEventListener('click', () => commandBaseFlipper(button.dataset.flipperDirection)));
   ui.shieldButtons.forEach((button) => button.addEventListener('click', activateShield));
   ui.hack.addEventListener('click', startFlipperHack);
@@ -823,7 +889,7 @@ if (root) {
   ui.fullscreen.addEventListener('click', async () => { try { if (fullscreenElement()) await (document.exitFullscreen?.() || document.webkitExitFullscreen?.()); else if (shell.classList.contains('is-pseudo-fullscreen')) leavePseudoFullscreen(); else if (shell.requestFullscreen) await shell.requestFullscreen({ navigationUI: 'hide' }); else if (shell.webkitRequestFullscreen) shell.webkitRequestFullscreen(); else enterPseudoFullscreen(); if (isFullscreen()) screen.orientation?.lock?.('landscape')?.catch?.(() => {}); syncFullscreen(); } catch { enterPseudoFullscreen(); syncFullscreen(); } }); ['fullscreenchange', 'webkitfullscreenchange'].forEach((eventName) => document.addEventListener(eventName, syncFullscreen)); window.visualViewport?.addEventListener('resize', resize); addEventListener('orientationchange', () => requestAnimationFrame(resize));
   const levelStartMessage = () => levels[levelIndex].requiresBooster
     ? `Level ${levelIndex + 1}: hold R / gamepad LB, or tap Boost, to rise. Release or tap Land to descend onto the blue pads. Collect the elevated cells and land at the summit dock; rockets use 18 energy per second.`
-    : `Level ${levelIndex + 1}: lower the flippers with F to lift the front, then drive onto the step for automatic rear support. Use B to raise them manually. ${levels[levelIndex].key ? 'Find the key and use the orange hack panel.' : 'Clear the targets and collect every cell.'}`;
+    : `Level ${levelIndex + 1}: lean with C and grasp the ${levels[levelIndex].cargo.name} with G. Carry it to the marked destination and use C then G to place it. Lower the flippers with F to lift the front, then drive onto the step for automatic rear support. Use B to raise them manually. ${levels[levelIndex].key ? 'Find the key and use the orange hack panel.' : 'Clear the targets and collect every cell.'}`;
   ui.intermissionContinue.addEventListener('click', () => {
     if (!levelComplete || levelIndex >= levels.length - 1) return;
     if (levels[levelIndex + 1]?.requiresBooster && !upgradeLevels.rocketBooster) { say('Install the 900-point Plasma Booster before deploying. Replay this level if you need more skill points.'); return; }

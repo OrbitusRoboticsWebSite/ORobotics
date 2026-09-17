@@ -1,3 +1,5 @@
+import { cargoForLevel } from './rob-pickup.mjs';
+
 export const KEY_WORKSHOP_KEY_SPAWN = Object.freeze([-3.6, -4.8]);
 export const KEY_BEACON_HEIGHT = 5.8;
 
@@ -136,7 +138,7 @@ export function reachableCoursePoints(level, { closedDoor = false, clearance = 1
   return queue.map(({ point }) => point);
 }
 
-function repairMissionSpawns(level) {
+function repairMissionSpawns(level, index) {
   const reachable = reachableCoursePoints(level), beforeDoor = level.door ? reachableCoursePoints(level, { closedDoor: true }) : reachable;
   level.spawn = beforeDoor[0];
   const reserved = [level.spawn];
@@ -155,4 +157,7 @@ function repairMissionSpawns(level) {
   level.enemies = level.enemies.map(([kind, x, z]) => [kind, ...place([x, z], reachable, groundBlockers)]);
   level.shieldPickups = level.shieldPickups.map((point) => place(point));
   level.repairPickups = level.repairPickups.map((point) => place(point));
+  level.cargo = { ...cargoForLevel(index),
+    pickup: place([3.6, 16.2], beforeDoor.filter((point) => point[1] > 0), [...groundBlockers, ...(level.door ? [level.door] : [])]),
+    destinationPoint: [...level.dock] };
 }

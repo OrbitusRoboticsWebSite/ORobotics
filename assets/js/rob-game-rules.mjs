@@ -1,4 +1,4 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.09.17.1';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.17.2';
 export const MAX_ROB_HEALTH = 100;
 export const MAX_ROB_SHIELDS = 40;
 export const SHIELD_ACTIVATION_DURATION = 2.5;

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import * as THREE from 'three';
 import { buildROBVisual, robFlipperSupportHeight, ROB_VISUAL_DIMENSIONS } from '../assets/js/rob-visual-model.mjs';
 import { loadCapturedROB } from '../assets/js/rob-captured-model.mjs';
@@ -41,12 +42,13 @@ test('rollers clear the floor over the entire animated cycle at both game scales
   }
 });
 
-test('all six published scans have valid GLB buffers and original scan provenance', () => {
+test('all eight published scans have valid GLB buffers, hashes and original scan provenance', () => {
   const directory = new URL('../static/models/rob/', import.meta.url);
   const provenance = JSON.parse(readFileSync(new URL('scan-provenance.json', directory)));
-  assert.equal(provenance.scans.length, 6);
+  assert.equal(provenance.scans.length, 8);
   for (const scan of provenance.scans) {
     const bytes = readFileSync(new URL(scan.file, directory));
+    assert.equal(createHash('sha256').update(bytes).digest('hex'), scan.sha256);
     assert.equal(bytes.readUInt32LE(0), 0x46546c67); assert.equal(bytes.readUInt32LE(8), bytes.length);
     const jsonLength = bytes.readUInt32LE(12), doc = JSON.parse(bytes.subarray(20, 20 + jsonLength));
     const binaryStart = 28 + jsonLength;
@@ -55,6 +57,8 @@ test('all six published scans have valid GLB buffers and original scan provenanc
     assert.equal(doc.accessors[doc.meshes[0].primitives[0].indices].count, scan.triangles * 3);
     assert.equal(scan.sourceSHA256.length, 64); assert.equal(scan.originalUnmodified, true);
   }
+  assert.equal(provenance.scans.find((scan) => scan.file === 'rob-lean-forward.glb').poseObservation.lactPinToPinMillimeters, 302);
+  assert.equal(provenance.scans.find((scan) => scan.file === 'rob-lean-back.glb').poseObservation.lactPinToPinMillimeters, 200);
 });
 
 test('captured surfaces load at both game scales and follow head motion without moving the base', async (t) => {
