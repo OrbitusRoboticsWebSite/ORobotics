@@ -23,7 +23,13 @@ import {
   SECURITY_CAMERA_HALF_ANGLE,
   applyROBDamage,
   advanceBaseFlipper,
-  battleUpgradePoints,
+  battleScore,
+  enemyContactDamage,
+  enemySkillReward,
+  levelSkillReward,
+  skillPointBalance,
+  saberDamage,
+  upgradeRequiredCompletedLevel,
   baseFlipperPresentation,
   bossStats,
   cameraHeading,
@@ -87,7 +93,10 @@ if (root) {
   const saveProgress = (key, value) => { try { localStorage.setItem(key, String(value)); } catch {} };
   let running = false, complete = false, levelComplete = false, elapsed = 0, levelElapsed = 0, score = 0, gateDone = false, cellCount = 0, lastShot = -Infinity, levelIndex = 0, hasKey = false, doorOpen = true, hacking = false, hackingCamera, hackingProgress = 0, securityAlertRemaining = 0, securityMiniBossReleased = false, laserLock, secondaryLaserLock, laserChargeStarted, saberCombo = 0, lastSaberAttack = -Infinity, saberAnimation, gamepadLaserHeld = false, baseFlipperAngle = BASE_FLIPPER_REAR_ANGLE, baseFlipperTarget = 'rear';
   let health = MAX_ROB_HEALTH, shields = MAX_ROB_SHIELDS, lives = MAX_TRIAL_LIVES, damageInvulnerableUntil = -Infinity, highestCompletedLevel = Math.max(0, Math.min(15, Number(readProgress('robHighestCompletedLevel', 0)) || 0));
-  let upgradePoints = Math.max(0, Number(readProgress('robUpgradePoints', 0)) || 0);
+  const savedSkillPoints = readProgress('robSkillPoints', null), legacyPoints = Number(readProgress('robUpgradePoints', 0)) || 0;
+  let upgradePoints = skillPointBalance(savedSkillPoints, legacyPoints);
+  if (savedSkillPoints === null) saveProgress('robSkillPoints', upgradePoints);
+  const economyMigrationMessage = savedSkillPoints === null && legacyPoints > 0 ? `Balance update: ${legacyPoints} old points converted to ${upgradePoints} skill points. Earn more by defeating robots and clearing levels.` : undefined;
   const upgradeLevels = Object.fromEntries(upgrades.map((upgrade) => [upgrade.id, Math.max(0, Math.min(upgrade.maximumLevel, Number(readProgress(`rob${upgrade.id}Level`, 0)) || 0))]));
   let energy = maximumEnergy(upgradeLevels.energyCapacity);
   let shieldTimeRemaining = 0, gamepadShieldHeld = false;
@@ -375,8 +384,8 @@ if (root) {
     intermissionStatus: root.querySelector('[data-sim-intermission-status]'),
     intermissionContinue: root.querySelector('[data-sim-intermission-continue]'),
   });
-  const awardMissionPoints = (points) => { if (points <= 0) return; score += points; upgradePoints += points; saveProgress('robUpgradePoints', upgradePoints); updateWorkshop(); };
-  const objectives = Object.fromEntries([...root.querySelectorAll('[data-objective]')].map((item) => [item.dataset.objective, item])); const say = (t) => { ui.message.textContent = t; ui.intermissionStatus.textContent = t; }; const mark = (n, t, p) => { if (objectives[n].classList.contains('is-complete')) return; objectives[n].classList.add('is-complete'); awardMissionPoints(p); say(t); };
+  const awardMissionPoints = (points, skillPoints = 0) => { score += Math.max(0, points); if (skillPoints <= 0) return; upgradePoints += skillPoints; saveProgress('robSkillPoints', upgradePoints); updateWorkshop(); };
+  const objectives = Object.fromEntries([...root.querySelectorAll('[data-objective]')].map((item) => [item.dataset.objective, item])); const say = (t) => { ui.message.textContent = t; ui.intermissionStatus.textContent = t; }; const mark = (n, t, p, skillPoints = 0) => { if (objectives[n].classList.contains('is-complete')) return; objectives[n].classList.add('is-complete'); awardMissionPoints(p, skillPoints); say(t); };
   const currentBoss = () => enemies.find((enemy) => enemy.userData.alive && enemy.userData.isBoss);
   const updateWorkshop = () => {
     selectedFinishID = selectedFinish().id; selectedFaceColorID = selectedFaceColor().id; selectedRangedID = selectedRanged().id; selectedMeleeID = selectedMelee().id;
@@ -385,10 +394,15 @@ if (root) {
     ui.finish.value = selectedFinishID; ui.faceColor.value = selectedFaceColorID; ui.ranged.value = selectedRangedID; ui.melee.value = selectedMeleeID;
     [...ui.ranged.options].forEach((option) => { const weapon = rangedWeapons.find(({ id }) => id === option.value); option.disabled = Boolean(weapon && !isUnlocked(weapon, highestCompletedLevel)); });
     [...ui.melee.options].forEach((option) => { const weapon = meleeWeapons.find(({ id }) => id === option.value); option.disabled = Boolean(weapon && !isUnlocked(weapon, highestCompletedLevel)); });
-    ui.workshopPoints.textContent = `${upgradePoints.toLocaleString()} points`;
-    ui.intermissionPoints.textContent = `${upgradePoints.toLocaleString()} battle points available`;
-    ui.upgradeButtons.forEach((button) => { const upgrade = upgrades.find(({ id }) => id === button.dataset.upgrade), level = upgradeLevels[upgrade.id], cost = upgradeCost(upgrade, level); button.textContent = cost === undefined ? `${upgrade.name} · MAX` : `${upgrade.name} L${level} · ${cost}`; button.disabled = cost === undefined || upgradePoints < cost; });
-    ui.loadoutStatus.textContent = `${selectedFinish().name} finish · ${selectedFaceColor().name} smile · ${selectedRanged().name} · ${selectedMelee().name} · Speed L${upgradeLevels.speedBoost} (${Math.round(driveSpeedMultiplier(upgradeLevels.speedBoost) * 100)}%) · Energy L${upgradeLevels.energyCapacity} (${maximumEnergy(upgradeLevels.energyCapacity)} max) · Power L${upgradeLevels.weaponPower} · ${targetingComputer().autoLock ? 'Auto Targeting · 0.25s cycle' : 'Basic Manual Aim · 0.8s cycle'}`;
+    ui.workshopPoints.textContent = `${upgradePoints.toLocaleString()} skill points`;
+    ui.intermissionPoints.textContent = `${upgradePoints.toLocaleString()} skill points available`;
+    ui.upgradeButtons.forEach((button) => {
+      const upgrade = upgrades.find(({ id }) => id === button.dataset.upgrade), level = upgradeLevels[upgrade.id], cost = upgradeCost(upgrade, level);
+      const requiredLevel = upgradeRequiredCompletedLevel(upgrade, level), locked = highestCompletedLevel < requiredLevel;
+      button.textContent = cost === undefined ? `${upgrade.name} · MAX` : `${upgrade.name} L${level} · ${cost}${locked ? ` · Clear Level ${requiredLevel}` : ''}`;
+      button.disabled = cost === undefined || upgradePoints < cost || locked;
+    });
+    ui.loadoutStatus.textContent = `${selectedFinish().name} finish · ${selectedFaceColor().name} smile · ${selectedRanged().name} · ${selectedMelee().name} · Speed L${upgradeLevels.speedBoost} (${Math.round(driveSpeedMultiplier(upgradeLevels.speedBoost) * 100)}%) · Energy L${upgradeLevels.energyCapacity} (${maximumEnergy(upgradeLevels.energyCapacity)} max) · Laser L${upgradeLevels.weaponPower} · Kyber L${upgradeLevels.kyberCrystals} (${saberDamage(upgradeLevels.kyberCrystals)} saber damage) · ${targetingComputer().autoLock ? 'Auto Targeting · 0.25s cycle' : 'Basic Manual Aim · 0.8s cycle'}`;
   };
   const applyLoadout = () => {
     const housingMaterial = droidHousingMaterials.find(({ id }) => id === droidProfile.material) || droidHousingMaterials[0];
@@ -422,7 +436,7 @@ if (root) {
       const enemy = enemies.find((candidate) => !candidate.visible && candidate.userData.type === spec[0]);
       if (!enemy) return;
       const stats = enemyIndex === 0 ? bossStats(index + 1, level.health) : { isBoss: false, shields: level.health };
-      enemy.visible = true; enemy.userData.alive = true; enemy.userData.isBoss = stats.isBoss; enemy.userData.isMiniBoss = false; enemy.userData.health = stats.shields; enemy.userData.maxHealth = stats.shields; enemy.userData.contactDamage = stats.contactDamage || (spec[0] === 'spider' ? 6 : 5); enemy.userData.projectileDamage = stats.projectileDamage || 4; enemy.userData.combatScale = stats.isBoss ? 1.35 : 1; enemy.userData.defeatReward = stats.isBoss ? 1000 : 300; enemy.userData.name = `${stats.isBoss ? 'Boss ' : ''}${spec[0] === 'spider' ? 'Spider bot' : 'Dalek-style sentry robot'}`; enemy.scale.setScalar(enemy.userData.combatScale);
+      enemy.visible = true; enemy.userData.alive = true; enemy.userData.isBoss = stats.isBoss; enemy.userData.isMiniBoss = false; enemy.userData.health = stats.shields; enemy.userData.maxHealth = stats.shields; enemy.userData.contactDamage = enemyContactDamage({ kind: spec[0], isBoss: stats.isBoss }); enemy.userData.projectileDamage = stats.projectileDamage || 4; enemy.userData.combatScale = stats.isBoss ? 1.35 : 1; enemy.userData.defeatReward = stats.isBoss ? 1000 : 300; enemy.userData.name = `${stats.isBoss ? 'Boss ' : ''}${spec[0] === 'spider' ? 'Spider bot' : 'Dalek-style sentry robot'}`; enemy.scale.setScalar(enemy.userData.combatScale);
       enemy.position.set(spec[1], surfaceHeight({ x: spec[1], z: spec[2] }), spec[2]); enemy.userData.origin = enemy.position.clone(); enemy.userData.patrolPhase = enemyIndex * 2.17; enemy.userData.nextAttack = elapsed + 1.6 + enemyIndex * .65; enemy.userData.nextSkitterSound = elapsed + .8 + enemyIndex * .38; enemy.userData.lungeUntil = 0; enemy.userData.travelDistance = 0;
     });
     Object.values(objectives).forEach((objective) => objective.classList.remove('is-complete')); objectives.cells.querySelector('[data-objective-text]').textContent = `Collect ${level.cells.length} energy cells`; objectives.enemies.querySelector('[data-objective-text]').textContent = `Disable ${level.enemies.length} hostile robots`; objectives.dock.querySelector('[data-objective-text]').textContent = level.key ? 'Find the key, hack the door, use the flipper ledge, then dock' : 'Use the flipper to mount the ledge, then dock';
@@ -462,7 +476,22 @@ if (root) {
     objectives.enemies.classList.remove('is-complete'); objectives.enemies.querySelector('[data-objective-text]').textContent = 'Disable hostile robots and the released mini boss';
     return true;
   };
-  const damageEnemy = (hit, weapon, amount = 1) => { const damage = upgradedWeaponDamage(amount, upgradeLevels.weaponPower); hit.userData.health -= damage; awardMissionPoints(battleUpgradePoints({ damage })); if (hit.userData.type === 'spider') playSpiderSound(hit.userData.health <= 0 ? 'shutdown' : 'impact'); say(`${hit.userData.name} hit by ${weapon} — ${Math.max(0, hit.userData.health)} shields remain.`); if (hit.userData.health <= 0) { hit.userData.alive = false; hit.visible = false; awardMissionPoints(battleUpgradePoints({ defeatReward: hit.userData.defeatReward ?? (hit.userData.isBoss ? 1000 : 300) })); if (laserLock === hit) laserLock = undefined; if (secondaryLaserLock === hit) secondaryLaserLock = undefined; if (hit.userData.type !== 'spider') playDalekSentry(); say(`${hit.userData.name} disabled by ${weapon}. ${enemies.filter((enemy) => enemy.userData.alive).length} targets remain.`); if (enemies.every((e) => !e.userData.alive)) mark('enemies', 'Training-room defense complete.', 400); } };
+  const damageEnemy = (hit, weapon, amount = 1) => {
+    if (!hit.userData.alive) return;
+    const damage = Math.min(hit.userData.health, Math.max(0, amount));
+    hit.userData.health -= damage; awardMissionPoints(battleScore({ damage }));
+    if (hit.userData.type === 'spider') playSpiderSound(hit.userData.health <= 0 ? 'shutdown' : 'impact');
+    say(`${hit.userData.name} hit by ${weapon} — ${hit.userData.health} shields remain.`);
+    if (hit.userData.health <= 0) {
+      const skillPoints = enemySkillReward(hit.userData);
+      hit.userData.alive = false; hit.visible = false;
+      awardMissionPoints(battleScore({ defeatReward: hit.userData.defeatReward ?? (hit.userData.isBoss ? 1000 : 300) }), skillPoints);
+      if (laserLock === hit) laserLock = undefined; if (secondaryLaserLock === hit) secondaryLaserLock = undefined;
+      if (hit.userData.type !== 'spider') playDalekSentry();
+      say(`${hit.userData.name} disabled by ${weapon}. +${skillPoints} skill points. ${enemies.filter((enemy) => enemy.userData.alive).length} targets remain.`);
+      if (enemies.every((enemy) => !enemy.userData.alive)) mark('enemies', 'Training-room defense complete.', 400);
+    }
+  };
   const damageROB = (attack, damage) => {
     if (!running || elapsed < damageInvulnerableUntil) return false;
     const result = applyROBDamage({ health, shields, damage, shieldActive: shieldTimeRemaining > 0 }); health = result.health; shields = result.shields; score = Math.max(0, score - result.scorePenalty); damageInvulnerableUntil = elapsed + .75;
@@ -477,7 +506,7 @@ if (root) {
     if (!life.trialFailed) {
       loadLevel(levelIndex); running = true; ui.start.hidden = true; damageInvulnerableUntil = elapsed + 1; say(`ROB was disabled by ${attack}. Life lost — ${lives} remaining. Restarting level ${levelIndex + 1}.`); return true;
     }
-    score = 0; upgradePoints = 0; upgrades.forEach((upgrade) => { upgradeLevels[upgrade.id] = 0; saveProgress(`rob${upgrade.id}Level`, 0); }); saveProgress('robUpgradePoints', 0);
+    score = 0; upgradePoints = 0; upgrades.forEach((upgrade) => { upgradeLevels[upgrade.id] = 0; saveProgress(`rob${upgrade.id}Level`, 0); }); saveProgress('robSkillPoints', 0);
     levelIndex = 0; complete = false; loadLevel(0); running = false; ui.start.hidden = false; ui.start.textContent = 'Start new three-life trial'; stopMusic(); updateWorkshop(); say(`Trial over after ${attack}. All points and installed upgrades were lost. Start Level 1 to try again with three lives.`); return true;
   };
   const combatNow = () => performance.now() / 1000;
@@ -505,7 +534,7 @@ if (root) {
       const direction = new THREE.Vector3(-Math.sin(heading), verticalAim, -Math.cos(heading)).normalize();
       const bolt = mesh(new THREE.CylinderGeometry(radius, radius, length, 12), mat(color, color), scene);
       bolt.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction); bolt.position.copy(start).addScaledVector(direction, .7 + charge * .55);
-      bolt.userData.velocity = direction.multiplyScalar(weapon.projectileSpeed + charge * 3.5); bolt.userData.damage = weaponDamage(weapon, charge); bolt.userData.charge = charge; bolt.userData.weapon = weapon; bolts.push(bolt);
+      bolt.userData.velocity = direction.multiplyScalar(weapon.projectileSpeed + charge * 3.5); bolt.userData.damage = upgradedWeaponDamage(weaponDamage(weapon, charge), upgradeLevels.weaponPower); bolt.userData.charge = charge; bolt.userData.weapon = weapon; bolts.push(bolt);
     });
     if (weapon.id === 'twinBlasters' && secondaryLaserLock) say(`Twin Blasters dual lock — two beams fired for ${Math.ceil(energyCost)} energy.`);
     else if (laserLock) say(`${weapon.name} fired at ${laserLock.userData.name} for ${Math.ceil(energyCost)} energy.`);
@@ -535,7 +564,7 @@ if (root) {
     }
     saberCombo = now - lastSaberAttack <= 1.15 ? saberCombo + 1 : 1; const style = saberCombo >= 3 ? 'spin' : saberCombo % 2 ? 'left' : 'right', radius = style === 'spin' ? 4.1 : 3.15;
     lastSaberAttack = now; if (style === 'spin') saberCombo = 0; saberAnimation = { style, started: now, duration: meleeDuration(style) }; playSound('laser');
-    const hits = enemies.filter((enemy) => enemy.userData.alive).filter((enemy) => { const offset = enemy.position.clone().sub(robot.position), enemyPoint = { x: enemy.position.x, z: enemy.position.z }; return offset.length() <= radius && (style === 'spin' || offset.clone().normalize().dot(forward) > -.08) && meleeAnimationIsClear({ origin, target: enemyPoint, blockers: projectileBlockers() }); }); hits.forEach((enemy) => damageEnemy(enemy, style === 'spin' ? 'dual-saber spin' : `dual-saber ${style} sweep`)); say(style === 'spin' ? `Spin attack! ROB extended both sabers and struck ${hits.length} ${hits.length === 1 ? 'enemy' : 'enemies'}.` : hits.length ? `${style === 'left' ? 'Left' : 'Right'} dual-arm sweep connected.` : `${style === 'left' ? 'Left' : 'Right'} sweep missed. Close the distance, then chain three attacks for a spin.`);
+    const hits = enemies.filter((enemy) => enemy.userData.alive).filter((enemy) => { const offset = enemy.position.clone().sub(robot.position), enemyPoint = { x: enemy.position.x, z: enemy.position.z }; return offset.length() <= radius && (style === 'spin' || offset.clone().normalize().dot(forward) > -.08) && meleeAnimationIsClear({ origin, target: enemyPoint, blockers: projectileBlockers() }); }); hits.forEach((enemy) => damageEnemy(enemy, style === 'spin' ? 'dual-saber spin' : `dual-saber ${style} sweep`, saberDamage(upgradeLevels.kyberCrystals))); say(style === 'spin' ? `Spin attack! ROB extended both sabers and struck ${hits.length} ${hits.length === 1 ? 'enemy' : 'enemies'}.` : hits.length ? `${style === 'left' ? 'Left' : 'Right'} dual-arm sweep connected.` : `${style === 'left' ? 'Left' : 'Right'} sweep missed. Close the distance, then chain three attacks for a spin.`);
   };
   const updateRobotWeapons = () => {
     scanForLaserTarget(); const now = combatNow(), charge = laserChargeAmount(); robotRig.torso.rotation.set(0, 0, 0); armAssemblies.forEach((arm) => arm.rotation.set(0, 0, 0));
@@ -714,7 +743,8 @@ if (root) {
     if (cellCount === level.cells.length && enemies.every((e) => !e.userData.alive) && doorOpen && robot.position.distanceTo(dock.position) < 1.15) {
       const timeBonus = Math.max(0, level.bonus - Math.floor(levelElapsed) * 10), completedLevel = levelIndex + 1, earnedProgress = completedLevel > highestCompletedLevel, reward = earnedProgress ? unlockReward(completedLevel) : undefined;
       highestCompletedLevel = Math.max(highestCompletedLevel, completedLevel); saveProgress('robHighestCompletedLevel', highestCompletedLevel); updateWorkshop();
-      mark('dock', [reward, `Level cleared! Time bonus: ${timeBonus}.`].filter(Boolean).join(' '), 500 + timeBonus);
+      const skillPoints = levelSkillReward(completedLevel);
+      mark('dock', [reward, `Level cleared! +${skillPoints} skill points. Time score bonus: ${timeBonus}.`].filter(Boolean).join(' '), 500 + timeBonus, skillPoints);
       playSound('level-complete'); running = false; levelComplete = true; releaseAllInput(); stopMusic();
       if (levelIndex < levels.length - 1) {
         ui.start.hidden = true;
@@ -766,7 +796,7 @@ if (root) {
     ui.health.value = health; ui.healthText.textContent = `${health} / ${MAX_ROB_HEALTH}`; ui.shields.value = shields; ui.shieldsText.textContent = `${shields} / ${MAX_ROB_SHIELDS}`; const energyMaximum = maximumEnergy(upgradeLevels.energyCapacity); ui.energy.max = energyMaximum; ui.energy.value = energy; ui.energyText.textContent = `${Math.floor(energy)} / ${energyMaximum}`; ui.security.hidden = securityAlertRemaining <= 0;
     const level = levels[levelIndex], hackDistance = robot.position.distanceTo(hackTerminal.position), doorHackAvailable = Boolean(level.door && !doorOpen && hackDistance <= 2.7), nearbyCamera = nearestHackableCamera(), hasActiveCamera = securityCameras.some((securityCamera) => !securityCamera.disabled), hackAvailable = doorHackAvailable || hasActiveCamera || hacking || Boolean(hackingCamera); ui.hack.hidden = !hackAvailable; ui.hack.disabled = hacking || Boolean(hackingCamera) || (!nearbyCamera && !doorHackAvailable); ui.hack.textContent = hackingCamera ? `▣ Hacking camera ${Math.round(hackingProgress * 100)}%` : hacking ? `▣ Hacking door ${Math.round(hackingProgress * 100)}%` : nearbyCamera ? '▣ Hack camera' : doorHackAvailable ? hasKey ? '▣ Hack door' : '▣ Key required' : '▣ Reach security camera';
     hackTerminalLamp.material.color.setHex(hacking ? 0xffcf33 : hasKey ? 0x37e887 : 0xff3030); hackTerminalLamp.material.emissive.setHex(hacking ? 0xb37700 : hasKey ? 0x087a35 : 0x8b0505);
-    ui.workshopPoints.textContent = `${upgradePoints.toLocaleString()} points`;
+    ui.workshopPoints.textContent = `${upgradePoints.toLocaleString()} skill points`;
     const boss = currentBoss(); ui.boss.hidden = !boss; if (boss) { ui.bossName.textContent = `${boss.userData.name} shields`; ui.bossText.textContent = `${boss.userData.health} / ${boss.userData.maxHealth}`; ui.bossHealth.max = boss.userData.maxHealth; ui.bossHealth.value = Math.max(0, boss.userData.health); }
     renderer.render(scene, camera);
   };
@@ -802,8 +832,10 @@ if (root) {
   ui.upgradeButtons.forEach((button) => button.addEventListener('click', () => {
     const upgrade = upgrades.find(({ id }) => id === button.dataset.upgrade), level = upgradeLevels[upgrade.id], cost = upgradeCost(upgrade, level);
     if (cost === undefined) { say(`${upgrade.name} is already fully upgraded.`); return; }
-    if (upgradePoints < cost) { say(`${cost - upgradePoints} more mission points needed for ${upgrade.name}.`); return; }
-    upgradePoints -= cost; upgradeLevels[upgrade.id] += 1; saveProgress('robUpgradePoints', upgradePoints); saveProgress(`rob${upgrade.id}Level`, upgradeLevels[upgrade.id]); if (upgrade.id === 'energyCapacity') energy = Math.min(maximumEnergy(upgradeLevels.energyCapacity), energy + 60); updateWorkshop(); const benefit = upgrade.id === 'speedBoost' ? `${Math.round(driveSpeedMultiplier(upgradeLevels.speedBoost) * 100)}% drive speed` : upgrade.id === 'energyCapacity' ? `${maximumEnergy(upgradeLevels.energyCapacity)} max energy` : undefined; say(`${upgrade.name} upgraded to Level ${upgradeLevels[upgrade.id]}${benefit ? ` — ${benefit}.` : '.'}`);
+    const requiredLevel = upgradeRequiredCompletedLevel(upgrade, level);
+    if (highestCompletedLevel < requiredLevel) { say(`Clear Level ${requiredLevel} for the next ${upgrade.name} rank.`); return; }
+    if (upgradePoints < cost) { say(`${cost - upgradePoints} more skill points needed for ${upgrade.name}.`); return; }
+    upgradePoints -= cost; upgradeLevels[upgrade.id] += 1; saveProgress('robSkillPoints', upgradePoints); saveProgress(`rob${upgrade.id}Level`, upgradeLevels[upgrade.id]); if (upgrade.id === 'energyCapacity') energy = Math.min(maximumEnergy(upgradeLevels.energyCapacity), energy + 60); updateWorkshop(); const benefit = upgrade.id === 'speedBoost' ? `${Math.round(driveSpeedMultiplier(upgradeLevels.speedBoost) * 100)}% drive speed` : upgrade.id === 'energyCapacity' ? `${maximumEnergy(upgradeLevels.energyCapacity)} max energy` : undefined; say(`${upgrade.name} upgraded to Level ${upgradeLevels[upgrade.id]}${benefit ? ` — ${benefit}.` : '.'}`);
   }));
   window.addEventListener('rob:droid-profile', (event) => {
     droidProfile = sanitizeDroidProfile(event.detail?.profile);
@@ -812,5 +844,5 @@ if (root) {
     applyLoadout();
     if (event.detail?.announce) say(`${droidProfile.name} loaded with ${droidProfile.material.replace(/([A-Z])/g, ' $1').toLowerCase()} housing.`);
   });
-  document.addEventListener('visibilitychange', () => { if (document.hidden) releaseAllInput(); }); addEventListener('pagehide', releaseAllInput); new ResizeObserver(resize).observe(viewport); reset(); resize(); animate();
+  document.addEventListener('visibilitychange', () => { if (document.hidden) releaseAllInput(); }); addEventListener('pagehide', releaseAllInput); new ResizeObserver(resize).observe(viewport); reset(); if (economyMigrationMessage) say(economyMigrationMessage); resize(); animate();
 }

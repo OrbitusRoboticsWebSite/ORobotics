@@ -16,7 +16,13 @@ import {
   applyROBDamage,
   applyROBHealthDamage,
   advanceBaseFlipper,
-  battleUpgradePoints,
+  battleScore,
+  enemyContactDamage,
+  enemySkillReward,
+  levelSkillReward,
+  skillPointBalance,
+  saberDamage,
+  upgradeRequiredCompletedLevel,
   baseFlipperPresentation,
   bossStats,
   cameraHeading,
@@ -137,9 +143,9 @@ test('map pickups replenish shields and repair hull damage without overfilling',
   assert.equal(repairROBHealth(90), MAX_ROB_HEALTH);
 });
 
-test('every fifth level adds an escalating reinforced ten-damage boss', () => {
+test('every fifth level adds an escalating reinforced thirty-contact-damage boss', () => {
   assert.deepEqual(bossStats(4, 4), { isBoss: false, shields: 4, contactDamage: undefined, projectileDamage: undefined });
-  assert.deepEqual(bossStats(5, 6), { isBoss: true, shields: 60, contactDamage: 10, projectileDamage: 10 });
+  assert.deepEqual(bossStats(5, 6), { isBoss: true, shields: 60, contactDamage: 30, projectileDamage: 10 });
   assert.equal(bossStats(10, 8).shields, 90);
   assert.equal(bossStats(15, 10).shields, 120);
 });
@@ -250,10 +256,10 @@ test('conveyor chevrons animate and wrap in the physical travel direction', () =
   assert.equal(conveyorArrowOffset({ baseOffset: .75, elapsed: 1, speed: .5, span: 2, direction: 1 }), -.75);
 });
 
-test('battle damage and defeats pay into the persistent upgrade economy', () => {
-  assert.equal(battleUpgradePoints({ damage: 1 }), 50);
-  assert.equal(battleUpgradePoints({ damage: 2, defeatReward: 300 }), 400);
-  assert.equal(battleUpgradePoints({ damage: -3, defeatReward: -1 }), 0);
+test('battle damage and defeats contribute to arcade score', () => {
+  assert.equal(battleScore({ damage: 1 }), 50);
+  assert.equal(battleScore({ damage: 2, defeatReward: 300 }), 400);
+  assert.equal(battleScore({ damage: -3, defeatReward: -1 }), 0);
 });
 
 test('security cameras respect their view cone, walls, and shadow cover', () => {
@@ -289,7 +295,7 @@ test('a camera releases one lightweight mini boss profile', () => {
     isBoss: true,
     isMiniBoss: true,
     shields: 6,
-    contactDamage: 4,
+    contactDamage: 12,
     projectileDamage: 3,
     scale: 1.15,
     defeatReward: 500,
@@ -461,4 +467,38 @@ test('the third trial life is the terminal life', () => {
   assert.deepEqual(consumeTrialLife(3), { lives: 2, trialFailed: false });
   assert.deepEqual(consumeTrialLife(2), { lives: 1, trialFailed: false });
   assert.deepEqual(consumeTrialLife(1), { lives: 0, trialFailed: true });
+});
+
+test('Kyber Crystals control saber damage and later ranks require campaign progress', () => {
+  const crystal = upgrades.find(({ id }) => id === 'kyberCrystals');
+  assert.deepEqual([0, 1, 2, 3].map(saberDamage), [1, 2, 3, 4]);
+  assert.deepEqual([0, 1, 2].map((level) => upgradeCost(crystal, level)), [600, 1600, 2600]);
+  assert.deepEqual([0, 1, 2].map((level) => upgradeRequiredCompletedLevel(crystal, level)), [0, 5, 10]);
+  assert.equal(upgradeCost(crystal, 3), undefined);
+});
+
+test('enemy contact hits punish closing into melee range', () => {
+  assert.equal(enemyContactDamage({ kind: 'spider' }), 18);
+  assert.equal(enemyContactDamage({ kind: 'dalek' }), 15);
+  assert.equal(enemyContactDamage({ kind: 'spider', isBoss: true }), 30);
+  assert.equal(enemyContactDamage({ kind: 'spider', isBoss: true, isMiniBoss: true }), 12);
+});
+
+test('skill rewards require defeats and level clears instead of matching arcade score', () => {
+  assert.equal(enemySkillReward({}), 40);
+  assert.equal(enemySkillReward({ isBoss: true }), 200);
+  assert.equal(enemySkillReward({ isBoss: true, isMiniBoss: true }), 60);
+  assert.equal(levelSkillReward(1), 100);
+  assert.equal(levelSkillReward(15), 450);
+  const firstThreeLevels = [1, 2, 3].reduce((points, level) => points + 3 * enemySkillReward({}) + levelSkillReward(level), 0);
+  assert.equal(firstThreeLevels, 735);
+  assert.ok(firstThreeLevels < upgradeCost(upgrades.find(({ id }) => id === 'targetingComputer'), 0));
+});
+
+test('legacy balances convert once and old tabs cannot replace the new balance', () => {
+  assert.equal(skillPointBalance(null, 13100), 1310);
+  assert.equal(skillPointBalance(1310, 13100), 1310);
+  assert.equal(skillPointBalance(710, 99999), 710);
+  assert.equal(skillPointBalance(0, 99999), 0);
+  assert.equal(skillPointBalance(null, -100), 0);
 });

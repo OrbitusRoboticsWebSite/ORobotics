@@ -1,4 +1,4 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.09.16.6';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.16.7';
 export const MAX_ROB_HEALTH = 100;
 export const MAX_ROB_SHIELDS = 40;
 export const SHIELD_ACTIVATION_DURATION = 2.5;
@@ -17,11 +17,23 @@ export const REPAIR_PICKUP_STRENGTH = 35;
 export const upgrades = [
   { id: 'speedBoost', name: 'Speed Boost', maximumLevel: 3, baseCost: 700, costStep: 650 },
   { id: 'energyCapacity', name: 'Energy Capacity', maximumLevel: 3, baseCost: 550, costStep: 500 },
-  { id: 'weaponPower', name: 'Weapon Power', maximumLevel: 3, baseCost: 900, costStep: 800 },
+  { id: 'weaponPower', name: 'Laser Power', maximumLevel: 3, baseCost: 900, costStep: 800 },
   { id: 'targetingComputer', name: 'Targeting Computer', maximumLevel: 1, baseCost: 1200, costStep: 0 },
+  { id: 'kyberCrystals', name: 'Kyber Crystals', maximumLevel: 3, baseCost: 600, costStep: 1000 },
 ];
 
 export const upgradeCost = (upgrade, level) => level < upgrade.maximumLevel ? upgrade.baseCost + level * upgrade.costStep : undefined;
+export const upgradeRequiredCompletedLevel = (upgrade, level) => upgrade.id === 'kyberCrystals' ? level * 5 : 0;
+export const saberDamage = (crystalLevel = 0) => 1 + Math.max(0, Math.min(3, Math.floor(crystalLevel)));
+export const enemyContactDamage = ({ kind, isBoss = false, isMiniBoss = false }) => isMiniBoss ? 12 : isBoss ? 30 : kind === 'spider' ? 18 : 15;
+export const enemySkillReward = ({ isBoss = false, isMiniBoss = false }) => isMiniBoss ? 60 : isBoss ? 200 : 40;
+export const levelSkillReward = (levelNumber) => 100 + Math.max(0, Math.min(14, levelNumber - 1)) * 25;
+// A separate balance key prevents old open game tabs from restoring the old economy.
+export const skillPointBalance = (savedBalance, legacyBalance = 0) => {
+  const raw = Number(savedBalance ?? legacyBalance);
+  const balance = Number.isFinite(raw) ? Math.max(0, Math.floor(raw)) : 0;
+  return savedBalance == null ? Math.floor(balance / 10) : balance;
+};
 export const driveSpeedMultiplier = (level) => 1 + Math.max(0, level) * .6;
 export const maximumEnergy = (level) => BASE_ROB_ENERGY + Math.max(0, level) * 60;
 export const energyPickupAmount = (capacityLevel = 0) => 70 + Math.max(0, capacityLevel) * 20;
@@ -136,7 +148,7 @@ export const conveyorArrowOffset = ({ baseOffset, elapsed, speed, span, directio
   return ((shifted % span) + span) % span - span / 2;
 };
 
-export const battleUpgradePoints = ({ damage = 0, defeatReward = 0 }) => (
+export const battleScore = ({ damage = 0, defeatReward = 0 }) => (
   Math.max(0, Math.floor(damage)) * 50 + Math.max(0, Math.floor(defeatReward))
 );
 
@@ -229,7 +241,7 @@ export const bossStats = (levelNumber, baseShields) => {
   return {
     isBoss,
     shields: isBoss ? 30 + (levelNumber / 5) * 30 : baseShields,
-    contactDamage: isBoss ? 10 : undefined,
+    contactDamage: isBoss ? 30 : undefined,
     projectileDamage: isBoss ? 10 : undefined,
   };
 };
@@ -238,7 +250,7 @@ export const securityMiniBossStats = () => ({
   isBoss: true,
   isMiniBoss: true,
   shields: 6,
-  contactDamage: 4,
+  contactDamage: 12,
   projectileDamage: 3,
   scale: 1.15,
   defeatReward: 500,

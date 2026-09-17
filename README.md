@@ -92,7 +92,7 @@ The ROB Training game uses that same public CloudKit container and website token
 
 ### ROB Training gameplay sync
 
-Website gameplay rules live in `assets/js/rob-game-rules.mjs` and the Three.js implementation lives in `assets/js/rob-simulator.js`. The portable customization schema lives in `assets/js/rob-droid-profile.mjs`; its field keys, allowlists, Base64URL encoding, and FNV-1a checksum must stay byte-compatible with `Shared/ROBDroidProfile.swift`. Every gameplay change must be mirrored in the ROBTrainingGames repository's shared Swift session, renderer, platform controls, and tests so the iPhone, iPad, Vision Pro, and browser campaigns remain equivalent. Keep `GAMEPLAY_RULESET_VERSION` equal to `GameSession.gameplayRulesetVersion`; the current synchronized version is `2026.09.16.6`.
+Website gameplay rules live in `assets/js/rob-game-rules.mjs` and the Three.js implementation lives in `assets/js/rob-simulator.js`. The portable customization schema lives in `assets/js/rob-droid-profile.mjs`; its field keys, allowlists, Base64URL encoding, and FNV-1a checksum must stay byte-compatible with `Shared/ROBDroidProfile.swift`. Every gameplay change must be mirrored in the ROBTrainingGames repository's shared Swift session, renderer, platform controls, and tests so the iPhone, iPad, Vision Pro, and browser campaigns remain equivalent. Keep `GAMEPLAY_RULESET_VERSION` equal to `GameSession.gameplayRulesetVersion`; the current synchronized version is `2026.09.16.7`.
 
 Platform support uses the tread contact patch beneath ROB’s center, so an overhanging end does not lock the flipper controls while the deck still supports ROB. Leaving the deck still transitions into tipping and gravity. Equipped sabers stay extended; `assets/js/rob-melee-animation.mjs` matches native sweep, reverse recovery, and spin poses without repeating attack damage.
 
@@ -101,6 +101,10 @@ The body lean hinge sits above the upper tread wheel. LACT animation swings the 
 The basic targeting computer uses manual forward aim with a 0.8-second firing cycle and 1.8-second full charge. Its 1,200-point upgrade enables automatic locks on every laser, two independent Twin Blaster locks, a 0.25-second firing cycle, and 1.25-second full charge. Shots spend 8–24 energy (Gatling), 10–28 (Twin Blaster volley), or 16–44 (Arc Cannon), even when they miss. Charging pauses passive recovery, which resumes 1.5 seconds after the last shot.
 
 Enemy durability is doubled: regular campaign robots have 4–10 shield hit points, security mini bosses have 6, and the bosses on levels 5, 10, and 15 have 60, 90, and 120.
+
+Basic sabers deal 1 damage regardless of Laser Power. Kyber Crystal ranks cost 600, 1,600, and 2,600 skill points and raise saber damage to 2, 3, and 4; ranks 2 and 3 require clearing levels 5 and 10. Enemy contact deals 18 damage from spiders, 15 from sentries, 12 from security mini bosses, and 30 from bosses.
+
+Skill points are separate from arcade score: normal defeats award 40, mini bosses 60, bosses 200, and clearing level N awards 100 + 25 × (N − 1), up to 450. Hits, pickups, hacks, and time bonuses add score only. The first three full normal waves and level clears earn 735 skill points total. Existing unspent balances migrate once at 10:1 into `robSkillPoints`, keeping the legacy balance and installed upgrades; old clients writing `robUpgradePoints` cannot overwrite the new currency.
 
 For this custom GitHub Actions deployment, the custom domain configured under
 **Settings → Pages** is authoritative. `static/CNAME` mirrors that value in the
