@@ -2,5 +2,5 @@
 title: "Meet ROB in 3D"
 url: "/rob-model/"
 type: "rob-model"
-description: "Explore six original 3D scans of ROB, rotate and zoom the robot, and try the rear axle flippers on the interactive model."
+description: "Rotate ROB’s shoulder laser, try balanced flipper motion, and watch a ledge climb with torso counter-lean. Explore six detailed 3D scan poses."
 ---

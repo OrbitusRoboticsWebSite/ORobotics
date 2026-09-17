@@ -1,13 +1,14 @@
 <div class="rob-showcase" data-rob-showcase data-model-base="{{ "models/rob/" | relURL }}">
   <div class="rob-showcase__viewport" data-model-viewport aria-busy="true">
     <span class="rob-showcase__badge">R.O.B. · Explore in 3D</span>
+    <span class="rob-showcase__stage" data-model-stage>Explore ROB’s moving joints</span>
     <img class="rob-showcase__poster" data-model-poster src="{{ "models/rob/rob-upright.webp" | relURL }}" srcset="{{ "models/rob/rob-upright-small.webp" | relURL }} 480w, {{ "models/rob/rob-upright.webp" | relURL }} 960w" sizes="(min-width: 1024px) 50vw, 100vw" fetchpriority="high" alt="3D scan of ROB with twin chest speakers, a long camera neck, articulated arms and triangular treads" width="960" height="720" />
   </div>
   <div class="rob-showcase__controls" data-model-controls>
     <label>Explore ROB
       <select data-model-pose aria-label="ROB model or scan pose">
+        <option value="rig">Interactive ROB · motion</option>
         <option value="rob-upright">Detailed scan · upright</option>
-        <option value="rig">Interactive robot · move the flippers</option>
         <option value="rob-head-forward-flipper-lifted">Flipper &amp; head forward</option>
         <option value="rob-head-upright-flipper-lifted">Flipper lifted · head upright</option>
         <option value="rob-head-backward-flipper-lifted">Flipper lifted · head back</option>
@@ -15,11 +16,32 @@
         <option value="rob-chess-scene">At the chessboard</option>
       </select>
     </label>
-    <button type="button" data-model-rotate aria-pressed="false">Rotate</button>
+    <button type="button" data-model-rotate aria-pressed="false">Rotate view</button>
     <button type="button" data-model-reset>Reset view</button>
-    <label hidden>Flipper rotation <output data-model-angle>0°</output>
-      <input data-model-flipper type="range" min="-360" max="0" step="1" value="0" aria-label="Flipper rotation in degrees" />
-    </label>
+    <div class="rob-showcase__rig-controls" data-model-rig-controls hidden>
+      <div class="rob-showcase__joints">
+        <label>Shoulder laser pan <output data-model-pan-angle>0°</output>
+          <input data-model-laser-pan type="range" min="-90" max="90" step="0.1" value="0" aria-label="Shoulder laser pan in degrees" />
+        </label>
+        <label>Shoulder laser tilt <output data-model-tilt-angle>0°</output>
+          <input data-model-laser-tilt type="range" min="-35" max="35" step="0.1" value="0" aria-label="Shoulder laser tilt in degrees" />
+        </label>
+        <button type="button" data-model-laser-scan aria-pressed="false">Scan shoulder laser</button>
+      </div>
+      <div class="rob-showcase__joints">
+        <label>Flipper rotation <output data-model-angle>0°</output>
+          <input data-model-flipper type="range" min="-54" max="207" step="0.1" value="0" aria-label="Flipper rotation in degrees" />
+        </label>
+        <p class="rob-showcase__balance" data-model-balance>Chassis 0° · Body counter-lean 0°</p>
+      </div>
+      <div class="rob-showcase__demo">
+        <button type="button" class="rob-showcase__play" data-model-climb aria-pressed="false">Watch ROB climb</button>
+        <button type="button" data-model-reset-pose>Reset pose</button>
+        <label>Climb progress <output data-model-progress-text>0%</output>
+          <input data-model-progress type="range" min="0" max="11.5" step="0.05" value="0" aria-label="Ledge climb progress" />
+        </label>
+      </div>
+    </div>
   </div>
   <p class="rob-showcase__status" role="status" data-model-status>Loading ROB’s 3D view…</p>
   <noscript><p class="rob-showcase__status">Enable JavaScript to rotate and zoom the model.</p></noscript>

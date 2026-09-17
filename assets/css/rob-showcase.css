@@ -5,17 +5,40 @@
 .rob-showcase__poster{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:1;pointer-events:none}
 .rob-showcase__poster[hidden]{display:none}
 .rob-showcase__badge{position:absolute;top:1rem;left:1rem;z-index:2;pointer-events:none;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:#aec5d8}
+.rob-showcase__stage{position:absolute;bottom:1rem;left:1rem;right:1rem;z-index:2;pointer-events:none;width:fit-content;max-width:calc(100% - 2rem);padding:.5rem .8rem;border:1px solid #52758a;border-radius:.5rem;background:#0a172de8;color:#d9efff;font-size:.85rem}
 .rob-showcase__controls{display:flex;flex-wrap:wrap;align-items:end;gap:.8rem;padding:1rem;border-top:1px solid #344657;background:#101e2b}
 .rob-showcase label{display:flex;flex:1 1 180px;flex-direction:column;gap:.4rem;font-size:.875rem;font-weight:600}
-.rob-showcase label[hidden],.rob-showcase__controls[hidden]{display:none}
+.rob-showcase [hidden]{display:none!important}
 .rob-showcase select,.rob-showcase button{min-height:44px;border:1px solid #597086;border-radius:.5rem;background:#172c3d;color:#f1f7fc;padding:.6rem .8rem;font:inherit;font-size:.875rem}
 .rob-showcase select{max-width:100%;width:100%}
 .rob-showcase button:hover{background:#25485f}
 .rob-showcase :is(button,select,input):focus-visible{outline:2px solid #65d5ff;outline-offset:3px}
 .rob-showcase input{min-height:30px;accent-color:#65d5ff}
+.rob-showcase__rig-controls{flex-basis:100%;display:grid;gap:.85rem;border-top:1px solid #344657;padding-top:1rem}
+.rob-showcase__joints,.rob-showcase__demo{display:flex;align-items:end;flex-wrap:wrap;gap:.8rem}
+.rob-showcase__joints label{flex-basis:140px;display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:.5rem}
+.rob-showcase label output{font-variant-numeric:tabular-nums;color:#7edbff}
+.rob-showcase__joints input{grid-column:1/-1;width:100%}
+.rob-showcase__balance{flex:1 1 220px;align-self:center;margin:0;font-size:.8rem;color:#b4cbdd;line-height:1.5;font-variant-numeric:tabular-nums}
+.rob-showcase__demo{padding-top:.85rem;border-top:1px solid #344657}
+.rob-showcase__demo label{display:grid;grid-template-columns:1fr auto;min-width:150px}
+.rob-showcase__demo input{grid-column:1/-1;width:100%}
+.rob-showcase .rob-showcase__play{background:#19547a;border-color:#76c9f6;font-weight:700}
+.rob-showcase .rob-showcase__play:hover{background:#246b99}
 .rob-showcase__status{margin:0;padding:.8rem 1rem;color:#bdcddd;font-size:.875rem;line-height:1.5;min-height:3rem}
 .rob-model-page{max-width:1200px;margin:auto;padding:2rem 1.5rem 4rem}
 .rob-model-page h1{font-size:clamp(2rem,6vw,3.8rem);font-weight:900;line-height:1.1;margin:.6rem 0 1rem}
 .rob-model-page__intro{max-width:44rem;margin-bottom:1.5rem;font-size:1.125rem;line-height:1.6}
 .rob-model-page__links{display:flex;flex-wrap:wrap;gap:1.5rem;margin:1.5rem 0;font-weight:700}
+@media(min-width:1000px){
+  .rob-model-page .rob-showcase{display:grid;grid-template-columns:minmax(0,1fr) 310px}
+  .rob-model-page .rob-showcase__viewport{height:100%;min-height:610px}
+  .rob-model-page .rob-showcase__controls{display:grid;grid-template-columns:1fr 1fr;align-content:start;align-items:stretch;border-top:0;border-left:1px solid #344657;gap:.65rem}
+  .rob-model-page .rob-showcase__controls>label,.rob-model-page .rob-showcase__rig-controls{grid-column:1/-1;min-width:0}
+  .rob-model-page .rob-showcase__joints{display:grid;grid-template-columns:1fr;gap:.65rem}
+  .rob-model-page .rob-showcase__balance{font-size:.75rem}
+  .rob-model-page .rob-showcase__demo{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
+  .rob-model-page .rob-showcase__demo label{grid-column:1/-1}
+  .rob-model-page .rob-showcase__status{grid-column:1/-1}
+}
 @media(max-width:540px){.rob-showcase__controls{gap:.6rem}.rob-showcase__controls label{flex-basis:100%}.rob-showcase__controls button{flex:1}.rob-showcase__viewport{height:390px}}

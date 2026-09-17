@@ -4,6 +4,8 @@ import { readFileSync } from 'node:fs';
 import * as THREE from 'three';
 import { buildROBVisual, robFlipperSupportHeight, ROB_VISUAL_DIMENSIONS } from '../assets/js/rob-visual-model.mjs';
 import { loadCapturedROB } from '../assets/js/rob-captured-model.mjs';
+import { SHOWCASE_PLATFORM, SHOWCASE_CLIMB_DURATION, showcaseGroundPose, showcaseClimbPose, applyShowcasePose, applyShowcaseLaser } from '../assets/js/rob-showcase-motion.mjs';
+import { ROB_LEAN_HINGE } from '../assets/js/rob-support-motion.mjs';
 
 test('ROB has rear wheel flipper pivots, separate end rollers and actual perforations', () => {
   const { root, baseFlipper } = buildROBVisual(); root.updateMatrixWorld(true);
@@ -83,6 +85,13 @@ test('captured surfaces load at both game scales and follow head motion without 
     assert.ok(shoulder.children.some(child => child.material?.map));
     assert.equal(shoulder.parent.name, 'Gatling Tilt Servo');
     assert.equal(rig.root.getObjectByName('Shoulder Laser Muzzle').parent, shoulder.parent);
+    const laserSurface = shoulder.children.find((child) => child.geometry);
+    const laserSample = new THREE.Vector3().fromBufferAttribute(laserSurface.geometry.attributes.position, 0);
+    const laserBefore = laserSurface.localToWorld(laserSample.clone());
+    const torsoBefore = rig.torso.matrixWorld.clone();
+    applyShowcaseLaser(rig, .8, -.25); rig.root.updateMatrixWorld(true);
+    assert.ok(laserBefore.distanceTo(laserSurface.localToWorld(laserSample.clone())) > .01 * scale, 'captured shoulder housing follows pan and tilt');
+    assert.ok(rig.torso.matrixWorld.equals(torsoBefore), 'laser controls do not turn ROB’s torso');
     const head = rig.root.getObjectByName('Camera Head');
     const neck = rig.root.getObjectByName('Neck Pan');
     const base = rig.root.getObjectByName('Tri-Wheel Chassis');
@@ -92,6 +101,43 @@ test('captured surfaces load at both game scales and follow head motion without 
     assert.ok(before.distanceTo(head.localToWorld(sample.clone())) > .01 * scale);
     assert.ok(base.matrixWorld.equals(baseBefore));
     assert.ok(rig.root.getObjectByName('Left Perforated UHMW Flipper').visible);
+  }
+});
+
+test('showcase flippers pitch the base around a grounded end and counter-lean at the upper wheel', () => {
+  const rig = buildROBVisual();
+  for (const angle of [-.3 * Math.PI, 1.15 * Math.PI]) {
+    const pose = showcaseGroundPose(angle), { leanAngle } = applyShowcasePose(rig, pose);
+    rig.root.updateMatrixWorld(true);
+    assert.equal(Math.sign(pose.pitch), -Math.sign(leanAngle));
+    const rear = rig.driveBase.localToWorld(new THREE.Vector3(0, 0, 0));
+    const front = rig.driveBase.localToWorld(new THREE.Vector3(0, 0, -.42545));
+    assert.ok(Math.abs(Math.min(front.y, rear.y)) < 1e-6, 'one tread end remains grounded');
+    assert.ok(Math.max(front.y, rear.y) > .03, 'the opposite end rises');
+    const baseHinge = rig.driveBase.localToWorld(new THREE.Vector3(0, ROB_LEAN_HINGE.y, ROB_LEAN_HINGE.z - .212725));
+    const bodyHinge = rig.torso.localToWorld(new THREE.Vector3(0, ROB_LEAN_HINGE.y, ROB_LEAN_HINGE.z));
+    assert.ok(baseHinge.distanceTo(bodyHinge) < 1e-6, 'torso bends at the upper wheel, without separating from the base');
+  }
+});
+
+test('ledge demonstration lifts the front, reverses flippers and finishes level on the platform', () => {
+  const raised = showcaseClimbPose(3), mounting = showcaseClimbPose(4.6), rearLift = showcaseClimbPose(8), done = showcaseClimbPose(SHOWCASE_CLIMB_DURATION);
+  assert.ok(raised.pitch > .6); assert.equal(raised.lift, 0);
+  assert.ok(mounting.z < raised.z && mounting.angle === raised.angle);
+  assert.ok(rearLift.angle > 0 && rearLift.lift > 0 && rearLift.pitch < mounting.pitch);
+  assert.equal(done.pitch, 0); assert.equal(done.angle, 0); assert.equal(done.lift, SHOWCASE_PLATFORM.height);
+  assert.ok(done.z + .212725 < SHOWCASE_PLATFORM.edgeZ);
+  assert.deepEqual(showcaseClimbPose(100), done, 'completed sequence holds its pose instead of snapping back');
+  for (const boundary of [1.5, 3, 4.6, 8.4, 9.7]) {
+    const a = showcaseClimbPose(boundary - .00001), b = showcaseClimbPose(boundary + .00001);
+    for (const key of ['z', 'pitch', 'lift', 'angle']) assert.ok(Math.abs(a[key] - b[key]) < .0001, `${key} jumps at ${boundary}s`);
+  }
+  const rig = buildROBVisual();
+  for (let seconds = 0; seconds <= SHOWCASE_CLIMB_DURATION; seconds += .025) {
+    applyShowcasePose(rig, showcaseClimbPose(seconds)); rig.root.updateMatrixWorld(true);
+    const roller = rig.root.getObjectByName('Left Flipper End Roller').getWorldPosition(new THREE.Vector3());
+    const aboveDeck = roller.z - .029 < SHOWCASE_PLATFORM.edgeZ && roller.z + .029 > SHOWCASE_PLATFORM.edgeZ - SHOWCASE_PLATFORM.depth;
+    assert.ok(roller.y - .029 >= (aboveDeck ? SHOWCASE_PLATFORM.height : 0) - .00001, `flipper cuts through the floor or platform at ${seconds}s`);
   }
 });
 
