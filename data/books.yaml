@@ -37,7 +37,7 @@ books:
     title: "Circuits & Signals"
     subtitle: "Building R.O.B. · Volume 2"
     audience: "Ages 10–14"
-    pages: 39
+    pages: 40
     price_usd: 4.99
     position: 2
     image: "images/books/volume-2-circuits-and-signals.webp"
@@ -48,7 +48,7 @@ books:
     title: "Motion Workshop"
     subtitle: "Building R.O.B. · Volume 3"
     audience: "Ages 10–15"
-    pages: 40
+    pages: 41
     price_usd: 4.99
     position: 3
     image: "images/books/volume-3-motion-workshop.webp"
@@ -81,7 +81,7 @@ books:
     title: "Dual-Arm Robotics"
     subtitle: "Building R.O.B. · Volume 6"
     audience: "Advanced makers and robot integrators"
-    pages: 27
+    pages: 28
     price_usd: 8.99
     position: 6
     image: "images/books/volume-6-amber-dual-arm-robotics.webp"
@@ -114,7 +114,7 @@ books:
     title: "Complete Builder's Field Manual"
     subtitle: "The discounted complete digital collection"
     audience: "Advanced makers, developers, and mentors"
-    pages: 207
+    pages: 209
     price_usd: 24.99
     position: 9
     image: "images/books/complete-builders-field-manual.webp"

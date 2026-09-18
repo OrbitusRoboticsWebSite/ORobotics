@@ -137,8 +137,8 @@
       "poseObservation": {
         "lactPinToPinMillimeters": 200,
         "lactEndpoint": "fully retracted",
-        "evidence": "Operator explicitly paired ROB lean forward with 302 mm fully extended and ROB lean back with 200 mm fully retracted on 2026-09-17.",
-        "coordinateConvention": "Actuator attachment-pivot center distance; independent physical verification and joint-frame registration pending."
+        "evidence": "Operator explicitly paired ROB lean forward with 302 mm fully extended and ROB lean back with 200 mm fully retracted on 2026-09-17. Operator later confirmed manual dial-caliper measurements of these installed LACT endpoints; use them in preference to catalog endpoint dimensions.",
+        "coordinateConvention": "Actuator attachment-pivot center distance, physically measured with dial calipers by the operator; scan endpoint picking, scale fitting and joint-frame registration remain pending."
       }
     },
     {
@@ -162,8 +162,8 @@
       "poseObservation": {
         "lactPinToPinMillimeters": 302,
         "lactEndpoint": "fully extended",
-        "evidence": "Operator explicitly paired ROB lean forward with 302 mm fully extended and ROB lean back with 200 mm fully retracted on 2026-09-17.",
-        "coordinateConvention": "Actuator attachment-pivot center distance; independent physical verification and joint-frame registration pending."
+        "evidence": "Operator explicitly paired ROB lean forward with 302 mm fully extended and ROB lean back with 200 mm fully retracted on 2026-09-17. Operator later confirmed manual dial-caliper measurements of these installed LACT endpoints; use them in preference to catalog endpoint dimensions.",
+        "coordinateConvention": "Actuator attachment-pivot center distance, physically measured with dial calipers by the operator; scan endpoint picking, scale fitting and joint-frame registration remain pending."
       }
     }
   ]
