@@ -177,7 +177,7 @@ params:
       aria_label: 'Explore Orbitus Robotics projects on GitHub; opens in a new tab'
     facebook:
       enabled: true
-      url: 'https://facebook.com/orbitus.robotica/'
+      url: 'https://www.facebook.com/profile.php?id=100083014278564'
       slug: facebook
       label: Facebook
       badge: FB
@@ -193,6 +193,15 @@ params:
       handle: '@orbitus2019'
       description: Photos and field updates
       aria_label: 'Follow Orbitus Robotics on Instagram; opens in a new tab'
+    tiktok:
+      enabled: true
+      url: 'https://www.tiktok.com/@orbitusrobotica2019'
+      slug: tiktok
+      label: TikTok
+      badge: TT
+      handle: '@orbitusrobotica2019'
+      description: Robot clips and workshop moments
+      aria_label: 'Follow Orbitus Robotics on TikTok; opens in a new tab'
     twitter:
       enabled: true
       url: 'https://x.com/orbitusrobotics'

@@ -1,0 +1,33 @@
+{{ define "main" }}
+<main id="main" class="rob-follow">
+  <style>
+    .rob-follow{background:#071529;color:#dfecff;min-height:75vh;padding:3.5rem 1.25rem 4rem;font-family:ui-sans-serif,system-ui,sans-serif}.rob-follow *{box-sizing:border-box}.rob-follow__wrap{max-width:38rem;margin:auto}.rob-follow__eyebrow{color:#62e6ff;text-transform:uppercase;letter-spacing:.16em;font-size:.875rem;font-weight:800;margin:0 0 1rem}.rob-follow h1{font-size:clamp(2.5rem,8vw,4.25rem);font-weight:850;line-height:1.02;letter-spacing:-.045em;margin:0 0 1.25rem;color:white}.rob-follow h1 span{color:#62e6ff}.rob-follow__intro{font-size:1.125rem;line-height:1.65;margin:0 0 2rem;max-width:33rem}.rob-follow__accounts{display:grid;gap:.85rem;padding:0;margin:0;list-style:none}.rob-follow__account{display:grid;grid-template-columns:3rem minmax(0,1fr) 1.5rem;align-items:center;gap:1rem;padding:1.2rem;border:1px solid #34516f;border-radius:.6rem;background:#0d2440;color:white;text-decoration:none;min-height:6rem;transition:background .15s,border-color .15s}.rob-follow__account:hover{background:#123452;border-color:#62e6ff}.rob-follow a:focus-visible{outline:3px solid #baf04b;outline-offset:5px}.rob-follow__icon{display:grid;place-items:center;width:3rem;height:3rem}.rob-follow__icon img{width:1.8rem;height:1.8rem;object-fit:contain;filter:brightness(0) invert(1)}.rob-follow__account strong{display:block;font-size:1.3rem;line-height:1.3}.rob-follow__handle{display:block;font-size:1rem;color:#b8d5ef;line-height:1.4;margin-top:.3rem;overflow-wrap:anywhere}.rob-follow__arrow{font-size:1.5rem;color:#62e6ff}.rob-follow__more{display:flex;flex-wrap:wrap;gap:.75rem 1.6rem;border-top:1px solid #34516f;margin-top:2rem;padding-top:1.35rem}.rob-follow__more a{color:#dfecff;font-size:1rem;text-underline-offset:.2em}.rob-follow__credit{margin:2rem 0 0;font-size:.875rem;color:#9db6ce;line-height:1.6}.rob-follow__credit a{color:inherit;text-underline-offset:.2em}@media(max-width:380px){.rob-follow{padding:2.5rem 1rem}.rob-follow__account{grid-template-columns:2rem minmax(0,1fr) 1rem;gap:.7rem;padding:1rem}.rob-follow__icon{width:2rem}}@media(prefers-reduced-motion:reduce){.rob-follow__account{transition:none}}
+  </style>
+  <div class="rob-follow__wrap">
+    <header>
+      <p class="rob-follow__eyebrow">Orbitus Robotics</p>
+      <h1>Follow ROB's<br><span>journey.</span></h1>
+      <p class="rob-follow__intro">Robot experiments, workshop moments, and the story behind the build. Find ROB on your favorite platform.</p>
+    </header>
+    <ul class="rob-follow__accounts" aria-label="ROB's social accounts">
+      {{ range slice "instagram" "facebook" "tiktok" }}
+      {{ $account := index site.Params.social_media . }}
+      {{ if and $account.enabled $account.url }}
+      {{ $icon := . }}{{ if eq . "facebook" }}{{ $icon = "facebook-f" }}{{ end }}
+      <li><a class="rob-follow__account" href="{{ $account.url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ $account.aria_label }}">
+        <span class="rob-follow__icon"><img src="{{ printf "images/social-icons/%s.svg" $icon | relURL }}" width="32" height="32" alt=""></span>
+        <span><strong>{{ $account.label }}</strong><span class="rob-follow__handle">{{ $account.handle }}</span></span>
+        <span class="rob-follow__arrow" aria-hidden="true">↗</span>
+      </a></li>
+      {{ end }}
+      {{ end }}
+    </ul>
+    <nav class="rob-follow__more" aria-label="Explore ROB">
+      <a href="{{ "rob-model/" | relURL }}">Meet ROB</a>
+      <a href="{{ "rob-simulator/" | relURL }}">Play ROB Training</a>
+      <a href="{{ "learn/" | relURL }}">Start learning</a>
+    </nav>
+    <p class="rob-follow__credit">Social icons by <a href="https://fontawesome.com/" rel="noopener noreferrer">Font Awesome</a>, <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener noreferrer">CC BY 4.0</a>.</p>
+  </div>
+</main>
+{{ end }}

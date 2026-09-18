@@ -1,5 +1,5 @@
 {
-  "edition": "2026-09-17",
+  "edition": "2026-09-17-social",
   "product_asin": "B0DKCW5C2G",
   "selected_variant": "31x78 inch",
   "posters": [
@@ -7,44 +7,48 @@
       "id": "orbitus-learning-classroom-31x78",
       "title": "Learning Classroom",
       "qr_url": "https://www.orbitusrobotics.com/learn/",
+      "social_qr_url": "https://www.orbitusrobotics.com/follow/",
       "pdf_url": "https://www.orbitusrobotics.com/downloads/posters/orbitus-learning-classroom-31x78.pdf",
       "width_inches": 31,
       "height_inches": 78,
-      "bytes": 4257539,
-      "sha256": "0dd1640e2e138cc147e0f940a6dbdedca39a244d01dd7bc36c52de8e23b652eb",
+      "bytes": 4261142,
+      "sha256": "467fef93175878d4d49018ac24a055f55bb6de7f67502d0ee5e1616ba485d5a3",
       "description": "Scan for circuit lessons, then ask ROB your questions in iMessage."
     },
     {
       "id": "rob-training-games-31x78",
       "title": "ROB Training Games",
       "qr_url": "https://www.orbitusrobotics.com/rob-training-apps/",
+      "social_qr_url": "https://www.orbitusrobotics.com/follow/",
       "pdf_url": "https://www.orbitusrobotics.com/downloads/posters/rob-training-games-31x78.pdf",
       "width_inches": 31,
       "height_inches": 78,
-      "bytes": 4766800,
-      "sha256": "1319235402002f5ee7bb6e87bd3aa1b0d79263b66cd6b8c40283c3eb8d0cf7c9",
+      "bytes": 4771577,
+      "sha256": "ed856b84c3215ca027a237bf104034e8a670f5738c3101126794067ed6f34c43",
       "description": "Drive, climb and complete missions in ROB Training across web and Apple platforms."
     },
     {
       "id": "building-rob-books-31x78",
       "title": "Building R.O.B. Books",
       "qr_url": "https://www.orbitusrobotics.com/books/",
+      "social_qr_url": "https://www.orbitusrobotics.com/follow/",
       "pdf_url": "https://www.orbitusrobotics.com/downloads/posters/building-rob-books-31x78.pdf",
       "width_inches": 31,
       "height_inches": 78,
-      "bytes": 3240432,
-      "sha256": "c9d8c8ffe5590bc2001542aaab0172510305f1ff6f14c80a051b5155159f9f06",
+      "bytes": 3243901,
+      "sha256": "1618498ee8614801da422306589ec74a23d706c8fc058dc795c5b575d9c57971",
       "description": "Picture stories, young maker volumes and the complete engineering handbook."
     },
     {
       "id": "rob-blueprint-31x78",
       "title": "ROB Component Blueprint",
       "qr_url": "https://www.orbitusrobotics.com/rob-model/",
+      "social_qr_url": "https://www.orbitusrobotics.com/follow/",
       "pdf_url": "https://www.orbitusrobotics.com/downloads/posters/rob-blueprint-31x78.pdf",
       "width_inches": 31,
       "height_inches": 78,
-      "bytes": 3208478,
-      "sha256": "45f8f4c675f4237118186a47b66cb025b4981dc2e65e242edcd1209f31cf0014",
+      "bytes": 3212162,
+      "sha256": "9c8cbb4d97f84de2aca24a7fe9343524a1bc54512a033a8d64d5e237a8572832",
       "description": "A frontal view of ROB with labeled components and a map of the motor-control interfaces."
     }
   ]

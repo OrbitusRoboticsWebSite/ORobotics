@@ -51,7 +51,7 @@
             </div>
 
             <div class="qr-landing__links">
-                {{ $socialOrder := slice "instagram" "facebook" "twitter" "github" }}
+                {{ $socialOrder := slice "instagram" "facebook" "tiktok" "twitter" "github" }}
                 {{ range $socialOrder }}
                     {{ with index $.Site.Params.Social_media . }}
                         {{ if .Enabled }}

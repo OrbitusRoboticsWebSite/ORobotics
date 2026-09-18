@@ -1,11 +1,23 @@
 ORBITUS ROBOTICS - FOUR ROLL-UP BANNERS
-Artwork edition: September 17, 2026
+Artwork edition: September 17, 2026 - social QR revision
 Public share page: https://www.orbitusrobotics.com/posters/
 
 Learning Classroom includes "Ask ROB a question" and the iMessage Apple ID
 rob@orbitusrobotics.com. Its Circuit Playground QR code and printed URL both
 open https://www.orbitusrobotics.com/learn/; choose "Start Circuit Quest" to
 enter the interactive circuit playground. The original QR destination is retained.
+
+Every banner now has a separate "Follow ROB's journey" panel with Instagram,
+Facebook and TikTok icons and one shared social QR. It opens:
+https://www.orbitusrobotics.com/follow/
+Instagram: https://www.instagram.com/orbitus2019/
+Facebook: https://www.facebook.com/profile.php?id=100083014278564
+TikTok: https://www.tiktok.com/@orbitusrobotica2019
+The social page can update account destinations without reprinting the QR.
+Both QR codes remain above the four-inch background-only foot.
+Social icons: Font Awesome Free / Fonticons, Inc., CC BY 4.0.
+https://fontawesome.com/license/free
+SVG geometry is unchanged; display color and size follow the banner design.
 
 PRODUCT AND DIMENSIONS
 AOK aluminum retractable banner, seller SMARTGOALS, Amazon ASIN B0DKCW5C2G.
