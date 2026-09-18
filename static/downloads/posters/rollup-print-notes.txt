@@ -1,0 +1,49 @@
+ORBITUS ROBOTICS - FOUR ROLL-UP BANNERS
+Artwork edition: September 17, 2026
+Public share page: https://www.orbitusrobotics.com/posters/
+
+PRODUCT AND DIMENSIONS
+AOK aluminum retractable banner, seller SMARTGOALS, Amazon ASIN B0DKCW5C2G.
+Product: https://www.amazon.com/dp/B0DKCW5C2G
+Selected option observed in the owner's original Chrome tab: 31x78 inch.
+The older browser-tab title said 23.6x63; the live product heading and selected
+size in that same tab said 31x78. These files follow the selected 31x78 option.
+
+Each PDF is exactly 31 inches wide by 78 inches tall, portrait, one page.
+MediaBox, CropBox, TrimBox and BleedBox: [0, 0, 2232, 5616] points.
+Print at 100 percent. Preserve proportions. Do not crop to a different aspect.
+Background extends to every page edge. Important content stays at least
+1.5 inches from the sides and above a four-inch background-only foot.
+The four-inch foot is a design margin, not a verified vendor roller template.
+No extra bleed or roller attachment allowance is included. Confirm those
+requirements and the selected dimensions in the seller's production proof.
+No crop marks are included.
+
+FILES (each order row should use its own direct PDF URL)
+1. Learning Classroom
+https://www.orbitusrobotics.com/downloads/posters/orbitus-learning-classroom-31x78.pdf
+2. ROB Training Games
+https://www.orbitusrobotics.com/downloads/posters/rob-training-games-31x78.pdf
+3. Building R.O.B. Books
+https://www.orbitusrobotics.com/downloads/posters/building-rob-books-31x78.pdf
+4. ROB Component Blueprint
+https://www.orbitusrobotics.com/downloads/posters/rob-blueprint-31x78.pdf
+
+ARTWORK AND COLOR
+Full-color RGB PDF with embedded fonts; text, QR codes and authored schematic
+lines remain vectors. Book covers and generated illustration panels are raster
+images at their native resolution. Exporting a nominal 300 dpi JPEG would not
+add detail, so the PDF is the master. The generated background art is about
+30-46 effective pixels/inch at this large banner size; it is intended for
+viewing at exhibition distance. Inspect a full-size crop or seller proof before
+approving close-view image quality. The website's small WebP files are previews.
+No printer-specific ICC profile or PDF/X certification is claimed.
+
+BLUEPRINT SCOPE
+Original illustration based on ROB's photographs and 3D capture, with twelve
+component callouts. It is an educational schematic, not measured fabrication
+CAD. The hidden LACT is identified with a dashed leader. The controller map
+summarizes the documented information paths, not an as-built wiring harness.
+The precise Pololu Simple Motor Controller 18vXX suffix remains unconfirmed.
+
+Existing 36x60 campaign editions are separate files and were not overwritten.

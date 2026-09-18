@@ -1,0 +1,41 @@
+{{ define "main" }}
+<main id="main" class="poster-library">
+  <style>
+    .poster-library{background:#f5f7fc;color:#13243d;padding:3.5rem 0 5rem}.poster-library *{box-sizing:border-box}.poster-wrap{width:min(1200px,calc(100% - 2rem));margin:auto}.poster-library a:focus-visible,.poster-library input:focus-visible{outline:3px solid #007eaa;outline-offset:4px}.poster-eyebrow{margin:0 0 .7rem;color:#246296;text-transform:uppercase;font-size:.9rem;font-weight:800;letter-spacing:.14em}.poster-library h1{margin:0;font-size:clamp(2.2rem,5vw,4rem);line-height:1.05;letter-spacing:-.04em}.poster-intro{font-size:1.125rem;line-height:1.7;max-width:52rem;margin:1.1rem 0}.poster-spec{display:flex;flex-wrap:wrap;gap:.6rem 1.5rem;margin:1.25rem 0 2rem;padding:1rem 1.3rem;border-left:4px solid #1dbbe1;background:#e5f2fa;font-size:1rem;line-height:1.6}.poster-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.25rem}.poster-card{min-width:0;border:1px solid #cbd5e1;background:#fff;border-radius:.6rem;overflow:hidden}.poster-card__preview{display:block;background:#071529;padding:.7rem}.poster-card__preview img{display:block;width:100%;height:auto;aspect-ratio:31/78;object-fit:contain}.poster-card__body{padding:1.15rem}.poster-card__number{font-size:.875rem;letter-spacing:.12em;color:#407090;font-weight:800}.poster-card h2{margin:.55rem 0;font-size:1.4rem;line-height:1.15;letter-spacing:-.025em}.poster-card p{font-size:1rem;line-height:1.6;margin:.8rem 0;color:#40516a}.poster-download{display:block;margin:1rem 0;padding:.8rem .65rem;background:#0e3762;color:white!important;text-align:center;border-radius:.25rem;font-size:1rem;font-weight:750;text-decoration:none;line-height:1.3}.poster-download:hover{background:#18528a}.poster-card label{display:block;margin:.85rem 0 .4rem;font-weight:700;font-size:.875rem}.poster-url{width:100%;min-height:44px;padding:.6rem;border:1px solid #b9c7d8;border-radius:.25rem;background:#f5f8fd;color:#23405e;font-size:1rem}.poster-file-meta{font-size:.875rem!important}.poster-notes{margin-top:2.5rem;border-top:1px solid #c6d3e1;padding-top:1.5rem;max-width:56rem}.poster-notes h2{font-size:1.5rem;margin:0 0 1rem}.poster-notes p{font-size:1rem;line-height:1.7;margin:.7rem 0}.poster-notes a{color:#125b98;text-decoration:underline}.poster-card .poster-art-note{font-size:.875rem;line-height:1.6}@media(max-width:1000px){.poster-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:560px){.poster-library{padding-top:2rem}.poster-grid{grid-template-columns:1fr}.poster-card{display:grid;grid-template-columns:minmax(0,40%) minmax(0,60%)}.poster-card__body{padding:1rem}.poster-card__preview{padding:.4rem;align-self:start}.poster-card h2{font-size:1.3rem}.poster-card p{font-size:1rem}.poster-download{font-size:.9375rem}.poster-card__number{font-size:.875rem}.poster-intro{font-size:1rem}.poster-spec{gap:.4rem 1rem}}@media(max-width:350px){.poster-card{display:block}.poster-card__preview{padding:1rem 3rem}}
+  </style>
+  <div class="poster-wrap">
+    <header>
+      <p class="poster-eyebrow">Orbitus Robotics · exhibition print kit</p>
+      <h1>Four posters. Ready to share.</h1>
+      <p class="poster-intro">Download the full-size artwork below, or copy each poster’s direct PDF link into the order’s <strong>Share PDF File</strong> field. These public links open without an account.</p>
+      <div class="poster-spec" aria-label="Print dimensions"><strong>31 × 78 inches</strong><span>Portrait · one PDF page per poster</span><span>Print at 100% · preserve the full page</span></div>
+    </header>
+    <section class="poster-grid" aria-label="Poster downloads">
+      {{ range $i, $poster := hugo.Data.rollup_posters.posters }}
+      <article class="poster-card" id="{{ $poster.id }}">
+        <a class="poster-card__preview" href="{{ printf "downloads/posters/%s.pdf" $poster.id | relURL }}" aria-label="Open {{ $poster.title }} full-size PDF">
+          <img src="{{ printf "images/posters/%s.webp" $poster.id | relURL }}" width="775" height="1950" alt="{{ $poster.title }} banner preview" {{ if gt $i 1 }}loading="lazy"{{ end }}>
+        </a>
+        <div class="poster-card__body">
+          <span class="poster-card__number">{{ printf "%02d" (add $i 1) }} / 04</span>
+          <h2>{{ $poster.title }}</h2>
+          <p>{{ $poster.description }}</p>
+          <a class="poster-download" href="{{ printf "downloads/posters/%s.pdf" $poster.id | relURL }}" download>Download print PDF</a>
+          <p class="poster-file-meta">31 × 78 in · {{ printf "%.1f" (div (float $poster.bytes) 1048576) }} MB</p>
+          <label for="url-{{ $i }}">Direct PDF link for your order</label>
+          <input id="url-{{ $i }}" class="poster-url" readonly type="text" value="{{ $poster.pdf_url }}" aria-label="{{ $poster.title }} direct PDF link" spellcheck="false">
+          {{ if eq $i 3 }}<p class="poster-art-note">Original illustration with 12 component callouts and the documented controller paths. Schematic, not to scale.</p>{{ end }}
+        </div>
+      </article>
+      {{ end }}
+    </section>
+    <section class="poster-notes" aria-labelledby="print-notes-title">
+      <h2 id="print-notes-title">For the printer</h2>
+      <p>Prepared for the <a href="https://www.amazon.com/dp/B0DKCW5C2G" rel="noopener noreferrer">AOK retractable banner, selected 31 × 78-inch variant</a>. Each PDF is exactly 31 × 78 inches (2,232 × 5,616 points), with embedded fonts and vector text, QR codes and diagrams. The background extends to the page edges; key content stays above a four-inch background-only foot.</p>
+      <p>Please preserve the page proportions and confirm any additional bleed or roller attachment allowance in the seller’s proof before production. No seller-supplied bleed or roller allowance has been added to the artwork. The full-size PDFs combine vector graphics with illustrated raster artwork; use the PDFs, rather than these web previews, for the order.</p>
+      <p>The illustrations are intended for viewing at exhibition distance. Their native resolution is approximately 30–46 pixels per inch at full banner size; inspect a full-size crop or seller proof for close-view quality before approving production.</p>
+      <p>Artwork edition: September 17, 2026. <a href="{{ "downloads/posters/rollup-print-notes.txt" | relURL }}">Download print notes</a>. The earlier <a href="{{ "books/#poster-title" | relURL }}">36 × 60-inch campaign posters</a> remain available in the book library.</p>
+    </section>
+  </div>
+</main>
+{{ end }}
