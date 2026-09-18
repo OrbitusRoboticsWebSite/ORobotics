@@ -10,9 +10,9 @@
       "pdf_url": "https://www.orbitusrobotics.com/downloads/posters/orbitus-learning-classroom-31x78.pdf",
       "width_inches": 31,
       "height_inches": 78,
-      "bytes": 4257235,
-      "sha256": "1f1ccb83f6c2a1519362956f3dfd49969ab4e4f2274f547a0c93d4231e7cbbd9",
-      "description": "Build circuits, explore motion and ask ROB your questions in iMessage."
+      "bytes": 4257539,
+      "sha256": "0dd1640e2e138cc147e0f940a6dbdedca39a244d01dd7bc36c52de8e23b652eb",
+      "description": "Scan for circuit lessons, then ask ROB your questions in iMessage."
     },
     {
       "id": "rob-training-games-31x78",

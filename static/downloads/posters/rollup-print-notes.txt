@@ -3,7 +3,9 @@ Artwork edition: September 17, 2026
 Public share page: https://www.orbitusrobotics.com/posters/
 
 Learning Classroom includes "Ask ROB a question" and the iMessage Apple ID
-rob@orbitusrobotics.com. Its QR code opens the learning website.
+rob@orbitusrobotics.com. Its Circuit Playground QR code and printed URL both
+open https://www.orbitusrobotics.com/learn/; choose "Start Circuit Quest" to
+enter the interactive circuit playground. The original QR destination is retained.
 
 PRODUCT AND DIMENSIONS
 AOK aluminum retractable banner, seller SMARTGOALS, Amazon ASIN B0DKCW5C2G.
