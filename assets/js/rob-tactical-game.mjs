@@ -93,6 +93,7 @@ export function createTacticalGame({ root, scene, robot, rig, arms, enemies, sta
       buttonGroups.jammer.forEach(b => { b.hidden = !s.upgrades.jammer; b.disabled = !s.running; b.textContent = active ? 'JAM ON · 14 E/s' : 'Jammer · J'; b.setAttribute('aria-pressed', String(active)); });
       buttonGroups.gel.forEach(b => { b.hidden = !s.upgrades.gelBlaster; b.disabled = !s.running; b.textContent = drawn ? 'Stow Gel · T' : 'Draw Gel · T'; b.setAttribute('aria-pressed', String(drawn)); });
       buttonGroups.peq.forEach(b => { b.hidden = !s.upgrades.gelBlaster; b.disabled = !drawn; b.textContent = `PEQ ${mode} · V`; });
+      if (drawn) root.querySelectorAll('[data-sim-lock]').forEach(label => { label.textContent = `GEL · MANUAL AIM · PEQ ${mode.toUpperCase()}`; label.classList.remove('is-locked'); });
       if (drawn) root.querySelectorAll('[data-sim-laser]').forEach(b => { b.disabled = !s.running || s.energy < TACTICAL.gelCost; b.textContent = 'GEL · 3 E · hold Q'; b.setAttribute('aria-label', 'Hold to fire gel pellets'); });
     },
   };
