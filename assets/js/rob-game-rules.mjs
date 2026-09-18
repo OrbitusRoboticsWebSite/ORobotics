@@ -1,4 +1,4 @@
-export const GAMEPLAY_RULESET_VERSION = '2026.09.17.2';
+export const GAMEPLAY_RULESET_VERSION = '2026.09.17.3';
 export const MAX_ROB_HEALTH = 100;
 export const MAX_ROB_SHIELDS = 40;
 export const SHIELD_ACTIVATION_DURATION = 2.5;
@@ -23,10 +23,12 @@ export const upgrades = [
   { id: 'targetingComputer', name: 'Targeting Computer', maximumLevel: 1, baseCost: 1200, costStep: 0 },
   { id: 'kyberCrystals', name: 'Kyber Crystals', maximumLevel: 3, baseCost: 600, costStep: 1000 },
   { id: 'rocketBooster', name: 'Plasma Booster', maximumLevel: 1, baseCost: 900, costStep: 0 },
+  { id: 'jammer', name: 'Jammer', maximumLevel: 1, baseCost: 1800, costStep: 0 },
+  { id: 'gelBlaster', name: 'StrikeForce Gel Kit + PEQ', maximumLevel: 1, baseCost: 6000, costStep: 0 },
 ];
 
 export const upgradeCost = (upgrade, level) => level < upgrade.maximumLevel ? upgrade.baseCost + level * upgrade.costStep : undefined;
-export const upgradeRequiredCompletedLevel = (upgrade, level) => upgrade.id === 'rocketBooster' ? 3 : upgrade.id === 'kyberCrystals' ? level * 5 : 0;
+export const upgradeRequiredCompletedLevel = (upgrade, level) => upgrade.id === 'jammer' ? 5 : upgrade.id === 'gelBlaster' ? 10 : upgrade.id === 'rocketBooster' ? 3 : upgrade.id === 'kyberCrystals' ? level * 5 : 0;
 export const saberDamage = (crystalLevel = 0) => 1 + Math.max(0, Math.min(3, Math.floor(crystalLevel)));
 export const enemyContactDamage = ({ kind, isBoss = false, isMiniBoss = false }) => isMiniBoss ? 12 : isBoss ? 30 : kind === 'spider' ? 18 : 15;
 export const enemySkillReward = ({ isBoss = false, isMiniBoss = false }) => isMiniBoss ? 30 : isBoss ? 100 : 20;
