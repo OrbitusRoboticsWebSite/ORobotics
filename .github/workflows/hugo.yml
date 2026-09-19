@@ -45,6 +45,9 @@ jobs:
             npm install
           fi
 
+      - name: Validate ROB gesture rig, scripts and rehearsal guards
+        run: npm run test:gestures
+
       - name: Build site (prefer npm run build if available)
         shell: bash
         run: |

@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "simulationOnly": true,
+  "hardwareAuthorized": false,
+  "sourceProfileSHA256": "ba63a659f10085da3fa7f7c5002f17b4af27596408bc447e0ac64cdb4198c2d7",
+  "segments": 43,
+  "animations": [
+    "Curious glance",
+    "A thoughtful nod",
+    "A small hello",
+    "Listening",
+    "Ready to help"
+  ],
+  "files": {
+    "rob-scan-rig.json": {
+      "bytes": 10517386,
+      "sha256": "4e39b62b2c45144b6a3660832b5879e825f6c115461ca97ba87cbf4a815bd8dc"
+    },
+    "rob-articulated.glb": {
+      "bytes": 7968196,
+      "sha256": "646aee5dbeae6dad80251eb09e7ec4b1ef8fc71c844977582dd32fb1f8bdea59"
+    },
+    "gestures.json": {
+      "bytes": 4874,
+      "sha256": "5b74111dce79ad628d6308597c221cc8398896cabe96dc2e022a2b685f501991"
+    },
+    "curb-sequence.json": {
+      "bytes": 3961,
+      "sha256": "ef5813a3def1678e1055b24af865de464a401e61c7fe990c519151f007e560c2"
+    },
+    "segmentation-report.json": {
+      "bytes": 2607,
+      "sha256": "d8d6e7c72ce1cf25de3d6f929116199515d0a08abbcdd5ed2ea08bedf1ee2760"
+    },
+    "drake-reference.json": {
+      "bytes": 1224,
+      "sha256": "87c591f614fe561a62e5c449269546a6ed2b0f1f662ec0d38aae5f35c71f11c5"
+    }
+  }
+}

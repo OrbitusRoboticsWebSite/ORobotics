@@ -1,6 +1,6 @@
 {{ define "main" }}
 <main id="main" class="rob-sim" data-rob-simulator data-model-base="{{ "models/rob/" | relURL }}" data-audio-base="{{ "audio/rob-simulator/" | relURL }}">
-  <p class="mx-auto max-w-7xl px-6 py-3"><a class="text-link" href="{{ "rob-model/" | relURL }}">Meet the real ROB · explore the 3D scans</a></p>
+  <p class="mx-auto max-w-7xl px-6 py-3"><a class="text-link" href="{{ "rob-model/" | relURL }}">Meet the real ROB · explore the 3D scans</a> · <a class="text-link" href="{{ "rob-gestures/" | relURL }}">Gesture Studio · animate ROB and rehearse a curb climb</a></p>
   <header class="rob-sim__intro"><div><p class="rob-sim__eyebrow">Three.js tank-drive combat challenge</p><h1>ROB Tank Training</h1><p>Explore 24 extended obstacle courses, including nine rocket-platform missions. Command ROB’s animated tri-wheel treads and rear-mounted LT-2-style flipper, climb the raised training decks, evade hostile robots, and protect all three trial lives before docking at Mission Control. Losing the third life clears the trial’s points and installed upgrades. This browser simulation never connects to the real robot.</p></div><img src="{{ "images/rob-simulator/rob-training-key-art.png" | relURL }}" alt="ROB with the spider and Dalek-style sentry robot inside a futuristic robotics training room" width="1536" height="864"></header>
   <section class="rob-sim__shell" data-sim-shell aria-label="ROB tank training game">
     <div class="rob-sim__viewport" data-sim-viewport tabindex="0">

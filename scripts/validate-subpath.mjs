@@ -100,7 +100,7 @@ try {
         : `${basePath}${htmlRelativePath}`;
     const pageURL = new URL(pagePath, testOrigin);
     const attributes = html.matchAll(
-      /\b(href|src|srcset|data-gallery-src|data-gallery-poster|data-gallery-captions)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>\x60]+))/gi,
+      /\b(href|src|srcset|data-gallery-src|data-gallery-poster|data-gallery-captions|data-rig-url)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>\x60]+))/gi,
     );
 
     for (const match of attributes) {

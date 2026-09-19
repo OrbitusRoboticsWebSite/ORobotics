@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "simulationOnly": true,
+  "kind": "guarded_sequence",
+  "name": "Curb ascent rehearsal",
+  "platformHeightM": 0.12,
+  "timeoutSeconds": 12,
+  "note": "Illustrative base path and provisional flipper angles. No physics or hardware authorization.",
+  "steps": [
+    {
+      "id": "align",
+      "label": "Approach and align",
+      "seconds": 8,
+      "brake": "released",
+      "driveM": 0.2,
+      "pose": {
+        "left_flipper": 0,
+        "right_flipper": 0,
+        "body_lean": 0
+      },
+      "world": {
+        "forward": 0.2,
+        "height": 0,
+        "pitch": 0
+      },
+      "before": [
+        "path_clear"
+      ],
+      "during": [
+        "path_clear"
+      ],
+      "after": [
+        "edge_aligned"
+      ]
+    },
+    {
+      "id": "place_flippers",
+      "label": "Place the flippers toward the platform",
+      "seconds": 5,
+      "brake": "hold",
+      "driveM": 0,
+      "pose": {
+        "left_flipper": 80,
+        "right_flipper": 80,
+        "body_lean": 0
+      },
+      "world": {
+        "forward": 0.2,
+        "height": 0,
+        "pitch": 0
+      },
+      "before": [
+        "hold_verified"
+      ],
+      "during": [
+        "hold_verified"
+      ],
+      "after": [
+        "rear_support"
+      ]
+    },
+    {
+      "id": "mount_front",
+      "label": "Advance until the front treads mount",
+      "seconds": 8,
+      "brake": "released",
+      "driveM": 0.18,
+      "pose": {
+        "left_flipper": 80,
+        "right_flipper": 80,
+        "body_lean": 8
+      },
+      "world": {
+        "forward": 0.38,
+        "height": 0.035,
+        "pitch": -8
+      },
+      "before": [
+        "rear_support"
+      ],
+      "during": [
+        "rear_support",
+        "path_clear"
+      ],
+      "after": [
+        "front_contact"
+      ]
+    },
+    {
+      "id": "brake",
+      "label": "Hold the treads and check for rollback",
+      "seconds": 1,
+      "brake": "hold",
+      "driveM": 0,
+      "pose": {
+        "left_flipper": 80,
+        "right_flipper": 80,
+        "body_lean": 8
+      },
+      "world": {
+        "forward": 0.38,
+        "height": 0.035,
+        "pitch": -8
+      },
+      "before": [
+        "front_contact"
+      ],
+      "during": [
+        "front_contact",
+        "hold_verified"
+      ],
+      "after": [
+        "hold_verified"
+      ]
+    },
+    {
+      "id": "transfer",
+      "label": "Rotate the flippers back with brake hold",
+      "seconds": 6,
+      "brake": "hold",
+      "driveM": 0,
+      "pose": {
+        "left_flipper": -4,
+        "right_flipper": -4,
+        "body_lean": 8
+      },
+      "world": {
+        "forward": 0.38,
+        "height": 0.035,
+        "pitch": -8
+      },
+      "before": [
+        "hold_verified"
+      ],
+      "during": [
+        "front_contact",
+        "hold_verified"
+      ],
+      "after": [
+        "rear_support"
+      ]
+    },
+    {
+      "id": "advance",
+      "label": "Release, advance slowly and level",
+      "seconds": 20,
+      "brake": "released",
+      "driveM": 0.52,
+      "pose": {
+        "left_flipper": -4,
+        "right_flipper": -4,
+        "body_lean": 0
+      },
+      "world": {
+        "forward": 0.9,
+        "height": 0.12,
+        "pitch": 0
+      },
+      "before": [
+        "rear_support",
+        "path_clear"
+      ],
+      "during": [
+        "rear_support",
+        "path_clear"
+      ],
+      "after": [
+        "on_platform"
+      ]
+    },
+    {
+      "id": "settle",
+      "label": "Brake, settle and confirm level",
+      "seconds": 4,
+      "brake": "hold",
+      "driveM": 0,
+      "pose": {
+        "left_flipper": 0,
+        "right_flipper": 0,
+        "body_lean": 0
+      },
+      "world": {
+        "forward": 0.9,
+        "height": 0.12,
+        "pitch": 0
+      },
+      "before": [
+        "on_platform"
+      ],
+      "during": [
+        "on_platform",
+        "hold_verified"
+      ],
+      "after": [
+        "hold_verified",
+        "level_verified"
+      ]
+    }
+  ]
+}
