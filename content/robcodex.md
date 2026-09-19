@@ -6,7 +6,9 @@ url: "/robcodex/"
 draft: false
 ---
 
-ROBCodex turns the Mac bridge into a focused Codex workspace and securely carries the same sessions to an iPhone or iPad on your local Wi-Fi network. It is independent of ROBController and Cerebro.
+**Secure local coding sessions.** ROBCodex turns the Mac bridge into a focused Codex workspace and securely carries the same sessions to an iPhone or iPad on your local Wi-Fi network. It is independent of ROBController and Cerebro.
+
+The iPhone and iPad app is awaiting App Store approval. Its App Store distribution excludes China mainland.
 
 ## Replace terminal-tab sprawl
 
@@ -47,9 +49,9 @@ Keep several Codex conversations open in one horizontal session bar instead of s
 
 The download is a universal application for Apple silicon and Intel Macs running macOS 14 or later. It is signed with the Orbitus Robotics Developer ID, uses Apple's hardened runtime, and is notarized by Apple.
 
-- Version: `0.1.0` (build 1011)
-- Size: 4,584,998 bytes
-- SHA-256: `e4c2b4a12a10ed607a46d178212856a93ebf661b6bf467b6c45df2dc14aa838e`
+- Version: `0.1.0` (build 1012)
+- Size: 4,585,003 bytes
+- SHA-256: `84e31275ba1a7e5b16368d828a50e43f086a160b83fe7af44debc89dd7faa96c`
 
 ## Connect your devices
 
