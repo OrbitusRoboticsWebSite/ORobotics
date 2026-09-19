@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { buildCalibratedRig } from './rob-calibrated-rig.mjs';
 import { GESTURES, validateGesture, sampleGesture, previewBounds } from './rob-gesture-core.mjs';
 import { createCurbWorkshop } from './rob-curb-workshop.mjs';
+import { GroundContactPreview } from './rob-ground-contact.mjs';
 
 const root=document.querySelector('[data-gesture-studio]');
 if(root) start().catch(error=>{root.querySelector('[data-status]').textContent='Could not load the preview: '+error.message+'. Reload to retry.';});
@@ -20,6 +21,7 @@ async function start() {
   new ResizeObserver(()=>{const w=viewport.clientWidth,h=viewport.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}).observe(viewport);
   const response=await fetch(root.dataset.rigUrl);if(!response.ok)throw Error('scan response '+response.status);
   const rig=buildCalibratedRig(await response.json());scene.add(rig.root);
+  const ground=new GroundContactPreview(rig.profile);
   let clip=structuredClone(GESTURES[0]),time=0,playing=false,manual={},last=performance.now();
   const curb=createCurbWorkshop({container:$('curb-workshop'),scene,rig,onEnter:()=>{playing=false;$('play').textContent='Play';}});
   for(const [i,g] of GESTURES.entries())$('gesture').add(new Option(g.name,String(i)));
@@ -34,7 +36,7 @@ async function start() {
     $('angle-input').min=b.min;$('angle-input').max=b.max;$('angle-input').value=v;$('angle').textContent=v.toFixed(1)+'°';
     $('joint-detail').textContent=j.name+' · '+b.min.toFixed(1)+'° to '+b.max.toFixed(1)+'° from reference'+(b.arm?' · cable travel unmeasured':'');
   }
-  function present(){rig.pose(offsets());$('timeline').value=time;$('time').textContent=time.toFixed(2)+' / '+clip.duration.toFixed(1)+' s';$('play').textContent=playing?'Pause':'Play';fields();}
+  function present(){const pose=offsets(),support=ground.solve(pose);rig.pose(pose);rig.root.position.set(support.world.x,0,support.world.height);rig.root.rotation.y=support.world.pitch*Math.PI/180;rig.root.updateMatrixWorld(true);$('timeline').value=time;$('time').textContent=time.toFixed(2)+' / '+clip.duration.toFixed(1)+' s';$('play').textContent=playing?'Pause':'Play';fields();}
   function script(){
     $('script').value=JSON.stringify(clip,null,2);$('timeline').max=clip.duration;
     const preset=GESTURES.findIndex(g=>JSON.stringify(g)===JSON.stringify(clip));

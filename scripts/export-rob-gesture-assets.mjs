@@ -15,7 +15,7 @@ const directory='static/models/rob/gesture-studio/';
 const raw=await fs.readFile(directory+'rob-scan-rig.json'),source=JSON.parse(raw),rig=buildCalibratedRig(source);
 const scene=new THREE.Scene(),conversion=new THREE.Group();conversion.name='ROB Z-up to glTF Y-up';conversion.rotation.x=-Math.PI/2;
 scene.add(conversion);conversion.add(rig.root);
-scene.userData={simulationOnly:true,hardwareAuthorized:false,sourceProfileSHA256:source.provenance.profileSHA256,description:'Automatically segmented reference scan. Cable limits, collisions, dynamics and contact unvalidated.'};
+scene.userData={simulationOnly:true,hardwareAuthorized:false,sourceProfileSHA256:source.provenance.profileSHA256,treadVisuals:'Rubber belt scan patches fixed to tread frames',description:'Automatically segmented reference scan with overhead hello. Contact solver belongs to the web preview; this GLB does not simulate terrain. Physical cable limits, clearance and dynamics unvalidated.'};
 const animations=[];
 for(const clip of GESTURES) {
   validateGesture(clip,rig.profile);
@@ -39,5 +39,5 @@ const files={};
 for(const name of ['rob-scan-rig.json','rob-articulated.glb','gestures.json','curb-sequence.json','segmentation-report.json','drake-reference.json']) {
   const bytes=await fs.readFile(directory+name);files[name]={bytes:bytes.length,sha256:hash(bytes)};
 }
-await fs.writeFile(directory+'manifest.json',JSON.stringify({schemaVersion:1,simulationOnly:true,hardwareAuthorized:false,sourceProfileSHA256:source.provenance.profileSHA256,segments:source.segments.length,animations:animations.map(a=>a.name),files},null,2)+'\n');
+await fs.writeFile(directory+'manifest.json',JSON.stringify({schemaVersion:1,assetRevision:2,simulationOnly:true,hardwareAuthorized:false,curbSchemaVersion:2,previewContactModel:'planar-quasi-static',treadVisuals:'Rubber belt scan patches fixed to tread frames',sourceProfileSHA256:source.provenance.profileSHA256,segments:source.segments.length,animations:animations.map(a=>a.name),files},null,2)+'\n');
 console.log('Exported '+source.segments.length+' rigid segments and '+animations.length+' GLB animations; '+glb.length+' bytes.');

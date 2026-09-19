@@ -7,6 +7,7 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {buildCalibratedRig} from '../assets/js/rob-calibrated-rig.mjs';
 import {GESTURES,validateGesture,sampleGesture,previewBounds} from '../assets/js/rob-gesture-core.mjs';
 import {CURB_SEQUENCE,SequencePreview,SIGNALS,validateSequence} from '../assets/js/rob-curb-sequence.mjs';
+import {GroundContactPreview,CURB_TERRAIN} from '../assets/js/rob-ground-contact.mjs';
 
 const directory=new URL('../static/models/rob/gesture-studio/',import.meta.url);
 const data=JSON.parse(fs.readFileSync(new URL('rob-scan-rig.json',directory))),profile=data.profile;
@@ -55,12 +56,15 @@ test('segmented mesh and calibrated hierarchy preserve source and Drake referenc
   rig.pose();assert.deepEqual(rig.links.get('left_tool').matrixWorld.elements,left.elements);
   const flipper=rig.joints.get('left_flipper').node.quaternion.clone();
   const wheel=rig.joints.get('left_track_drive').node.quaternion.clone();
-  rig.rollTreads(.9);
+  const treadPatches=[];
+  rig.root.traverse(n=>{if(n.isMesh && /_(sprocket_link|track_(front|upper)_idler_link)$/.test(n.name))treadPatches.push({node:n,matrix:n.matrixWorld.clone()});});
+  assert.equal(treadPatches.length,6);
+  rig.pose(Object.fromEntries([...rig.joints.keys()].filter(n=>/track_(drive|front_idler|upper_idler)$/.test(n)).map(n=>[n,90])));
   assert.notDeepEqual(rig.joints.get('left_track_drive').node.quaternion.toArray(),wheel.toArray());
+  for(const p of treadPatches)assert.deepEqual(p.node.matrixWorld.elements,p.matrix.elements,'rubber belt scan patch must not orbit a wheel');
   assert.deepEqual(rig.joints.get('left_flipper').node.quaternion.toArray(),flipper.toArray());
   assert.deepEqual(rig.links.get('left_tool').matrixWorld.elements,left.elements);
   rig.pose();assert.deepEqual(rig.joints.get('left_track_drive').node.quaternion.toArray(),wheel.toArray());
-  assert.throws(()=>rig.rollTreads(NaN),/wheel distance/);
   assert.throws(()=>rig.pose({left_joint1:360}),/limit/);
   assert.throws(()=>rig.pose({left_joint1:NaN}),/Nonfinite/);
 });
@@ -85,11 +89,23 @@ test('all fourteen arm joints accept a full unwrapped ±90° preview from the ha
   }
 });
 test('curb sequence finishes only with confirmations and never authorizes hardware',()=>{
-  const r=new SequencePreview(CURB_SEQUENCE,profile);r.start();
-  for(let i=0;i<10000 && r.phase!=='complete';i++)r.tick(.05,good());
+  const r=new SequencePreview(CURB_SEQUENCE,profile),startHeight=r.sample().world.height;r.start();
+  let prior=r.sample();
+  for(let i=0;i<10000 && !['complete','aborted'].includes(r.phase);i++){
+    const previousStep=r.index;r.tick(1/60,good());const s=r.sample();
+    for(const c of s.contacts)assert.ok(c.gap>=-1e-7,'terrain penetration: '+c.id);
+    assert.ok(Math.abs(s.world.height-prior.world.height)<.004,'contact must not teleport the chassis');
+    if(previousStep===r.index && s.brake==='hold')assert.equal(s.world.forward,prior.world.forward);
+    prior=s;
+  }
   assert.equal(r.phase,'complete');assert.equal(r.sample().hardwareAuthorized,false);
   assert.equal(r.events.filter(e=>e.event==='confirm_after').length,CURB_SEQUENCE.steps.length);
-  assert.equal(r.sample().world.height,.12);
+  assert.ok(Math.abs(r.sample().world.height-startHeight-.12)<1e-8);
+  assert.ok(Math.abs(r.sample().world.pitch)<1e-6);
+  const transfer=r.events.find(e=>e.step==='transfer' && e.event==='confirm_after');
+  assert.equal(transfer.contacts.filter(c=>c.id.endsWith('_flipper') && c.surface==='ground').length,2);
+  const rearPose=CURB_SEQUENCE.steps.find(s=>s.id==='transfer').pose.left_flipper;
+  assert.ok(profile.previewPositions.left_flipper+rearPose*Math.PI/180<-Math.PI,'flippers must swing fully behind ROB');
   const missing=new SequencePreview(CURB_SEQUENCE,profile);missing.start();
   for(let i=0;i<1000;i++)missing.tick(.05,{pose_visible:true,operator_present:true});
   assert.equal(missing.phase,'aborted');assert.equal(missing.fault,'CONFIRMATION_TIMEOUT');assert.equal(missing.index,0);
@@ -110,9 +126,61 @@ test('loss of vision, operator, brake hold or rollback latches an abort without 
   assert.throws(()=>validateSequence(bad,profile),/held brake/);
   const support=new SequencePreview(CURB_SEQUENCE,profile);support.start();
   while(support.index<2 || support.phase!=='after')support.tick(.1,good());
-  support.tick(.1,{...good(),rear_support:false});assert.equal(support.fault,'SUPPORT_UNCONFIRMED');
-  const unfinished=structuredClone(CURB_SEQUENCE);unfinished.steps.at(-1).world.height=.1;
-  assert.throws(()=>validateSequence(unfinished,profile),/platform height/);
+  support.tick(.1,{...good(),front_flipper_contact:false});assert.equal(support.fault,'SUPPORT_UNCONFIRMED');
+  const authoredHeight=structuredClone(CURB_SEQUENCE);authoredHeight.steps.at(-1).world={height:.1};
+  assert.throws(()=>validateSequence(authoredHeight,profile),/terrain contact/);
+});
+test('airborne rollers cannot lift ROB, and a curb wall blocks unsupported drive',()=>{
+  const g=new GroundContactPreview(profile),rest=g.state;
+  for(const q of [0,40,80,110,119]) {
+    const s=g.solve({left_flipper:q,right_flipper:q});
+    assert.equal(s.world.height,rest.world.height);assert.equal(Math.abs(s.world.pitch),0);
+    assert.equal(s.signals.front_flipper_contact,false);
+  }
+  for(const [q,front] of [[139,true],[-97,false]]) {
+    const s=g.solve({left_flipper:q,right_flipper:q});
+    assert.ok(s.world.height>rest.world.height);
+    assert.equal(s.signals[front?'front_flipper_contact':'rear_flipper_contact'],true);
+    for(const c of s.contacts.filter(c=>c.id.endsWith('_flipper')))assert.ok(Math.abs(c.gap)<1e-6);
+  }
+  const wall=new GroundContactPreview(profile,CURB_TERRAIN,-.35);let blocked=false;
+  for(let i=0;i<200;i++){const s=wall.advance({},.005);assert.ok(Math.abs(s.world.height-rest.world.height)<1e-6);if(s.driveBlocked){blocked=true;break;}}
+  assert.ok(blocked,'treads must stop at the curb face without flipper support');
+});
+test('automatic confirmations cannot bypass missing rear-wheel contact',()=>{
+  const script=structuredClone(CURB_SEQUENCE);
+  script.steps.find(s=>s.id==='transfer').pose={left_flipper:0,right_flipper:0,body_lean:0};
+  const r=new SequencePreview(script,profile);r.start();
+  for(let i=0;i<3000 && r.phase!=='aborted';i++)r.tick(.05,good());
+  assert.equal(r.step.id,'transfer');assert.equal(r.fault,'CONFIRMATION_TIMEOUT');
+  assert.equal(r.sample().contactSignals.rear_flipper_contact,false);
+});
+test('contact roller centers agree with the displayed approved joint hierarchy',()=>{
+  const rig=buildCalibratedRig(data),g=new GroundContactPreview(profile,CURB_TERRAIN,-.35);
+  for(const q of [0,119,139,-97]) {
+    const offsets={left_flipper:q,right_flipper:q},s=g.solve(offsets);
+    rig.pose(offsets);rig.root.position.set(s.world.x,0,s.world.height);rig.root.rotation.y=s.world.pitch*Math.PI/180;rig.root.updateMatrixWorld(true);
+    for(const side of ['left','right']) {
+      const point=rig.links.get(side+'_flipper_roller_link').getWorldPosition(new THREE.Vector3());
+      const contact=s.contacts.find(c=>c.id===side+'_flipper');
+      assert.ok(Math.abs(point.x-contact.centerX)<1e-9 && Math.abs(point.z-contact.centerZ)<1e-9);
+    }
+  }
+});
+test('hello raises the hand above the scanned head and waves side to side',()=>{
+  const rig=buildCalibratedRig(data),hello=GESTURES.find(g=>g.name==='A small hello');
+  const start=rig.links.get('left_tool').getWorldPosition(new THREE.Vector3()),ys=[];
+  const right=rig.links.get('right_tool').matrixWorld.clone();
+  for(let t=12;t<=20;t+=.1) {
+    rig.pose(sampleGesture(hello,t));
+    const hand=rig.links.get('left_tool').getWorldPosition(new THREE.Vector3());
+    const head=new THREE.Box3().setFromObject(rig.links.get('insta360_link'));
+    assert.ok(hand.z>head.max.z+.05,'hand must remain above the head during the wave');
+    ys.push(hand.y);assert.deepEqual(rig.links.get('right_tool').matrixWorld.elements,right.elements);
+  }
+  assert.ok(Math.max(...ys)-Math.min(...ys)>.06,'wave must have visible sideways travel');
+  rig.pose(sampleGesture(hello,hello.duration));
+  assert.ok(rig.links.get('left_tool').getWorldPosition(new THREE.Vector3()).distanceTo(start)<1e-9);
 });
 test('downloadable GLB has the complete rig, named clips, and verified asset hashes',async()=>{
   const bytes=fs.readFileSync(new URL('rob-articulated.glb',directory));

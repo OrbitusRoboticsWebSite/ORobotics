@@ -1,11 +1,11 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "simulationOnly": true,
   "kind": "guarded_sequence",
-  "name": "Curb ascent rehearsal",
+  "name": "Contact-driven curb ascent",
   "platformHeightM": 0.12,
   "timeoutSeconds": 12,
-  "note": "Illustrative base path and provisional flipper angles. No physics or hardware authorization.",
+  "note": "Wheel/terrain collision determines chassis height and pitch. Planar quasi-static preview; traction, dynamics and hardware unvalidated.",
   "steps": [
     {
       "id": "align",
@@ -17,11 +17,6 @@
         "left_flipper": 0,
         "right_flipper": 0,
         "body_lean": 0
-      },
-      "world": {
-        "forward": 0.2,
-        "height": 0,
-        "pitch": 0
       },
       "before": [
         "path_clear"
@@ -35,19 +30,14 @@
     },
     {
       "id": "place_flippers",
-      "label": "Place the flippers toward the platform",
-      "seconds": 5,
+      "label": "Touch the ground, then lift the front",
+      "seconds": 10,
       "brake": "hold",
       "driveM": 0,
       "pose": {
-        "left_flipper": 80,
-        "right_flipper": 80,
+        "left_flipper": 139,
+        "right_flipper": 139,
         "body_lean": 0
-      },
-      "world": {
-        "forward": 0.2,
-        "height": 0,
-        "pitch": 0
       },
       "before": [
         "hold_verified"
@@ -56,31 +46,49 @@
         "hold_verified"
       ],
       "after": [
-        "rear_support"
+        "front_flipper_contact",
+        "front_lifted"
       ]
     },
     {
       "id": "mount_front",
-      "label": "Advance until the front treads mount",
-      "seconds": 8,
+      "label": "Advance until the front clears the edge",
+      "seconds": 14,
       "brake": "released",
-      "driveM": 0.18,
+      "driveM": 0.4,
       "pose": {
-        "left_flipper": 80,
-        "right_flipper": 80,
-        "body_lean": 8
+        "left_flipper": 139,
+        "right_flipper": 139,
+        "body_lean": 0
       },
-      "world": {
-        "forward": 0.38,
-        "height": 0.035,
-        "pitch": -8
-      },
+      "until": "front_ready",
       "before": [
-        "rear_support"
+        "front_lifted"
       ],
       "during": [
-        "rear_support",
+        "front_flipper_contact",
         "path_clear"
+      ],
+      "after": [
+        "front_ready"
+      ]
+    },
+    {
+      "id": "seat_front",
+      "label": "Raise the flippers and seat the front tread",
+      "seconds": 8,
+      "brake": "hold",
+      "driveM": 0,
+      "pose": {
+        "left_flipper": 107,
+        "right_flipper": 107,
+        "body_lean": 0
+      },
+      "before": [
+        "front_ready"
+      ],
+      "during": [
+        "hold_verified"
       ],
       "after": [
         "front_contact"
@@ -93,14 +101,9 @@
       "brake": "hold",
       "driveM": 0,
       "pose": {
-        "left_flipper": 80,
-        "right_flipper": 80,
-        "body_lean": 8
-      },
-      "world": {
-        "forward": 0.38,
-        "height": 0.035,
-        "pitch": -8
+        "left_flipper": 107,
+        "right_flipper": 107,
+        "body_lean": 0
       },
       "before": [
         "front_contact"
@@ -115,49 +118,41 @@
     },
     {
       "id": "transfer",
-      "label": "Rotate the flippers back with brake hold",
-      "seconds": 6,
+      "label": "Swing fully back until the rear wheels touch",
+      "seconds": 18,
       "brake": "hold",
       "driveM": 0,
       "pose": {
-        "left_flipper": -4,
-        "right_flipper": -4,
-        "body_lean": 8
-      },
-      "world": {
-        "forward": 0.38,
-        "height": 0.035,
-        "pitch": -8
+        "left_flipper": -97,
+        "right_flipper": -97,
+        "body_lean": 0
       },
       "before": [
-        "hold_verified"
+        "hold_verified",
+        "front_contact"
       ],
       "during": [
         "front_contact",
         "hold_verified"
       ],
       "after": [
-        "rear_support"
+        "rear_flipper_contact"
       ]
     },
     {
       "id": "advance",
-      "label": "Release, advance slowly and level",
-      "seconds": 20,
+      "label": "Advance slowly with rear support",
+      "seconds": 22,
       "brake": "released",
-      "driveM": 0.52,
+      "driveM": 0.6,
       "pose": {
-        "left_flipper": -4,
-        "right_flipper": -4,
+        "left_flipper": -97,
+        "right_flipper": -97,
         "body_lean": 0
       },
-      "world": {
-        "forward": 0.9,
-        "height": 0.12,
-        "pitch": 0
-      },
+      "until": "on_platform",
       "before": [
-        "rear_support",
+        "rear_flipper_contact",
         "path_clear"
       ],
       "during": [
@@ -170,19 +165,14 @@
     },
     {
       "id": "settle",
-      "label": "Brake, settle and confirm level",
-      "seconds": 4,
+      "label": "Brake, stow the flippers and settle level",
+      "seconds": 10,
       "brake": "hold",
       "driveM": 0,
       "pose": {
         "left_flipper": 0,
         "right_flipper": 0,
         "body_lean": 0
-      },
-      "world": {
-        "forward": 0.9,
-        "height": 0.12,
-        "pitch": 0
       },
       "before": [
         "on_platform"

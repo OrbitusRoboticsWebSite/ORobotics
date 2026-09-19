@@ -39,19 +39,14 @@ export function buildCalibratedRig(document) {
     }
     root.updateMatrixWorld(true);
   }
-  // Illustrative no-slip rotation for the six independently rotating tread wheels.
-  // This does not model belt deformation, traction or a motor command.
-  function rollTreads(distanceMeters) {
-    if(!Number.isFinite(distanceMeters) || Math.abs(distanceMeters)>20) throw Error('Invalid preview wheel distance.');
-    for(const [name,{joint,node,origin,axis}] of joints) {
-      if(!/^(left|right)_track_(drive|front_idler|upper_idler)$/.test(name)) continue;
-      const link=profile.links.find(l=>l.name===joint.child),radius=link.boxMeters[0]/2;
-      if(joint.kind!=='continuous' || !(radius>0)) throw Error('Invalid tread wheel geometry: '+name);
-      node.quaternion.copy(origin).multiply(new THREE.Quaternion().setFromAxisAngle(axis,(profile.previewPositions[name] || 0)+distanceMeters/radius));
-    }
-    root.updateMatrixWorld(true);
-  }
   pose();
-  return {root,profile,joints,links,pose,rollTreads,provenance:document.provenance,
+  // Nearest-wheel scan cuts also contain the continuous rubber belt. Preserve
+  // their reference positions on the tread frame instead of orbiting patches.
+  for(const {mesh} of surfaces) {
+    const match=mesh.name.match(/^(left|right)_(sprocket_link|track_(front|upper)_idler_link)$/);
+    if(match)links.get(match[1]+'_track_link').attach(mesh);
+  }
+  root.updateMatrixWorld(true);
+  return {root,profile,joints,links,pose,provenance:document.provenance,
     showSegments(enabled){for(const s of surfaces)s.mesh.material=enabled?s.color:material;}};
 }
