@@ -3,10 +3,13 @@ export const RAD = Math.PI / 180;
 export const smooth = t => { const u = Math.max(0, Math.min(1, t)); return u*u*u*(10+u*(-15+6*u)); };
 export function previewBounds(joint, reference = 0) {
   const arm = /^(left|right)_joint[1-7]$/.test(joint.name);
-  const cap = arm ? 8 : joint.kind === 'continuous' ? 180 : 360;
+  // Operator-requested simulation window around the hanging reference. Saved
+  // vendor limits use a different zero and are not commissioned cable limits.
+  if (arm) return { min: -90, max: 90, speed: 15, acceleration: 45, arm };
+  const cap = joint.kind === 'continuous' ? 180 : 360;
   return { min: Math.max(-cap, joint.kind === 'continuous' ? -180 : (joint.lower-reference)/RAD),
     max: Math.min(cap, joint.kind === 'continuous' ? 180 : (joint.upper-reference)/RAD),
-    speed: arm ? 15 : 45, acceleration: arm ? 45 : 140, arm };
+    speed: 45, acceleration: 140, arm };
 }
 export function validateGesture(clip, profile) {
   if (!clip || clip.schemaVersion !== 1 || clip.simulationOnly !== true || clip.kind !== 'gesture') throw Error('Use a version 1 simulation gesture.');

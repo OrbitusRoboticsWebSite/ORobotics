@@ -64,6 +64,26 @@ test('segmented mesh and calibrated hierarchy preserve source and Drake referenc
   assert.throws(()=>rig.pose({left_joint1:360}),/limit/);
   assert.throws(()=>rig.pose({left_joint1:NaN}),/Nonfinite/);
 });
+test('all fourteen arm joints accept a full unwrapped ±90° preview from the hanging pose',()=>{
+  const arms=profile.joints.filter(j=>/^(left|right)_joint[1-7]$/.test(j.name));
+  assert.equal(arms.length,14);
+  const rig=buildCalibratedRig(data);
+  for(const joint of arms) {
+    const bounds=previewBounds(joint,profile.previewPositions[joint.name] || 0);
+    assert.equal(bounds.min,-90);assert.equal(bounds.max,90);
+    const wide={schemaVersion:1,simulationOnly:true,kind:'gesture',name:'Full preview sweep',duration:48,
+      tracks:{[joint.name]:[[0,0],[12,90],[36,-90],[48,0]]}};
+    assert.doesNotThrow(()=>validateGesture(wide,profile));
+    for(const time of [0,6,12,24,36,42,48])assert.doesNotThrow(()=>rig.pose(sampleGesture(wide,time)));
+    for(const outside of [-90.1,90.1,360]) {
+      const bad=structuredClone(wide);bad.tracks[joint.name][1][1]=outside;
+      assert.throws(()=>validateGesture(bad,profile),/preview range/);
+      assert.throws(()=>rig.pose({[joint.name]:outside}),/limit/);
+    }
+    const fast=structuredClone(wide);fast.tracks[joint.name][1][0]=1;
+    assert.throws(()=>validateGesture(fast,profile),/more time/);
+  }
+});
 test('curb sequence finishes only with confirmations and never authorizes hardware',()=>{
   const r=new SequencePreview(CURB_SEQUENCE,profile);r.start();
   for(let i=0;i<10000 && r.phase!=='complete';i++)r.tick(.05,good());

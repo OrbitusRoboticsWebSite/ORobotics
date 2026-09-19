@@ -35,9 +35,13 @@ ROB-right remains L-10.
 Quintic interpolation gives zero velocity and acceleration at keyframes and
 does not overshoot their range. Validation checks known joints, finite values,
 strictly increasing time, zero-offset first/last poses, bounds, and peak
-interpolated angular speed/acceleration. B1 joints are capped at ±8° around the
-reviewed pose. This provisional simulation cap is not a measured cable-safe
-range. Angles are unwrapped; a 360° request is rejected, not normalized to zero.
+interpolated angular speed/acceleration. All fourteen B1 joints have an
+operator-requested ±90° simulation window around the reviewed hanging pose
+(180° total travel). This provisional window overrides the saved vendor
+angle limits in the editor; those limits have not been calibrated to ROB's
+startup pose or cable travel. The frozen URDF and hardware limits are unchanged.
+Angular speed and acceleration caps still apply. Angles are unwrapped; a 360°
+request is rejected, not normalized to zero.
 
 Five starter clips are included: Curious glance, A thoughtful nod, A small
 hello, Listening and Ready to help. The GLB download includes the same 43
@@ -97,7 +101,7 @@ After updating the rig JSON, run:
     npm run validate
     npm run validate:subpath
 
-Tests compare browser FK to the independent Drake handoff, validate arm cable
-bounds and interpolation, hold joints through failures, exercise checkpoint
+Tests compare browser FK to the independent Drake handoff, validate provisional
+arm preview bounds and interpolation, hold joints through failures, exercise checkpoint
 timeouts, parse the GLB and its animations, and verify packaged asset hashes.
 The manifest identifies the actual generated files.
