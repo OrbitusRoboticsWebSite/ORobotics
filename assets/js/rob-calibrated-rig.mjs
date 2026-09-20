@@ -33,7 +33,10 @@ export function buildCalibratedRig(document) {
       const reference=profile.previewPositions[name] || 0, delta=offsets[name] ?? 0;
       if(!Number.isFinite(delta)) throw Error('Nonfinite pose: '+name);
       const b=previewBounds(joint,reference);
-      if(joint.kind!=='fixed' && (delta<b.min-1e-7 || delta>b.max+1e-7)) throw Error('Preview limit exceeded: '+name);
+      // A zero offset can display the captured scan even if its estimated pose
+      // conflicts with the new range. Playback is separately validated; this
+      // exception must not invent a legal transition to/from that observation.
+      if(joint.kind!=='fixed' && delta!==0 && (delta<b.min-1e-7 || delta>b.max+1e-7)) throw Error('Preview limit exceeded: '+name);
       node.quaternion.copy(origin);
       if(['revolute','continuous'].includes(joint.kind)) node.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(axis,reference+delta*RAD));
     }

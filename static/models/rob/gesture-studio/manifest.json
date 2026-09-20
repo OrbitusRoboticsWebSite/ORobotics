@@ -1,8 +1,10 @@
 {
   "schemaVersion": 1,
-  "assetRevision": 2,
+  "assetRevision": 3,
   "simulationOnly": true,
   "hardwareAuthorized": false,
+  "centeredArmLimitDegrees": 120,
+  "headClearanceMeters": 0.025,
   "curbSchemaVersion": 2,
   "previewContactModel": "planar-quasi-static",
   "treadVisuals": "Rubber belt scan patches fixed to tread frames",
@@ -12,8 +14,13 @@
     "Curious glance",
     "A thoughtful nod",
     "A small hello",
-    "Listening",
-    "Ready to help"
+    "Listening"
+  ],
+  "pendingAnimations": [
+    {
+      "name": "Ready to help",
+      "reason": "right_joint2: hanging reference 120.4° is outside the centered −120° to +120° preview range. Reconcile the pose estimate or measured travel before animating this joint."
+    }
   ],
   "files": {
     "rob-scan-rig.json": {
@@ -21,12 +28,16 @@
       "sha256": "4e39b62b2c45144b6a3660832b5879e825f6c115461ca97ba87cbf4a815bd8dc"
     },
     "rob-articulated.glb": {
-      "bytes": 8104940,
-      "sha256": "c232d2cf775c797654ae15d122eba072564f69f57cf257c8f5cb37a6c8cbf45d"
+      "bytes": 8082568,
+      "sha256": "6e26322fd57788976c2adc5c9963228421d6c4e479b708fd248b0a60efc85513"
     },
     "gestures.json": {
-      "bytes": 6073,
-      "sha256": "0f09b06ef431929a749ab3117215d104edac1f0ea4b0a88bd9482d6f9dcfe064"
+      "bytes": 6427,
+      "sha256": "9743f68d0f329593c0538e8c94ddc26beb602c3a62d52372992d3a40eb349cb8"
+    },
+    "gesture-review.json": {
+      "bytes": 3271,
+      "sha256": "73a7c533bd985afbd2313ae4ee71f76f88b4b2b96a3251881e9788c106346d17"
     },
     "curb-sequence.json": {
       "bytes": 3941,

@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "simulationOnly": true,
+  "hardwareAuthorized": false,
+  "centeredLimitDegrees": 120,
+  "uprightDefinition": "Arm extends along mounting-plate normal: plate X cross plate Y. Model joint zero; not a raw motor zero.",
+  "scriptCoordinates": "centeredDegrees = scanReferenceRadians * 180 / pi + offsetDegrees",
+  "referenceConflicts": [
+    {
+      "name": "right_joint2",
+      "referenceDegrees": 120.4171702717414,
+      "excessDegrees": 0.41717027174139787
+    }
+  ],
+  "headClearanceMeters": 0.025,
+  "collisionModel": "Convex envelopes of every scanned arm segment against the head and upper OAK-D. Does not cover neck, torso, arm/arm, cable, payload or environment clearance.",
+  "checks": {
+    "Curious glance": {
+      "samples": 60,
+      "clearanceMeters": 0.025,
+      "protectedLinks": [
+        "insta360_link",
+        "oak_link"
+      ]
+    },
+    "A thoughtful nod": {
+      "samples": 42,
+      "clearanceMeters": 0.025,
+      "protectedLinks": [
+        "insta360_link",
+        "oak_link"
+      ]
+    },
+    "A small hello": {
+      "samples": 1268,
+      "clearanceMeters": 0.025,
+      "protectedLinks": [
+        "insta360_link",
+        "oak_link"
+      ]
+    },
+    "Listening": {
+      "samples": 31,
+      "clearanceMeters": 0.025,
+      "protectedLinks": [
+        "insta360_link",
+        "oak_link"
+      ]
+    }
+  },
+  "pending": [
+    {
+      "name": "Ready to help",
+      "reason": "right_joint2: hanging reference 120.4° is outside the centered −120° to +120° preview range. Reconcile the pose estimate or measured travel before animating this joint."
+    }
+  ],
+  "helloPlanning": {
+    "algorithm": "position-only damped least-squares IK with centered bounds and head-clearance rejection",
+    "centeredLimitDegrees": 120,
+    "sourceProfileSHA256": "ba63a659f10085da3fa7f7c5002f17b4af27596408bc447e0ac64cdb4198c2d7",
+    "waypoints": [
+      {
+        "time": 12,
+        "targetMeters": [
+          0.1,
+          0.42,
+          1.42
+        ],
+        "errorMeters": 0.00021223919599792964,
+        "iterations": 2
+      },
+      {
+        "time": 14,
+        "targetMeters": [
+          0.1,
+          0.46,
+          1.42
+        ],
+        "errorMeters": 0.0002986002656860971,
+        "iterations": 2
+      },
+      {
+        "time": 16,
+        "targetMeters": [
+          0.1,
+          0.38,
+          1.42
+        ],
+        "errorMeters": 0.0009432347298532038,
+        "iterations": 2
+      },
+      {
+        "time": 18,
+        "targetMeters": [
+          0.1,
+          0.46,
+          1.42
+        ],
+        "errorMeters": 0.0010467554455852789,
+        "iterations": 2
+      },
+      {
+        "time": 20,
+        "targetMeters": [
+          0.1,
+          0.38,
+          1.42
+        ],
+        "errorMeters": 0.0008535476168828356,
+        "iterations": 2
+      },
+      {
+        "time": 22,
+        "targetMeters": [
+          0.1,
+          0.42,
+          1.42
+        ],
+        "errorMeters": 0.00021960567789757696,
+        "iterations": 2
+      }
+    ],
+    "samples": 1268,
+    "clearanceMeters": 0.025,
+    "protectedLinks": [
+      "insta360_link",
+      "oak_link"
+    ]
+  },
+  "sourceProfileSHA256": "ba63a659f10085da3fa7f7c5002f17b4af27596408bc447e0ac64cdb4198c2d7"
+}

@@ -5,15 +5,18 @@ import crypto from 'node:crypto';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {buildCalibratedRig} from '../assets/js/rob-calibrated-rig.mjs';
-import {GESTURES,validateGesture,sampleGesture,previewBounds} from '../assets/js/rob-gesture-core.mjs';
+import {GESTURES,validateGesture,sampleGesture,previewBounds,gestureAvailability,armReferenceConflicts,ARM_CENTERED_LIMIT} from '../assets/js/rob-gesture-core.mjs';
+import {ArmClearancePreview,HEAD_CLEARANCE_METERS} from '../assets/js/rob-arm-clearance.mjs';
+import {HELLO_PLANNING} from '../assets/js/rob-hello-plan.mjs';
 import {CURB_SEQUENCE,SequencePreview,SIGNALS,validateSequence} from '../assets/js/rob-curb-sequence.mjs';
 import {GroundContactPreview,CURB_TERRAIN} from '../assets/js/rob-ground-contact.mjs';
 
 const directory=new URL('../static/models/rob/gesture-studio/',import.meta.url);
 const data=JSON.parse(fs.readFileSync(new URL('rob-scan-rig.json',directory))),profile=data.profile;
+const playable=GESTURES.filter(g=>gestureAvailability(g,profile).playable);
 const good=()=>Object.fromEntries(Object.keys(SIGNALS).map(k=>[k,true]));
 test('all gesture samples stay inside unwrapped arm bounds and return to reference',()=>{
-  for(const g of GESTURES) {
+  for(const g of playable) {
     validateGesture(g,profile);
     for(let i=0;i<=1000;i++)for(const [name,angle] of Object.entries(sampleGesture(g,g.duration*i/1000))) {
       const joint=profile.joints.find(j=>j.name===name),b=previewBounds(joint,profile.previewPositions[name] || 0);
@@ -68,24 +71,41 @@ test('segmented mesh and calibrated hierarchy preserve source and Drake referenc
   assert.throws(()=>rig.pose({left_joint1:360}),/limit/);
   assert.throws(()=>rig.pose({left_joint1:NaN}),/Nonfinite/);
 });
-test('all fourteen arm joints accept a full unwrapped ±90° preview from the hanging pose',()=>{
+test('arm limits are centered on upright zero, with hanging offsets consuming travel',()=>{
   const arms=profile.joints.filter(j=>/^(left|right)_joint[1-7]$/.test(j.name));
   assert.equal(arms.length,14);
   const rig=buildCalibratedRig(data);
   for(const joint of arms) {
     const bounds=previewBounds(joint,profile.previewPositions[joint.name] || 0);
-    assert.equal(bounds.min,-90);assert.equal(bounds.max,90);
-    const wide={schemaVersion:1,simulationOnly:true,kind:'gesture',name:'Full preview sweep',duration:48,
-      tracks:{[joint.name]:[[0,0],[12,90],[36,-90],[48,0]]}};
+    const reference=(profile.previewPositions[joint.name] || 0)*180/Math.PI;
+    assert.ok(Math.abs(bounds.min+reference+120)<1e-8);assert.ok(Math.abs(bounds.max+reference-120)<1e-8);
+    const wide={schemaVersion:1,simulationOnly:true,kind:'gesture',name:'Full preview sweep',duration:96,
+      tracks:{[joint.name]:[[0,0],[32,bounds.max],[64,bounds.min],[96,0]]}};
+    if(!bounds.referenceInRange){assert.equal(joint.name,'right_joint2');assert.throws(()=>validateGesture(wide,profile),/hanging reference/);continue;}
     assert.doesNotThrow(()=>validateGesture(wide,profile));
-    for(const time of [0,6,12,24,36,42,48])assert.doesNotThrow(()=>rig.pose(sampleGesture(wide,time)));
-    for(const outside of [-90.1,90.1,360]) {
+    for(const time of [0,16,32,48,64,80,96])assert.doesNotThrow(()=>rig.pose(sampleGesture(wide,time)));
+    for(const outside of [bounds.min-.1,bounds.max+.1,360]) {
       const bad=structuredClone(wide);bad.tracks[joint.name][1][1]=outside;
       assert.throws(()=>validateGesture(bad,profile),/preview range/);
       assert.throws(()=>rig.pose({[joint.name]:outside}),/limit/);
     }
     const fast=structuredClone(wide);fast.tracks[joint.name][1][0]=1;
     assert.throws(()=>validateGesture(fast,profile),/more time/);
+  }
+  const conflicts=armReferenceConflicts(profile);assert.equal(conflicts.length,1);assert.equal(conflicts[0].name,'right_joint2');
+  assert.ok(conflicts[0].excessDegrees>.4 && conflicts[0].excessDegrees<.5);
+  assert.deepEqual(GESTURES.filter(g=>!gestureAvailability(g,profile).playable).map(g=>g.name),['Ready to help']);
+  // A +120° offset from hanging J4 would exceed its centered +120° bound.
+  assert.throws(()=>rig.pose({left_joint4:120}),/limit/);
+  assert.doesNotThrow(()=>rig.pose({left_joint2:119.48052311116868}));
+});
+test('upright arm zero follows the mounting plate cross-product normal on both canted mounts',()=>{
+  const rig=buildCalibratedRig(data),upright=Object.fromEntries(profile.joints.filter(j=>/^(left|right)_joint/.test(j.name)).map(j=>[j.name,-(profile.previewPositions[j.name]||0)*180/Math.PI]));
+  rig.pose(upright);
+  for(const side of ['left','right']) {
+    const m=rig.links.get(side+'_base_link').matrixWorld,x=new THREE.Vector3().setFromMatrixColumn(m,0),y=new THREE.Vector3().setFromMatrixColumn(m,1);
+    const normal=x.cross(y).normalize(),arm=rig.links.get(side+'_three_Link').getWorldPosition(new THREE.Vector3()).sub(rig.links.get(side+'_two_Link').getWorldPosition(new THREE.Vector3())).normalize();
+    assert.ok(normal.dot(arm)>1-1e-10);assert.ok(Math.abs(normal.y)>.3,'mount cant must remain visible');
   }
 });
 test('curb sequence finishes only with confirmations and never authorizes hardware',()=>{
@@ -171,7 +191,7 @@ test('hello raises the hand above the scanned head and waves side to side',()=>{
   const rig=buildCalibratedRig(data),hello=GESTURES.find(g=>g.name==='A small hello');
   const start=rig.links.get('left_tool').getWorldPosition(new THREE.Vector3()),ys=[];
   const right=rig.links.get('right_tool').matrixWorld.clone();
-  for(let t=12;t<=20;t+=.1) {
+  for(let t=12;t<=22;t+=.1) {
     rig.pose(sampleGesture(hello,t));
     const hand=rig.links.get('left_tool').getWorldPosition(new THREE.Vector3());
     const head=new THREE.Box3().setFromObject(rig.links.get('insta360_link'));
@@ -182,11 +202,51 @@ test('hello raises the hand above the scanned head and waves side to side',()=>{
   rig.pose(sampleGesture(hello,hello.duration));
   assert.ok(rig.links.get('left_tool').getWorldPosition(new THREE.Vector3()).distanceTo(start)<1e-9);
 });
+test('IK wave respects centered travel and swept scan-derived head clearance',()=>{
+  const safety=new ArmClearancePreview(data),hello=GESTURES.find(g=>g.name==='A small hello');
+  assert.equal(HELLO_PLANNING.centeredLimitDegrees,ARM_CENTERED_LIMIT);
+  assert.ok(HELLO_PLANNING.waypoints.every(w=>w.errorMeters<.002));
+  assert.equal(safety.validateMotion(hello).clearanceMeters,HEAD_CLEARANCE_METERS);
+  const rig=buildCalibratedRig(data);
+  for(const t of [0,6,12,16,22,28,34]) {
+    const pose=sampleGesture(hello,t),frames=safety.frames(pose);rig.pose(pose);
+    for(const name of ['left_tool','right_tool','insta360_link','oak_link'])assert.ok(frames.get(name).elements.every((v,i)=>Math.abs(v-rig.links.get(name).matrixWorld.elements[i])<1e-9));
+  }
+  const seed=sampleGesture(hello,12),result=safety.solveIK({target:[.1,.44,1.42],seed});
+  assert.ok(result.errorMeters<.002);assert.equal(safety.clearance(result.offsets).clear,true);
+  safety.validateTransition(seed,result.offsets);
+  assert.throws(()=>safety.solveIK({side:'right',target:[.1,-.4,1.3]}),/reference/);
+  const center=new THREE.Vector3().setFromMatrixPosition(safety.frames(seed).get('insta360_link')).toArray();
+  assert.throws(()=>safety.solveIK({target:center,seed}),/No IK solution/);
+});
+test('clear endpoints cannot authorize an arm path that crosses the head',()=>{
+  const safety=new ArmClearancePreview(data),from={left_joint1:-120,left_joint2:160,left_joint4:-120},to={...from,left_joint1:120};
+  assert.equal(safety.clearance(from).clear,true);assert.equal(safety.clearance(to).clear,true);
+  assert.equal(safety.clearance({...from,left_joint1:-80}).clear,false);
+  assert.throws(()=>safety.validateTransition(from,to),/Head clearance/);
+  const clip={schemaVersion:1,simulationOnly:true,kind:'gesture',name:'Crossing the head',duration:96,
+    tracks:Object.fromEntries(Object.keys(from).map(n=>[n,[[0,0],[24,from[n]],[72,to[n]],[96,0]]]))};
+  validateGesture(clip,profile);assert.throws(()=>safety.validateMotion(clip),/Head clearance/);
+  const sequence=structuredClone(CURB_SEQUENCE);sequence.steps[0].pose.left_joint2=5;
+  assert.throws(()=>validateSequence(sequence,profile),/holds the arms and head/);
+});
+test('motion worker reports rejected paths without treating them as successful poses',async()=>{
+  const {Worker}=await import('node:worker_threads');
+  const url=new URL('../assets/js/rob-motion-worker.mjs',import.meta.url).href;
+  const bootstrap="import {parentPort} from 'node:worker_threads';globalThis.self={postMessage:data=>parentPort.postMessage(data)};await import("+JSON.stringify(url)+");parentPort.on('message',data=>self.onmessage({data}));";
+  const worker=new Worker(new URL('data:text/javascript,'+encodeURIComponent(bootstrap)));let id=0;
+  const request=(operation,payload)=>new Promise((resolve,reject)=>{worker.once('message',resolve);worker.once('error',reject);worker.postMessage({id:++id,operation,payload});});
+  try {
+    const init=await request('init',data);assert.equal(init.result.ready,true);
+    const clear=await request('transition',{from:{},to:{left_joint2:5}});assert.ok(clear.result.samples>0);
+    const bad=await request('transition',{from:{},to:{left_joint4:120}});assert.match(bad.error,/limit/);assert.equal(bad.result,undefined);
+  } finally {await worker.terminate();}
+});
 test('downloadable GLB has the complete rig, named clips, and verified asset hashes',async()=>{
   const bytes=fs.readFileSync(new URL('rob-articulated.glb',directory));
   const parsed=await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),'');
-  assert.equal(parsed.animations.length,GESTURES.length);
-  assert.deepEqual(parsed.animations.map(a=>a.name),GESTURES.map(g=>g.name));
+  assert.equal(parsed.animations.length,playable.length);
+  assert.deepEqual(parsed.animations.map(a=>a.name),playable.map(g=>g.name));
   assert.ok(parsed.scene.getObjectByName('left_tool'));
   let count=0;parsed.scene.traverse(n=>{if(n.isMesh)count++;});assert.equal(count,43);
   const mixer=new THREE.AnimationMixer(parsed.scene);mixer.clipAction(parsed.animations[2]).play();mixer.update(3);
@@ -196,4 +256,7 @@ test('downloadable GLB has the complete rig, named clips, and verified asset has
     const data=fs.readFileSync(new URL(name,directory));assert.equal(data.length,entry.bytes);
     assert.equal(crypto.createHash('sha256').update(data).digest('hex'),entry.sha256);
   }
+  const review=JSON.parse(fs.readFileSync(new URL('gesture-review.json',directory)));
+  assert.equal(review.centeredLimitDegrees,120);assert.equal(review.referenceConflicts[0].name,'right_joint2');
+  assert.deepEqual(JSON.parse(fs.readFileSync(new URL('gestures.json',directory))),playable);
 });

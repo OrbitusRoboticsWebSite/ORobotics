@@ -46,6 +46,7 @@
   "homepage": "https://www.orbitusrobotics.com/",
   "dependencies": {
     "qrcode": "^1.5.4",
-    "three": "^0.180.0"
+    "three": "^0.180.0",
+    "three-mesh-bvh": "0.9.15"
   }
 }

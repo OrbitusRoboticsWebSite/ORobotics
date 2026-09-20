@@ -47,6 +47,7 @@ export function validateSequence(script,profile) {
     for(const name of new Set([...Object.keys(prior),...Object.keys(step.pose)])) {
       const joint=joints.get(name),value=step.pose[name]??0;
       if(!joint || !['revolute','continuous'].includes(joint.kind) || !Number.isFinite(value))throw Error('Invalid sequence joint: '+name);
+      if(!['left_flipper','right_flipper','body_lean','torso_yaw'].includes(name))throw Error('Curb rehearsal holds the arms and head at reference; author those motions in the head-clearance-checked gesture editor.');
       const b=previewBounds(joint,profile.previewPositions[name] || 0),change=Math.abs(value-(prior[name]??0));
       if(value<b.min-1e-8 || value>b.max+1e-8 || 1.875*change/step.seconds>b.speed || 5.774*change/step.seconds**2>b.acceleration)throw Error(name+': sequence exceeds preview angle/rate limits.');
     }
