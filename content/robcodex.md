@@ -16,12 +16,13 @@ Keep several Codex conversations open in one horizontal session bar instead of s
 
 - **Work natively on the Mac.** ROBCodex Bridge now includes a terminal-style session workspace with searchable history, live command output, approvals, prompts, and per-session controls.
 - **Continue from iPhone or iPad.** Open the same saved sessions, read their history, send or steer prompts, and stop an individual turn from a paired device. New sessions appear automatically while connected—no Refresh button required.
-- **Expand the activity behind each answer.** Processing groups are open by default and show commentary, thinking summaries, plans, tool inputs and results, progress messages, and command output. Collapse or reopen activity while keeping the final response visible. Existing conversations load the detailed history available from Codex.
+- **Expand the activity behind each answer.** Processing groups are open by default and show commentary, thinking summaries, plans, tool inputs and results, progress messages, and command output. Collapse or reopen activity while keeping the final response visible. Existing conversations load the detailed history available from Codex. When a step has no readable thinking summary, its card explains that no summary text is available.
 - **Follow work as it happens.** Live updates remain visible during a turn. Expand long output while it streams, scroll back through earlier activity, and return with Follow live.
 - **Open history without the long wait.** Recent messages and full tool results load in small pages, including within a long turn. Earlier messages stay available on demand, and stalled requests offer a retry.
 - **Make landscape count.** On iPhone, the session takes the full landscape width with a compact translucent title bar and composer, leaving more room for output without hiding the conversation title.
 - **Choose current and future models.** A labeled menu loads the signed-in Mac account's live Codex catalog, including GPT-6 Astra when available, so new models do not require a ROBCodex update.
 - **Control thinking depth.** A neighboring menu exposes every level the selected model supports—including Max or Ultra when available—for both new and existing sessions on Mac, iPhone, and iPad.
+- **Read session settings clearly.** The Mac settings sheet keeps Model and Effort labels fully visible, with wrapped descriptions and grouped controls.
 - **Recover cleanly.** Open tabs and their selected session survive relaunches, while bridge readiness and turn events keep every connected screen in sync.
 - **Keep Codex local.** Your Codex login stays on the Mac; the bridge exposes only a small allowlist over an encrypted, paired local connection.
 - **Allow Full Access.** ROBCodex sessions run without approval pauses so they remain usable remotely. Pair only devices you trust: a paired device can direct Codex to run commands and change files with your Mac user account's access.
@@ -50,9 +51,9 @@ Keep several Codex conversations open in one horizontal session bar instead of s
 
 The download is a universal application for Apple silicon and Intel Macs running macOS 14 or later. It is signed with the Orbitus Robotics Developer ID, uses Apple's hardened runtime, and is notarized by Apple.
 
-- Version: `0.1.0` (build 1013)
-- Size: 4,599,837 bytes
-- SHA-256: `4cd3ba16eee6098e92949092a49e220f1ba138b9aacacc1352a2ab528c548100`
+- Version: `0.1.0` (build 1014)
+- Size: 4,602,106 bytes
+- SHA-256: `5870a5d85372ac8b3894ab6d47c77c75561213f502e3c483435b3f5922080806`
 
 ## Connect your devices
 
