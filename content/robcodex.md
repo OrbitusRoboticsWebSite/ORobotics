@@ -18,6 +18,7 @@ Keep several Codex conversations open in one horizontal session bar instead of s
 - **Continue from iPhone or iPad.** Open the same saved sessions, read their history, send or steer prompts, and stop an individual turn from a paired device. New sessions appear automatically while connected—no Refresh button required.
 - **Expand the activity behind each answer.** Processing groups are open by default and show commentary, thinking summaries, plans, tool inputs and results, progress messages, and command output. Collapse or reopen activity while keeping the final response visible. Existing conversations load the detailed history available from Codex.
 - **Follow work as it happens.** Live updates remain visible during a turn. Expand long output while it streams, scroll back through earlier activity, and return with Follow live.
+- **Open history without the long wait.** Recent messages and full tool results load in small pages, including within a long turn. Earlier messages stay available on demand, and stalled requests offer a retry.
 - **Make landscape count.** On iPhone, the session takes the full landscape width with a compact translucent title bar and composer, leaving more room for output without hiding the conversation title.
 - **Choose current and future models.** A labeled menu loads the signed-in Mac account's live Codex catalog, including GPT-6 Astra when available, so new models do not require a ROBCodex update.
 - **Control thinking depth.** A neighboring menu exposes every level the selected model supports—including Max or Ultra when available—for both new and existing sessions on Mac, iPhone, and iPad.
@@ -49,9 +50,9 @@ Keep several Codex conversations open in one horizontal session bar instead of s
 
 The download is a universal application for Apple silicon and Intel Macs running macOS 14 or later. It is signed with the Orbitus Robotics Developer ID, uses Apple's hardened runtime, and is notarized by Apple.
 
-- Version: `0.1.0` (build 1012)
-- Size: 4,585,003 bytes
-- SHA-256: `84e31275ba1a7e5b16368d828a50e43f086a160b83fe7af44debc89dd7faa96c`
+- Version: `0.1.0` (build 1013)
+- Size: 4,599,837 bytes
+- SHA-256: `4cd3ba16eee6098e92949092a49e220f1ba138b9aacacc1352a2ab528c548100`
 
 ## Connect your devices
 
