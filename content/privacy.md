@@ -1,6 +1,6 @@
 ---
 title: "Privacy"
-description: "Privacy practices for Orbitus Robotics apps, including Musimotion Pro, CodeAtlas, ROBCodex, LingonXRob Plist Editor, ROB Training, and ROB Training Vision."
+description: "Privacy practices for Orbitus Robotics apps, including Musimotion Pro, CodeAtlas, ROB Code, LingonXRob Plist Editor, ROB Training, and ROB Training Vision."
 layout: "single"
 url: "/privacy/"
 ---
@@ -47,11 +47,11 @@ When you invoke the CodeAtlas Xcode Source Editor command, the extension reads t
 
 You can remove locally stored preferences and shared extension data by deleting the app and its local containers.
 
-## ROBCodex
+## ROB Code
 
-ROBCodex does not collect, track, sell, or share personal data. Live session content moves directly between the paired iPhone or iPad and Mac over an encrypted local-network connection; Orbitus Robotics does not receive or store it. Codex credentials remain on the Mac.
+ROB Code does not collect, track, sell, or share personal data. Live session content moves directly between the paired iPhone or iPad and Mac over an encrypted local-network connection; Orbitus Robotics does not receive or store it. Codex credentials remain on the Mac.
 
-[Read the complete ROBCodex privacy policy](/privacy/robcodex/), including local-network, Keychain, retention, and deletion details.
+[Read the complete ROB Code privacy policy](/privacy/robcodex/), including local-network, Keychain, retention, and deletion details.
 
 ## LingonXRob Plist Editor
 
