@@ -231,7 +231,7 @@ if (root) {
     }).catch(() => {});
     const r = visual.root, torso = visual.torso;
     const dark = mat(0x111820), steel = visual.materials.aluminum, cyan = mat(0x38dfff, 0x087995), green = mat(0x4cff76, 0x168c32);
-    Object.assign(robotRig, { driveBase: visual.driveBase, baseFlipper: visual.baseFlipper, torso,
+    Object.assign(robotRig, { driveBase: visual.driveBase, baseFlipper: visual.baseFlipper, torso, arms: visual.arms,
       treadWheels: visual.treadWheels, speakerCones: visual.speakerCones });
     robotRig.finishMaterials.push(visual.materials.body); robotRig.faceMaterials.push(visual.materials.face);
     robotRig.baseFlipper.rotation.x = BASE_FLIPPER_REAR_ANGLE;
