@@ -6,7 +6,7 @@ url: "/privacy/robcodex/"
 draft: false
 ---
 
-Last updated: September 21, 2026
+Last updated: October 24, 2026
 
 ROBCodeAgent does not collect, track, sell, or share personal data. It contains no advertising, third-party analytics, crash-reporting, or telemetry SDKs, and the iPhone and iPad app does not require an Orbitus Robotics account.
 
@@ -25,6 +25,12 @@ ROBCodeAgent creates a device identity for secure pairing. Device identities and
 ## Codex services
 
 The Codex installation on your Mac may communicate with OpenAI according to your Codex account, configuration, and OpenAI's policies. That communication is performed by Codex and is separate from ROBCodeAgent's local bridge. ROBCodeAgent does not add an Orbitus Robotics server between Codex and your devices.
+
+## Optional voice and goals
+
+Voice starts only after you tap Start Voice and grant microphone permission. Live microphone audio travels through your encrypted local connection to the Mac, then to OpenAI using the Mac's existing Codex authentication. AI-generated spoken replies and transcript text return to the device that started voice. Orbitus Robotics does not receive or retain this audio, and the apps do not save audio recordings. Codex/OpenAI handles audio and conversation data according to the signed-in account's policies.
+
+Mute stops sending microphone samples. End Voice, closing the voice screen, backgrounding the app, or disconnecting stops capture and playback. Ending voice does not cancel coding work already running. Goals are stored with the Mac's Codex threads and can continue work across turns until paused, cleared, completed, or limited by Codex usage or an optional token budget.
 
 ## Offline demo and data deletion
 

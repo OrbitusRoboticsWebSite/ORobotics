@@ -16,6 +16,9 @@ The app and Mac companion now use the ROBCodeAgent name. Existing sessions and p
 
 Keep several Codex conversations open in one horizontal session bar instead of spreading work across separate Terminal windows. Each tab has its own saved conversation, prompt draft, live stream, paging state, model, thinking effort, and Stop control, so sessions can work simultaneously without blocking or overwriting one another.
 
+- **Give each session a goal.** Set a verifiable outcome with an optional token budget. Inspect Codex's reported token/time usage, then pause, resume, edit, or clear the goal as work continues across turns.
+- **Talk through the work.** Start Voice beside the composer to send microphone audio through your paired Mac and hear AI-generated spoken replies. Mute or End Voice with a tap. Closing voice, leaving the app, or disconnecting stops capture. Current Codex realtime voice requires microphone permission, API-key authentication on the Mac, and realtime access; ChatGPT sign-in alone is not supported for voice. The offline demo uses sample text without opening a microphone.
+
 - **Work natively on the Mac.** ROBCodeAgent Bridge now includes a terminal-style session workspace with searchable history, live command output, approvals, prompts, and per-session controls.
 - **Continue from iPhone or iPad.** Open the same saved sessions, read their history, send or steer prompts, and stop an individual turn from a paired device. New sessions appear automatically while connected—no Refresh button required.
 - **Know how much is left.** Open **Usage & Limits** for remaining percentages, reset countdowns and dates, account allowances, and credit balances when Codex reports them. Readings refresh automatically and on demand. Session token totals and estimated context headroom have their own section; missing or outdated readings are labeled clearly. Both apps need version 0.1.1 and live allowance data requires a supported Codex sign-in.
@@ -59,6 +62,17 @@ Keep several Codex conversations open in one horizontal session bar instead of s
 
 ## See the multi-session workspace
 
+<div class="not-prose my-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+  <figure class="overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 p-3 shadow-2xl">
+    <img src="/images/robcodex/robcodex-iphone-goals.webp" width="660" height="1434" loading="lazy" alt="ROBCodeAgent session goal with an objective, active status, token budget, reported usage, and separate Pause and Clear controls" class="mx-auto h-auto w-full rounded-xl">
+    <figcaption class="px-2 pb-1 pt-3 text-sm text-slate-300">Keep a verifiable outcome visible across turns, with optional token budgets and explicit goal controls.</figcaption>
+  </figure>
+  <figure class="overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 p-3 shadow-2xl">
+    <img src="/images/robcodex/robcodex-iphone-voice.webp" width="660" height="1434" loading="lazy" alt="ROBCodeAgent's clearly labeled offline voice demo showing sample transcript text, Mute, End Voice, and the API-key authentication requirement for live voice" class="mx-auto h-auto w-full rounded-xl">
+    <figcaption class="px-2 pb-1 pt-3 text-sm text-slate-300">Voice stays under your control. Live audio requires Codex API-key authentication on the Mac; this offline sample never opens a microphone.</figcaption>
+  </figure>
+</div>
+
 <figure class="not-prose my-8 overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 p-3 shadow-2xl">
   <img src="/images/robcodex/robcodex-iphone-landscape.webp" width="1434" height="660" loading="lazy" alt="ROBCodeAgent filling an iPhone landscape screen with GPT-6 Astra and thinking-depth menus, expanded Processing groups, live progress, and a compact translucent composer" class="mx-auto h-auto w-full rounded-xl">
   <figcaption class="px-2 pb-1 pt-3 text-sm text-slate-300">The full-width iPhone landscape workspace keeps the GPT-6 Astra and thinking-depth choices beside the title while leaving more room for live output.</figcaption>
@@ -77,13 +91,13 @@ Keep several Codex conversations open in one horizontal session bar instead of s
 
 ## Download ROBCodeAgent Bridge for Mac
 
-<p><a href="/downloads/robcodex/ROBCodeAgentBridge-macOS-universal-0.1.1.zip" download class="inline-block px-5 py-3 font-bold text-white no-underline bg-indigo-600 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300">Download ROBCodeAgent Bridge 0.1.1</a></p>
+<p><a href="/downloads/robcodex/ROBCodeAgentBridge-macOS-universal-0.1.2.zip" download class="inline-block px-5 py-3 font-bold text-white no-underline bg-indigo-600 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300">Download ROBCodeAgent Bridge 0.1.2</a></p>
 
 The download is a universal application for Apple silicon and Intel Macs running macOS 14 or later. It is signed with the Orbitus Robotics Developer ID, uses Apple's hardened runtime, and is notarized by Apple.
 
-- Version: `0.1.1` (build 1019)
-- Size: 4,836,409 bytes
-- SHA-256: `42bc4f6cd7888f366c9d8bc05c26b29abb4e9607b1b73c7a3028408f1b78670f`
+- Version: `0.1.2` (build 1020)
+- Size: 4,966,992 bytes
+- SHA-256: `dc896095dc00ca49f41ed80fbbe2edeb7d0d0731cd781f3413e691980b08934d`
 
 ## Connect your devices
 
