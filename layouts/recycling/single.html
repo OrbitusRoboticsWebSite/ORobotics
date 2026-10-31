@@ -1,0 +1,44 @@
+{{ define "main" }}
+{{ partial "recycling-styles.html" . }}
+<main id="main" class="recycling-page">
+  <header class="recycling-header">
+    <div class="recycling-wrap">
+      <a class="recycling-back" href="{{ "/" | relURL }}">← Orbitus Robotics</a>
+      <p class="recycling-kicker"><span aria-hidden="true"></span>In the workshop / October 2026</p>
+      <h1>ROB takes on<br /><em>the recycling pile.</em></h1>
+      <p class="recycling-intro">Reaches, grips, releases, and a little robot personality.<br />The action from our recent can-handling sessions, cut into a quick demo.</p>
+      <div class="recycling-tags" aria-label="About this demo"><span>Real workshop footage</span><span>Original sound</span><span>Supervised prototype tests</span></div>
+    </div>
+  </header>
+
+  <div class="recycling-wrap recycling-body">
+    <section aria-labelledby="recycling-video-title">
+      <div class="recycling-section-heading"><h2 id="recycling-video-title">The session highlights</h2><span>{{ site.Data.recycling.duration }}</span></div>
+      <figure class="recycling-film">
+        <video controls playsinline preload="none" poster="{{ "images/recycling/demo-poster.webp" | relURL }}" width="1920" height="1080" aria-label="ROB recycling session highlight video" aria-describedby="recycling-film-description">
+          <source src="{{ "videos/recycling/rob-recycling-demo.mp4" | relURL }}" type="video/mp4" />
+          <track kind="captions" src="{{ "captions/recycling/rob-recycling-demo.vtt" | relURL }}" srclang="en" label="English" default />
+          <p><a href="{{ "videos/recycling/rob-recycling-demo.mp4" | relURL }}">Download the recycling demo.</a></p>
+        </video>
+        <figcaption id="recycling-film-description">An edited montage from separate workshop tests, shown at normal speed. Long pauses and setup time are removed.</figcaption>
+      </figure>
+      <details class="recycling-transcript"><summary>Read the video transcript and visual description</summary><p>{{ site.Data.recycling.transcript }}</p></details>
+    </section>
+
+    <section class="recycling-story" aria-labelledby="recycling-story-title">
+      <div><p class="recycling-kicker">Small task. Plenty to learn.</p><h2 id="recycling-story-title">Practice you<br />can see.</h2></div>
+      <div class="recycling-prose">{{ .Content }}</div>
+    </section>
+
+    <section class="recycling-downloads" aria-labelledby="recycling-downloads-title">
+      <div class="recycling-section-heading"><h2 id="recycling-downloads-title">Take the short version</h2><span>MP4 / H.264</span></div>
+      <div class="recycling-download-grid">
+        <article class="recycling-download-card"><p class="recycling-kicker">For the big picture</p><h3>Landscape demo</h3><p>The full highlight edit, ready for a website or a larger screen.</p><a href="{{ "videos/recycling/rob-recycling-demo.mp4" | relURL }}" download>Download the demo <span aria-hidden="true">↓</span></a></article>
+        <article class="recycling-download-card"><p class="recycling-kicker">Made for your feed</p><h3>Vertical reel</h3><p>A shorter 9:16 cut for mobile viewing. {{ site.Data.recycling.reelDuration }}</p><a href="{{ "videos/recycling/rob-recycling-reel.mp4" | relURL }}" download>Download the reel <span aria-hidden="true">↓</span></a></article>
+      </div>
+      <details class="recycling-transcript"><summary>Preview the vertical reel and read its description</summary><video class="recycling-reel" controls playsinline preload="none" poster="{{ "images/recycling/reel-poster.webp" | relURL }}" width="1080" height="1920" aria-label="ROB recycling vertical reel"><source src="{{ "videos/recycling/rob-recycling-reel.mp4" | relURL }}" type="video/mp4" /><track kind="captions" src="{{ "captions/recycling/rob-recycling-reel.vtt" | relURL }}" srclang="en" label="English" default /></video><p>{{ site.Data.recycling.reelTranscript }}</p></details>
+      <p class="recycling-follow">More workshop updates on <a href="{{ site.Params.social_media.facebook.url }}" rel="noopener">Facebook</a>.</p>
+    </section>
+  </div>
+</main>
+{{ end }}

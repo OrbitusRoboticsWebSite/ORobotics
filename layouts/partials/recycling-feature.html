@@ -1,0 +1,17 @@
+{{ partial "recycling-styles.html" . }}
+<section class="section-shell" aria-labelledby="recycling-feature-title">
+  <div class="recycling-feature">
+    <div class="recycling-feature__copy">
+      <p class="recycling-kicker"><span aria-hidden="true"></span>Fresh from the workshop · October 2026</p>
+      <h2 id="recycling-feature-title">{{ site.Data.recycling.title }}</h2>
+      <p>{{ site.Data.recycling.summary }}</p>
+      <a class="button-primary" href="{{ "recycling/" | relURL }}">Watch the recycling demo <span aria-hidden="true">→</span></a>
+      <p class="recycling-small">Edited session highlights · Original robot sounds</p>
+    </div>
+    <a class="recycling-feature__media" href="{{ "recycling/" | relURL }}" aria-label="Watch ROB's recycling session highlights">
+      <img src="{{ "images/recycling/can-closeup.webp" | relURL }}" width="1440" height="1080" alt="ROB's articulated arm reaches across a table toward a red aluminum can." loading="lazy" decoding="async" />
+      <span class="recycling-play" aria-hidden="true">▶</span>
+      <span class="recycling-feature__label">ROB / Recycling sessions</span>
+    </a>
+  </div>
+</section>

@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "description": "Real-time excerpts from separate supervised workshop sessions. Long waits removed. Source filenames refer to private camera originals, which are not published.",
+  "shots": {
+    "can-lift": {"source": "IMG_9412.MOV", "start": 0, "duration": 2.2, "title": "Lift."},
+    "arm-turn": {"source": "IMG_9480.MOV", "start": 3.8, "duration": 5, "title": "In motion."},
+    "arm-carry": {"source": "IMG_9414.MOV", "start": 18.2, "duration": 4.6, "title": "Move."},
+    "wrist-turn": {"source": "IMG_9417.MOV", "start": 28.9, "duration": 4.2, "title": "Turn."},
+    "can-drop": {"source": "IMG_9419.MOV", "start": 43.5, "duration": 9, "title": "Let go."},
+    "drop-closeup": {"source": "IMG_9437.MOV", "start": 39.5, "duration": 5.8, "title": "One more."}
+  },
+  "formats": {
+    "demo": {"size": [1920, 1080], "shots": ["can-lift", "arm-turn", "arm-carry", "wrist-turn", "can-drop", "drop-closeup"], "outro": 2},
+    "reel": {"size": [1080, 1920], "shots": ["can-lift", "arm-carry", "wrist-turn", "can-drop"], "outro": 2}
+  }
+}

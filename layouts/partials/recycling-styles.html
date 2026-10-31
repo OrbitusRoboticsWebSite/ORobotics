@@ -1,0 +1,2 @@
+{{ $recyclingStyles := resources.Get "css/recycling.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $recyclingStyles.RelPermalink }}" integrity="{{ $recyclingStyles.Data.Integrity }}" />

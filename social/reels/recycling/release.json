@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-31",
+  "page": "https://www.orbitusrobotics.com/recycling/",
+  "editing": "Separate supervised tests; waits removed; all motion at normal speed.",
+  "media": [
+    {
+      "path": "static/videos/recycling/rob-recycling-demo.mp4",
+      "sha256": "d448e2c2f91fe4c8a474f2350d059b4e653cc764aa9b5eea9ed90b4b90e26952",
+      "bytes": 9643465,
+      "durationSeconds": 32.821354,
+      "width": 1920,
+      "height": 1080,
+      "video": "H.264, 30 fps, SDR BT.709",
+      "audio": "AAC stereo, original workshop audio",
+      "captions": "static/captions/recycling/rob-recycling-demo.vtt",
+      "captionsSha256": "59174aa08550fb4fe94087dc9b0cccb6d3c335ed28cedc6d6a1ac1b760468548"
+    },
+    {
+      "path": "static/videos/recycling/rob-recycling-reel.mp4",
+      "sha256": "9644dbe4782c2a82969e0ecc8b31254ae858745e36dd83a4e27fef937bc68598",
+      "bytes": 8258980,
+      "durationSeconds": 22.021354,
+      "width": 1080,
+      "height": 1920,
+      "video": "H.264, 30 fps, SDR BT.709",
+      "audio": "AAC stereo, original workshop audio",
+      "captions": "static/captions/recycling/rob-recycling-reel.vtt",
+      "captionsSha256": "9a522c60bdd24f0fbfe63999f7596f6aff397cdddcbf85751180ca814b60c3a9"
+    }
+  ]
+}
