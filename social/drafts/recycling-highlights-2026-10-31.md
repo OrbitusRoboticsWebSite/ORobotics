@@ -1,10 +1,16 @@
 # ROB recycling-session reel
 
-Status: Ready for exact copy and media review. Not posted to Facebook.
+Status: Published publicly on 2026-10-31 after exact copy and media approval.
 Destination: the existing Rob the Robot Facebook Page linked from the website,
 managed by the saved Orbitus Robotica account.
 Media: `static/videos/recycling/rob-recycling-reel.mp4` (vertical, about 22 seconds).
 Review page: <https://www.orbitusrobotics.com/recycling/>
+Published reel: <https://www.facebook.com/reel/982543597661802/>
+
+Facebook confirmed "Your reel is published." The live reel was opened and
+verified under Rob the Robot with a Public audience, 0:22 playback, original
+audio, and the exact approved caption below. The uploaded English captions
+were verified in the published player. No paid boost was enabled.
 
 ## Exact post copy
 

@@ -2,6 +2,22 @@
   "date": "2026-10-31",
   "page": "https://www.orbitusrobotics.com/recycling/",
   "editing": "Separate supervised tests; waits removed; all motion at normal speed.",
+  "facebook": {
+    "status": "published",
+    "date": "2026-10-31",
+    "pageName": "Rob the Robot",
+    "pageProfileId": "100083014278564",
+    "reelUrl": "https://www.facebook.com/reel/982543597661802/",
+    "reelId": "982543597661802",
+    "contentId": "1141705568606575",
+    "audience": "Public",
+    "approval": "User approved this exact reel and caption before publication.",
+    "response": "Your reel is published.",
+    "verification": "Opened published reel; verified Page identity, public audience, 0:22 playback, original audio, approved caption and uploaded English captions.",
+    "captionFile": "social/reels/recycling/rob-recycling-reel.en_US.srt",
+    "captionSha256": "de53d0660cf6b853cb46ed210c86d21aa44343609182da39eb496bba7879333b",
+    "paidBoost": false
+  },
   "media": [
     {
       "path": "static/videos/recycling/rob-recycling-demo.mp4",

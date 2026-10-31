@@ -1,6 +1,7 @@
 # ROB can-handling highlights
 
 Published page: <https://www.orbitusrobotics.com/recycling/>
+Published Facebook reel: <https://www.facebook.com/reel/982543597661802/>
 
 The landscape demo is about 33 seconds (1920×1080); the vertical reel is about
 22 seconds (1080×1920). Both contain real camera footage and its original audio.
