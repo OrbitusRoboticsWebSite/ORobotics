@@ -43,7 +43,9 @@ def normalize_audio(source, output, target_lufs, report):
          '-map_metadata', '-1', '-map_chapters', '-1', '-movflags', '+faststart', output])
 
 
-def overlay(path, shape, title, number, outro=False, wide=False, layout=None, episode=None):
+def overlay(path, shape, title, number, outro=False, wide=False, layout=None, episode=None,
+            footer='Edited workshop tests · Normal speed',
+            outro_title='More ROB. Less waiting.', outro_url='orbitusrobotics.com/recycling'):
     w, h = shape
     im = Image.new('RGBA', shape)
     d = ImageDraw.Draw(im)
@@ -51,16 +53,19 @@ def overlay(path, shape, title, number, outro=False, wide=False, layout=None, ep
         d.rectangle((0, 0, w, h), fill=(9, 16, 29, 242))
         y = h * .36
         for text, size, color in [('ORBITUS ROBOTICS', 32, '#c5b5fd'),
-                                   ('More ROB. Less waiting.', 66 if w > h else 58, 'white'),
-                                   ('orbitusrobotics.com/recycling', 31, '#cbd5e1')]:
+                                   (outro_title, 66 if w > h else 58, 'white'),
+                                   (outro_url, 31, '#cbd5e1')]:
             d.text((w/2, y), text, font=font(size, True), fill=color, anchor='mt')
             y += 100
     elif layout == 'process':
         # Dedicated title/footer space keeps the gripper and torso unobscured.
+        if wide:
+            d.rectangle((0, 0, w, 180), fill='#0b111c')
+            d.rectangle((0, 1780, w, h), fill='#0b111c')
         d.text((90, 33), episode, font=font(27, True), fill='#c5b5fd')
         d.text((90, 88), title, font=font(54, True), fill='white')
         d.line((90, 163, w-90, 163), fill='#334155', width=2)
-        d.text((w/2, 1810), 'Edited workshop tests · Normal speed', font=font(26), fill='#cbd5e1', anchor='mt')
+        d.text((w/2, 1810), footer, font=font(26), fill='#cbd5e1', anchor='mt')
         d.text((w/2, 1860), 'ORBITUS ROBOTICS', font=font(26, True), fill='#c5b5fd', anchor='mt')
     elif w > h:
         d.rounded_rectangle((36, 34, 485, 118), 15, fill=(9, 16, 29, 205))
@@ -109,8 +114,15 @@ def main():
                            '-show_entries', 'stream=width,height', '-of', 'json', str(source)]))['streams'][0]
         wide = info['width'] > info['height']
         overlay(png, (width, height), shot['title'], f'{index+1:02d}', wide=wide,
-                layout=edit.get('layout'), episode=edit.get('episode'))
-        if edit.get('layout') == 'process':
+                layout=edit.get('layout'), episode=edit.get('episode'),
+                footer=edit.get('footer', 'Edited workshop tests · Normal speed'))
+        if edit.get('layout') == 'process' and wide:
+            # Preserve the can, glass and both arms in landscape source shots.
+            video = ('[0:v:0]split[bg][fg];[bg]scale=270:480:force_original_aspect_ratio=increase,'
+                     'crop=270:480,boxblur=12:1,eq=brightness=-0.35:saturation=0.5,'
+                     'scale=1080:1920[back];[fg]scale=1080:-2[front];'
+                     '[back][front]overlay=(W-w)/2:(H-h)/2[framed];')
+        elif edit.get('layout') == 'process':
             video = ('[0:v:0]scale=900:1600:force_original_aspect_ratio=decrease,'
                      'pad=1080:1920:(ow-iw)/2:180:color=0x0b111c[framed];')
         elif width > height and not wide:
@@ -133,7 +145,9 @@ def main():
         parts.append(target)
     png = a.work / f'{a.format}-outro.png'
     outro = a.work / f'{a.format}-outro.mp4'
-    overlay(png, (width, height), '', '', outro=True)
+    overlay(png, (width, height), '', '', outro=True,
+            outro_title=edit.get('outroTitle', 'More ROB. Less waiting.'),
+            outro_url=edit.get('outroUrl', 'orbitusrobotics.com/recycling'))
     run(['ffmpeg', '-v', 'error', '-y', '-loop', '1', '-framerate', '30', '-i', png,
          '-f', 'lavfi', '-i', 'anullsrc=r=48000:cl=stereo', '-t', edit['outro'],
          '-c:v', 'libx264', '-preset', 'fast', '-crf', '24', '-threads', '2',

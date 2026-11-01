@@ -1,0 +1,44 @@
+{
+  "date": "2026-11-01",
+  "status": "prepared",
+  "scope": "Pouring-practice setup teaser. No completed pour is shown in the currently synced source footage.",
+  "media": {
+    "path": "static/videos/workshop/rob-pouring-practice-reel.mp4",
+    "url": "https://www.orbitusrobotics.com/videos/workshop/rob-pouring-practice-reel.mp4",
+    "sha256": "f018fa6bf53fc50b0bf626a1e82722a57281ce897876f9838a8d913dfaf6f713",
+    "bytes": 5838039,
+    "durationSeconds": 17.013333,
+    "width": 1080,
+    "height": 1920,
+    "video": "H.264, 30 fps, SDR BT.709",
+    "audio": "AAC stereo; selected original audio; no added music or pouring effects",
+    "integratedLufs": -17.97,
+    "truePeakDbtp": -1.44,
+    "captions": {
+      "path": "static/captions/workshop/rob-pouring-practice.vtt",
+      "sha256": "4f2abb97d21b4920badf0f38738ab466772f091cac73e5d8e2030efeedb6982a"
+    },
+    "socialCaptions": {
+      "path": "social/reels/pouring-practice/rob-pouring-practice.en_US.srt",
+      "sha256": "b6fdbb924359c374c8ec9817d01f6f1f793fdddb65337c6e0046e12eee8019b6"
+    },
+    "poster": {
+      "path": "static/images/workshop/pouring-practice-poster.webp",
+      "sha256": "bc19754ba70825a859a771e01c4a4e6dcd93ed1d9dbc43bee52ace452ea0a14a"
+    }
+  },
+  "verification": {
+    "fullDecode": "passed",
+    "cameraMetadataRemoved": true,
+    "fastStart": true,
+    "shotAndCutContactSheets": "reviewed",
+    "titleBounds": "passed",
+    "localSpeechReview": "Local transcription found no dialogue in the final edit; selected source dialogue was excluded.",
+    "websiteBuild": "passed",
+    "staticSiteValidation": "passed; 368.0 MiB"
+  },
+  "facebook": {
+    "status": "draft_only",
+    "exactCopyAndMediaReview": "pending"
+  }
+}

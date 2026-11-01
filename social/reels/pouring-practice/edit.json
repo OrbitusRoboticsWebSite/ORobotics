@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "description": "A teaser from the new Coke-can pouring-practice session. The available clips show setup and arm positioning, not a completed pour. Separate excerpts at normal speed; no simulated action or liquid.",
+  "shots": {
+    "pour-intro": {"source": "IMG_9494.MOV", "start": 5.2, "duration": 4.5, "title": "A can. A glass. A challenge."},
+    "pour-adjust": {"source": "IMG_9495.MOV", "start": 3.2, "duration": 3.5, "title": "Small moves first."},
+    "pour-position": {"source": "IMG_9499.MOV", "start": 4.6, "duration": 4.5, "title": "Fine-tuning the setup."},
+    "pour-detail": {"source": "IMG_9497.MOV", "start": 6.2, "duration": 2.4, "title": "Working toward the pour."}
+  },
+  "formats": {
+    "reel": {
+      "size": [1080, 1920],
+      "layout": "process",
+      "episode": "WORKSHOP NOTES / 03 · POURING PRACTICE",
+      "footer": "Setup & positioning · Normal speed",
+      "shots": ["pour-intro", "pour-adjust", "pour-position", "pour-detail"],
+      "outro": 2,
+      "outroTitle": "One step at a time.",
+      "outroUrl": "orbitusrobotics.com",
+      "audioLufs": -18,
+      "filename": "rob-pouring-practice-reel.mp4"
+    }
+  }
+}
