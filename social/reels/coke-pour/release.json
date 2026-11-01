@@ -1,7 +1,7 @@
 {
   "date": "2026-11-01",
-  "status": "prepared",
-  "scope": "Actual Coke pour and return upright; human assistance and spill retained. Website release prepared; Facebook exact review pending.",
+  "status": "website_published_facebook_review_pending",
+  "scope": "Actual Coke pour and return upright; human assistance and spill retained. Website publication verified; Facebook exact review pending.",
   "media": {
     "path": "static/videos/workshop/rob-coke-pour-reel.mp4",
     "sha256": "f72e3a66f12126d0b167c6ee0455be7709981505812f964d220ac79323694765",
@@ -47,11 +47,21 @@
     "websiteBuild": "passed",
     "staticSiteValidation": "passed; 374.2 MiB",
     "projectSubpathValidation": "passed; 63 HTML files",
-    "desktopPreview": "reviewed"
+    "desktopPreview": "reviewed",
+    "hostedBuildAndDeployment": "passed",
+    "codeQL": "passed"
   },
   "website": {
     "url": "https://www.orbitusrobotics.com/coke-pour/",
-    "status": "awaiting_deployment"
+    "status": "published_verified",
+    "deploymentCommit": "ae182ac2b140c4c4bd75a12ebe2453fcde99fcf5",
+    "workflow": "https://github.com/OrbitusRoboticsWebSite/ORobotics/actions/runs/41362034605",
+    "verifiedAt": "2026-11-01T23:29:07.077625+00:00",
+    "pageStatus": 200,
+    "publicMediaHashMatches": true,
+    "publicPosterHashMatches": true,
+    "publicCaptionsHashMatches": true,
+    "homepageLinkVerified": true
   },
   "facebook": {
     "status": "draft_only",
