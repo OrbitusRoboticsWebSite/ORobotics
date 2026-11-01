@@ -7,6 +7,7 @@ All subprocess arguments are passed directly; no shell interpolation is used.
 import argparse
 import json
 from pathlib import Path
+import re
 import subprocess
 
 from PIL import Image, ImageDraw, ImageFont
@@ -23,7 +24,26 @@ def font(size, bold=False):
     return ImageFont.truetype(str(FONT_DIR / ('Arial Bold.ttf' if bold else 'Arial.ttf')), size)
 
 
-def overlay(path, shape, title, number, outro=False, wide=False):
+def normalize_audio(source, output, target_lufs, report):
+    """Balance quiet workshop sounds and the can impact without altering video."""
+    base = f'loudnorm=I={target_lufs}:TP=-1.5:LRA=11'
+    measured = subprocess.run(['ffmpeg', '-hide_banner', '-nostats', '-i', str(source),
+                               '-af', base+':print_format=json', '-vn', '-f', 'null', '-'],
+                              check=True, capture_output=True, text=True)
+    match = re.search(r'\{\s*"input_i"[\s\S]*?\}', measured.stderr)
+    if match is None:
+        raise RuntimeError('FFmpeg did not return a loudness measurement')
+    levels = json.loads(match.group())
+    report.write_text(json.dumps(levels, indent=2)+'\n')
+    audio = (base+f':measured_I={levels["input_i"]}:measured_TP={levels["input_tp"]}'
+             f':measured_LRA={levels["input_lra"]}:measured_thresh={levels["input_thresh"]}'
+             f':offset={levels["target_offset"]}:linear=false')
+    run(['ffmpeg', '-v', 'error', '-y', '-i', source, '-map', '0:v:0', '-map', '0:a:0',
+         '-c:v', 'copy', '-af', audio, '-c:a', 'aac', '-b:a', '160k', '-ar', '48000', '-ac', '2',
+         '-map_metadata', '-1', '-map_chapters', '-1', '-movflags', '+faststart', output])
+
+
+def overlay(path, shape, title, number, outro=False, wide=False, layout=None, episode=None):
     w, h = shape
     im = Image.new('RGBA', shape)
     d = ImageDraw.Draw(im)
@@ -35,6 +55,13 @@ def overlay(path, shape, title, number, outro=False, wide=False):
                                    ('orbitusrobotics.com/recycling', 31, '#cbd5e1')]:
             d.text((w/2, y), text, font=font(size, True), fill=color, anchor='mt')
             y += 100
+    elif layout == 'process':
+        # Dedicated title/footer space keeps the gripper and torso unobscured.
+        d.text((90, 33), episode, font=font(27, True), fill='#c5b5fd')
+        d.text((90, 88), title, font=font(54, True), fill='white')
+        d.line((90, 163, w-90, 163), fill='#334155', width=2)
+        d.text((w/2, 1810), 'Edited workshop tests · Normal speed', font=font(26), fill='#cbd5e1', anchor='mt')
+        d.text((w/2, 1860), 'ORBITUS ROBOTICS', font=font(26, True), fill='#c5b5fd', anchor='mt')
     elif w > h:
         d.rounded_rectangle((36, 34, 485, 118), 15, fill=(9, 16, 29, 205))
         d.text((58, 58), 'ORBITUS ROBOTICS', font=font(32, True), fill='white')
@@ -59,11 +86,15 @@ def main():
     p.add_argument('--shots', type=Path, required=True)
     p.add_argument('--work', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
-    p.add_argument('--format', choices=['demo', 'reel'], required=True)
+    p.add_argument('--format', required=True)
+    p.add_argument('--edit', type=Path, default=ROOT/'social/reels/recycling/edit.json',
+                   help='Edit manifest; defaults to the original recycling highlights.')
     a = p.parse_args()
     a.work.mkdir(parents=True, exist_ok=True)
     a.output.mkdir(parents=True, exist_ok=True)
-    manifest = json.loads((ROOT/'social/reels/recycling/edit.json').read_text())
+    manifest = json.loads(a.edit.read_text())
+    if a.format not in manifest['formats']:
+        p.error(f'Unknown format {a.format!r}; choose from {", ".join(manifest["formats"])}')
     edit = manifest['formats'][a.format]
     width, height = edit['size']
     parts = []
@@ -77,8 +108,12 @@ def main():
         info = json.loads(subprocess.check_output(['ffprobe', '-v', 'error', '-select_streams', 'v:0',
                            '-show_entries', 'stream=width,height', '-of', 'json', str(source)]))['streams'][0]
         wide = info['width'] > info['height']
-        overlay(png, (width, height), shot['title'], f'{index+1:02d}', wide=wide)
-        if width > height and not wide:
+        overlay(png, (width, height), shot['title'], f'{index+1:02d}', wide=wide,
+                layout=edit.get('layout'), episode=edit.get('episode'))
+        if edit.get('layout') == 'process':
+            video = ('[0:v:0]scale=900:1600:force_original_aspect_ratio=decrease,'
+                     'pad=1080:1920:(ow-iw)/2:180:color=0x0b111c[framed];')
+        elif width > height and not wide:
             video = (f'[0:v:0]split[bg][fg];[bg]scale=480:270:force_original_aspect_ratio=increase,'
                      f'crop=480:270,boxblur=16:1,eq=brightness=-0.22:saturation=0.45,'
                      f'scale={width}:{height}[back];[fg]scale=-2:{height}[front];'
@@ -109,10 +144,13 @@ def main():
     listing = a.work / f'{a.format}-concat.txt'
     # FFmpeg concat-file quoting, including filenames containing apostrophes.
     listing.write_text(''.join("file '"+str(part.resolve()).replace("'", "'\\''")+"'\n" for part in parts))
-    output = a.output / f'rob-recycling-{a.format}.mp4'
+    output = a.output / edit.get('filename', f'rob-recycling-{a.format}.mp4')
+    joined = a.work / f'{a.format}-joined.mp4' if 'audioLufs' in edit else output
     run(['ffmpeg', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', listing,
          '-map', '0:v:0', '-map', '0:a:0', '-c', 'copy', '-map_metadata', '-1', '-map_chapters', '-1',
-         '-movflags', '+faststart', output])
+          '-movflags', '+faststart', joined])
+    if 'audioLufs' in edit:
+        normalize_audio(joined, output, edit['audioLufs'], a.work/f'{a.format}-loudness.json')
     print(output)
 
 

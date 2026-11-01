@@ -1,0 +1,18 @@
+1
+00:00:00,000 --> 00:00:11,620
+[Workshop sounds; motors and electronic tones]
+
+2
+00:00:11,620 --> 00:00:14,100
+Success! Look at that.
+Got it, babe.
+
+3
+00:00:14,200 --> 00:00:20,040
+[Robot describes lifting clear of the table,
+then retracting and turning toward the bucket]
+
+4
+00:00:20,040 --> 00:00:23,000
+[Robot mentions the corrected drop position
+as a starting estimate]

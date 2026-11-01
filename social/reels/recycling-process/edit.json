@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "description": "Process-focused excerpts from supervised workshop tests. Pauses and setup removed; all action remains at normal speed. Source filenames refer to private originals.",
+  "shots": {
+    "process-reach": {"source": "IMG_9438.MOV", "start": 30.0, "duration": 6.2, "title": "Reach toward the can."},
+    "process-grasp": {"source": "IMG_9433.MOV", "start": 38.3, "duration": 8.0, "title": "Close the gripper."},
+    "process-lift": {"source": "IMG_9433.MOV", "start": 84.0, "duration": 10.5, "title": "Lift clear of the table."},
+    "process-torso": {"source": "IMG_9433.MOV", "start": 110.0, "duration": 10.3, "title": "Watch the torso turn."},
+    "process-release": {"source": "IMG_9437.MOV", "start": 39.5, "duration": 5.8, "title": "Then the clatter."}
+  },
+  "formats": {
+    "pickup": {"size": [1080, 1920], "layout": "process", "episode": "WORKSHOP NOTES / 01 · GRIP + LIFT", "shots": ["process-reach", "process-grasp", "process-lift"], "outro": 2, "audioLufs": -18},
+    "torso": {"size": [1080, 1920], "layout": "process", "episode": "WORKSHOP NOTES / 02 · TURN + RELEASE", "shots": ["process-torso", "process-release"], "outro": 2, "audioLufs": -18}
+  }
+}

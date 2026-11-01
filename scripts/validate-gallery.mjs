@@ -934,8 +934,9 @@ async function main() {
     expect(extension !== ".mov", `Published MOV original: ${path.relative(publicRoot, publicFile)}`);
   }
   expect(
-    publicBytes <= 350 * 1024 * 1024,
-    `Published site exceeds 350 MiB: ${(publicBytes / 1024 / 1024).toFixed(1)} MiB`,
+    // Includes the gallery archive and four recycling videos, all loaded on demand.
+    publicBytes <= 375 * 1024 * 1024,
+    `Published site exceeds 375 MiB: ${(publicBytes / 1024 / 1024).toFixed(1)} MiB`,
   );
 
   const htmlFiles = publicFiles.filter((file) => path.extname(file).toLowerCase() === ".html");

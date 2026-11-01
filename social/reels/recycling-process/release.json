@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-31",
+  "page": "https://www.orbitusrobotics.com/recycling/#process",
+  "editing": "Supervised test excerpts; waits removed; all motion at normal speed; the torso turn is one unbroken excerpt.",
+  "media": [
+    {
+      "path": "static/videos/recycling/rob-recycling-pickup.mp4",
+      "sha256": "156968d729ef1186159eb4092f0b2331cf93a95d9bec49cf38fac3822d98d50f",
+      "bytes": 9639068,
+      "durationSeconds": 26.849333,
+      "width": 1080,
+      "height": 1920,
+      "video": "H.264, 30 fps, SDR BT.709",
+      "audio": "AAC stereo, original workshop audio, loudness balanced",
+      "captions": "static/captions/recycling/rob-recycling-pickup.vtt",
+      "captionsSha256": "997549a07302ed99aa4ffb3198ca8eafa04460ffc80153f49abf469d38737b8b",
+      "integratedLufs": -18.25,
+      "truePeakDbtp": -1.28,
+      "socialCaptions": "social/reels/recycling-process/rob-recycling-pickup.en_US.srt",
+      "socialCaptionsSha256": "05b9035cb5076232f5623192d0fca4b6419c16ee37d61b3155bacc9f7412d4fb"
+    },
+    {
+      "path": "static/videos/recycling/rob-recycling-torso.mp4",
+      "sha256": "c6841866e751f1a70ec34e973306664814ff656fce85f440f5238d678b93a40a",
+      "bytes": 6256292,
+      "durationSeconds": 18.174667,
+      "width": 1080,
+      "height": 1920,
+      "video": "H.264, 30 fps, SDR BT.709",
+      "audio": "AAC stereo, original workshop audio, loudness balanced",
+      "captions": "static/captions/recycling/rob-recycling-torso.vtt",
+      "captionsSha256": "bbc3e20eefe9f6c3a0b09b8400e7f87c94432725968d3aa9b377a0bcdb35076c",
+      "integratedLufs": -18.37,
+      "truePeakDbtp": -1.34,
+      "socialCaptions": "social/reels/recycling-process/rob-recycling-torso.en_US.srt",
+      "socialCaptionsSha256": "fecb1a72693e0932ece673c78eef048e358e0b946129ce5816606dae87cbb910"
+    }
+  ],
+  "facebook": {
+    "status": "awaiting_exact_review"
+  },
+  "verification": {
+    "fullMediaDecode": "passed",
+    "videoStreamUnchangedAfterAudioMastering": true,
+    "metadataAndFastStart": "passed",
+    "captionTiming": "passed",
+    "desktopAnd390pxMobile": "passed",
+    "unitTestsPassed": 127,
+    "subpathHtmlFilesPassed": 62
+  }
+}

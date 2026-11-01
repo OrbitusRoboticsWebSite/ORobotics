@@ -1,8 +1,32 @@
 {
   "title": "A can. Two arms. A lot of practice.",
-  "summary": "Come into the workshop for ROB's latest can-handling sessions. The short cuts keep the movement, the experiments, and the robot's personality.",
+  "summary": "Get closer to ROB's can-handling process: the gripper closes, the can lifts, and the torso turns. Two new workshop notes join the original highlight demo.",
   "duration": "33 seconds",
   "reelDuration": "22 seconds.",
   "transcript": "ROB lifts a red aluminum can from a table. A close-up shows the open gripper and wrist moving. From another angle, the arm repositions while holding a can, then the wrist turns. Workshop ambience and electronic sounds accompany the footage.\nThe gripper opens above an orange bucket, and the can falls inside with a clatter. Someone cheers: ‘Oh, oh, oh, oh! Success! He did it! He did not fail!’\nIn a separate close-up, another can drops into the bucket. A voice says, ‘Nice.’\nThe end card reads: ‘Orbitus Robotics. More ROB. Less waiting. orbitusrobotics.com/recycling.’ All motion is shown at normal speed; waits between actions have been removed.",
-  "reelTranscript": "ROB lifts a red aluminum can from a table, repositions the arm, and turns the wrist. Workshop ambience and electronic sounds accompany the footage. The gripper releases the can into an orange bucket with a clatter. Someone cheers: ‘Oh, oh, oh, oh! Success! He did it! He did not fail!’ The end card reads: ‘Orbitus Robotics. More ROB. Less waiting. orbitusrobotics.com/recycling.’ This is a montage of separate supervised tests at normal speed."
+  "reelTranscript": "ROB lifts a red aluminum can from a table, repositions the arm, and turns the wrist. Workshop ambience and electronic sounds accompany the footage. The gripper releases the can into an orange bucket with a clatter. Someone cheers: ‘Oh, oh, oh, oh! Success! He did it! He did not fail!’ The end card reads: ‘Orbitus Robotics. More ROB. Less waiting. orbitusrobotics.com/recycling.’ This is a montage of separate supervised tests at normal speed.",
+  "process": [
+    {
+      "id": "grip-and-lift",
+      "number": "01",
+      "title": "Grip + lift",
+      "duration": "27 seconds",
+      "description": "See the reach, watch the fingers close, and stay with the lift until the can clears the table.",
+      "video": "videos/recycling/rob-recycling-pickup.mp4",
+      "captions": "captions/recycling/rob-recycling-pickup.vtt",
+      "poster": "images/recycling/pickup-poster.webp",
+      "transcript": "An open gripper reaches toward a can. In a close-up from another test, the yellow finger pads close around an upright red aluminum can. A later excerpt shows the can lifting clear of the table while the camera pulls back to include ROB's torso. Titles read ‘Reach toward the can’, ‘Close the gripper’, and ‘Lift clear of the table’. A voice says, ‘Success! Look at that. Got it, babe.’ ROB's spoken movement plan mentions lifting clear of the table, retracting, turning toward the bucket, and using a corrected drop position as a starting estimate.\nThese are edited excerpts from supervised prototype tests. Pauses and setup are removed; every movement is shown at normal speed. The end card links to orbitusrobotics.com/recycling."
+    },
+    {
+      "id": "turn-and-release",
+      "number": "02",
+      "title": "Turn + release",
+      "duration": "18 seconds",
+      "description": "Follow the torso rotation with the tracked base still in view, then watch the can drop into the bucket.",
+      "video": "videos/recycling/rob-recycling-torso.mp4",
+      "captions": "captions/recycling/rob-recycling-torso.vtt",
+      "poster": "images/recycling/torso-poster.webp",
+      "transcript": "ROB holds a red aluminum can while the torso turns. The tracked base remains visible throughout the unbroken turn. The view changes from the front of the upper body to the rear. A cut to a close-up shows the gripper opening over an orange bucket and the can falling inside with a clatter. A voice says, ‘Nice.’ Titles read ‘Watch the torso turn’ and ‘Then the clatter’.\nThese are edited excerpts from supervised prototype tests, with original workshop audio. All motion is shown at normal speed. The end card links to orbitusrobotics.com/recycling."
+    }
+  ]
 }
