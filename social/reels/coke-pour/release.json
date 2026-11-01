@@ -1,0 +1,60 @@
+{
+  "date": "2026-11-01",
+  "status": "prepared",
+  "scope": "Actual Coke pour and return upright; human assistance and spill retained. Website release prepared; Facebook exact review pending.",
+  "media": {
+    "path": "static/videos/workshop/rob-coke-pour-reel.mp4",
+    "sha256": "f72e3a66f12126d0b167c6ee0455be7709981505812f964d220ac79323694765",
+    "bytes": 6442896,
+    "url": "https://www.orbitusrobotics.com/videos/workshop/rob-coke-pour-reel.mp4",
+    "durationSeconds": 30.564,
+    "width": 1080,
+    "height": 1920,
+    "video": "H.264, 30 fps, SDR BT.709",
+    "audio": "AAC stereo, selected original workshop recording; no added music or pouring effects",
+    "integratedLufs": -18.39,
+    "truePeakDbtp": -1.32,
+    "captions": {
+      "path": "static/captions/workshop/rob-coke-pour.vtt",
+      "sha256": "ac96c0e797eb1bbc8ad44f47578b33a31c8665a4cf7b8428fce68fc19f52bdd8",
+      "bytes": 237
+    },
+    "socialCaptions": {
+      "path": "social/reels/coke-pour/rob-coke-pour.en_US.srt",
+      "sha256": "c9b86d539df3177825416d017b2bef03eae21b277300f05315d31d8adf6c44df",
+      "bytes": 269
+    },
+    "poster": {
+      "path": "static/images/workshop/coke-pour-poster.webp",
+      "sha256": "a721e463a71cf29d394358ce461633b607ade82b0ba4b2116875fde07f64da6a",
+      "bytes": 55554
+    }
+  },
+  "source": {
+    "selectedFile": "IMG_9522.MOV",
+    "sha256": "262c322d6eb7b7177effd05cdf0e3c53fb31df9faaef6ed9b400a67dda707706",
+    "surveyedRobotVideos": 13,
+    "originals": "Private; excluded from repository"
+  },
+  "verification": {
+    "fullDecode": "passed",
+    "cameraMetadataRemoved": true,
+    "fastStart": true,
+    "shotAndCutContactSheets": "reviewed",
+    "titleBounds": "passed",
+    "localSpeechReview": "Final local transcription confirms the brief reaction; indistinct background voices are described without invented dialogue.",
+    "localPlayback": "Completed to end card in Chrome",
+    "websiteBuild": "passed",
+    "staticSiteValidation": "passed; 374.2 MiB",
+    "projectSubpathValidation": "passed; 63 HTML files",
+    "desktopPreview": "reviewed"
+  },
+  "website": {
+    "url": "https://www.orbitusrobotics.com/coke-pour/",
+    "status": "awaiting_deployment"
+  },
+  "facebook": {
+    "status": "draft_only",
+    "exactCopyAndMediaReview": "pending"
+  }
+}

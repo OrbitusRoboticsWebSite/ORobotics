@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "description": "Actual Coke pour, human assistance and return upright. Two excerpts from one supervised prototype take at normal speed; waiting is omitted.",
+  "shots": {
+    "pour": {
+      "source": "IMG_9522.MOV",
+      "start": 23,
+      "duration": 17.5,
+      "title": "The actual Coke pour.",
+      "crop": [
+        0.28,
+        0,
+        0.5,
+        1
+      ]
+    },
+    "recover": {
+      "source": "IMG_9522.MOV",
+      "start": 49,
+      "duration": 11,
+      "title": "And back upright.",
+      "crop": [
+        0.28,
+        0,
+        0.5,
+        1
+      ]
+    }
+  },
+  "formats": {
+    "reel": {
+      "size": [
+        1080,
+        1920
+      ],
+      "layout": "process",
+      "episode": "WORKSHOP NOTES / 04 \u00b7 POUR PRACTICE",
+      "footer": "Assisted prototype test \u00b7 Normal speed",
+      "shots": [
+        "pour",
+        "recover"
+      ],
+      "outro": 2,
+      "outroTitle": "Pour. Learn. Repeat.",
+      "outroUrl": "orbitusrobotics.com",
+      "audioLufs": -18,
+      "filename": "rob-coke-pour-reel.mp4"
+    }
+  }
+}

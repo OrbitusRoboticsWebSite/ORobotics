@@ -1,0 +1,35 @@
+{{ define "main" }}
+{{ partial "recycling-styles.html" . }}
+<main id="main" class="recycling-page">
+  <header class="recycling-header">
+    <div class="recycling-wrap">
+      <a class="recycling-back" href="{{ "/" | relURL }}">← Orbitus Robotics</a>
+      <p class="recycling-kicker"><span aria-hidden="true"></span>Workshop notes / 04 · November 2026</p>
+      <h1>ROB takes on<br /><em>the Coke pour.</em></h1>
+      <p class="recycling-intro">A can tilt. A real stream. A helping hand.<br />The latest workshop test, with the waiting cut out.</p>
+      <div class="recycling-tags" aria-label="About this reel"><span>Actual pouring footage</span><span>Original sound</span><span>Assisted prototype test</span></div>
+    </div>
+  </header>
+  <div class="recycling-wrap recycling-body">
+    <section class="recycling-story" aria-labelledby="pour-title">
+      <article class="recycling-process-card">
+        <p class="recycling-kicker">31 seconds / Normal speed</p>
+        <h2 id="pour-title">Watch the pour</h2>
+        <video controls playsinline preload="none" poster="{{ "images/workshop/coke-pour-poster.webp" | relURL }}" width="1080" height="1920" aria-label="ROB pours Coke with human assistance" aria-describedby="pour-context">
+          <source src="{{ "videos/workshop/rob-coke-pour-reel.mp4" | relURL }}" type="video/mp4" />
+          <track kind="captions" src="{{ "captions/workshop/rob-coke-pour.vtt" | relURL }}" srclang="en" label="English" default />
+          <p><a href="{{ "videos/workshop/rob-coke-pour-reel.mp4" | relURL }}">Download the Coke-pour reel.</a></p>
+        </video>
+        <p class="recycling-process-note" id="pour-context">Edited excerpts from one supervised test. Human assistance and the spill remain visible.</p>
+        <a class="recycling-process-download" href="{{ "videos/workshop/rob-coke-pour-reel.mp4" | relURL }}" download>Download the reel <span aria-hidden="true">↓</span></a>
+      </article>
+      <div class="recycling-prose">
+        <p class="recycling-kicker">Pour. Learn. Repeat.</p>
+        {{ .Content }}
+        <details class="recycling-transcript"><summary>Transcript and visual description</summary><p>ROB holds a red Coca-Cola can above a clear glass. Its wrist tilts the can and liquid pours out. A person catches and repositions the glass; liquid is also visible on the table. The glass fills partway. After a cut, the wrist turns the can upright. The original recording includes motor and workshop sounds, brief indistinct voices, and the reaction “Oh my God.” Titles identify the actual Coke pour and the return upright. The footer reads “Assisted prototype test · Normal speed.” A silent end card reads “Pour. Learn. Repeat.”</p></details>
+        <p><a href="{{ "recycling/#process" | relURL }}">See the grip, lift and torso-turn reels →</a></p>
+      </div>
+    </section>
+  </div>
+</main>
+{{ end }}

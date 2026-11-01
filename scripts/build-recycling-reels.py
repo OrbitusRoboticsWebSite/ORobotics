@@ -116,7 +116,17 @@ def main():
         overlay(png, (width, height), shot['title'], f'{index+1:02d}', wide=wide,
                 layout=edit.get('layout'), episode=edit.get('episode'),
                 footer=edit.get('footer', 'Edited workshop tests · Normal speed'))
-        if edit.get('layout') == 'process' and wide:
+        if edit.get('layout') == 'process' and 'crop' in shot:
+            # A reviewed normalized crop can make landscape action legible on
+            # phones. Keep the complete action and any human assistance visible.
+            x, y, w, h = shot['crop']
+            if not (0 <= x < 1 and 0 <= y < 1 and 0 < w <= 1 and 0 < h <= 1
+                    and x+w <= 1 and y+h <= 1):
+                raise ValueError(f'Invalid normalized crop for {shot_id}')
+            video = (f'[0:v:0]crop=iw*{w}:ih*{h}:iw*{x}:ih*{y},'
+                     'scale=1080:1600:force_original_aspect_ratio=decrease,'
+                     'pad=1080:1920:(ow-iw)/2:(oh-ih)/2:color=0x0b111c[framed];')
+        elif edit.get('layout') == 'process' and wide:
             # Preserve the can, glass and both arms in landscape source shots.
             video = ('[0:v:0]split[bg][fg];[bg]scale=270:480:force_original_aspect_ratio=increase,'
                      'crop=270:480,boxblur=12:1,eq=brightness=-0.35:saturation=0.5,'
