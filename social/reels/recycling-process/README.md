@@ -1,7 +1,9 @@
 # ROB workshop notes: the process
 
 Published website previews: <https://www.orbitusrobotics.com/recycling/#process>.
-Facebook copy and publication status: `social/drafts/recycling-process-2026-10-31.md`.
+Published Facebook reels: [Grip + lift](https://www.facebook.com/reel/1787943629159591/)
+and [Turn + release](https://www.facebook.com/reel/4563522910539178/).
+Exact post copy and publication verification: `social/drafts/recycling-process-2026-10-31.md`.
 
 Two 1080×1920, 30 fps SDR reels expand the first highlights:
 

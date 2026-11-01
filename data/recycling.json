@@ -15,7 +15,8 @@
       "video": "videos/recycling/rob-recycling-pickup.mp4",
       "captions": "captions/recycling/rob-recycling-pickup.vtt",
       "poster": "images/recycling/pickup-poster.webp",
-      "transcript": "An open gripper reaches toward a can. In a close-up from another test, the yellow finger pads close around an upright red aluminum can. A later excerpt shows the can lifting clear of the table while the camera pulls back to include ROB's torso. Titles read ‘Reach toward the can’, ‘Close the gripper’, and ‘Lift clear of the table’. A voice says, ‘Success! Look at that. Got it, babe.’ ROB's spoken movement plan mentions lifting clear of the table, retracting, turning toward the bucket, and using a corrected drop position as a starting estimate.\nThese are edited excerpts from supervised prototype tests. Pauses and setup are removed; every movement is shown at normal speed. The end card links to orbitusrobotics.com/recycling."
+      "transcript": "An open gripper reaches toward a can. In a close-up from another test, the yellow finger pads close around an upright red aluminum can. A later excerpt shows the can lifting clear of the table while the camera pulls back to include ROB's torso. Titles read ‘Reach toward the can’, ‘Close the gripper’, and ‘Lift clear of the table’. A voice says, ‘Success! Look at that. Got it, babe.’ ROB's spoken movement plan mentions lifting clear of the table, retracting, turning toward the bucket, and using a corrected drop position as a starting estimate.\nThese are edited excerpts from supervised prototype tests. Pauses and setup are removed; every movement is shown at normal speed. The end card links to orbitusrobotics.com/recycling.",
+      "facebook": "https://www.facebook.com/reel/1787943629159591/"
     },
     {
       "id": "turn-and-release",
@@ -26,7 +27,8 @@
       "video": "videos/recycling/rob-recycling-torso.mp4",
       "captions": "captions/recycling/rob-recycling-torso.vtt",
       "poster": "images/recycling/torso-poster.webp",
-      "transcript": "ROB holds a red aluminum can while the torso turns. The tracked base remains visible throughout the unbroken turn. The view changes from the front of the upper body to the rear. A cut to a close-up shows the gripper opening over an orange bucket and the can falling inside with a clatter. A voice says, ‘Nice.’ Titles read ‘Watch the torso turn’ and ‘Then the clatter’.\nThese are edited excerpts from supervised prototype tests, with original workshop audio. All motion is shown at normal speed. The end card links to orbitusrobotics.com/recycling."
+      "transcript": "ROB holds a red aluminum can while the torso turns. The tracked base remains visible throughout the unbroken turn. The view changes from the front of the upper body to the rear. A cut to a close-up shows the gripper opening over an orange bucket and the can falling inside with a clatter. A voice says, ‘Nice.’ Titles read ‘Watch the torso turn’ and ‘Then the clatter’.\nThese are edited excerpts from supervised prototype tests, with original workshop audio. All motion is shown at normal speed. The end card links to orbitusrobotics.com/recycling.",
+      "facebook": "https://www.facebook.com/reel/4563522910539178/"
     }
   ]
 }

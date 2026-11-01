@@ -37,7 +37,43 @@
     }
   ],
   "facebook": {
-    "status": "awaiting_exact_review"
+    "status": "published",
+    "approval": "User approved both exact reels and captions in this task on 2026-10-31.",
+    "reviewedDraftCommit": "f0647c5f41d6f2fcbbe9f5b8a774c451ca1ed3c6",
+    "posts": [
+      {
+        "id": "grip-and-lift",
+        "status": "published",
+        "url": "https://www.facebook.com/reel/1787943629159591/",
+        "contentId": "1141737935270005",
+        "page": "Rob the Robot",
+        "pageId": "100083014278564",
+        "audience": "Public",
+        "manualEnglishCaptions": "uploaded and verified during public playback",
+        "captionMatchesReviewedDraft": true,
+        "response": "Your Post is successfully shared with EVERYONE; public reel playback verified."
+      },
+      {
+        "id": "turn-and-release",
+        "status": "published",
+        "page": "Rob the Robot",
+        "pageId": "100083014278564",
+        "audience": "Public",
+        "manualEnglishCaptions": "uploaded and verified during public playback",
+        "captionMatchesReviewedDraft": true,
+        "response": "Post submitted; returned to Facebook home. Public reel playback and Public audience verified.",
+        "url": "https://www.facebook.com/reel/4563522910539178/",
+        "contentId": "1141739908603141"
+      }
+    ]
+  },
+  "website": {
+    "status": "published",
+    "commit": "f0647c5f41d6f2fcbbe9f5b8a774c451ca1ed3c6",
+    "deployment": "https://github.com/OrbitusRoboticsWebSite/ORobotics/actions/runs/41256316113",
+    "deploymentConclusion": "success",
+    "liveMediaHashesMatch": true,
+    "liveCaptionHashesMatch": true
   },
   "verification": {
     "fullMediaDecode": "passed",
