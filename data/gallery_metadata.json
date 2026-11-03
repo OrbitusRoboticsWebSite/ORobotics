@@ -1008,6 +1008,28 @@
   "2026/IMG_6340.HEIC": {
     "alt": "A skeletal quadruped robot prototype stands outdoors near the 2026 maker displays."
   },
+  "2026_CokeCan/01-table-grip.jpg": {
+    "alt": "Side view of ROB reaching to a red Coke can at the edge of a table, with its other arm bent below.",
+    "caption": "At the table: the gripper meets the can during the October 29 practice session. Still from Kierie’s video."
+  },
+  "2026_CokeCan/02-can-held-front.jpg": {
+    "alt": "ROB faces the camera holding a dented red Coke can in front of its purple-lit chest while its other gripper remains open.",
+    "caption": "A full-body view of the can held in front of ROB’s chest. Still from Kierie’s October 29, 2026 video."
+  },
+  "2026_CokeCan/03-torso-turn.jpg": {
+    "alt": "ROB’s torso has turned above the tracked base while its extended gripper keeps hold of the red Coke can.",
+    "caption": "Keeping hold as the torso turns above the base. Still from Kierie’s October 29, 2026 video."
+  },
+  "2026_CokeCan/04-can-held-side.jpg": {
+    "alt": "Three-quarter view of ROB after the torso turn, with the red can held outward and the opposite gripper raised open.",
+    "caption": "After the turn: the can remains in the gripper and the opposite hand stays open. Still from Kierie’s October 29, 2026 video."
+  },
+  "2026_CokeCan/05-can-torso-turn.MOV": {
+    "alt": "ROB turns its torso while holding a red Coke can, with its tracked base and open opposite gripper in view.",
+    "caption": "Holding through the turn: one continuous 28-second excerpt from a supervised session, at normal speed without audio. Video by Kierie, October 29, 2026.",
+    "captions": "captions/galleries/2026_CokeCan/05-can-torso-turn.MOV.vtt",
+    "transcript": "[Visual description; no audio] ROB holds a red Coke can in front of its chest. The opposite gripper is open. The torso turns above the tracked base while the gripper keeps hold of the can. ROB holds the turned position with the can still extended in its gripper."
+  },
   "2026_MakerFaire/IMG_9191.HEIC": {
     "alt": "ROB stands beneath a black canopy behind a rope barrier, with speakers and robotics posters around the booth.",
     "caption": "September 25: the Orbitus Robotics booth at Maker Faire Bay Area."
@@ -1035,5 +1057,41 @@
   "2026_MakerFaire/IMG_9200.HEIC": {
     "alt": "Two visitors pose outside the ROB booth; one wears a purple hat and sunglasses with colorful electronic gadgets.",
     "caption": "September 27: a colorful encounter outside the Orbitus Robotics booth."
+  },
+  "2026_MakerFaire_Exploring/IMG_2974.HEIC": {
+    "alt": "Side view of ROB outdoors with one arm extended and a second lightsaber angled across its tracked base.",
+    "caption": "Two lightsabers and a crowd at the Orbitus booth. Photo by Kierie, September 27, 2026."
+  },
+  "2026_MakerFaire_Exploring/IMG_2979.HEIC": {
+    "alt": "ROB turns its spherical camera head toward the camera in a busy exhibition hall, with arm motors and wiring visible.",
+    "caption": "A closer look at the hardware behind the character, on the Maker Faire floor. Photo by Kierie, September 27, 2026."
+  },
+  "2026_MakerFaire_Exploring/IMG_2987.HEIC": {
+    "alt": "Rear view of ROB holding a blue lightsaber beside R2-D2, an orange droid, and a tall cream-colored droid.",
+    "caption": "ROB joins the droid display inside the Mare Island hall. Photo by Kierie, September 27, 2026."
+  },
+  "2026_MakerFaire_Exploring/IMG_2990.HEIC": {
+    "alt": "Front three-quarter view of ROB with purple chest rings, one open gripper, and a blue lightsaber among Maker Faire visitors.",
+    "caption": "A blue lightsaber, purple chest lights, and an open hand for the crowd. Photo by Kierie, September 27, 2026."
+  },
+  "2026_MakerFaire_Exploring/IMG_2991.MOV": {
+    "alt": "ROB holds a blue lightsaber upright near visitors and astromech droids inside the exhibition hall.",
+    "caption": "A visit to the droid display. Silent, normal-speed video by Kierie, September 27, 2026.",
+    "captions": "captions/galleries/2026_MakerFaire_Exploring/IMG_2991.MOV.vtt",
+    "transcript": "[Visual description; no audio] Rear view of ROB with a blue lightsaber raised in the Maker Faire hall. Visitors and droids surround ROB as the camera widens the view. The camera moves closer to ROB and the visitors beside it."
+  },
+  "2026_MakerFaire_Exploring/IMG_2992.HEIC": {
+    "alt": "R2-D2 fills the foreground while ROB, holding a blue lightsaber, stands among visitors at the droid display.",
+    "caption": "Different robots, shared curiosity: ROB beside R2-D2 and the droid builders. Photo by Kierie, September 27, 2026."
+  },
+  "2026_MakerFaire_Exploring/IMG_2994.MOV": {
+    "alt": "ROB rolls along the outdoor aisle beside the Orbitus canopy toward the exhibition-hall doorway, accompanied by an operator.",
+    "caption": "From the booth toward the hall, with an operator alongside. Silent 12-second excerpt at normal speed. Video by Kierie, September 27, 2026.",
+    "captions": "captions/galleries/2026_MakerFaire_Exploring/IMG_2994.MOV.vtt",
+    "transcript": "[Visual description; no audio] ROB rolls past the Orbitus canopy with its lightsabers extended. ROB travels along the outdoor aisle toward the exhibition-hall doorway. An operator walks beside ROB as it continues toward the hall."
+  },
+  "2026_MakerFaire_Exploring/IMG_2996.JPEG": {
+    "alt": "A maker stands behind bright yellow and orange wheeled robots at the HomeBrew Robotics Club display, beside a green figure on a rover.",
+    "caption": "Colorful rovers at the HomeBrew Robotics Club display. Photo by Kierie, September 27, 2026."
   }
 }

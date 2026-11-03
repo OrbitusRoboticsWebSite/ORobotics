@@ -121,7 +121,7 @@ write_video() {
         return 1
     fi
 
-    "$probe_tool" -v error -select_streams v:0 -show_entries stream=codec_name -of csv=p=0 "$temporary" | grep -qx "h264"
+    "$probe_tool" -v error -select_streams v:0 -show_entries stream=codec_name -of default=nw=1:nk=1 "$temporary" | grep -qx "h264"
     mv -f "$temporary" "$output"
 }
 

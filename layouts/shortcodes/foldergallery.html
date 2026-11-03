@@ -103,7 +103,7 @@
   {{- if $hasTranscripts }}
   <section class="media-gallery__transcripts" aria-labelledby="{{ $galleryID }}-transcripts-title">
     <h3 id="{{ $galleryID }}-transcripts-title">Video transcripts</h3>
-    <p>Read the spoken content or open the synchronized WebVTT captions without using the lightbox.</p>
+    <p>Read the transcript or open the synchronized WebVTT captions without using the lightbox.</p>
     <div class="media-gallery__transcript-list">
       {{- range $index, $file := $media -}}
         {{- $mediaKey := printf "%s/%s" $folder $file.name -}}

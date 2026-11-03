@@ -1665,6 +1665,31 @@
     "kind": "image"
   },
   {
+    "album": "2026_CokeCan",
+    "name": "01-table-grip.jpg",
+    "kind": "image"
+  },
+  {
+    "album": "2026_CokeCan",
+    "name": "02-can-held-front.jpg",
+    "kind": "image"
+  },
+  {
+    "album": "2026_CokeCan",
+    "name": "03-torso-turn.jpg",
+    "kind": "image"
+  },
+  {
+    "album": "2026_CokeCan",
+    "name": "04-can-held-side.jpg",
+    "kind": "image"
+  },
+  {
+    "album": "2026_CokeCan",
+    "name": "05-can-torso-turn.MOV",
+    "kind": "video"
+  },
+  {
     "album": "2026_MakerFaire",
     "name": "IMG_9191.HEIC",
     "kind": "image"
@@ -1697,6 +1722,46 @@
   {
     "album": "2026_MakerFaire",
     "name": "IMG_9200.HEIC",
+    "kind": "image"
+  },
+  {
+    "album": "2026_MakerFaire_Exploring",
+    "name": "IMG_2974.HEIC",
+    "kind": "image"
+  },
+  {
+    "album": "2026_MakerFaire_Exploring",
+    "name": "IMG_2979.HEIC",
+    "kind": "image"
+  },
+  {
+    "album": "2026_MakerFaire_Exploring",
+    "name": "IMG_2987.HEIC",
+    "kind": "image"
+  },
+  {
+    "album": "2026_MakerFaire_Exploring",
+    "name": "IMG_2990.HEIC",
+    "kind": "image"
+  },
+  {
+    "album": "2026_MakerFaire_Exploring",
+    "name": "IMG_2991.MOV",
+    "kind": "video"
+  },
+  {
+    "album": "2026_MakerFaire_Exploring",
+    "name": "IMG_2992.HEIC",
+    "kind": "image"
+  },
+  {
+    "album": "2026_MakerFaire_Exploring",
+    "name": "IMG_2994.MOV",
+    "kind": "video"
+  },
+  {
+    "album": "2026_MakerFaire_Exploring",
+    "name": "IMG_2996.JPEG",
     "kind": "image"
   }
 ]

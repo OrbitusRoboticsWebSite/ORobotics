@@ -934,9 +934,9 @@ async function main() {
     expect(extension !== ".mov", `Published MOV original: ${path.relative(publicRoot, publicFile)}`);
   }
   expect(
-    // Includes the gallery archive and four recycling videos, all loaded on demand.
-    publicBytes <= 375 * 1024 * 1024,
-    `Published site exceeds 375 MiB: ${(publicBytes / 1024 / 1024).toFixed(1)} MiB`,
+    // Includes the gallery archive, recycling videos, and three 2026 clips loaded on demand.
+    publicBytes <= 400 * 1024 * 1024,
+    `Published site exceeds 400 MiB: ${(publicBytes / 1024 / 1024).toFixed(1)} MiB`,
   );
 
   const htmlFiles = publicFiles.filter((file) => path.extname(file).toLowerCase() === ".html");
@@ -1124,10 +1124,10 @@ async function main() {
       }
 
       const videoLink = archiveBlock.match(
-        /<a\b[^>]*\bdata-gallery-transcript-video(?:\s|=)[^>]*>/i,
+        /<a\b[^>]*\bdata-gallery-transcript-video(?=\s|=|>)[^>]*>/i,
       )?.[0];
       const captionsLink = archiveBlock.match(
-        /<a\b[^>]*\bdata-gallery-transcript-vtt(?:\s|=)[^>]*>/i,
+        /<a\b[^>]*\bdata-gallery-transcript-vtt(?=\s|=|>)[^>]*>/i,
       )?.[0];
       const expectedVideo = `images/galleries/${manifestEntry.album}/video/${manifestEntry.name}.mp4`;
       expect(
