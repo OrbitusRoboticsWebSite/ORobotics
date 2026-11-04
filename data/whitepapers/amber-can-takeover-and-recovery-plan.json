@@ -2,7 +2,7 @@
   "author": "Orbitus Robotics",
   "project_lead": "Rodolfo Aramayo",
   "date": "2026-11-04",
-  "version": "1.0",
+  "version": "1.1",
   "publication_status": "Technical white paper · Not peer reviewed",
   "disclosure": "Prepared with AI assistance from project reports, source code and recorded test evidence. Technical claims are tied to the cited records. No new physical robot trial was performed for this publication.",
   "contact": "orbitus@orbitusrobotics.com",
@@ -26,6 +26,56 @@
   "photo_alt": "ROB holds a red can outward after turning its torso above the tracked base.",
   "photo_caption": "ROB during the October 29, 2026 can session. Still from Kierie’s video. A loaded arm illustrates why recovery must consider gravity and retained targets; no CAN takeover is shown.",
   "sections": [
+    {
+      "title": "ROB: history, purpose and software",
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "ROB (R.O.B.) is Orbitus Robotics' experimental tracked humanoid: a platform for robotics education, human-robot interaction and supervised manipulation. Independent treads, a rotating torso, two seven-joint arms and grippers, cameras and range sensing connect software to a physical machine. Can-handling practice, stage demonstrations and spatial teleoperation give the project concrete tasks to investigate. [8,9,10]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The project's archive reconstruction records ROB-specific Mac serial-control work in 2017-2018 and a surviving Cerebro Git root on January 1, 2018. Later histories add speech, perception experiments and controller arbitration. Public galleries document builds and appearances from 2019 onward. The fresh Cerebro repository of August 5, 2025 imported an existing v5 application; it was not the project's beginning. The pre-v5 originals remain local, with provenance summarized in the supporting record. [8,10]"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Codebase / platform",
+            "Role in ROB"
+          ],
+          "rows": [
+            [
+              "Cerebro / macOS",
+              "Swift, Objective-C/Objective-C++, C++ and Python helpers coordinate perception, dialogue, command admission and robot I/O."
+            ],
+            [
+              "ROBController / iPhone, iPad, Watch",
+              "Human command, maps, telemetry and explicit action approval."
+            ],
+            [
+              "ROBControllerVision / visionOS",
+              "SwiftUI spatial controls, live video and time-limited arm authority."
+            ],
+            [
+              "ROBArduino + RPLidar project",
+              "Base firmware handles low-level drive; the lidar application supplies scans and map observations."
+            ],
+            [
+              "Amber host + ContinuousArm",
+              "Existing Ubuntu arm runtime; the C++ replacement owner and codec live in Cerebro/Tools/ContinuousArm."
+            ]
+          ],
+          "widths": [
+            0.35,
+            0.65
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "The public source index links six repositories and suggests starting files. The architecture separates human intent and AI-assisted planning from motor-facing ownership. This paper examines that latter boundary. It does not establish that every project feature is active together, or that the replacement controller has been physically commissioned. [8,9]"
+        }
+      ]
+    },
     {
       "title": "1. Readiness is a set of separate claims",
       "blocks": [
@@ -298,7 +348,20 @@
     {
       "label": "[7] Linux SocketCAN: multiple senders",
       "url": "https://docs.kernel.org/networking/can.html"
+    },
+    {
+      "label": "[8] ROB project chronology and public source index (v1.1)",
+      "url": "https://www.orbitusrobotics.com/whitepapers/rob-project-background.json"
+    },
+    {
+      "label": "[9] ROB software platform and operator interfaces",
+      "url": "https://www.orbitusrobotics.com/products/"
+    },
+    {
+      "label": "[10] ROB development and Maker Faire photo archive",
+      "url": "https://www.orbitusrobotics.com/makerfaire/"
     }
   ],
-  "source_report_sha256": "38ce01e9bff04b89309eaa93ee1a92306a21147cf81d0880fc86e685e8c26cf5"
+  "source_report_sha256": "38ce01e9bff04b89309eaa93ee1a92306a21147cf81d0880fc86e685e8c26cf5",
+  "revision_note": "Version 1.1 adds ROB history, purpose, functionality and a software-stack overview. Recorded test results and physical commissioning status are unchanged."
 }

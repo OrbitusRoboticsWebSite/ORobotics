@@ -8,6 +8,7 @@
         <h1>{{ .Title }}</h1>
         <p class="wp-subtitle">{{ .Params.subtitle }}</p>
         <p class="wp-byline">Orbitus Robotics · November 4, 2026 · Version {{ .Params.version }}</p>
+        {{ with .Params.revision_note }}<p class="wp-status">{{ . }}</p>{{ end }}
         <div class="wp-actions"><a class="wp-primary" href="{{ .Params.pdf | relURL }}" download>Download PDF <span>({{ .Params.pdf_pages }} pages, {{ math.Ceil (div .Params.pdf_bytes 1024.0) }} KB)</span></a></div>
         <p class="wp-status">Not peer reviewed. Recorded evidence and remaining physical tests are distinguished throughout.</p>
       </div>
@@ -22,6 +23,7 @@
       <details open><summary>In this paper</summary>{{ .TableOfContents }}</details>
       <div class="wp-supplements">
         <h2>Supporting files</h2>
+        <a href="{{ "whitepapers/rob-project-background.json" | relURL }}">ROB history and codebase (JSON)</a>
         <a href="{{ printf "whitepapers/%s.evidence.json" .Params.paper_slug | relURL }}">Evidence summary (JSON)</a>
         {{ if eq .Params.paper_slug "amber-controller-replacement-analysis" }}
           <a href="{{ "whitepapers/amber-library-ledger.csv" | relURL }}" download>42-library ledger (CSV)</a>

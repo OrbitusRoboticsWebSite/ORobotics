@@ -1,0 +1,134 @@
+{
+  "title": "ROB project background, chronology and source index",
+  "edition": "1.1",
+  "recorded_on": "2026-11-04",
+  "publisher": "Orbitus Robotics",
+  "purpose": "An experimental tracked humanoid used for robotics education, human-robot interaction and supervised manipulation research.",
+  "chronology_method": "The 2017-2025 archive chronology is summarized from the project's preserved-archive reconstruction. Original pre-v5 archives remain local; they are not public clone targets. This publication did not re-run historical software or perform a new physical test.",
+  "archive_reconstruction": {
+    "record_name": "CEREBRO_ARCHIVE_HISTORY.md",
+    "record_sha256": "c1afcc45e6982392c42d4442607a0493e145faaff73722dcb8a34367705ca960",
+    "record_commit": "694fb61545a3a0d3aca12347c4ac5429e4db4d4e",
+    "original_archive_visibility": "Retained locally; not redistributed"
+  },
+  "chronology": [
+    {
+      "period": "2017-2018",
+      "claim": "ROB-specific Mac serial-control work survives in the pre-Git v1 archive.",
+      "evidence_class": "Project archive reconstruction; dated source headers and fingerprints",
+      "fingerprints": {
+        "KeyboardInputView.m": "e3b16998585e5dbc88a90aaa5b61d35d25abc8776d008015dbff1a01ebb437eb",
+        "SerialDebug.m": "c1de40a9361dc6881f749ccf20145c86738ecde58f743dbf60f7f562a9e36d5c"
+      }
+    },
+    {
+      "period": "2018-01-01",
+      "claim": "Earliest surviving Cerebro Git root in the v2 archive.",
+      "evidence_class": "Project archive reconstruction; historical Git object",
+      "commit": "0141a6461303302e53941c398ebeda4f60c1a1c7"
+    },
+    {
+      "period": "2018-2025",
+      "claim": "Preserved histories record speech and perception experiments, controller arbitration, Apple-silicon migration and early language-model integration.",
+      "evidence_class": "Project archive reconstruction; v2/v3/v4 history",
+      "checkpoints": {
+        "v2": "c27829851b9252310a7ee14337ec7c773ca52813",
+        "v3": "00fbf6bdc4ec9c62df9173253bfe3b7e4ab1c2db",
+        "v4": "1a3c7799bdb4b60d0d4917f5de4ad0a95d88e96e"
+      }
+    },
+    {
+      "period": "2019-2026",
+      "claim": "Public galleries document multiple ROB builds and Maker Faire appearances.",
+      "evidence_class": "Published photographs and captions",
+      "url": "https://www.orbitusrobotics.com/makerfaire/"
+    },
+    {
+      "period": "2025-08-05",
+      "claim": "Fresh v5 public repository imports an existing application; this is not the start of ROB or Cerebro.",
+      "evidence_class": "Public Git root and commit subject",
+      "commit": "4c4f1d454253e39798c23aed4522716068aadd98",
+      "url": "https://github.com/RudyAramayo/Cerebro/commit/4c4f1d454253e39798c23aed4522716068aadd98"
+    },
+    {
+      "period": "2026-10-29",
+      "claim": "Supervised can-handling videos document ROB gripping, holding and turning with a can.",
+      "evidence_class": "Published historical video and stills; not a continuous autonomous benchmark",
+      "url": "https://www.orbitusrobotics.com/makerfaire/rob_2026/"
+    },
+    {
+      "period": "2026-11-01 to 2026-11-04",
+      "claim": "The controller white-paper series records a motion-transition investigation, compatibility audit and recovery-first takeover plan.",
+      "evidence_class": "Dated source and test records; physical replacement commissioning remains open",
+      "url": "https://www.orbitusrobotics.com/whitepapers/"
+    }
+  ],
+  "public_source_index": [
+    {
+      "repository": "Cerebro",
+      "url": "https://github.com/RudyAramayo/Cerebro",
+      "role": "macOS coordination, perception, dialogue, authorization and robot I/O; isolated C++ continuous-arm owner and codec",
+      "languages": "Swift, Objective-C/Objective-C++, C++, Python helpers",
+      "reading_starts": [
+        "Cerebro/ROBMainViewController.mm",
+        "Cerebro/ROBSerialBox.m",
+        "Cerebro/CameraManager.swift",
+        "Cerebro/ROBAutonomyCoordinator.swift",
+        "Tools/ContinuousArm"
+      ],
+      "inspected_commit": "f5861f82e9025c2df2eb71ab93c74c1695ba5f6d"
+    },
+    {
+      "repository": "ROBController",
+      "url": "https://github.com/RudyAramayo/ROBController",
+      "role": "iPhone/iPad operator console and Watch relay; command, maps, telemetry and explicit action approval",
+      "reading_starts": [
+        "README.md",
+        "Consciousness/ConsciousViewController.mm",
+        "Consciousness/AutoNetClient/AutoNetClient.swift"
+      ],
+      "inspected_commit": "6f12999012cf4ded0b3062c5cd68048dfd355703"
+    },
+    {
+      "repository": "ROBControllerVision",
+      "url": "https://github.com/RudyAramayo/ROBControllerVision",
+      "role": "SwiftUI visionOS cockpit, authenticated control, video and time-limited arm authority",
+      "reading_starts": [
+        "README.md",
+        "Packages/ROBControlCore",
+        "ROBControllerVision/Features/Control/ArmControlPanel.swift"
+      ],
+      "inspected_commit": "f5ce2de76c576a12f43d15f3d0b35b5b14d83e1e"
+    },
+    {
+      "repository": "ROBArduino",
+      "url": "https://github.com/RudyAramayo/ROBArduino",
+      "role": "Arduino Base firmware for low-level drive and serial protocol; historical Head/Torso sketches are separate",
+      "reading_starts": [
+        "ROBOT_CEREBELLULAR_BASE_APP/ROBOT_CEREBELLULAR_BASE_APP.ino"
+      ],
+      "inspection_note": "Reading path from the project source map; firmware was not flashed or re-tested for this revision."
+    },
+    {
+      "repository": "M2M1-RPLIDAR-iOS-MacOS-Catalyst-",
+      "url": "https://github.com/RudyAramayo/M2M1-RPLIDAR-iOS-MacOS-Catalyst-",
+      "role": "Lidar acquisition, maps and bounded scan publication to Cerebro",
+      "reading_starts": [
+        "README.md",
+        "RPLidar/RPLidarViewController.swift"
+      ],
+      "inspected_commit": "5205d431914997d8a7102e188bc335480709e9bd"
+    },
+    {
+      "repository": "Amber-HomeFolder",
+      "url": "https://github.com/RudyAramayo/Amber-HomeFolder",
+      "role": "Captured Ubuntu host material and recovery tooling; archived vendor core executables are binaries, not recovered source",
+      "reading_starts": [
+        "docs/amber-stack-recovery.md"
+      ],
+      "recovery_reference_commit": "7c3b2449936a017c5f7049f6d562764a9fdb3f94"
+    }
+  ],
+  "implementation_boundary": "The overview describes project roles and intended capabilities. It does not assert that every capability is active in one session or that the replacement controller has completed physical commissioning.",
+  "reuse_note": "Repository visibility is not a blanket redistribution license. Consult each repository and third-party component notices."
+}

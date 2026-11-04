@@ -44,6 +44,8 @@
     "note": "Public edition adapts this private report; original operator and machine details are not redistributed."
   },
   "protocol_evidence_commit": "1e2f52b95f706efb1ecc58c0db32b65983f193ec",
+  "paper_version": "1.1",
+  "project_background_url": "https://www.orbitusrobotics.com/whitepapers/rob-project-background.json",
   "source_references": [
     {
       "label": "[1] Installed executable audit and source-search scope (bfed885)",
@@ -68,6 +70,18 @@
     {
       "label": "[6] Controller source and reproduction instructions (9e05415)",
       "url": "https://github.com/RudyAramayo/Cerebro/tree/9e054156e0fe29cc5cfde8e785eb3a1f6e0489e2/Tools/ContinuousArm"
+    },
+    {
+      "label": "[7] ROB project chronology and public source index (v1.1)",
+      "url": "https://www.orbitusrobotics.com/whitepapers/rob-project-background.json"
+    },
+    {
+      "label": "[8] ROB software platform and operator interfaces",
+      "url": "https://www.orbitusrobotics.com/products/"
+    },
+    {
+      "label": "[9] ROB development and Maker Faire photo archive",
+      "url": "https://www.orbitusrobotics.com/makerfaire/"
     }
   ]
 }

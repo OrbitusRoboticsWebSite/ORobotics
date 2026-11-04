@@ -27,6 +27,8 @@ The `/whitepapers/` section publishes complete HTML editions, illustrated PDFs,
 source references, evidence summaries, and a library-identity ledger. Manuscripts
 live in `data/whitepapers/`; curated evidence and library identities live in
 `data/whitepaper_evidence.json` and `data/whitepaper_library_ledger.json`.
+`data/whitepaper_project_background.json` records project chronology, provenance
+and the six-repository reading map shared by the papers.
 Edit those inputs, then regenerate the publication artifacts:
 
 ```sh
