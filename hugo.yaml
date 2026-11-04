@@ -215,6 +215,10 @@ params:
 
 menu:
   main:
+    - identifier: whitepapers
+      name: White Papers
+      pageRef: /whitepapers
+      weight: 8
     - identifier: products
       name: Products
       pageRef: /products
@@ -248,6 +252,10 @@ menu:
       pageRef: /contact
       weight: 30
   footer:
+    - identifier: whitepapers
+      name: White Papers
+      pageRef: /whitepapers
+      weight: 4
     - identifier: learn
       name: Learn Robotics
       pageRef: /learn

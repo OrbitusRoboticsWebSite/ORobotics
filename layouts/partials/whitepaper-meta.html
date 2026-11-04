@@ -1,0 +1,10 @@
+{{ if and (eq .Type "whitepapers") .IsPage }}
+<meta name="citation_title" content="{{ .Title }}">
+<meta name="citation_author" content="Orbitus Robotics">
+<meta name="citation_publication_date" content="2026/11/04">
+<meta name="citation_technical_report_number" content="{{ .Params.paper_id }}">
+<meta name="citation_technical_report_institution" content="Orbitus Robotics">
+<meta name="citation_pdf_url" content="{{ .Params.pdf | absURL }}">
+{{ $schema := dict "@context" "https://schema.org" "@type" "ScholarlyArticle" "headline" .Title "description" .Description "abstract" .Params.abstract "datePublished" "2026-11-04" "dateModified" "2026-11-04" "version" .Params.version "identifier" .Params.paper_id "url" .Permalink "author" (dict "@type" "Organization" "name" "Orbitus Robotics" "url" .Site.BaseURL) "publisher" (dict "@type" "Organization" "name" "Orbitus Robotics") "keywords" .Params.keywords "isAccessibleForFree" true "encoding" (dict "@type" "MediaObject" "contentUrl" (.Params.pdf | absURL) "encodingFormat" "application/pdf") }}
+<script type="application/ld+json">{{ $schema | jsonify | safeJS }}</script>
+{{ end }}

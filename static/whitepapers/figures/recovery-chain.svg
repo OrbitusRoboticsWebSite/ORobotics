@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="471.96pt" height="147.456pt" viewBox="0 0 471.96 147.456" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Orbitus Robotics</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 147.456
+L 471.96 147.456
+L 471.96 0
+L 0 0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 14.175 89.311135
+L 90.8442 89.311135
+Q 93.3552 89.311135 93.3552 86.614054
+L 93.3552 23.682162
+Q 93.3552 20.985081 90.8442 20.985081
+L 14.175 20.985081
+Q 11.664 20.985081 11.664 23.682162
+L 11.664 86.614054
+Q 11.664 89.311135 14.175 89.311135
+z
+" clip-path="url(#p9fd4c4c917)" style="fill: #edf5f7; stroke: #b9d2d9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 94.238246 55.148108
+Q 98.376878 55.148108 100.726655 55.148108
+" clip-path="url(#p9fd4c4c917)" style="fill: none; stroke: #087f8c; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 95.126655 52.348108
+L 100.726655 55.148108
+L 95.126655 57.948108
+z
+" clip-path="url(#p9fd4c4c917)" style="fill: #087f8c; stroke: #087f8c; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 105.9102 89.311135
+L 182.5794 89.311135
+Q 185.0904 89.311135 185.0904 86.614054
+L 185.0904 23.682162
+Q 185.0904 20.985081 182.5794 20.985081
+L 105.9102 20.985081
+Q 103.3992 20.985081 103.3992 23.682162
+L 103.3992 86.614054
+Q 103.3992 89.311135 105.9102 89.311135
+z
+" clip-path="url(#p9fd4c4c917)" style="fill: #edf5f7; stroke: #b9d2d9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 185.973446 55.148108
+Q 190.112078 55.148108 192.461855 55.148108
+" clip-path="url(#p9fd4c4c917)" style="fill: none; stroke: #087f8c; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 186.861855 52.348108
+L 192.461855 55.148108
+L 186.861855 57.948108
+z
+" clip-path="url(#p9fd4c4c917)" style="fill: #087f8c; stroke: #087f8c; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 197.6454 89.311135
+L 274.3146 89.311135
+Q 276.8256 89.311135 276.8256 86.614054
+L 276.8256 23.682162
+Q 276.8256 20.985081 274.3146 20.985081
+L 197.6454 20.985081
+Q 195.1344 20.985081 195.1344 23.682162
+L 195.1344 86.614054
+Q 195.1344 89.311135 197.6454 89.311135
+z
+" clip-path="url(#p9fd4c4c917)" style="fill: #edf5f7; stroke: #b9d2d9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 277.708646 55.148108
+Q 281.847278 55.148108 284.197055 55.148108
+" clip-path="url(#p9fd4c4c917)" style="fill: none; stroke: #087f8c; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 278.597055 52.348108
+L 284.197055 55.148108
+L 278.597055 57.948108
+z
+" clip-path="url(#p9fd4c4c917)" style="fill: #087f8c; stroke: #087f8c; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 289.3806 89.311135
+L 366.0498 89.311135
+Q 368.5608 89.311135 368.5608 86.614054
+L 368.5608 23.682162
+Q 368.5608 20.985081 366.0498 20.985081
+L 289.3806 20.985081
+Q 286.8696 20.985081 286.8696 23.682162
+L 286.8696 86.614054
+Q 286.8696 89.311135 289.3806 89.311135
+z
+" clip-path="url(#p9fd4c4c917)" style="fill: #edf5f7; stroke: #b9d2d9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 369.443846 55.148108
+Q 373.582478 55.148108 375.932255 55.148108
+" clip-path="url(#p9fd4c4c917)" style="fill: none; stroke: #087f8c; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 370.332255 52.348108
+L 375.932255 55.148108
+L 370.332255 57.948108
+z
+" clip-path="url(#p9fd4c4c917)" style="fill: #087f8c; stroke: #087f8c; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 381.1158 89.311135
+L 457.785 89.311135
+Q 460.296 89.311135 460.296 86.614054
+L 460.296 23.682162
+Q 460.296 20.985081 457.785 20.985081
+L 381.1158 20.985081
+Q 378.6048 20.985081 378.6048 23.682162
+L 378.6048 86.614054
+Q 378.6048 89.311135 381.1158 89.311135
+z
+" clip-path="url(#p9fd4c4c917)" style="fill: #edf5f7; stroke: #b9d2d9; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(32.69003 49.907952)">Identify</text>
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(20.651123 66.182952)">original disk</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(129.350386 41.770452)">Verify</text>
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(116.2623 59.062639)">whole-disk</text>
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(127.89187 74.320452)">image</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(221.085586 41.770452)">Verify</text>
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(202.791797 58.045452)">independent</text>
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(223.440703 73.271272)">copy</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(307.793911 50.763538)">Restore</text>
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(301.332309 65.880257)">to a spare</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(395.6154 42.626038)">Boot test</text>
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(392.462939 59.062639)">motors off</text>
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(381.980986 75.337639)">CAN detached</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #49616f" x="235.98" y="120.678047" transform="rotate(-0 235.98 120.678047)">Proposed recovery gates - completion requires recorded evidence at each step.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p9fd4c4c917">
+   <rect x="7.2" y="7.2" width="457.56" height="133.056"/>
+  </clipPath>
+ </defs>
+</svg>

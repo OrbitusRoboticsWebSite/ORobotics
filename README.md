@@ -21,6 +21,37 @@ Create a production build and run the gallery checks:
 npm test
 ```
 
+## Robotics white papers
+
+The `/whitepapers/` section publishes complete HTML editions, illustrated PDFs,
+source references, evidence summaries, and a library-identity ledger. Manuscripts
+live in `data/whitepapers/`; curated evidence and library identities live in
+`data/whitepaper_evidence.json` and `data/whitepaper_library_ledger.json`.
+Edit those inputs, then regenerate the publication artifacts:
+
+```sh
+python3 -m venv /tmp/orbitus-whitepapers-venv
+/tmp/orbitus-whitepapers-venv/bin/pip install -r scripts/whitepapers/requirements.txt
+/tmp/orbitus-whitepapers-venv/bin/python scripts/whitepapers/build_whitepapers.py
+npm test
+```
+
+The builder uses Arial on macOS or DejaVu Sans on Linux; a different font can
+change pagination and hashes. `WHITEPAPER_FONT_DIR` can select the font directory.
+It runs entirely from committed publication inputs, without robot access. Render
+every changed PDF with `pdftoppm` and inspect every page before publishing. The
+HTML edition supplies semantic headings, tables, image descriptions and citation
+links; the downloadable PDFs are not certified PDF/UA documents.
+
+Published artifacts are under `static/whitepapers/`. `manifest.json` records each
+PDF's page count, size and SHA-256, plus checksums for all supplements and figures.
+`npm run validate:whitepapers` checks integrity, metadata, references, discovery
+links, and generated local links. It also runs in the Pages deployment workflow.
+Do not publish private report originals, backup archives, operator messages or
+camera originals. Public photographs are metadata-free derivatives credited and
+dated in each edition. Bump the edition version when changing a published claim;
+retain source commit identities and distinguish new experiments from old records.
+
 ## Gallery media
 
 Camera originals live locally under the Git-ignored `media/gallery-originals/<album>/` directory. They are deliberately excluded from version control and Hugo's `static` directory because camera files can contain precise GPS, timestamps, and device metadata. Back them up in private storage; the website build does not require them.

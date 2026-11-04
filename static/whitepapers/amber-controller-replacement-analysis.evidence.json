@@ -1,0 +1,73 @@
+{
+  "audit_commit": "bfed885d51f36fb6f529fe68043e48f1f9b6cb4d",
+  "codec_commit": "9e054156e0fe29cc5cfde8e785eb3a1f6e0489e2",
+  "evidence_date": "2026-11-02",
+  "captured_utc": "2026-11-03T05:42:09.411180+00:00",
+  "hardware_io": false,
+  "installed": false,
+  "core_sha256": "554e7088b94b98f03f152f394c5e5b1d1ecfd16dacd470889e65dc83c36d2100",
+  "core_build_id": "376e8d04f9075e4e7166403f4f50ea3c2a7d740f",
+  "audit": {
+    "direct_shared_libraries": 7,
+    "mapped_shared_objects_including_loader": 42,
+    "graph_nodes_including_executable": 43,
+    "dt_needed_edges": 141,
+    "core_imports": 235,
+    "searched_filenames": 78325,
+    "searched_cpp_files": 30572,
+    "matching_current_wrappers_found": false
+  },
+  "recorded_codec": {
+    "ticks": 6000,
+    "frames_recorded_not_transmitted": 42000,
+    "moving_retargets": 1358,
+    "ideal_feedback_hz": 20,
+    "max_quantization_error_rad": 0.000136344,
+    "max_wire_step_rad": 0.00163625,
+    "full_domain_round_trips": 917476,
+    "quantization_sweep_checks": 420014,
+    "regression_groups_each_configuration": 27,
+    "configurations": [
+      "Release",
+      "ASan/UBSan",
+      "TSan"
+    ]
+  },
+  "interpretation": "Static dependency and disassembly observations plus offline codec tests. No inference of physical tracking or validated drive-side stop semantics.",
+  "paper_id": "OR-WP-2026-002",
+  "publication_date": "2026-11-04",
+  "new_physical_tests_for_publication": false,
+  "source_report": {
+    "filename": "amber-controller-replacement-analysis.pdf",
+    "sha256": "8334ad292c46e6597ff69753e2bba817d73352d52a1889e596b09d4962b650f6",
+    "public_original": false,
+    "note": "Public edition adapts this private report; original operator and machine details are not redistributed."
+  },
+  "protocol_evidence_commit": "1e2f52b95f706efb1ecc58c0db32b65983f193ec",
+  "source_references": [
+    {
+      "label": "[1] Installed executable audit and source-search scope (bfed885)",
+      "url": "https://github.com/RudyAramayo/Cerebro/tree/bfed885d51f36fb6f529fe68043e48f1f9b6cb4d/docs/calibration/evidence/2026-11-02-amber-executable"
+    },
+    {
+      "label": "[2] Shared libraries and imports, full graph",
+      "url": "https://github.com/RudyAramayo/Cerebro/blob/bfed885d51f36fb6f529fe68043e48f1f9b6cb4d/docs/calibration/evidence/2026-11-02-amber-executable/shared-libraries-and-imports.json"
+    },
+    {
+      "label": "[3] Host protocol evidence (1e2f52b)",
+      "url": "https://github.com/RudyAramayo/Cerebro/tree/1e2f52b95f706efb1ecc58c0db32b65983f193ec/docs/calibration/evidence/2026-11-02-amber-protocol"
+    },
+    {
+      "label": "[4] Source-bound owner and codec regression records",
+      "url": "https://github.com/RudyAramayo/Cerebro/tree/9e054156e0fe29cc5cfde8e785eb3a1f6e0489e2/docs/calibration/evidence/2026-11-02-amber-codec"
+    },
+    {
+      "label": "[5] Linux kernel: SocketCAN networking documentation",
+      "url": "https://docs.kernel.org/networking/can.html"
+    },
+    {
+      "label": "[6] Controller source and reproduction instructions (9e05415)",
+      "url": "https://github.com/RudyAramayo/Cerebro/tree/9e054156e0fe29cc5cfde8e785eb3a1f6e0489e2/Tools/ContinuousArm"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{{ with .Site.GetPage "/whitepapers" }}
+<section class="wp-feature" aria-labelledby="whitepapers-heading">
+  <div class="wp-shell">
+    <div class="wp-section-heading">
+      <div><p class="wp-eyebrow">Research from the workshop</p><h2 id="whitepapers-heading">What we learn, shared openly.</h2></div>
+      <a class="wp-text-link" href="{{ .RelPermalink }}">All white papers <span aria-hidden="true">→</span></a>
+    </div>
+    <p class="wp-intro">Three engineering case studies follow ROB from a motion-control defect to a tested software design and a plan for recoverable hardware integration.</p>
+    <div class="wp-cards">{{ range .RegularPages.ByWeight }}{{ partial "whitepaper-card.html" . }}{{ end }}</div>
+  </div>
+</section>
+{{ end }}

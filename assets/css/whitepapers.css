@@ -1,0 +1,87 @@
+/* Independent reading styles for the research section and home-page feature. */
+.wp-page,.wp-feature{--wp-ink:#102c3e;--wp-muted:#49616f;--wp-accent:#087381;--wp-surface:#fff;--wp-tint:#edf5f7;--wp-line:#c9dce1;color:var(--wp-ink);background:#f5f8f9}
+.dark .wp-page,.dark .wp-feature{--wp-ink:#edf7fc;--wp-muted:#bdced7;--wp-accent:#70d7df;--wp-surface:#112735;--wp-tint:#193442;--wp-line:#355363;background:#0c1e2a}
+.wp-shell{max-width:1200px;margin:0 auto;padding:0 28px}
+.wp-page h1,.wp-page h2,.wp-page h3,.wp-feature h2,.wp-feature h3{color:var(--wp-ink);font-weight:800;letter-spacing:-.025em;line-height:1.16}
+.wp-eyebrow{color:var(--wp-accent);font-weight:750;text-transform:uppercase;letter-spacing:.12em;font-size:12px;margin:0 0 14px}
+.wp-hub-hero{color:#e7f2f6;background:radial-gradient(ellipse at 95% 0%,#174855 0,transparent 55%),#102c3e;padding:76px 0 68px;border-bottom:4px solid #0a8995}
+.wp-hub-hero h1{color:#fff;font-size:clamp(38px,5.6vw,68px);max-width:900px;margin:0 0 26px;letter-spacing:-.04em}
+.wp-hub-hero .wp-eyebrow{color:#83dce3}
+.wp-hub-intro{font-size:20px;line-height:1.7;max-width:760px}
+.wp-hub-note{font-size:14px;color:#c3dbe4;margin-top:24px;line-height:1.6}
+.wp-hub-papers{padding-top:60px;padding-bottom:68px}
+.wp-feature{padding:64px 0;border-block:1px solid var(--wp-line)}
+.wp-section-heading{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:24px}
+.wp-section-heading h2,.wp-related h2{font-size:clamp(26px,3.3vw,38px);max-width:780px;margin:0}
+.wp-intro{max-width:800px;color:var(--wp-muted);font-size:18px;line-height:1.7;margin:0 0 28px}
+.wp-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.wp-card{border:1px solid var(--wp-line);background:var(--wp-surface);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.wp-card__image{display:block;overflow:hidden;aspect-ratio:16/10;background:#163745}
+.wp-card__image img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 35%;transition:transform .2s ease}
+.wp-card:hover .wp-card__image img{transform:scale(1.025)}
+.wp-card__body{padding:25px;display:flex;flex-direction:column;flex:1}
+.wp-card h3{font-size:23px;margin:0 0 15px}
+.wp-card h3 a{text-decoration:none;color:inherit}
+.wp-card h3 a:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+.wp-card__body>p:not(.wp-eyebrow){color:var(--wp-muted);font-size:15px;line-height:1.65;margin:0 0 18px}
+.wp-card__body .wp-card__meta{font-size:12px;margin-top:auto;padding-top:10px}
+.wp-text-link{color:var(--wp-accent);font-weight:700;text-underline-offset:4px;font-size:15px}
+.wp-text-link:hover{text-decoration:underline}
+.wp-reading-note{margin-top:40px;padding:30px;border-left:4px solid var(--wp-accent);border-radius:0 12px 12px 0;background:var(--wp-surface)}
+.wp-reading-note h2{font-size:25px;margin:0 0 18px}
+.wp-reading-note p{font-size:16px;line-height:1.75;max-width:920px;margin:14px 0;color:var(--wp-muted)}
+.wp-actions{display:flex;flex-wrap:wrap;gap:12px;margin:25px 0 20px}
+.wp-primary,.wp-secondary{display:inline-flex;gap:8px;align-items:center;padding:12px 16px;border-radius:7px;font-size:14px;line-height:1.5;font-weight:700;text-decoration:none}
+.wp-primary{background:#087381;color:white;border:1px solid #087381;flex-wrap:wrap}
+.wp-primary:hover{background:#075d69}
+.wp-secondary{background:var(--wp-tint);color:var(--wp-ink);border:1px solid var(--wp-line)}
+.wp-secondary:hover{border-color:var(--wp-accent)}
+.wp-primary span{font-size:12px;font-weight:400}
+.wp-correction a,.wp-contact a{color:var(--wp-accent);text-decoration:underline;text-underline-offset:3px}
+.wp-paper-header{padding-top:35px;padding-bottom:38px}
+.wp-paper-hero{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:56px;align-items:start;margin-top:38px}
+.wp-paper-hero h1{font-size:clamp(34px,4.4vw,53px);max-width:800px;margin:0 0 22px}
+.wp-subtitle{font-size:21px;line-height:1.55;color:var(--wp-muted);margin:0 0 22px;max-width:720px}
+.wp-byline{font-size:14px;color:var(--wp-muted);line-height:1.6}
+.wp-status{font-size:13px;color:var(--wp-muted);line-height:1.6;max-width:630px}
+.wp-paper-photo{margin:0}
+.wp-paper-photo img{width:100%;height:330px;object-fit:contain;background:#102c3e;border-radius:8px}
+.wp-paper-photo figcaption{font-size:12px;line-height:1.55;color:var(--wp-muted);margin-top:10px}
+.wp-reading-layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:54px;align-items:start;padding-bottom:60px}
+.wp-sidebar{position:sticky;top:24px;border-top:2px solid var(--wp-accent);padding-top:17px;font-size:13px;color:var(--wp-muted)}
+.wp-sidebar summary{color:var(--wp-ink);font-size:15px;font-weight:750;cursor:pointer;margin-bottom:12px}
+.wp-sidebar ul{list-style:none;margin:0;padding:0}
+.wp-sidebar li{margin:0 0 12px;line-height:1.5}
+.wp-sidebar a{color:var(--wp-muted);text-decoration:none}
+.wp-sidebar a:hover{color:var(--wp-accent);text-decoration:underline}
+.wp-supplements{border-top:1px solid var(--wp-line);margin-top:23px;padding-top:20px;display:flex;flex-direction:column;gap:12px;line-height:1.5}
+.wp-supplements h2{font-size:15px;margin:0 0 3px}
+.wp-content{font-size:17px;line-height:1.8;min-width:0;overflow-wrap:anywhere}
+.wp-content>h2{font-size:28px;line-height:1.3;margin:45px 0 20px;scroll-margin-top:24px}
+.wp-content p{margin:0 0 20px}
+.wp-content a{color:var(--wp-accent);text-decoration:underline;text-underline-offset:3px}
+.wp-content ul{list-style:disc;padding-left:24px;margin:0 0 22px}
+.wp-content li{margin-bottom:14px;padding-left:4px}
+.wp-abstract{background:var(--wp-surface);padding:28px;border:1px solid var(--wp-line);border-radius:10px}
+.wp-abstract h2{font-size:21px;margin:0 0 13px}
+.wp-abstract p{margin:0;font-size:17px}
+.wp-content blockquote{margin:25px 0;padding:21px 24px;background:var(--wp-tint);border-left:4px solid var(--wp-accent);font-size:16px;line-height:1.75}
+.wp-content blockquote p{margin:0}
+.wp-table{overflow:auto;margin:25px 0;border:1px solid var(--wp-line);border-radius:7px;max-width:100%}
+.wp-table table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.6;min-width:560px;overflow-wrap:normal}
+.wp-table th{background:#102c3e;color:#fff;font-weight:700;text-align:left;padding:14px 16px;vertical-align:top}
+.wp-table td{padding:14px 16px;border-bottom:1px solid var(--wp-line);vertical-align:top}
+.wp-table tr:nth-child(even){background:var(--wp-tint)}
+.wp-table tr:last-child td{border-bottom:0}
+.wp-figure{margin:30px 0}
+.wp-figure img{display:block;width:100%;height:auto;background:#fff;border:1px solid var(--wp-line);border-radius:8px}
+.wp-figure figcaption{color:var(--wp-muted);font-size:13px;line-height:1.65;margin-top:10px}
+.wp-content .wp-reference{font-size:15px;line-height:1.65;margin-bottom:16px;scroll-margin-top:24px}
+.wp-contact{padding-top:24px;border-top:1px solid var(--wp-line);font-size:15px}
+.wp-related{border-top:1px solid var(--wp-line);padding-top:45px;padding-bottom:65px}
+.wp-related .wp-cards{margin-top:25px;grid-template-columns:repeat(2,minmax(0,1fr));max-width:800px}
+.wp-page a:focus-visible,.wp-feature a:focus-visible,.wp-table:focus-visible,.wp-sidebar summary:focus-visible{outline:3px solid var(--wp-accent);outline-offset:4px}
+@media(max-width:1000px){.wp-cards{gap:16px}.wp-card__body{padding:20px}.wp-card h3{font-size:21px}.wp-paper-hero{gap:30px;grid-template-columns:minmax(0,1fr) 210px}.wp-reading-layout{grid-template-columns:190px minmax(0,1fr);gap:30px}}
+@media(max-width:760px){.wp-shell{padding-inline:20px}.wp-hub-hero{padding-block:46px}.wp-section-heading{display:block}.wp-section-heading>.wp-text-link{display:inline-block;margin-top:20px}.wp-cards{grid-template-columns:1fr;gap:24px}.wp-card__image{aspect-ratio:2/1}.wp-card h3{font-size:25px}.wp-paper-hero{grid-template-columns:1fr;gap:28px}.wp-paper-photo{display:grid;grid-template-columns:130px 1fr;gap:18px;align-items:center}.wp-paper-photo img{height:210px}.wp-paper-photo figcaption{margin:0}.wp-reading-layout{display:block}.wp-sidebar{position:static;margin-bottom:28px}.wp-sidebar details{padding-bottom:5px}.wp-sidebar .wp-supplements{padding-bottom:22px}.wp-content{font-size:17px}.wp-content>h2{font-size:25px}.wp-abstract{padding:22px}.wp-reading-note{padding:22px}.wp-related .wp-cards{grid-template-columns:1fr}.wp-hub-papers,.wp-feature{padding-top:40px}}
+@media(prefers-reduced-motion:reduce){.wp-card__image img{transition:none}}
+@media print{.site-nav,footer,.wp-sidebar,.wp-actions,.wp-related,.wp-paper-header>.wp-text-link{display:none!important}.wp-page{background:white;color:#102c3e}.wp-shell{max-width:none;padding:0}.wp-reading-layout{display:block}.wp-paper-header{padding-top:0}.wp-content{font-size:11pt}.wp-table{overflow:visible}.wp-table table{min-width:0}.wp-content>h2{break-after:avoid}.wp-figure{break-inside:avoid}.wp-content a{color:#087381}}

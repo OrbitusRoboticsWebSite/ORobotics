@@ -67,6 +67,9 @@ jobs:
       - name: Validate optimized gallery output
         run: npm run validate
 
+      - name: Validate white-paper editions and evidence
+        run: npm run validate:whitepapers
+
       - name: Validate project-subpath URLs
         run: npm run validate:subpath
 

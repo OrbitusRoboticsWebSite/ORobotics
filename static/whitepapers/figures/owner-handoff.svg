@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="471.96pt" height="147.456pt" viewBox="0 0 471.96 147.456" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Orbitus Robotics</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 147.456
+L 471.96 147.456
+L 471.96 0
+L 0 0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 14.175 89.311135
+L 113.778 89.311135
+Q 116.289 89.311135 116.289 86.614054
+L 116.289 23.682162
+Q 116.289 20.985081 113.778 20.985081
+L 14.175 20.985081
+Q 11.664 20.985081 11.664 23.682162
+L 11.664 86.614054
+Q 11.664 89.311135 14.175 89.311135
+z
+" clip-path="url(#p9fd4c4c917)" style="fill: #edf5f7; stroke: #b9d2d9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 117.172046 55.148108
+Q 121.310678 55.148108 123.660455 55.148108
+" clip-path="url(#p9fd4c4c917)" style="fill: none; stroke: #087f8c; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 118.060455 52.348108
+L 123.660455 55.148108
+L 118.060455 57.948108
+z
+" clip-path="url(#p9fd4c4c917)" style="fill: #087f8c; stroke: #087f8c; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 128.844 89.311135
+L 228.447 89.311135
+Q 230.958 89.311135 230.958 86.614054
+L 230.958 23.682162
+Q 230.958 20.985081 228.447 20.985081
+L 128.844 20.985081
+Q 126.333 20.985081 126.333 23.682162
+L 126.333 86.614054
+Q 126.333 89.311135 128.844 89.311135
+z
+" clip-path="url(#p9fd4c4c917)" style="fill: #edf5f7; stroke: #b9d2d9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 231.841046 55.148108
+Q 235.979678 55.148108 238.329455 55.148108
+" clip-path="url(#p9fd4c4c917)" style="fill: none; stroke: #087f8c; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 232.729455 52.348108
+L 238.329455 55.148108
+L 232.729455 57.948108
+z
+" clip-path="url(#p9fd4c4c917)" style="fill: #087f8c; stroke: #087f8c; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 243.513 89.311135
+L 343.116 89.311135
+Q 345.627 89.311135 345.627 86.614054
+L 345.627 23.682162
+Q 345.627 20.985081 343.116 20.985081
+L 243.513 20.985081
+Q 241.002 20.985081 241.002 23.682162
+L 241.002 86.614054
+Q 241.002 89.311135 243.513 89.311135
+z
+" clip-path="url(#p9fd4c4c917)" style="fill: #edf5f7; stroke: #b9d2d9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 346.510046 55.148108
+Q 350.648678 55.148108 352.998455 55.148108
+" clip-path="url(#p9fd4c4c917)" style="fill: none; stroke: #087f8c; stroke-width: 1.6; stroke-linecap: round"/>
+    <path d="M 347.398455 52.348108
+L 352.998455 55.148108
+L 347.398455 57.948108
+z
+" clip-path="url(#p9fd4c4c917)" style="fill: #087f8c; stroke: #087f8c; stroke-width: 1.6; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 358.182 89.311135
+L 457.785 89.311135
+Q 460.296 89.311135 460.296 86.614054
+L 460.296 23.682162
+Q 460.296 20.985081 457.785 20.985081
+L 358.182 20.985081
+Q 355.671 20.985081 355.671 23.682162
+L 355.671 86.614054
+Q 355.671 89.311135 358.182 89.311135
+z
+" clip-path="url(#p9fd4c4c917)" style="fill: #edf5f7; stroke: #b9d2d9; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(34.893141 41.60885)">New target</text>
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(32.60857 57.348186)">sequence +</text>
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(35.423883 74.320452)">generation</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(140.013703 42.787639)">Latest mailbox</text>
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(145.864992 58.045452)">one pending</text>
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(149.229914 75.337639)">destination</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(249.454852 42.787639)">Persistent owner</text>
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(269.999578 59.062639)">coherent</text>
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(255.983719 74.320452)">position / v / a</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(363.365883 41.770452)">Serialized output</text>
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(374.396625 59.062639)">same barrier</text>
+    <text style="font-size: 10.5px; font-family: 'DejaVu Sans'; fill: #102c3e" transform="translate(388.42643 74.227757)">as Stop</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #49616f" x="235.98" y="120.678047" transform="rotate(-0 235.98 120.678047)">Design proposal: one owner of commanded motion, including replacement and Stop.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p9fd4c4c917">
+   <rect x="7.2" y="7.2" width="457.56" height="133.056"/>
+  </clipPath>
+ </defs>
+</svg>

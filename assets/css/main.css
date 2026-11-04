@@ -4105,3 +4105,9 @@ body.rob-game-open{overflow:hidden;overscroll-behavior:none}.rob-sim__shell.is-f
 [data-sim-lean],[data-sim-grab]{background:#0d4c49;border-color:#5eead4;color:#fff}
 .rob-sim__fire[data-sim-lean],.rob-sim__fire[data-sim-grab]{font-size:.875rem;min-height:44px;padding:.25rem}
 @media(max-width:380px){.rob-sim__tread-stick{width:72px}.rob-sim__mobile-controls{inset-inline:.5rem;gap:.3rem}.rob-sim__fire{width:54px}}
+
+/* Keep the expanded research navigation usable on tablets. */
+@media (min-width: 768px) and (max-width: 1279px) {
+    .site-nav__link { width: 100%; justify-content: space-between; }
+    .site-nav__theme { margin-top: 0.25rem; }
+}

@@ -9,6 +9,7 @@
 <meta name="msapplication-TileColor" content="#111827">
 <meta name="theme-color" content="#111827">
 {{ partial "meta" . }}
+{{ partial "whitepaper-meta" . }}
 <script>
     if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
@@ -27,4 +28,10 @@
   {{ $labStyles := resources.Get "css/robot-lab.css" }}
   {{ if hugo.IsProduction }}{{ $labStyles = $labStyles | minify | fingerprint }}{{ end }}
   <link rel="stylesheet" href="{{ $labStyles.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $labStyles.Data.Integrity }}" crossorigin="anonymous"{{ end }} />
+{{ end }}
+
+{{ if or .IsHome (eq .Type "whitepapers") }}
+  {{ $paperStyles := resources.Get "css/whitepapers.css" }}
+  {{ if hugo.IsProduction }}{{ $paperStyles = $paperStyles | minify | fingerprint }}{{ end }}
+  <link rel="stylesheet" href="{{ $paperStyles.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $paperStyles.Data.Integrity }}" crossorigin="anonymous"{{ end }} />
 {{ end }}

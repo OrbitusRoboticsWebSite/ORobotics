@@ -1,0 +1,28 @@
+{{ define "main" }}
+<main id="main" class="wp-page">
+  <header class="wp-hub-hero">
+    <div class="wp-shell">
+      <p class="wp-eyebrow">Orbitus Robotics / Research</p>
+      <h1>Engineering lessons<br>from a real robot.</h1>
+      <div class="wp-hub-intro">{{ .Content }}</div>
+      <p class="wp-hub-note">Full web editions, illustrated PDFs, and traceable evidence. Published November 4, 2026.</p>
+    </div>
+  </header>
+  <section class="wp-shell wp-hub-papers" aria-labelledby="series-title">
+    <div class="wp-section-heading"><div><p class="wp-eyebrow">The ROB controller series</p><h2 id="series-title">From diagnosis to a recoverable handoff.</h2></div></div>
+    <div class="wp-cards">{{ range .RegularPages.ByWeight }}{{ partial "whitepaper-card.html" . }}{{ end }}</div>
+    <div class="wp-reading-note">
+      <h2>How to read this series</h2>
+      <p>Start with the motion-transition study, then the controller compatibility audit, and finish with the recovery plan. Test counts describe recorded offline or inactive-host checks. The papers identify the physical measurements still needed.</p>
+      <p>Photos come from Kierie’s October 29 can-handling videos. They document earlier work with ROB; they do not show the replacement controller operating.</p>
+      <p>These are Orbitus Robotics technical white papers, not peer-reviewed journal articles. Each edition includes its source commits, limitations, and an AI-assistance disclosure.</p>
+      <div class="wp-actions">
+        <a class="wp-secondary" href="{{ "whitepapers/orbitus-robotics-whitepapers.bib" | relURL }}" download>Download citations (.bib)</a>
+        <a class="wp-secondary" href="{{ "whitepapers/manifest.json" | relURL }}">Publication checksums</a>
+        <a class="wp-secondary" href="{{ "makerfaire/rob_2026/" | relURL }}">Can-handling gallery</a>
+      </div>
+      <p class="wp-correction">Have a related result or a correction? <a href="{{ "contact/" | relURL }}">Contact Orbitus Robotics.</a></p>
+    </div>
+  </section>
+</main>
+{{ end }}

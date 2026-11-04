@@ -1,0 +1,67 @@
+{
+  "edition_date": "2026-11-04",
+  "publisher": "Orbitus Robotics",
+  "external_editorial_status": "Not submitted; no external acceptance claimed.",
+  "papers": [
+    {
+      "id": "OR-WP-2026-001",
+      "slug": "arm-transition-fix-2026-11-01",
+      "title": "Continuous arm retargeting without competing trajectory workers",
+      "version": "1.0",
+      "canonical_url": "https://www.orbitusrobotics.com/whitepapers/arm-transition-fix-2026-11-01/",
+      "pdf": "arm-transition-fix-2026-11-01.pdf",
+      "pages": 6,
+      "bytes": 475405,
+      "sha256": "c584d2558a56e1310a3600b5b4c81cc0be0ad0fb20617944c1df069895ca665e",
+      "evidence_sha256": "22b20d318e98dd9ac9e0f22a5f940127618d52105004461119e17532cfb5c399"
+    },
+    {
+      "id": "OR-WP-2026-002",
+      "slug": "amber-controller-replacement-analysis",
+      "title": "Replacing a robot’s host controller while preserving its actuators",
+      "version": "1.0",
+      "canonical_url": "https://www.orbitusrobotics.com/whitepapers/amber-controller-replacement-analysis/",
+      "pdf": "amber-controller-replacement-analysis.pdf",
+      "pages": 7,
+      "bytes": 465297,
+      "sha256": "842c8356a0fc92fb1dda557d749dbef774181bb77b6c2b86d6db0720eca4f1df",
+      "evidence_sha256": "7be348fea65ab7204c356d21afe1a0fab2e8729c1028e1ed8b4a77846b42dc19"
+    },
+    {
+      "id": "OR-WP-2026-003",
+      "slug": "amber-can-takeover-and-recovery-plan",
+      "title": "A recovery-first CAN takeover plan for an experimental robot",
+      "version": "1.0",
+      "canonical_url": "https://www.orbitusrobotics.com/whitepapers/amber-can-takeover-and-recovery-plan/",
+      "pdf": "amber-can-takeover-and-recovery-plan.pdf",
+      "pages": 7,
+      "bytes": 358335,
+      "sha256": "fa86caf2f3af9e98adc25e2c21bdc157a2172ea1bf36fcc7ee54450db64cfd1c",
+      "evidence_sha256": "9a491a0d709987358d99e51b8b615d1fa4dce1d069e30ee6f31b527b7a215934"
+    }
+  ],
+  "artifacts": {
+    "amber-can-takeover-and-recovery-plan.evidence.json": "9a491a0d709987358d99e51b8b615d1fa4dce1d069e30ee6f31b527b7a215934",
+    "amber-can-takeover-and-recovery-plan.pdf": "fa86caf2f3af9e98adc25e2c21bdc157a2172ea1bf36fcc7ee54450db64cfd1c",
+    "amber-controller-replacement-analysis.evidence.json": "7be348fea65ab7204c356d21afe1a0fab2e8729c1028e1ed8b4a77846b42dc19",
+    "amber-controller-replacement-analysis.pdf": "842c8356a0fc92fb1dda557d749dbef774181bb77b6c2b86d6db0720eca4f1df",
+    "amber-library-ledger.csv": "197d9d93fd3b443122dd8aaa12e587d70a70e0b38396f05978fe998a32c98286",
+    "amber-library-ledger.json": "f88dd75fcdf3ab092fb645b2567e0ed81e6b130179df1e70d72f03226d36b29e",
+    "arm-transition-fix-2026-11-01.evidence.json": "22b20d318e98dd9ac9e0f22a5f940127618d52105004461119e17532cfb5c399",
+    "arm-transition-fix-2026-11-01.pdf": "c584d2558a56e1310a3600b5b4c81cc0be0ad0fb20617944c1df069895ca665e",
+    "figures/controller-architecture.png": "c85338fbd01d5be57eb90b5a7d74e546099989901fa27e429ae0cbcd0d6cae04",
+    "figures/controller-architecture.svg": "9e17d8d409065052b04615cc666a2f758f94f9c47aaa262626a019d179bd5238",
+    "figures/dependency-boundary.png": "faa77bc40a3880b28ffc167a861150162c91e5901747a6b381bbffa020841436",
+    "figures/dependency-boundary.svg": "144062b0825bcd96d57632649f01e624e3ad658a1c0abdf055c1a13a8fa8f8c2",
+    "figures/owner-handoff.png": "f9411abf1a89578485c8a36053898406e0432b88544d1bf78720767b4e94cd60",
+    "figures/owner-handoff.svg": "db0fc3eef31503f19899251ab452425bb91c634edc3316c96db856d7f5f6595b",
+    "figures/recovery-chain.png": "b83e540cc42c27a982407321f132e7fb06914d5835a24c8c17f59acbc65ca947",
+    "figures/recovery-chain.svg": "e793a40e5e7a53ffa4cb84ca37950522ca9ea31e69730b471c61d86572c9a82f",
+    "figures/rob-can-held.jpg": "9cbca7024badbfd669021d93a05756c4b22cd9d26bd57b3018bdd90690e69470",
+    "figures/rob-can-turn.jpg": "fa37a11f79ba56c77fbd4061247ec3a04d395ca5f2597bb3779f872729f55a95",
+    "figures/rob-table-grip.jpg": "f11193b4d4b356f77908d7224bf0815949edf2201b25085b21a19ea595648fe2",
+    "figures/seed-comparison.png": "804a5fceb2fa70974c15b66e8c167e75ad1cfa08cfaeecb2facec177b2e127a9",
+    "figures/seed-comparison.svg": "364bd26fd058a1094651b33362fef7e3f3cbc8cec27cf6768cf2ea239f59d3fe",
+    "orbitus-robotics-whitepapers.bib": "494f99d4d9b38694d8fa49331fa64f19a61fb16687709aac12cf5d737a9afbdd"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "source_commit": "d98ebd3791b9509249212e2c754f4061f78458f9",
+  "handoff_commit": "f5861f82e9025c2df2eb71ab93c74c1695ba5f6d",
+  "recovery_commit": "7c3b2449936a017c5f7049f6d562764a9fdb3f94",
+  "evidence_date": "2026-11-04",
+  "staged_package_sha256": "3628a1d4bc60aeacc40fb9fc3930ebb65419a019f3afe730c5734853fd9a909e",
+  "physical_transmit_available": false,
+  "installed": false,
+  "service_enabled": false,
+  "recorded_validation": {
+    "linux_checks_Release": 84,
+    "linux_checks_ASan_UBSan": 84,
+    "portable_TSan_groups": 58,
+    "inert_target_host_rehearsals": 5,
+    "inert_network_syscalls": 0,
+    "recovery_startup_offline_tests": 27
+  },
+  "archive": {
+    "payload_files": 48,
+    "payload_bytes": 43686735,
+    "additional_readable_startup_files": 7,
+    "later_protected_policy_files": 3,
+    "protected_policy_backup_verified_utc": "2026-11-04T17:51:00Z",
+    "full_disk_image_verified": false,
+    "independent_image_copy_verified": false,
+    "spare_restore_boot_verified": false
+  },
+  "open_gates": [
+    "B1 media identity",
+    "B2 full offline image",
+    "B3 independent copy",
+    "B4 spare restore and boot",
+    "T1 supported inactive hardware",
+    "T2 exclude legacy writers and restart routes",
+    "T3 adapter queues and reset behavior",
+    "T4 real CAN isolation",
+    "T5 fresh generation and bounded feedback",
+    "C0 measured limits and stop envelope",
+    "M1 supported first motion and Stop",
+    "M2 finite continuous retargeting"
+  ],
+  "interpretation": "Recorded offline and inactive-host evidence, not physical takeover completion. Three protected policy files close one backup gap; full system recovery remains open.",
+  "paper_id": "OR-WP-2026-003",
+  "publication_date": "2026-11-04",
+  "new_physical_tests_for_publication": false,
+  "source_report": {
+    "filename": "amber-can-takeover-and-recovery-plan.pdf",
+    "sha256": "38ce01e9bff04b89309eaa93ee1a92306a21147cf81d0880fc86e685e8c26cf5",
+    "public_original": false,
+    "note": "Public edition adapts this private report; original operator and machine details are not redistributed."
+  },
+  "source_references": [
+    {
+      "label": "[1] November 3-4 handoff, backup correction and open gates (f5861f8)",
+      "url": "https://github.com/RudyAramayo/Cerebro/blob/f5861f82e9025c2df2eb71ab93c74c1695ba5f6d/docs/calibration/amber-overnight-preparation-2026-11-03.md"
+    },
+    {
+      "label": "[2] Source-bound overnight manifests and verification",
+      "url": "https://github.com/RudyAramayo/Cerebro/tree/f5861f82e9025c2df2eb71ab93c74c1695ba5f6d/docs/calibration/evidence/2026-11-03-amber-overnight"
+    },
+    {
+      "label": "[3] Recovery/startup ownership source (7c3b244)",
+      "url": "https://github.com/RudyAramayo/Amber-HomeFolder/blob/7c3b2449936a017c5f7049f6d562764a9fdb3f94/docs/amber-stack-recovery.md"
+    },
+    {
+      "label": "[4] Clonezilla: supported imaging and recovery capabilities",
+      "url": "https://clonezilla.org/"
+    },
+    {
+      "label": "[5] Linux network namespace lifetime",
+      "url": "https://man7.org/linux/man-pages/man7/network_namespaces.7.html"
+    },
+    {
+      "label": "[6] Advertised CANable2 source; flashed image not verified",
+      "url": "https://github.com/normaldotcom/canable2-fw/blob/b158aa7ab106bc018715cd4d5f02f544f9de1830/src/can.c"
+    },
+    {
+      "label": "[7] Linux SocketCAN: multiple senders",
+      "url": "https://docs.kernel.org/networking/can.html"
+    }
+  ]
+}

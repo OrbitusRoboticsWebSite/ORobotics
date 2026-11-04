@@ -1,6 +1,6 @@
 {{ $currentPage := . }}
 <header class="site-nav" x-data="{ open: false }" @keydown.escape.window="if (open) { open = false; $nextTick(() => $refs.menuToggle.focus()) }">
-    <div class="mx-auto flex max-w-7xl flex-col px-4 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+    <div class="mx-auto flex max-w-7xl flex-col px-4 sm:px-6 xl:flex-row xl:items-center xl:justify-between lg:px-8">
         <div class="flex min-h-[4.5rem] items-center justify-between">
             <a href="{{ "" | relLangURL }}" class="site-brand" aria-label="{{ .Site.Title }} home">
                 <img src="{{ "images/site-logo.svg" | relURL }}" class="h-10 w-10 rounded-full" alt="" />
@@ -11,7 +11,7 @@
             </a>
             <button type="button"
                     x-ref="menuToggle"
-                    class="site-nav__toggle md:hidden"
+                    class="site-nav__toggle xl:hidden"
                     @click="open = !open"
                     :aria-expanded="open.toString()"
                     aria-label="Toggle main menu"
@@ -25,7 +25,7 @@
 
         <nav id="menuItems"
              :class="{ 'flex': open, 'hidden': !open }"
-             class="hidden flex-col gap-1 border-t border-white/10 py-3 md:flex md:flex-row md:items-center md:border-0 md:py-0"
+             class="hidden flex-col gap-1 border-t border-white/10 py-3 xl:flex xl:flex-row xl:items-center xl:border-0 xl:py-0"
              aria-label="Main navigation">
             {{ range site.Menus.main }}
                 {{ $isCurrent := or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }}
@@ -51,7 +51,7 @@
         </nav>
 
         <noscript>
-            <nav class="flex flex-wrap gap-2 border-t border-white/10 py-3 md:hidden" aria-label="Main navigation without JavaScript">
+            <nav class="flex flex-wrap gap-2 border-t border-white/10 py-3 xl:hidden" aria-label="Main navigation without JavaScript">
                 {{ range site.Menus.main }}
                 <a class="site-nav__link" href="{{ .URL | relLangURL }}">{{ .Name }}</a>
                 {{ end }}
