@@ -6,6 +6,7 @@ The committed manuscripts and curated evidence are the complete build inputs.
 """
 from __future__ import annotations
 import csv, hashlib, html, json, os, re
+from datetime import date
 from pathlib import Path
 import matplotlib
 matplotlib.use('Agg')
@@ -64,6 +65,15 @@ def flow(name,labels,caption):
 
 
 def figures(evidence):
+ flow('xhub-installed-stack',['Robot Studio\ncommand backend','ROS 2 Foxy\n200 Hz controller','SOEM\nEtherCAT driver','X-Hub\nendpoint'], 'Installed single-arm stack; the X-Hub Ethernet link was disconnected during the audit.')
+ fig,ax=plt.subplots(figsize=(8.2,3.2));ax.set_xlim(-.1,8.1);ax.set_ylim(-.1,3.1);ax.axis('off')
+ box(ax,0,1.05,1.65,.95,'Cerebro / VR\ntimestamped\nclutched goals',fontsize=10)
+ box(ax,2,1.05,1.65,.95,'Shared admission\nscene / limits\nStop',fontsize=10);arrow(ax,(1.65,1.525),(2,1.525))
+ for y,side in [(1.85,'RIGHT'),(.35,'LEFT')]:
+  box(ax,4.05,y,1.8,.9,'Persistent owner\n'+side,fontsize=10)
+  box(ax,6.2,y,1.8,.9,'Exclusive writer\nverified transport',fontsize=10)
+  arrow(ax,(3.65,1.525),(4.05,y+.45));arrow(ax,(5.85,y+.45),(6.2,y+.45))
+ savefig(fig,'xhub-dual-owner')
  flow('owner-handoff',['New target\nsequence +\ngeneration','Latest mailbox\none pending\ndestination','Persistent owner\ncoherent\nposition / v / a','Serialized output\nsame barrier\nas Stop'], 'Design proposal: one owner of commanded motion, including replacement and Stop.')
  flow('recovery-chain',['Identify\noriginal disk','Verify\nwhole-disk\nimage','Verify\nindependent\ncopy','Restore\nto a spare','Boot test\nmotors off\nCAN detached'], 'Proposed recovery gates - completion requires recorded evidence at each step.')
  vals=evidence['arm-transition-fix-2026-11-01']['recorded_release']['legacy_comparison'][:3]
@@ -129,7 +139,9 @@ def pdf(p):
   if doc.page>1:
    canvas.setFont('Paper',8);canvas.setFillColor(colors.HexColor(MUTED));canvas.drawString(54,h-25,norm(p['short_title']))
   canvas.setFont('Paper',8);canvas.setFillColor(colors.HexColor(MUTED));canvas.drawString(54,28,p['id']+'  |  Orbitus Robotics  |  v'+p['version']);canvas.drawRightString(w-54,28,str(doc.page));canvas.restoreState()
- story += [para('ORBITUS ROBOTICS  /  WHITE PAPER','eyebrow'),para(p['title'],'h1'),para(p['subtitle'],'subtitle'),para(f"{p['id']}  |  Version {p['version']}  |  November 4, 2026",'small'),para(p['author']+'  ·  Project lead: '+p['project_lead'],'small'),Spacer(1,6),para('Abstract','eyebrow'),para(p['abstract']),Spacer(1,9)]
+ published=date.fromisoformat(p['date'])
+ date_label=f'{published:%B} {published.day}, {published.year}'
+ story += [para('ORBITUS ROBOTICS  /  WHITE PAPER','eyebrow'),para(p['title'],'h1'),para(p['subtitle'],'subtitle'),para(f"{p['id']}  |  Version {p['version']}  |  {date_label}",'small'),para(p['author']+'  ·  Project lead: '+p['project_lead'],'small'),Spacer(1,6),para('Abstract','eyebrow'),para(p['abstract']),Spacer(1,9)]
  im=PILImage.open(FIG/p['photo']);ih=260;iw=ih*im.width/im.height
  photo=Image(str(FIG/p['photo']),width=iw,height=ih)
  details=[para('RESEARCH RECORD','eyebrow'),para(p['summary']),para('Evidence originates in the '+p['source_date']+' report. '+p['publication_status']+'.','small'),para(p['photo_caption'],'caption'),para('Keywords: '+', '.join(p['keywords']),'small')]
@@ -195,7 +207,7 @@ def main():
  OUT.mkdir(parents=True,exist_ok=True);FIG.mkdir(exist_ok=True);setup_fonts()
  evidence=read(ROOT/'data/whitepaper_evidence.json');ledger=read(ROOT/'data/whitepaper_library_ledger.json');figures(evidence)
  dump(OUT/'rob-project-background.json',read(ROOT/'data/whitepaper_project_background.json'))
- papers=sorted([read(p) for p in (ROOT/'data/whitepapers').glob('*.json')],key=lambda p:p['id']);manifest={'edition_date':'2026-11-04','publisher':'Orbitus Robotics','external_editorial_status':'Not submitted; no external acceptance claimed.','papers':[]};bib=[]
+ papers=sorted([read(p) for p in (ROOT/'data/whitepapers').glob('*.json')],key=lambda p:p['id']);manifest={'edition_date':max(p['date'] for p in papers),'publisher':'Orbitus Robotics','external_editorial_status':'Self-published technical papers; external indexing does not establish peer review.','papers':[]};bib=[]
  dump(OUT/'amber-library-ledger.json',ledger)
  with (OUT/'amber-library-ledger.csv').open('w',newline='') as f:
   w=csv.DictWriter(f,fieldnames=list(ledger['libraries'][0]),lineterminator='\n');w.writeheader();w.writerows(ledger['libraries'])

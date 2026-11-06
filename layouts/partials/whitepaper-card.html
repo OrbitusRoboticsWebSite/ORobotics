@@ -6,7 +6,7 @@
     <p class="wp-eyebrow">{{ .Params.paper_id }}</p>
     <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
     <p>{{ .Description }}</p>
-    <p class="wp-card__meta">{{ .Params.pdf_pages }} pages · November 2026 · v{{ .Params.version }}</p>
+    <p class="wp-card__meta">{{ .Params.pdf_pages }} pages · {{ .Date.Format "January 2006" }} · v{{ .Params.version }}</p>
     <a class="wp-text-link" href="{{ .RelPermalink }}">Read paper <span aria-hidden="true">→</span></a>
   </div>
 </article>

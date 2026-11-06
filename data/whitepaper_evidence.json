@@ -264,5 +264,142 @@
       "public_original": false,
       "note": "Public edition adapts this private report; original operator and machine details are not redistributed."
     }
+  },
+  "amber-xhub-dual-arm-conversion": {
+    "paper_id": "OR-WP-2026-004",
+    "publication_date": "2026-11-05",
+    "evidence_date": "2026-11-05",
+    "inspection_scope": "Read-only host audit and static binary/model inspection; no vendor launcher, transport initialization, service restart or motion command. Existing master processes continued running.",
+    "new_physical_tests_for_publication": false,
+    "conversion_installed": false,
+    "source_report": {
+      "filename": "amber-b1-xhub-audit-and-dual-arm-conversion-plan.pdf",
+      "sha256": "ba6b58e75c2d13f0d30674398e01483a2c0dc1c47d3779e8f2604fa180c27995",
+      "public_original": false,
+      "note": "Private report preserved separately. Public edition omits machine identifiers, access details, operator messages and binary payloads."
+    },
+    "installed_stack": {
+      "family": "B1 V1 X-Hub / EtherCAT",
+      "api_configuration_version": "1.1",
+      "api_version_is_hub_firmware": false,
+      "ros": "Foxy",
+      "soem_ros2_version": "1.4.0",
+      "controller_hz": 200,
+      "open_loop_control": true,
+      "command_interfaces": [
+        "position",
+        "velocity"
+      ],
+      "hardware_plugin_sha256": "ec3123dcbe311e15793b33831049204fafb994479e6bd815f70b57f4d9414c68",
+      "hardware_plugin_build_id": "82c8778c462175daa1890e4b1052302768bc7abf",
+      "gui_sha256": "38e9f38095c49b301b848b17b016e34d9eda099e33f7077d4e1b9d5c7421ac80",
+      "current_core_sha256": "554e7088b94b98f03f152f394c5e5b1d1ecfd16dacd470889e65dc83c36d2100",
+      "current_core_required_glibc": "2.34"
+    },
+    "hosts": {
+      "older": {
+        "cpu": "Intel Celeron N2840",
+        "cores": 2,
+        "ram_bytes": 1960660992,
+        "swap_bytes": 0,
+        "disk_bytes": 32017047552,
+        "ubuntu": "20.04.3",
+        "glibc": "2.31",
+        "network_interfaces": 2
+      },
+      "current": {
+        "cpu": "Intel Celeron J4125",
+        "cores": 4,
+        "ram_gb_approx": 3.92,
+        "swap_gb_approx": 3.99,
+        "disk_bytes": 64023257088,
+        "ubuntu": "22.04.3",
+        "glibc": "2.35"
+      }
+    },
+    "cpu_sample": {
+      "host": "current",
+      "interval_seconds_approx": 2.025,
+      "per_process_percent_one_logical_cpu_is_100": [
+        194.1,
+        187.1
+      ],
+      "per_process_threads": [
+        19,
+        19
+      ],
+      "combined_logical_cpus_approx": 3.81,
+      "interpretation": "Short sampled current workload, not a N2840 benchmark, real-time qualification or proof an efficient two-arm controller is infeasible."
+    },
+    "hubs": {
+      "operator_reported_powered": 2,
+      "ethernet_connected": 0,
+      "spare_ethercat_port_carrier": false,
+      "physical_model_label_verified": false,
+      "firmware_verified": false,
+      "eeprom_verified": false,
+      "two_hub_topology_verified": false,
+      "direct_usb_can_compatibility_verified": false
+    },
+    "historical_log": {
+      "date": "2024-10-20",
+      "slave_count": 1,
+      "input_bytes": 92,
+      "output_bytes": 56,
+      "expected_working_counter": 3,
+      "later_events": [
+        "packet errors",
+        "lost slave",
+        "degraded ESTOP"
+      ],
+      "interpretation": "Past connection only; not current hub identity or failure diagnosis."
+    },
+    "models": {
+      "standalone_urdf": {
+        "j7_limits_rad": [
+          -314,
+          314
+        ],
+        "joint_velocity": 10
+      },
+      "launched_xacro": {
+        "j7_limits_rad": [
+          -3.05,
+          3.05
+        ],
+        "j1_j4_velocity": 3.1415,
+        "j5_j7_velocity": 5.23
+      },
+      "current_solver": {
+        "per_arm_joints": 7,
+        "limits_rad": [
+          -2.09,
+          2.09
+        ],
+        "effort": 100000,
+        "velocity": 1000000
+      },
+      "interpretation": "Values observed in files; not measured or commissioned actuator limits."
+    },
+    "preservation": {
+      "regular_files": 393,
+      "compressed_bytes": 15203162,
+      "archive_sha256": "0a90a608a97bff397c9fac2ea4b49f9ed5c019a84bfc52dc13a1059f8546fae4",
+      "source_hash_mismatches": 0,
+      "archive_public": false,
+      "full_disk_image_verified": false,
+      "restore_boot_verified": false
+    },
+    "open_gates": [
+      "full-disk preservation and restore",
+      "independent clone identity",
+      "runtime and instruction compatibility",
+      "two-arm target-host timing",
+      "hub and arm identity",
+      "electrical and protocol compatibility",
+      "measured joint limits and full-body collision frames",
+      "exclusive writers and restart inhibition",
+      "physical Stop and retarget commissioning"
+    ]
   }
 }

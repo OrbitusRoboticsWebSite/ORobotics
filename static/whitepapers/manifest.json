@@ -1,7 +1,7 @@
 {
-  "edition_date": "2026-11-04",
+  "edition_date": "2026-11-05",
   "publisher": "Orbitus Robotics",
-  "external_editorial_status": "Not submitted; no external acceptance claimed.",
+  "external_editorial_status": "Self-published technical papers; external indexing does not establish peer review.",
   "papers": [
     {
       "id": "OR-WP-2026-001",
@@ -38,6 +38,18 @@
       "bytes": 361842,
       "sha256": "75af1518131bace4e78b22e3eee9a14d8580daf55488395eb384b51ae165f2af",
       "evidence_sha256": "8c03c379b2ad0d4bce9d10f93b9c9fcd6ed8322fda345647df07f57ea6d4e1cf"
+    },
+    {
+      "id": "OR-WP-2026-004",
+      "slug": "amber-xhub-dual-arm-conversion",
+      "title": "From a single-arm X-Hub host to a dual-arm development system",
+      "version": "1.0",
+      "canonical_url": "https://www.orbitusrobotics.com/whitepapers/amber-xhub-dual-arm-conversion/",
+      "pdf": "amber-xhub-dual-arm-conversion.pdf",
+      "pages": 8,
+      "bytes": 411607,
+      "sha256": "fa1be24cc78c550de6258a241fba441453b4c63cc09ccc5b353347ca0554df04",
+      "evidence_sha256": "9162c2e398e1da53ed71e42e54a8d902d9d94d52c2b9315ac3a5118049b8fcda"
     }
   ],
   "artifacts": {
@@ -47,6 +59,8 @@
     "amber-controller-replacement-analysis.pdf": "6ed6d34dfcd50dd75c56e3e5a9c11d99d8ff7f0183f0a8279bc63ea33fa85d06",
     "amber-library-ledger.csv": "197d9d93fd3b443122dd8aaa12e587d70a70e0b38396f05978fe998a32c98286",
     "amber-library-ledger.json": "f88dd75fcdf3ab092fb645b2567e0ed81e6b130179df1e70d72f03226d36b29e",
+    "amber-xhub-dual-arm-conversion.evidence.json": "9162c2e398e1da53ed71e42e54a8d902d9d94d52c2b9315ac3a5118049b8fcda",
+    "amber-xhub-dual-arm-conversion.pdf": "fa1be24cc78c550de6258a241fba441453b4c63cc09ccc5b353347ca0554df04",
     "arm-transition-fix-2026-11-01.evidence.json": "6961d61868f68838cbbfb35ec3e0cd7744960110a0c5a574073ae58f89d29274",
     "arm-transition-fix-2026-11-01.pdf": "cedc4ece9be187ce8f2f1561c2bf9d7f9c149d062fa5b6f6fdedceb66bccf3fe",
     "figures/controller-architecture.png": "c85338fbd01d5be57eb90b5a7d74e546099989901fa27e429ae0cbcd0d6cae04",
@@ -62,7 +76,11 @@
     "figures/rob-table-grip.jpg": "f11193b4d4b356f77908d7224bf0815949edf2201b25085b21a19ea595648fe2",
     "figures/seed-comparison.png": "804a5fceb2fa70974c15b66e8c167e75ad1cfa08cfaeecb2facec177b2e127a9",
     "figures/seed-comparison.svg": "364bd26fd058a1094651b33362fef7e3f3cbc8cec27cf6768cf2ea239f59d3fe",
-    "orbitus-robotics-whitepapers.bib": "7f2bb24cc4716f66d0d20ec69aeee2d86b3ca7b7430b11050f2978edb246f115",
+    "figures/xhub-dual-owner.png": "eb3bfc853f01ec833fd8de8f361d4bc17d87e9d69eb774af835fea2bc37dd433",
+    "figures/xhub-dual-owner.svg": "07c9c4acc339f49fda3f97888c2b3a8da19fe7be1e6f8205f218fea75b542fee",
+    "figures/xhub-installed-stack.png": "30575696d59863b9e331b3e608855d029b3f697f6e58fe4c11916d36b55fe642",
+    "figures/xhub-installed-stack.svg": "bfe63f83234daa49b433ce10b17a73827d43920ebea09fc324cf11aa2e4b3d07",
+    "orbitus-robotics-whitepapers.bib": "7f26d29f5d3ebe98e7cd0ab882708d678fc5b968a288c35abba6790645cf367e",
     "rob-project-background.json": "20a11b35a4e8cf8bb812c966050bfef2e88b35c05da1761b7405ce106ce7a652"
   }
 }

@@ -17,6 +17,7 @@ const attr = (tag, name) => tag.match(new RegExp(`\\b${name}=(?:"([^"]*)"|'([^']
 const origin = 'https://www.orbitusrobotics.com';
 
 validate(manifest.papers.length === manuscripts.length, 'Manifest/manuscript count differs.');
+validate(manifest.edition_date === manuscripts.map(p => p.date).sort().at(-1), 'Manifest does not identify the newest publication date.');
 validate(new Set(manuscripts.map(p => p.id)).size === manuscripts.length, 'Duplicate paper identifier.');
 for (const [name, expected] of Object.entries(manifest.artifacts)) {
   validate(!name.includes('..') && !path.isAbsolute(name), `Unsafe artifact path: ${name}`);
@@ -35,6 +36,8 @@ for (const p of manuscripts) {
   const pageFile = path.join(publicRoot, 'whitepapers', p.slug, 'index.html');
   const page = await readFile(pageFile, 'utf8');
   validate(page.includes(p.id) && page.includes('Not peer reviewed'), `${p.id}: identity or publication status missing`);
+  const citationDateTag = (page.match(/<meta\b[^>]*>/g) ?? []).find(tag => attr(tag, 'name') === 'citation_publication_date');
+  validate(Boolean(citationDateTag) && attr(citationDateTag, 'content') === p.date.replaceAll('-', '/'), `${p.id}: citation publication date differs from manuscript`);
   const ids = new Set([...page.matchAll(/\bid=(?:"([^"]+)"|'([^']+)'|([^\s>]+))/g)].map(m=>m[1]??m[2]??m[3]));
   for (let i=1; i<=p.references.length; i++) validate(ids.has(`ref-${i}`), `${p.id}: missing reference ${i}`);
   for (const s of p.sections) {
@@ -66,6 +69,7 @@ for (const p of manuscripts) {
   if (schemaMatch) {
     const schema=JSON.parse(schemaMatch[1]);
     validate(schema.identifier===p.id && schema.encoding.contentUrl===`${origin}/whitepapers/${m.pdf}`,`${p.id}: metadata/PDF disagreement`);
+    validate(schema.datePublished === p.date && schema.dateModified >= p.date, `${p.id}: structured publication dates differ from manuscript`);
   }
   validate(page.includes('Evidence summary (JSON)') && page.includes('Citation file (BibTeX)'),`${p.id}: supporting links missing`);
 }

@@ -7,7 +7,7 @@
         <p class="wp-eyebrow">{{ .Params.paper_id }} / Technical white paper</p>
         <h1>{{ .Title }}</h1>
         <p class="wp-subtitle">{{ .Params.subtitle }}</p>
-        <p class="wp-byline">Orbitus Robotics · November 4, 2026 · Version {{ .Params.version }}</p>
+        <p class="wp-byline">Orbitus Robotics · {{ .Date.Format "January 2, 2006" }} · Version {{ .Params.version }}</p>
         {{ with .Params.revision_note }}<p class="wp-status">{{ . }}</p>{{ end }}
         <div class="wp-actions"><a class="wp-primary" href="{{ .Params.pdf | relURL }}" download>Download PDF <span>({{ .Params.pdf_pages }} pages, {{ math.Ceil (div .Params.pdf_bytes 1024.0) }} KB)</span></a></div>
         <p class="wp-status">Not peer reviewed. Recorded evidence and remaining physical tests are distinguished throughout.</p>
