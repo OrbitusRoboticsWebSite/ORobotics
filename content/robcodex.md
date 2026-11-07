@@ -8,7 +8,7 @@ draft: false
 
 **Secure local coding sessions.** ROBCodeAgent turns the Mac bridge into a focused Codex workspace and securely carries the same sessions to an iPhone or iPad on your local Wi-Fi network. ROBCodeAgent is made by Orbitus Robotics and works with a separately installed Codex CLI. It is independent of ROBController and Cerebro.
 
-ROBCodeAgent is available on the [App Store](https://apps.apple.com/app/id6807303425). Version 0.1.1 adds remaining-usage details and direct question replies; its iPhone and iPad rollout follows Apple review. The matching Mac bridge is available below. App Store distribution excludes China mainland.
+ROBCodeAgent 0.1.2 is available on the [App Store](https://apps.apple.com/app/id6807303425) for iPhone and iPad. It includes session goals, optional voice, remaining-usage details, and direct question replies. The matching Mac bridge is available below. App Store distribution excludes China mainland. [Explore all Orbitus products](/products/).
 
 The app and Mac companion now use the ROBCodeAgent name. Existing sessions and paired-device identities are preserved.
 

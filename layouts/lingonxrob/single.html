@@ -1,0 +1,29 @@
+{{ define "main" }}
+{{ $app := index (where hugo.Data.app_store_products.products "slug" "lingonxrob") 0 }}
+<main id="main" class="product-hub plist-product">
+  {{ partial "product-subnav.html" . }}
+  <header class="plist-product__hero">
+    <div>
+      {{ $icon := (resources.Get $app.icon).Resize "192x webp q85" }}
+      <img class="plist-product__icon" src="{{ $icon.RelPermalink }}" width="96" height="96" alt="">
+      <p class="product-kicker">Native Mac utility · Available now</p>
+      <h1>Launchd files.<br><em>Clearly edited.</em></h1>
+      <p class="plist-product__name">LingonXRob Plist Editor</p>
+      <p class="product-hub__lede">Create a property list, open a file you choose, and edit its commands, schedules, and advanced settings through a focused native interface.</p>
+      <div class="app-catalog__actions"><a class="app-catalog__store" href="{{ $app.store_url }}">View on Mac App Store <span aria-hidden="true">↗</span></a><a class="app-catalog__details" href="{{ "contact/" | relURL }}">Get support →</a></div>
+      <p class="app-catalog__note">macOS 14 or later · Apple silicon and Intel · No account required</p>
+    </div>
+    <figure>
+      {{ $screen := (resources.Get "images/products/lingonxrob/editor.png").Resize "1280x webp q85" }}
+      <img src="{{ $screen.RelPermalink }}" width="{{ $screen.Width }}" height="{{ $screen.Height }}" alt="LingonXRob Plist Editor showing a new launchd document with a label, command, and scheduling controls" fetchpriority="high" decoding="async">
+      <figcaption>The native editor, with a sample launchd document.</figcaption>
+    </figure>
+  </header>
+  <section class="plist-product__features" aria-label="LingonXRob Plist Editor features">
+    <article><span>01 / DOCUMENTS</span><h2>Open. Edit. Save.</h2><p>Start with a new XML property list or open an existing file. Standard macOS Open and Save panels keep file selection in your hands.</p></article>
+    <article><span>02 / DETAILS</span><h2>The keys you need.</h2><p>Edit labels, commands, startup behavior, keep-alive settings, schedules, session options, paths, Mach services, and notes. Unrecognized keys in existing files are preserved.</p></article>
+    <article><span>03 / SCOPE</span><h2>A focused file editor.</h2><p>The App Store edition edits the files you select. It does not install or run jobs, scan launchd folders, execute commands, or request administrator access.</p></article>
+  </section>
+  <section class="plist-product__privacy"><h2>Your files stay yours.</h2><p>No accounts, analytics, tracking, advertising, or data collection. Read our <a href="{{ "privacy/" | relURL }}">privacy policy</a> or <a href="{{ "contact/" | relURL }}">contact Orbitus Robotics</a> for help.</p><a class="app-catalog__details" href="{{ "products/" | relURL }}">Explore all Orbitus products →</a></section>
+</main>
+{{ end }}

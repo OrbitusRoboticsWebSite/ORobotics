@@ -2902,6 +2902,53 @@ body.rob-game-open{overflow:hidden;overscroll-behavior:none}.rob-sim__shell.is-f
     }
 }
 
+/* App Store catalog and LingonXRob product page. */
+.product-subnav>div a {white-space:nowrap;flex:none}
+.plist-product {--pd-line:#233332;--pd-accent:#85f5c5}
+.product-hub__jumps {display:flex;flex-wrap:wrap;gap:0 2rem}
+.app-catalog {width:min(92rem,100%);margin:auto;padding:clamp(4rem,7vw,7rem) clamp(1.25rem,5vw,5rem);scroll-margin-top:5rem}
+.app-catalog .product-hub__section-head {grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:1.2rem 3rem}
+.app-catalog .product-hub__section-head h2 {font-size:clamp(2.4rem,4vw,4rem);line-height:1.02}
+.app-catalog__grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem}
+.app-catalog__card {display:flex;flex-direction:column;min-width:0;border:1px solid #29413a;border-radius:1.25rem;padding:clamp(1.3rem,3vw,2.5rem);background:linear-gradient(145deg,#10241d,#0a1212)}
+.app-catalog__identity {display:flex;align-items:center;gap:1.1rem}
+.app-catalog__identity img {flex:none;width:80px;height:80px;border-radius:19px}
+.app-catalog__identity h3 {margin:.3rem 0;font-size:clamp(1.25rem,2vw,1.65rem);line-height:1.2;letter-spacing:-.03em}
+.app-catalog__category {margin:0;color:#85f5c5;font:750 .65rem/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.11em;text-transform:uppercase}
+.app-catalog__platforms {margin:.45rem 0 0;color:#adc5bd;font-size:.8rem;line-height:1.5}
+.app-catalog__card h4 {margin:1.9rem 0 .7rem;font-size:clamp(1.65rem,2.6vw,2.2rem);line-height:1.15;letter-spacing:-.04em}
+.app-catalog__description {margin:0 0 1rem;color:#c5d5cf;line-height:1.7}
+.app-catalog__requirement {margin:auto 0 0;padding:1rem 0 0;color:#9cb5ab;font-size:.8rem;line-height:1.6}
+.app-catalog__actions {display:flex;flex-wrap:wrap;align-items:center;gap:1rem 1.3rem;margin-top:1.6rem}
+.app-catalog__store {display:inline-flex;align-items:center;justify-content:center;gap:1rem;border:1px solid #85f5c5;border-radius:.6rem;padding:.8rem 1rem;background:#85f5c5;color:#071910;font-size:.85rem;font-weight:850;text-decoration:none}
+.app-catalog__store:hover {background:#b4ffdf}
+.app-catalog__details {color:#e4f7ed;font-size:.85rem;font-weight:750;text-underline-offset:4px}
+.app-catalog__details:hover {text-decoration:underline}
+.app-catalog a:focus-visible,.plist-product a:focus-visible {outline:3px solid #fff;outline-offset:5px}
+.app-catalog__note {margin:1.2rem 0;color:#a5b9b0;font-size:.8rem;line-height:1.7}
+.app-catalog__upcoming {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem 3rem;margin-top:3.5rem;border-top:1px solid #29413a;padding-top:2rem}
+.app-catalog__upcoming>h3 {grid-column:1/-1;margin:0;font-size:1.3rem}
+.app-catalog__upcoming h4 {margin:.5rem 0;font-size:1.35rem}
+.app-catalog__upcoming article>p:last-child {color:#aabfb5;line-height:1.65;font-size:.9rem}
+.plist-product__hero {display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(2rem,5vw,5rem);align-items:center;width:min(100rem,100%);margin:auto;padding:clamp(3rem,7vw,7rem) clamp(1.25rem,5vw,5rem)}
+.plist-product__icon {width:96px;height:96px;border-radius:22px;margin-bottom:1.6rem}
+.plist-product__hero h1 {font-size:clamp(3rem,5.2vw,5.7rem);line-height:.95;letter-spacing:-.055em;margin:1.2rem 0}
+.plist-product__hero h1 em {color:#85f5c5;font-style:normal}
+.plist-product__name {color:#d8eee3;font-weight:750;font-size:1.2rem}
+.plist-product__hero figure {min-width:0;margin:0}
+.plist-product__hero figure img {width:100%;height:auto;border-radius:1rem;border:1px solid #3d5048;box-shadow:0 30px 90px #0008}
+.plist-product__hero figcaption {margin-top:.8rem;color:#a5b9b0;font-size:.8rem}
+.plist-product__features {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2rem;width:min(90rem,100%);padding:1rem clamp(1.25rem,5vw,5rem) 5rem;margin:auto}
+.plist-product__features article {border-top:1px solid #29413a;padding-top:1.5rem}
+.plist-product__features span {color:#85f5c5;font:700 .7rem/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
+.plist-product__features h2 {margin:.8rem 0;font-size:1.6rem;letter-spacing:-.035em}
+.plist-product__features p,.plist-product__privacy p {color:#b6c7bd;line-height:1.75}
+.plist-product__privacy {width:min(55rem,100%);padding:1rem 1.25rem 6rem;margin:auto;text-align:center}
+.plist-product__privacy h2 {font-size:2.5rem;letter-spacing:-.04em}
+.plist-product__privacy p a {text-decoration:underline;text-underline-offset:3px;color:#85f5c5}
+@media(max-width:980px){.app-catalog .product-hub__section-head,.plist-product__hero{grid-template-columns:1fr}.plist-product__features{grid-template-columns:1fr}}
+@media(max-width:720px){.app-catalog__grid,.app-catalog__upcoming{grid-template-columns:1fr}.app-catalog__identity img{width:64px;height:64px;border-radius:15px}.app-catalog__identity{gap:.85rem}.app-catalog__upcoming>h3{grid-column:auto}}
+
 /* CodeAtlas product page — a developer observatory, drawn in graph light. */
 .codeatlas-page {
     --ca-bg: #05070b;

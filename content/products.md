@@ -3,8 +3,8 @@ title: "Products"
 url: "/products/"
 type: "products"
 draft: false
-description: "Explore Orbitus Robotics products: the native ROB operating stack, the local-first CodeAtlas developer workspace, and Musimotion for expressive visual creation."
+description: "Discover Orbitus Robotics apps on the App Store: ROBCodeAgent, CodeAtlas, LingonXRob Plist Editor, and ROB Training. Explore Musimotion and the ROB operating stack."
 featured_image: "images/products/rob-software-stack-og.png"
 ---
 
-Orbitus Robotics builds the software and the machine as one system.
+Native tools for coding, creating, learning, and connecting with R.O.B.

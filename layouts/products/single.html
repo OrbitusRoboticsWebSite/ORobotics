@@ -4,10 +4,10 @@
     <div class="product-hub__grid" aria-hidden="true"></div>
     <div class="product-hub__hero-inner">
       <div class="product-hub__copy">
-        <p class="product-kicker"><span></span>The ROB operating stack</p>
-        <h1 id="product-hub-title">One robot.<br><em>Three control planes.</em></h1>
-        <p class="product-hub__lede">Perception, identity, and supervised autonomy on the Mac. Direct robot command, mapping, and secure remote operations from iPhone, iPad, and Apple Watch. Multi-camera spatial control, immersive 360° video, and measured dual-arm operation in Apple Vision Pro. Every layer is native, purpose-built, and connected to the physical machine.</p>
-        <a class="product-hub__jump" href="#product-stack">Explore the stack <span aria-hidden="true">↓</span></a>
+        <p class="product-kicker"><span></span>Orbitus apps + robotics</p>
+        <h1 id="product-hub-title">Build. Explore.<br><em>Make it move.</em></h1>
+        <p class="product-hub__lede">Follow your coding sessions from anywhere on your local network. See the shape of a codebase. Give Mac automation files a clear interface. Learn robotics through play. Discover native apps from the team building R.O.B.</p>
+        <div class="product-hub__jumps"><a class="product-hub__jump" href="#app-store-apps">Explore our apps <span aria-hidden="true">↓</span></a><a class="product-hub__jump" href="#product-stack">Meet the robot stack <span aria-hidden="true">↓</span></a></div>
       </div>
       <div class="stack-orbit" aria-label="The ROB software stack connects Cerebro, ROBController, and ROBControllerVision to the physical robot">
         <div class="stack-orbit__ring stack-orbit__ring--outer" aria-hidden="true"></div>
@@ -19,6 +19,39 @@
         <span class="stack-orbit__node stack-orbit__node--control">02 <b>Control</b></span>
         <span class="stack-orbit__node stack-orbit__node--spatial">03 <b>Spatial</b></span>
       </div>
+    </div>
+  </section>
+
+  <section id="app-store-apps" class="app-catalog" aria-labelledby="app-catalog-title">
+    <div class="product-hub__section-head">
+      <p class="product-kicker">Available on the App Store</p>
+      <h2 id="app-catalog-title">Find your next tool.<br>Or your next mission.</h2>
+      <p>Purpose-built apps for Mac, iPhone, and iPad. Explore each product, check its requirements, and get it directly from Apple.</p>
+    </div>
+    <div class="app-catalog__grid">
+      {{ range where hugo.Data.app_store_products.products "status" "available" }}
+      <article class="app-catalog__card" id="app-{{ .slug }}" data-app-id="{{ .app_id }}">
+        <div class="app-catalog__identity">
+          {{ $icon := (resources.Get .icon).Resize "160x webp q85" }}
+          <img src="{{ $icon.RelPermalink }}" width="80" height="80" alt="" loading="lazy" decoding="async">
+          <div><p class="app-catalog__category">{{ .category }}</p><h3>{{ .name }}</h3><p class="app-catalog__platforms">{{ .platforms }}</p></div>
+        </div>
+        <h4>{{ .headline }}</h4>
+        <p class="app-catalog__description">{{ .description }}</p>
+        <p class="app-catalog__requirement">{{ .requirement }}</p>
+        <div class="app-catalog__actions">
+          <a class="app-catalog__store" href="{{ .store_url }}" aria-label="Get {{ .name }} on the App Store">View on App Store <span aria-hidden="true">↗</span></a>
+          <a class="app-catalog__details" href="{{ .page | relURL }}">Explore {{ .name }} <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+      {{ end }}
+    </div>
+    <p class="app-catalog__note">Availability and compatibility vary by storefront and device. Apple’s listing has the current price and requirements.</p>
+    <div class="app-catalog__upcoming" aria-labelledby="upcoming-apps-title">
+      <h3 id="upcoming-apps-title">On the horizon</h3>
+      {{ range where hugo.Data.app_store_products.products "status" "ne" "available" }}
+      <article data-app-id="{{ .app_id }}"><p class="app-catalog__category">{{ .platforms }}</p><h4><a href="{{ .page | relURL }}">{{ .name }} <span aria-hidden="true">→</span></a></h4><p>{{ .description }}</p></article>
+      {{ end }}
     </div>
   </section>
 
