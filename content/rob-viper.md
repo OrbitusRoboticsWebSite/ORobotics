@@ -3,6 +3,6 @@ title: "ROB Viper — macOS Endpoint Security"
 url: "/products/rob-viper/"
 type: "rob-viper"
 draft: false
-description: "Native execution auditing, per-app network rules, local connection history and managed policy profiles for macOS. Explore the ROB Viper development preview and its path to MDM deployment."
+description: "Publisher and signing-identity execution rules, application lockdown, per-app network controls and managed policy profiles for macOS. Explore the ROB Viper 0.6 development preview."
 featured_image: "images/products/rob-viper/icon.png"
 ---
