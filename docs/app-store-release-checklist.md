@@ -30,3 +30,7 @@ Public verification: [ChronixNinja developer catalog](https://apps.apple.com/us/
 The four catalog icons came from those Apple storefront listings. The LingonXRob editor screenshot came from its existing `AppStoreAssets/Screenshots/02-launchd-plist-editor.png` and was inspected before publication. The App Store edition is a file editor and does not manage running launchd jobs.
 
 Validation for this update: all 127 existing tests passed, along with the six-product catalog check, gallery and white-paper validation, and the subpath link check. The catalog and new LingonXRob page were inspected in native Chrome at desktop size and a 390 × 844 responsive viewport; the mobile product link opened the new detail page. The deployment workflow repeats build and link/catalog checks before publishing.
+
+## ROB Viper 0.7 development publication — November 6, 2026
+
+The product page, products index and privacy scope describe local ClamAV/Trivy/YARA-X scanning, reports, heuristic signals and app-open scheduling. Public production installer remains pending; no App Store submission or production download is claimed. Scanner engines are separate installations. The 0.7 source and test receipt are maintained in the private EndpointExecutionMonitor repository; the public page does not expose local scan reports or machine findings. Canonical publication uses this repository’s existing GitHub Pages workflow.
