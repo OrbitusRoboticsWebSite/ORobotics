@@ -110,6 +110,26 @@
     </a>
   </section>
 
+  <section class="product-hub__developer" aria-labelledby="security-products-title">
+    <div class="product-hub__section-head">
+      <p class="product-kicker">Mac security · Development preview</p>
+      <h2 id="security-products-title">Know what runs. Decide what connects.</h2>
+      <p>ROB Viper brings native Endpoint Security events, explicit execution rules, managed policy profiles, and a network-filter extension into one Mac interface.</p>
+    </div>
+    <a class="developer-product-card" href="{{ "products/rob-viper/" | relURL }}">
+      <div class="developer-product-card__copy">
+        <span>macOS · MDM policy · Private development preview</span>
+        <h3>ROB Viper</h3>
+        <p>Inspect events, rehearse rules in Audit, and prepare a staged fleet rollout. Explore tested features and the remaining gates before a public installer.</p>
+        <strong>Explore ROB Viper <span aria-hidden="true">↗</span></strong>
+      </div>
+      <div class="developer-product-card__media">
+        {{ $viperIcon := (resources.Get "images/products/rob-viper/icon.png").Resize "640x640 webp q86" }}
+        <img src="{{ $viperIcon.RelPermalink }}" width="{{ $viperIcon.Width }}" height="{{ $viperIcon.Height }}" alt="ROB Viper graphite snake and shield icon" loading="lazy" decoding="async">
+      </div>
+    </a>
+  </section>
+
   <section class="product-hub__creative" aria-labelledby="creative-products-title">
     <div class="product-hub__section-head">
       <p class="product-kicker">Creative software</p>
