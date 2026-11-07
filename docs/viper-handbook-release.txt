@@ -1,0 +1,33 @@
+ROB Viper Security Operations Handbook / first edition / 2026-11-07
+
+Free PDF, EPUB and harmless exercise downloads. Copyright retained.
+Canonical page: https://www.orbitusrobotics.com/books/rob-viper-security-operations/
+Marketing: Books library, Viper product/support page, Products index.
+No existing ROB book identifiers, rights, prices or store records changed.
+This is a new digital handbook; no existing IngramSpark edition is affected.
+
+Artifact bytes and SHA-256: data/viper_handbook.json and the public
+static/downloads/rob-viper/handbook/SHA256SUMS.txt file.
+Manuscript, original screenshots, tests and upload receipt are maintained in
+the private EndpointExecutionMonitor repository under docs/security-handbook/.
+
+Validation completed:
+- 70 PDF pages rendered and visually reviewed; selectable text and bounds pass.
+- 30 chapter bookmarks; semantic EPUB navigation and 25 image descriptions.
+- EPUBCheck 5.4.0: no errors or warnings.
+- 10 helper tests and seven scoped scanner control cases pass.
+- Website desktop and 390px layouts reviewed in Chrome.
+- All local handbook links, artifact sizes and checksums verified.
+- Hugo build, gallery budget (399.7 MiB), App Store products, white papers and
+  project-subpath validators pass.
+
+Apple accepted the EPUB and cover upload and displayed "You're almost done!"
+Rights & Pricing remains pending: the My Books page redirects to its dashboard
+in Chrome. The official catalog shortcut redirects to a missing Apps page.
+Safari authentication has been requested. No Apple price, review submission,
+or public store availability has been verified. Do not upload a duplicate book.
+Use the existing uploaded title to complete Free pricing and territories.
+
+Deployment is automatic on main. Record the actual GitHub Pages run and live
+artifact checksum results in the private edition publication.json after deploy.
+Update the public status text only when supported by actual Apple evidence.

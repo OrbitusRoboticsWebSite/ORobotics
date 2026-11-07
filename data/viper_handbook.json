@@ -1,0 +1,61 @@
+{
+  "title": "ROB Viper Security Operations Handbook",
+  "subtitle": "Malware Triage, CVE Analysis, and macOS Hardening",
+  "author": "Rodolfo Aramayo",
+  "publisher": "OrbitusRobotics LLC",
+  "edition": "1.0",
+  "date": "2026-11-07",
+  "price_usd": 0,
+  "pages": 70,
+  "chapters": 30,
+  "figures": 24,
+  "word_count": 13961,
+  "apple_status": "Files uploaded to Apple Books. Free pricing and store availability are still pending; download the PDF or EPUB here now.",
+  "apple_url": "",
+  "artifacts": {
+    "ROB-Viper-Security-Operations-Handbook.epub": {
+      "bytes": 4260518,
+      "sha256": "39e7ef6fe14e899eff76960b14af5e89eb5a56a9b9cb9e61d63bce3c5c1c9df7"
+    },
+    "ROB-Viper-Handbook-Exercises.zip": {
+      "bytes": 6421,
+      "sha256": "ee2fce488fc4574f372407bd633af0f3365a76f128eb6900015f5ac442d1a544"
+    },
+    "ROB-Viper-Security-Operations-Handbook.pdf": {
+      "bytes": 2933292,
+      "sha256": "be6bdbcf98ea1ea64a245fdcd307796157d3df65c08e6d3dd934d8dc6023fea8"
+    }
+  },
+  "contents": [
+    "01 / How to use this handbook",
+    "02 / Choose the right security question",
+    "03 / Prepare permissions and prove collection",
+    "04 / Inspect events without losing the record",
+    "05 / Rehearse execution rules before enforcement",
+    "06 / Investigate network evidence and constrain access",
+    "07 / Prepare Threat Center and its tools",
+    "08 / Malware concepts that change the investigation",
+    "09 / Open a case and preserve useful evidence",
+    "10 / Run ClamAV and interpret a signature result",
+    "11 / Coverage gaps, archives and false positives",
+    "12 / Write, review and test a YARA-X rule",
+    "13 / Inspect macOS artifacts without launching them",
+    "14 / Correlate behavior signals with events",
+    "15 / Use controlled execution only in a prepared lab",
+    "16 / What a CVE scan actually tells you",
+    "17 / Scan dependency manifests with Trivy",
+    "18 / A reproducible CVE analysis exercise",
+    "19 / Prioritize with context, CVSS, EPSS and KEV",
+    "20 / Remediate and prove the deployed change",
+    "21 / Use SBOMs and CI without hiding failures",
+    "22 / Build an organizational analysis workflow",
+    "23 / Plan an MDM pilot and central administration",
+    "24 / Schedule work at the right time",
+    "25 / Respond to a suspicious result",
+    "26 / Exercise the program with harmless controls",
+    "27 / Read posture and understand FileVault",
+    "28 / Export, retain and communicate evidence",
+    "29 / Case templates, checklists and daily reference",
+    "30 / Glossary, sources and edition evidence"
+  ]
+}

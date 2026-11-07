@@ -1,0 +1,47 @@
+{{ define "main" }}
+{{ $book := .Site.Data.viper_handbook }}
+{{ $style := resources.Get "css/rob-viper.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
+<style>.handbook-cover{max-width:380px;margin:auto}.handbook-cover img{display:block;width:100%;height:auto;border:1px solid #344150;border-radius:6px;box-shadow:0 28px 75px #0009}.handbook-cover figcaption{margin-top:1rem;color:#bac5d1;font-size:.85rem}.handbook-toc{columns:2;column-gap:3rem;padding:0;list-style:none}.handbook-toc li{break-inside:avoid;padding:.55rem 0;border-bottom:1px solid #344150;font-size:.94rem}.handbook-downloads{display:flex;gap:.8rem;flex-wrap:wrap}.handbook-downloads a{padding:.8rem 1.15rem;border:1px solid #657487;border-radius:.5rem;font-weight:700}.handbook-page a:focus-visible{outline:3px solid #ffc45c;outline-offset:5px}.handbook-stats{display:flex;flex-wrap:wrap;gap:1.3rem;color:#ffc45c;font-weight:700;margin:1.7rem 0}.handbook-page .viper-hero h1{font-size:clamp(2.3rem,5vw,4.5rem)}.handbook-page .viper-hero h1 span{font-size:.54em}.handbook-qa{overflow-wrap:anywhere}@media(max-width:650px){.handbook-toc{columns:1}.handbook-cover{max-width:280px}.handbook-downloads a{width:100%;text-align:center}}</style>
+<main id="main" class="viper-page handbook-page">
+  <section class="viper-hero" aria-labelledby="handbook-title">
+    <div>
+      <p class="viper-eyebrow">Orbitus Robotics / Free security handbook</p>
+      <h1 id="handbook-title">ROB Viper<span>Security Operations Handbook</span></h1>
+      <p class="viper-lede">Turn a scanner result into a defensible decision. A practical, illustrated guide to malware triage, dependency CVEs, macOS hardening and the people who own the next action.</p>
+      <p>By {{ $book.author }} · First edition · November 2026</p>
+      <div class="handbook-stats"><span>{{ $book.pages }} PDF pages</span><span>{{ $book.chapters }} chapters</span><span>{{ $book.figures }} UI figures</span><span>Free</span></div>
+      <div class="viper-actions"><a class="viper-primary" href="{{ "downloads/rob-viper/handbook/ROB-Viper-Security-Operations-Handbook.pdf" | relURL }}">Read the PDF</a><a href="{{ "downloads/rob-viper/handbook/ROB-Viper-Security-Operations-Handbook.epub" | relURL }}" download>Download EPUB ↓</a></div>
+      <p class="viper-small">PDF: fixed layout · EPUB: adjustable text, linked contents and image descriptions. No account required.</p>
+      <p class="viper-status">{{ $book.apple_status }}</p>
+      {{ with $book.apple_url }}<a href="{{ . }}" rel="noopener noreferrer">View the Apple Books listing ↗</a>{{ end }}
+    </div>
+    <figure class="handbook-cover">{{ $cover := (resources.Get "images/books/rob-viper/cover.jpg").Resize "760x webp q88" }}<img src="{{ $cover.RelPermalink }}" width="{{ $cover.Width }}" height="{{ $cover.Height }}" alt="ROB Viper Security Operations Handbook cover: graphite viper and silver shield, amber typography" fetchpriority="high"><figcaption>Malware Triage, CVE Analysis, and macOS Hardening</figcaption></figure>
+  </section>
+  <section class="viper-section">
+    <p class="viper-eyebrow">From the first scan to a team workflow</p><h2>Learn the tools.<br>Understand the evidence.</h2>
+    <div class="viper-grid">
+      <article><span class="viper-number">01</span><h3>Operate the app</h3><p>Permissions, stable event inspection, signing identity, Audit rules, network evidence, website allowlists and Threat Center readiness, explained with real UI captures.</p></article>
+      <article><span class="viper-number">02</span><h3>Investigate malware leads</h3><p>ClamAV signatures, EICAR controls, YARA-X rule review, static inspection, behavior correlation, false positives, evidence preservation and the boundary of a controlled lab.</p></article>
+      <article><span class="viper-number">03</span><h3>Work a CVE to closure</h3><p>Trivy inventory, dependency paths, CVSS, EPSS and KEV context, remediation choices, SBOM and CI handoffs, exceptions and proof that a fix reached deployment.</p></article>
+      <article><span class="viper-number">04</span><h3>Build an organizational practice</h3><p>Operator and analyst roles, case ownership, MDM pilots, schedules, incident decisions, recovery evidence, retention and privacy. Proposed workflows are labeled clearly.</p></article>
+      <article><span class="viper-number">05</span><h3>Read hardening findings</h3><p>What FileVault off means, how posture differs from malware detection, and why unknown or incomplete results must stay visible.</p></article>
+      <article><span class="viper-number">06</span><h3>Practice with harmless data</h3><p>Generate positive and negative controls, a metadata-only vulnerable lockfile and an optional scan-limit fixture. No real malware or old dependency installation is required.</p></article>
+    </div>
+  </section>
+  <section class="viper-section viper-contrast" id="exercises">
+    <p class="viper-eyebrow">A small lab you can inspect</p><h2>Practice the analysis.<br>Keep the decision human.</h2>
+    <p>The companion includes a Python fixture generator, a bounded JSON report reviewer, instructions and a case template. It creates a new directory you choose. It does not install tools, contact a server or change policy. EICAR intentionally exercises antivirus detection; read the instructions first.</p>
+    <div class="handbook-downloads"><a href="{{ "downloads/rob-viper/handbook/ROB-Viper-Handbook-Exercises.zip" | relURL }}" download>Download exercises · 6.4 KB</a><a href="{{ "downloads/rob-viper/handbook/SHA256SUMS.txt" | relURL }}">SHA-256 checksums</a></div>
+    <div class="viper-callout"><b>Tested controls, bounded conclusions.</b><p>Seven scoped live cases passed: clean text, EICAR, positive and negative YARA controls, dependency advisories, over-limit coverage and changed-rule rejection. Ten helper tests check malformed input and missing evidence. A passing exercise does not establish complete malware detection or production readiness.</p></div>
+  </section>
+  <section class="viper-section" aria-labelledby="contents-title"><p class="viper-eyebrow">Inside the book</p><h2 id="contents-title">Thirty chapters to use at your desk.</h2><ol class="handbook-toc">{{ range $book.contents }}<li>{{ . }}</li>{{ end }}</ol></section>
+  <section class="viper-section handbook-qa">
+    <h2>Edition and scope.</h2>
+    <p>Edition {{ $book.edition }} documents ROB Viper 0.7.0 build 12, a development preview. The handbook is free; the app has separate distribution requirements. A public production installer and live fleet rollout remain pending. Read the <a href="{{ "products/rob-viper/" | relURL }}">current product status</a> before planning deployment.</p>
+    <p>The 70-page PDF was rendered and reviewed. The reflowable EPUB passes EPUBCheck 5.4.0 with no errors or warnings, and includes descriptive alternative text and semantic navigation. The PDF is visually designed; use the EPUB for semantic reading support. No independent accessibility certification is claimed.</p>
+    <p>Copyright 2026 {{ $book.publisher }}. All rights reserved. Free pricing does not change copyright or third-party software licenses. This is an independent operating guide; references to Apple, ClamAV, Trivy and YARA-X do not imply endorsement.</p>
+    <p><a href="mailto:orbitus@orbitusrobotics.com?subject=ROB%20Viper%20handbook%20feedback">Report a correction or discuss an organizational workshop</a> · <a href="{{ "books/" | relURL }}">Browse the Orbitus library</a></p>
+  </section>
+</main>
+{{ end }}
