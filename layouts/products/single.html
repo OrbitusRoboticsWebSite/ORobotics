@@ -50,7 +50,7 @@
     <div class="app-catalog__upcoming" aria-labelledby="upcoming-apps-title">
       <h3 id="upcoming-apps-title">On the horizon</h3>
       {{ range where hugo.Data.app_store_products.products "status" "ne" "available" }}
-      <article data-app-id="{{ .app_id }}"><p class="app-catalog__category">{{ .platforms }}</p><h4><a href="{{ .page | relURL }}">{{ .name }} <span aria-hidden="true">→</span></a></h4><p>{{ .description }}</p></article>
+      <article data-app-id="{{ .app_id }}">{{ with .icon }}{{ $icon := (resources.Get .).Resize "128x webp q85" }}<img class="app-catalog__pending-icon" src="{{ $icon.RelPermalink }}" width="64" height="64" alt="" loading="lazy" decoding="async">{{ end }}<p class="app-catalog__category">{{ .platforms }}</p><h4><a href="{{ .page | relURL }}">{{ .name }} <span aria-hidden="true">→</span></a></h4><p>{{ .description }}</p></article>
       {{ end }}
     </div>
   </section>

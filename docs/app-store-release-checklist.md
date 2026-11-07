@@ -34,3 +34,11 @@ Validation for this update: all 127 existing tests passed, along with the six-pr
 ## ROB Viper 0.7 development publication — November 6, 2026
 
 The product page, products index and privacy scope describe local ClamAV/Trivy/YARA-X scanning, reports, heuristic signals and app-open scheduling. Public production installer remains pending; no App Store submission or production download is claimed. Scanner engines are separate installations. The 0.7 source and test receipt are maintained in the private EndpointExecutionMonitor repository; the public page does not expose local scan reports or machine findings. Canonical publication uses this repository’s existing GitHub Pages workflow.
+
+## SignalAtlas 1.0 launch preparation — November 7, 2026
+
+SignalAtlas for Mac (`com.raramayo.SignalAtlas`, App Store ID `6832020243`) and the separate public-API SignalAtlas GPS companion (`com.raramayo.SignalAtlasGPS`, App Store ID `6832017704`) have production App Store builds 1.0.0 (10) uploaded and processed as VALID. The Mac price is $4.99 US; the companion is free. Both use automatic release after Apple approval. This entry supersedes the earlier prototype-only description for the new public targets; the private research prototype remains separate.
+
+At this publication checkpoint, the versions remain in preparation and are not publicly available in the US lookup. The catalog and product page say build uploaded / submission in preparation and intentionally omit unverified customer download links. The product, support section, privacy policy, actual app screenshots, generated icon, HTML manual and 14-page PDF are included. No separately hosted executable is required: both apps are distributed through Apple.
+
+Validation: full `npm test` passed, including eight-product catalog, gallery, white-paper and subpath checks. Native Chrome inspection confirmed the desktop layout and a 390 × 844 responsive layout, and the manual button opened the HTML manual with the correct PDF URL. The manual PDF is 2,250,758 bytes, SHA-256 `3126f5593e8ba1ee33cc03e35937ff165c2fe86ab570abb3d8238705ea53493d`. Apple privacy disclosures are published as Data Not Collected for both apps; the policy explains local location transfer, storage, exports and Apple's map services.

@@ -1,0 +1,39 @@
+{{ define "main" }}
+{{ $mac := index (where hugo.Data.app_store_products.products "slug" "signalatlas") 0 }}
+{{ $gps := index (where hugo.Data.app_store_products.products "slug" "signalatlas-gps") 0 }}
+<main id="main" class="product-hub plist-product atlas-product">
+  {{ partial "product-subnav.html" . }}
+  <header class="plist-product__hero">
+    <div>
+      {{ $icon := (resources.Get $mac.icon).Resize "192x webp q90" }}
+      <img class="plist-product__icon" src="{{ $icon.RelPermalink }}" width="96" height="96" alt="">
+      <p class="product-kicker">SignalAtlas · Wireless field observatory</p>
+      <h1>See the signal.<br><em>Keep the context.</em></h1>
+      <p class="product-hub__lede">Record Wi-Fi and Bluetooth observations. Compare signal strength. Revisit the places where your receiver saw them, with a survey history that stays on your Mac.</p>
+      <div class="app-catalog__actions"><a class="app-catalog__store" href="{{ "products/signalatlas/manual/" | relURL }}">Read the user manual →</a><a class="app-catalog__details" href="#support">Get support →</a></div>
+      <p class="app-catalog__note">{{ $mac.price_label }} launch price · macOS 14+ · Apple silicon + Intel</p>
+      <p class="atlas-product__status"><strong>Mac 1.0.0 (10)</strong> — {{ $mac.release_status }}.{{ if ne $mac.status "available" }} Not yet available to download.{{ end }}</p>
+      {{ with $mac.store_url }}<a class="app-catalog__store" href="{{ . }}">View on Mac App Store ↗</a>{{ end }}
+    </div>
+    <figure>
+      {{ $screen := (resources.Get "images/products/signalatlas/overview.png").Resize "1440x webp q88" }}
+      <a href="{{ $screen.RelPermalink }}"><img src="{{ $screen.RelPermalink }}" width="{{ $screen.Width }}" height="{{ $screen.Height }}" alt="SignalAtlas Overview showing signal-strength radar, a receiver-location map and a list of synthetic Wi-Fi and Bluetooth observations" fetchpriority="high" decoding="async"></a>
+      <figcaption>The actual Mac app with its clearly labeled example survey. Signals and coordinates in this example are synthetic.</figcaption>
+    </figure>
+  </header>
+  <section class="plist-product__features" aria-label="SignalAtlas features">
+    <article><span>01 / OBSERVE</span><h2>Read your radio environment.</h2><p>Collect Wi-Fi observations and Bluetooth LE advertisements with public macOS APIs. Compare RSSI, filter by radio and name, and keep a watchlist of signals that matter to your survey.</p></article>
+    <article><span>02 / UNDERSTAND</span><h2>Every sighting has context.</h2><p>Switch between Overview, Radar, Map and History. Map pins show the receiver's location. Radar angles are illustrative; signal strength is not a distance measurement.</p></article>
+    <article><span>03 / KEEP</span><h2>Your history. Your files.</h2><p>Save sessions locally and export their full observations as JSON, CSV or GeoJSON. Inspect the latest sample for each signal or every loaded observation. No account or subscription.</p></article>
+  </section>
+  <section id="gps" class="atlas-product__section">
+    <div><p class="product-kicker">SignalAtlas GPS · Free companion</p><h2>Bring a location source along.</h2><p>Pair an iPhone or iPad with your Mac using a QR code or pairing code. Keep the companion open beside the Mac to share fresh receiver-location fixes over your local network.</p><p>The Mac runs the wireless survey. The companion shares location only. You can also use Mac Location Services or a compatible NMEA receiver.</p><p><strong>Requires:</strong> iOS or iPadOS 17+, the separately purchased Mac app, and the same local network. A Wi-Fi-only iPad may provide network-derived location.</p><p class="atlas-product__status"><strong>GPS 1.0.0 (10)</strong> — {{ $gps.release_status }}.{{ if ne $gps.status "available" }} Not yet available to download.{{ end }}</p>{{ with $gps.store_url }}<a class="app-catalog__store" href="{{ . }}">View on App Store ↗</a>{{ end }}</div>
+    <div class="atlas-product__guide"><span>INCLUDED / 14 PAGES</span><h3>Your field guide.</h3><p>First launch, permissions, survey controls, map and radar interpretation, GPS pairing, NMEA, exports and troubleshooting.</p><a class="app-catalog__store" href="{{ "downloads/signalatlas/SignalAtlas-User-Manual.pdf" | relURL }}">Download the PDF manual ↓</a><p><a href="{{ "products/signalatlas/manual/" | relURL }}">Read the accessible HTML edition →</a></p><p class="app-catalog__note">Version 1.0 · Also available from the Mac app's Help menu.</p></div>
+  </section>
+  <section class="atlas-product__section">
+    <div><p class="product-kicker">Release 1.0 highlights</p><h2>A complete survey workspace.</h2><ul><li>Four connected views, filters, a watchlist and saved sessions.</li><li>Explicit distinction between cached readings and fresh observations.</li><li>Receiver-location provenance and optional secure GPS pairing.</li><li>JSON, CSV and GeoJSON exports, plus the bundled illustrated manual.</li></ul></div>
+    <figure>{{ $history := (resources.Get "images/products/signalatlas/history.png").Resize "1280x webp q85" }}<img src="{{ $history.RelPermalink }}" width="{{ $history.Width }}" height="{{ $history.Height }}" alt="SignalAtlas History view with timestamp, radio, RSSI, channel, identity and receiver-location columns for a synthetic survey" loading="lazy" decoding="async"><figcaption>History keeps the radio reading and location source visible together.</figcaption></figure>
+  </section>
+  <section id="support" class="plist-product__privacy"><h2>Start with a clear reading.</h2><p>macOS controls radio scanning and may withhold Wi-Fi names or identifiers. SignalAtlas does not join networks or capture their traffic. Missing or stale location fixes are kept distinct from valid receiver positions.</p><p>For help, read the <a href="{{ "products/signalatlas/manual/" | relURL }}">manual and troubleshooting guide</a> or <a href="{{ "contact/" | relURL }}">contact Orbitus Robotics</a>. Include your app version, macOS or iOS version, and the steps that caused the issue. Keep pairing secrets and private survey data out of support messages.</p><p>No developer telemetry, advertising or tracking. Apple basemap services use the network. Read the <a href="{{ "products/signalatlas/privacy/" | relURL }}">SignalAtlas privacy policy</a>.</p><a class="app-catalog__details" href="{{ "products/" | relURL }}">Explore all Orbitus products →</a></section>
+</main>
+{{ end }}
