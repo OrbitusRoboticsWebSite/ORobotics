@@ -1,0 +1,209 @@
+{
+  "paper_id": "OR-WP-2026-005",
+  "assessment_date": "2026-11-07",
+  "method": "Read-only inspection of the frozen source documentation and validation record; primary vendor documentation and selected research publications. No new product or detection benchmark.",
+  "source_records": [
+    {
+      "project": "SignalAtlas",
+      "commit": "30a867890f6e0f45f283f17e63cd7ad61cc57a1a",
+      "path": "README.md",
+      "sha256": "e028b6713f7cce14bdae1fbd815c516013d4a06fdb84342559c2522d4ed9e63f",
+      "bytes": 13334
+    },
+    {
+      "project": "SignalAtlas",
+      "commit": "30a867890f6e0f45f283f17e63cd7ad61cc57a1a",
+      "path": "docs/NETWORK-WORKBENCH.txt",
+      "sha256": "728b32d1d779b473fbeeca9c551bd7266cea90a5966e8a31e4a1ea4ab6f08733",
+      "bytes": 20700
+    },
+    {
+      "project": "SignalAtlas",
+      "commit": "30a867890f6e0f45f283f17e63cd7ad61cc57a1a",
+      "path": "docs/SECURITY-INTEGRATION.txt",
+      "sha256": "20bde430cdcced32ffcb8a0d1f62ce4e3fc724ca19747f3760888bac1df14a77",
+      "bytes": 24862
+    },
+    {
+      "project": "BlackViper",
+      "commit": "4314a0d82219ea6e5f1c725b5b288093ab8768b2",
+      "path": "README.md",
+      "sha256": "a8a54157641f14f964c6e901f56493e37e49a889281ab22f3e5e30efe46343bf",
+      "bytes": 12939
+    },
+    {
+      "project": "BlackViper",
+      "commit": "4314a0d82219ea6e5f1c725b5b288093ab8768b2",
+      "path": "SCANNING.txt",
+      "sha256": "d28b0006db47e862c7d02b97875862a0f15cc8efef8b18914f4dbade7e60d903",
+      "bytes": 9493
+    },
+    {
+      "project": "BlackViper",
+      "commit": "4314a0d82219ea6e5f1c725b5b288093ab8768b2",
+      "path": "BACKGROUND-SCANNING.txt",
+      "sha256": "7937da6ddd4e4df2c8dc8522e0430eeef69c6a0037e1e6d1aac279e68378eca3",
+      "bytes": 6654
+    },
+    {
+      "project": "BlackViper",
+      "commit": "4314a0d82219ea6e5f1c725b5b288093ab8768b2",
+      "path": "results/execution-control-validation.json",
+      "sha256": "c241f7922675917fb31a63d31abd695a84ca0cb64403582e5d3bffc480239119",
+      "bytes": 5479
+    }
+  ],
+  "research_checked": "2026-11-07",
+  "recorded_validation": {
+    "signalatlas_live_capture_tests": 56,
+    "cross_repository_checks": 3,
+    "preceding_blackviper_retention_tests": 220,
+    "permissioned_live_capture": "Pending; recorded real loopback attempt denied BPF device access.",
+    "execution_denial": "Not tested in the inspected live execution audit. Audit would-deny was exercised.",
+    "claim_boundary": "Counts are checked-in historical results, not tests rerun for publication or proof of threat-detection effectiveness."
+  },
+  "implemented": [
+    "Wi-Fi/BLE survey and history",
+    "Bounded native IPv4 TCP inventory and baseline comparison",
+    "Nmap XML and Suricata EVE imports",
+    "TShark saved capture analysis and full-retention schema",
+    "dumpcap capture controls and native permission-package handoff",
+    "Endpoint Security event/policy implementation",
+    "Separate Network Extension controls",
+    "ClamAV, YARA-X and Trivy integrations",
+    "Per-user scheduled scanning"
+  ],
+  "proposed": [
+    "Automatic identity/process/flow/packet correlation",
+    "Evidence graph with explicit ambiguity and coverage",
+    "Jamf inventory connector",
+    "Reviewed Nmap launcher",
+    "Learned prioritization and model evaluation",
+    "Retrieval-grounded LLM investigation and separate action service"
+  ],
+  "not_claimed": [
+    "Full competitor parity",
+    "Production-ready public distribution of the development workbench",
+    "Permissioned live capture acceptance",
+    "Live execution denial acceptance",
+    "Measured ML detection performance",
+    "Continuous background behavioral EDR",
+    "An independent head-to-head comparison"
+  ],
+  "publication_data": "Architecture, aggregate development validation and source identities only. No captured user traffic or credentials.",
+  "paper_version": "1.0",
+  "source_references": [
+    {
+      "label": "[1] Orbitus Robotics. Public evidence supplement and frozen implementation record for this edition.",
+      "url": "https://www.orbitusrobotics.com/whitepapers/evidence-first-cyber-defense.evidence.json"
+    },
+    {
+      "label": "[2] Apple. Endpoint Security framework overview.",
+      "url": "https://developer.apple.com/documentation/endpointsecurity"
+    },
+    {
+      "label": "[3] Apple. es_message_t.deadline: authorization response deadline.",
+      "url": "https://developer.apple.com/documentation/endpointsecurity/es_message_t/deadline"
+    },
+    {
+      "label": "[4] Apple. es_message_t.seq_num: event-drop accounting.",
+      "url": "https://developer.apple.com/documentation/endpointsecurity/es_message_t/seq_num"
+    },
+    {
+      "label": "[5] Apple. es_new_client: message handler, entitlement and Full Disk Access.",
+      "url": "https://developer.apple.com/documentation/endpointsecurity/es_new_client(_:_:)"
+    },
+    {
+      "label": "[6] Apple. Network Extension content filter providers.",
+      "url": "https://developer.apple.com/documentation/networkextension/content-filter-providers"
+    },
+    {
+      "label": "[7] Wireshark Foundation. TShark manual.",
+      "url": "https://www.wireshark.org/docs/man-pages/tshark.html"
+    },
+    {
+      "label": "[8] Wireshark Foundation. dumpcap manual.",
+      "url": "https://www.wireshark.org/docs/man-pages/dumpcap.html"
+    },
+    {
+      "label": "[9] Wireshark Foundation. Installing Wireshark under macOS; ChmodBPF.",
+      "url": "https://www.wireshark.org/docs/wsug_html_chunked/ChBuildInstallOSXInstall.html"
+    },
+    {
+      "label": "[10] Jamf. Jamf Pro: Apple device management.",
+      "url": "https://www.jamf.com/products/jamf-pro/"
+    },
+    {
+      "label": "[11] Jamf. About Jamf Protect: endpoint and network security.",
+      "url": "https://learn.jamf.com/r/en-US/jamf-protect-documentation/About_Jamf_Protect"
+    },
+    {
+      "label": "[12] Nmap Project. Nmap Reference Guide.",
+      "url": "https://nmap.org/book/man.html"
+    },
+    {
+      "label": "[13] Aribada Inc. NetAdmin Pro - Network Scanner. Vendor App Store listing.",
+      "url": "https://apps.apple.com/us/app/netadmin-pro-network-scanner/id675649574?mt=12"
+    },
+    {
+      "label": "[14] Wireshark Foundation. Following protocol streams.",
+      "url": "https://www.wireshark.org/docs/wsug_html_chunked/ChAdvFollowStreamSection.html"
+    },
+    {
+      "label": "[15] North Pole Security. Santa: binary and file access authorization for macOS.",
+      "url": "https://github.com/northpolesec/santa"
+    },
+    {
+      "label": "[16] Objective Development. Little Snitch: application firewall and network monitor.",
+      "url": "https://www.obdev.at/products/littlesnitch/index.html"
+    },
+    {
+      "label": "[17] OISF. What is Suricata. Development documentation; cited for engine role.",
+      "url": "https://docs.suricata.io/en/latest/what-is-suricata.html"
+    },
+    {
+      "label": "[18] Security Onion. Introduction, documentation 2.4.",
+      "url": "https://docs.securityonion.net/en/2.4/introduction.html"
+    },
+    {
+      "label": "[19] Wazuh. Platform overview and use cases.",
+      "url": "https://wazuh.com/platform/overview/"
+    },
+    {
+      "label": "[20] Tenable. Nessus vulnerability scanner.",
+      "url": "https://www.tenable.com/products/nessus"
+    },
+    {
+      "label": "[21] NetSpot. Wi-Fi planning, surveys and coverage features.",
+      "url": "https://www.netspotapp.com/features.html"
+    },
+    {
+      "label": "[22] Bilot, T., et al. Sometimes Simpler is Better: A Comprehensive Analysis of State-of-the-Art Provenance-Based Intrusion Detection Systems. USENIX Security 2025.",
+      "url": "https://www.usenix.org/conference/usenixsecurity25/presentation/bilot"
+    },
+    {
+      "label": "[23] Bae, C., Ding, H., Ma, S., and Zhang, X. DUPIN: Attack Learning Is Still Needed! Demonstrating Few-Shot after Unsupervised Pretraining Is A Nimble Forensics Learner. USENIX Security 2026.",
+      "url": "https://www.usenix.org/conference/usenixsecurity26/presentation/bae"
+    },
+    {
+      "label": "[24] Karanjai, R., et al. Context Contamination in LLM Analysis of Network Security Logs: Poison with Passive Prompt Injection and Mitigation Evaluation. USENIX Security 2026; author manuscript arXiv:2607.14493.",
+      "url": "https://arxiv.org/abs/2607.14493"
+    },
+    {
+      "label": "[25] Wang, Y., et al. SecLog-Bench: A Scalable Benchmark for Cybersecurity Log Reasoning with Scaffolded Evidence. arXiv:2610.31000v1, October 22, 2026. Preprint.",
+      "url": "https://arxiv.org/abs/2610.31000v1"
+    },
+    {
+      "label": "[26] Zhou, J., et al. Traffic-MoE: A Sparse Foundation Model for Network Traffic Security Analysis. arXiv:2601.00357v2, July 8, 2026. Preprint.",
+      "url": "https://arxiv.org/abs/2601.00357v2"
+    },
+    {
+      "label": "[27] Apple. Core ML overview and on-device model integration.",
+      "url": "https://developer.apple.com/documentation/coreml/"
+    },
+    {
+      "label": "[28] Nmap Project. Nmap Public Source License. Integration/distribution terms require review.",
+      "url": "https://nmap.org/npsl/"
+    }
+  ]
+}

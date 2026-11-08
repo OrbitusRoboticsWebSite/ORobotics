@@ -2,7 +2,7 @@
 <main id="main" class="wp-page">
   <header class="wp-paper-header wp-shell">
     <a class="wp-text-link" href="{{ "whitepapers/" | relURL }}">← All white papers</a>
-    <div class="wp-paper-hero">
+    <div class="wp-paper-hero{{ if eq .Params.cover_style "diagram" }} wp-diagram-hero{{ end }}">
       <div>
         <p class="wp-eyebrow">{{ .Params.paper_id }} / Technical white paper</p>
         <h1>{{ .Title }}</h1>
@@ -10,7 +10,7 @@
         <p class="wp-byline">Orbitus Robotics · {{ .Date.Format "January 2, 2006" }} · Version {{ .Params.version }}</p>
         {{ with .Params.revision_note }}<p class="wp-status">{{ . }}</p>{{ end }}
         <div class="wp-actions"><a class="wp-primary" href="{{ .Params.pdf | relURL }}" download>Download PDF <span>({{ .Params.pdf_pages }} pages, {{ math.Ceil (div .Params.pdf_bytes 1024.0) }} KB)</span></a></div>
-        <p class="wp-status">Not peer reviewed. Recorded evidence and remaining physical tests are distinguished throughout.</p>
+        <p class="wp-status">Not peer reviewed. {{ .Params.record_context | default "Recorded evidence and remaining physical tests are distinguished throughout." }}</p>
       </div>
       <figure class="wp-paper-photo">
         <img src="{{ printf "whitepapers/figures/%s" .Params.photo | relURL }}" alt="{{ .Params.photo_alt }}" width="810" height="1440" decoding="async" />
@@ -23,7 +23,7 @@
       <details open><summary>In this paper</summary>{{ .TableOfContents }}</details>
       <div class="wp-supplements">
         <h2>Supporting files</h2>
-        <a href="{{ "whitepapers/rob-project-background.json" | relURL }}">ROB history and codebase (JSON)</a>
+        {{ if ne .Params.domain "security" }}<a href="{{ "whitepapers/rob-project-background.json" | relURL }}">ROB history and codebase (JSON)</a>{{ end }}
         <a href="{{ printf "whitepapers/%s.evidence.json" .Params.paper_slug | relURL }}">Evidence summary (JSON)</a>
         {{ if eq .Params.paper_slug "amber-controller-replacement-analysis" }}
           <a href="{{ "whitepapers/amber-library-ledger.csv" | relURL }}" download>42-library ledger (CSV)</a>

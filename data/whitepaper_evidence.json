@@ -401,5 +401,99 @@
       "exclusive writers and restart inhibition",
       "physical Stop and retarget commissioning"
     ]
+  },
+  "evidence-first-cyber-defense": {
+    "paper_id": "OR-WP-2026-005",
+    "assessment_date": "2026-11-07",
+    "method": "Read-only inspection of the frozen source documentation and validation record; primary vendor documentation and selected research publications. No new product or detection benchmark.",
+    "source_records": [
+      {
+        "project": "SignalAtlas",
+        "commit": "30a867890f6e0f45f283f17e63cd7ad61cc57a1a",
+        "path": "README.md",
+        "sha256": "e028b6713f7cce14bdae1fbd815c516013d4a06fdb84342559c2522d4ed9e63f",
+        "bytes": 13334
+      },
+      {
+        "project": "SignalAtlas",
+        "commit": "30a867890f6e0f45f283f17e63cd7ad61cc57a1a",
+        "path": "docs/NETWORK-WORKBENCH.txt",
+        "sha256": "728b32d1d779b473fbeeca9c551bd7266cea90a5966e8a31e4a1ea4ab6f08733",
+        "bytes": 20700
+      },
+      {
+        "project": "SignalAtlas",
+        "commit": "30a867890f6e0f45f283f17e63cd7ad61cc57a1a",
+        "path": "docs/SECURITY-INTEGRATION.txt",
+        "sha256": "20bde430cdcced32ffcb8a0d1f62ce4e3fc724ca19747f3760888bac1df14a77",
+        "bytes": 24862
+      },
+      {
+        "project": "BlackViper",
+        "commit": "4314a0d82219ea6e5f1c725b5b288093ab8768b2",
+        "path": "README.md",
+        "sha256": "a8a54157641f14f964c6e901f56493e37e49a889281ab22f3e5e30efe46343bf",
+        "bytes": 12939
+      },
+      {
+        "project": "BlackViper",
+        "commit": "4314a0d82219ea6e5f1c725b5b288093ab8768b2",
+        "path": "SCANNING.txt",
+        "sha256": "d28b0006db47e862c7d02b97875862a0f15cc8efef8b18914f4dbade7e60d903",
+        "bytes": 9493
+      },
+      {
+        "project": "BlackViper",
+        "commit": "4314a0d82219ea6e5f1c725b5b288093ab8768b2",
+        "path": "BACKGROUND-SCANNING.txt",
+        "sha256": "7937da6ddd4e4df2c8dc8522e0430eeef69c6a0037e1e6d1aac279e68378eca3",
+        "bytes": 6654
+      },
+      {
+        "project": "BlackViper",
+        "commit": "4314a0d82219ea6e5f1c725b5b288093ab8768b2",
+        "path": "results/execution-control-validation.json",
+        "sha256": "c241f7922675917fb31a63d31abd695a84ca0cb64403582e5d3bffc480239119",
+        "bytes": 5479
+      }
+    ],
+    "research_checked": "2026-11-07",
+    "recorded_validation": {
+      "signalatlas_live_capture_tests": 56,
+      "cross_repository_checks": 3,
+      "preceding_blackviper_retention_tests": 220,
+      "permissioned_live_capture": "Pending; recorded real loopback attempt denied BPF device access.",
+      "execution_denial": "Not tested in the inspected live execution audit. Audit would-deny was exercised.",
+      "claim_boundary": "Counts are checked-in historical results, not tests rerun for publication or proof of threat-detection effectiveness."
+    },
+    "implemented": [
+      "Wi-Fi/BLE survey and history",
+      "Bounded native IPv4 TCP inventory and baseline comparison",
+      "Nmap XML and Suricata EVE imports",
+      "TShark saved capture analysis and full-retention schema",
+      "dumpcap capture controls and native permission-package handoff",
+      "Endpoint Security event/policy implementation",
+      "Separate Network Extension controls",
+      "ClamAV, YARA-X and Trivy integrations",
+      "Per-user scheduled scanning"
+    ],
+    "proposed": [
+      "Automatic identity/process/flow/packet correlation",
+      "Evidence graph with explicit ambiguity and coverage",
+      "Jamf inventory connector",
+      "Reviewed Nmap launcher",
+      "Learned prioritization and model evaluation",
+      "Retrieval-grounded LLM investigation and separate action service"
+    ],
+    "not_claimed": [
+      "Full competitor parity",
+      "Production-ready public distribution of the development workbench",
+      "Permissioned live capture acceptance",
+      "Live execution denial acceptance",
+      "Measured ML detection performance",
+      "Continuous background behavioral EDR",
+      "An independent head-to-head comparison"
+    ],
+    "publication_data": "Architecture, aggregate development validation and source identities only. No captured user traffic or credentials."
   }
 }

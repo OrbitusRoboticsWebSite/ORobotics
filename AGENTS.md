@@ -1,5 +1,13 @@
 # Website release agreements
 
+## White papers must be published on the website
+
+- Every requested Orbitus white paper includes publication on https://www.orbitusrobotics.com/ by default. This is standing authorization; do not ask again unless the user explicitly limits the work to a private draft.
+- Publish the final PDF and a full HTML edition under `/whitepapers/`, with home/library discovery links, date, version, sources, evidence boundaries, file size and SHA-256 manifest.
+- Render and visually inspect every changed PDF page, validate the website and links, commit and push the intended changes, deploy, and verify the public HTML and downloaded PDF against the final checksum before reporting publication complete.
+- Preserve unrelated work and earlier editions. Distinguish proposed functionality, source implementation, tests, live acceptance and public availability. Report any publication blocker explicitly.
+- Website publication alone does not authorize contacting an external publisher or submitting a book to a store.
+
 ## App Store submissions must advertise the product
 
 - Every new App Store submission or resubmission must include a corresponding update to the canonical Orbitus Robotics website at https://www.orbitusrobotics.com/.

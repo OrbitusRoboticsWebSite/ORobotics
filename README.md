@@ -31,12 +31,21 @@ live in `data/whitepapers/`; curated evidence and library identities live in
 and the six-repository reading map shared by the papers.
 Edit those inputs, then regenerate the publication artifacts:
 
+Use Python 3.11 or newer for the pinned PDF/diagram dependencies (macOS's system
+Python 3.9 is too old). This security edition was built with Python 3.14.
+
 ```sh
 python3 -m venv /tmp/orbitus-whitepapers-venv
 /tmp/orbitus-whitepapers-venv/bin/pip install -r scripts/whitepapers/requirements.txt
 /tmp/orbitus-whitepapers-venv/bin/python scripts/whitepapers/build_whitepapers.py
 npm test
 ```
+
+To rebuild one paper while preserving all other published PDF bytes, use
+`python scripts/whitepapers/build_whitepapers.py --paper evidence-first-cyber-defense`
+in that environment. The security edition includes its own source-evidence
+record and conceptual diagrams; it does not read live endpoint or packet data.
+White-paper requests include website publication by default; see `AGENTS.md`.
 
 The builder uses Arial on macOS or DejaVu Sans on Linux; a different font can
 change pagination and hashes. `WHITEPAPER_FONT_DIR` can select the font directory.

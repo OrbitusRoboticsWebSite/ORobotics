@@ -1,5 +1,5 @@
 {
-  "edition_date": "2026-11-05",
+  "edition_date": "2026-11-07",
   "publisher": "Orbitus Robotics",
   "external_editorial_status": "Self-published technical papers; external indexing does not establish peer review.",
   "papers": [
@@ -50,6 +50,18 @@
       "bytes": 411607,
       "sha256": "fa1be24cc78c550de6258a241fba441453b4c63cc09ccc5b353347ca0554df04",
       "evidence_sha256": "9162c2e398e1da53ed71e42e54a8d902d9d94d52c2b9315ac3a5118049b8fcda"
+    },
+    {
+      "id": "OR-WP-2026-005",
+      "slug": "evidence-first-cyber-defense",
+      "title": "Next-generation cyber defense",
+      "version": "1.0",
+      "canonical_url": "https://www.orbitusrobotics.com/whitepapers/evidence-first-cyber-defense/",
+      "pdf": "evidence-first-cyber-defense.pdf",
+      "pages": 14,
+      "bytes": 360539,
+      "sha256": "8cad655e2491b87de048c9494619ea4734f1cd570c9fbb4178da4b3aa4afa9a5",
+      "evidence_sha256": "b50ecc8f98a1b7da80cfc6db2fd74187ba10136d2cc718f569f9a21045dc8a56"
     }
   ],
   "artifacts": {
@@ -63,6 +75,8 @@
     "amber-xhub-dual-arm-conversion.pdf": "fa1be24cc78c550de6258a241fba441453b4c63cc09ccc5b353347ca0554df04",
     "arm-transition-fix-2026-11-01.evidence.json": "6961d61868f68838cbbfb35ec3e0cd7744960110a0c5a574073ae58f89d29274",
     "arm-transition-fix-2026-11-01.pdf": "cedc4ece9be187ce8f2f1561c2bf9d7f9c149d062fa5b6f6fdedceb66bccf3fe",
+    "evidence-first-cyber-defense.evidence.json": "b50ecc8f98a1b7da80cfc6db2fd74187ba10136d2cc718f569f9a21045dc8a56",
+    "evidence-first-cyber-defense.pdf": "8cad655e2491b87de048c9494619ea4734f1cd570c9fbb4178da4b3aa4afa9a5",
     "figures/controller-architecture.png": "c85338fbd01d5be57eb90b5a7d74e546099989901fa27e429ae0cbcd0d6cae04",
     "figures/controller-architecture.svg": "9e17d8d409065052b04615cc666a2f758f94f9c47aaa262626a019d179bd5238",
     "figures/dependency-boundary.png": "faa77bc40a3880b28ffc167a861150162c91e5901747a6b381bbffa020841436",
@@ -74,13 +88,19 @@
     "figures/rob-can-held.jpg": "9cbca7024badbfd669021d93a05756c4b22cd9d26bd57b3018bdd90690e69470",
     "figures/rob-can-turn.jpg": "fa37a11f79ba56c77fbd4061247ec3a04d395ca5f2597bb3779f872729f55a95",
     "figures/rob-table-grip.jpg": "f11193b4d4b356f77908d7224bf0815949edf2201b25085b21a19ea595648fe2",
+    "figures/security-correlation-graph.png": "1cf32fc6b06d1da2c3781abc09279b6cdb92b36f6c6f7c50bf7301f8e791fd7d",
+    "figures/security-correlation-graph.svg": "1df893d195240ed550c32ee6fd4050656b7a156f450ad55505c8be5ad3b4ea95",
+    "figures/security-evidence-cover.png": "e1a697f87c23563cd46892975eb77486596b1b80ebb8f355d3019c9622a85446",
+    "figures/security-evidence-cover.svg": "86beba261e619582eafe4a96f453ae5242ffba4ecf27961f6f3814f47b0ad8c3",
+    "figures/security-two-path-architecture.png": "b470cd4ed8155571aebe487ec7ad7ac774549b4d6fc5ba79ec6620e46072f01a",
+    "figures/security-two-path-architecture.svg": "96dbc939799efe96da41b59665480b3d74678572c4601703bdb0d3a3285dfd56",
     "figures/seed-comparison.png": "804a5fceb2fa70974c15b66e8c167e75ad1cfa08cfaeecb2facec177b2e127a9",
     "figures/seed-comparison.svg": "364bd26fd058a1094651b33362fef7e3f3cbc8cec27cf6768cf2ea239f59d3fe",
     "figures/xhub-dual-owner.png": "eb3bfc853f01ec833fd8de8f361d4bc17d87e9d69eb774af835fea2bc37dd433",
     "figures/xhub-dual-owner.svg": "07c9c4acc339f49fda3f97888c2b3a8da19fe7be1e6f8205f218fea75b542fee",
     "figures/xhub-installed-stack.png": "30575696d59863b9e331b3e608855d029b3f697f6e58fe4c11916d36b55fe642",
     "figures/xhub-installed-stack.svg": "bfe63f83234daa49b433ce10b17a73827d43920ebea09fc324cf11aa2e4b3d07",
-    "orbitus-robotics-whitepapers.bib": "7f26d29f5d3ebe98e7cd0ab882708d678fc5b968a288c35abba6790645cf367e",
+    "orbitus-robotics-whitepapers.bib": "59e062461940affd140b95131b99e4fb11088477822943350a9275c8a373c158",
     "rob-project-background.json": "20a11b35a4e8cf8bb812c966050bfef2e88b35c05da1761b7405ce106ce7a652"
   }
 }

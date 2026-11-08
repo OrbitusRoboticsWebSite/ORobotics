@@ -1,8 +1,8 @@
 ---
-title: Robotics white papers
-description: Engineering findings from ROB, with recorded evidence, testing photographs, limitations, and open questions for the robotics community.
+title: Robotics and cybersecurity white papers
+description: Orbitus engineering findings in robotics, endpoint security, network analysis and machine learning, with traceable evidence and explicit limitations.
 type: whitepapers
 date: 2026-11-04
 ---
 
-Building ROB exposes practical problems in motion control, hardware compatibility, and recovery. These papers share what we observed, how we investigated it, and what remains to be tested.
+Building ROB and our security applications exposes practical problems in control, recovery, observation, and trustworthy automation. These papers share what we observed, how we investigated it, and what remains to be tested.

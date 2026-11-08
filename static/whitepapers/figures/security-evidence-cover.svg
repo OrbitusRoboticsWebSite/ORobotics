@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="516.6pt" height="197.352pt" viewBox="0 0 516.6 197.352" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Orbitus Robotics</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 197.352
+L 516.6 197.352
+L 516.6 0
+L 0 0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 14.569239 66.798
+L 158.132935 66.798
+Q 161.408152 66.798 161.408152 63.4716
+L 161.408152 23.0004
+Q 161.408152 19.674 158.132935 19.674
+L 14.569239 19.674
+Q 11.294022 19.674 11.294022 23.0004
+L 11.294022 63.4716
+Q 11.294022 66.798 14.569239 66.798
+z
+" clip-path="url(#p2ffcbc1606)" style="fill: #edf5f7; stroke: #b9d2d9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 88.337252 68.440153
+Q 172.326641 79.272142 254.652754 89.88962
+" clip-path="url(#p2ffcbc1606)" style="fill: none; stroke: #087f8c; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 249.828031 86.645849
+L 254.652754 89.88962
+L 249.162903 91.803136
+z
+" clip-path="url(#p2ffcbc1606)" style="fill: #087f8c; stroke: #087f8c; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 186.518152 66.798
+L 330.081848 66.798
+Q 333.357065 66.798 333.357065 63.4716
+L 333.357065 23.0004
+Q 333.357065 19.674 330.081848 19.674
+L 186.518152 19.674
+Q 183.242935 19.674 183.242935 23.0004
+L 183.242935 63.4716
+Q 183.242935 66.798 186.518152 66.798
+z
+" clip-path="url(#p2ffcbc1606)" style="fill: #edf5f7; stroke: #b9d2d9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 258.3 70.184496
+Q 258.3 79.269876 258.3 86.678205
+" clip-path="url(#p2ffcbc1606)" style="fill: none; stroke: #087f8c; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 260.9 81.478205
+L 258.3 86.678205
+L 255.7 81.478205
+z
+" clip-path="url(#p2ffcbc1606)" style="fill: #087f8c; stroke: #087f8c; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 358.467065 66.798
+L 502.030761 66.798
+Q 505.305978 66.798 505.305978 63.4716
+L 505.305978 23.0004
+Q 505.305978 19.674 502.030761 19.674
+L 358.467065 19.674
+Q 355.191848 19.674 355.191848 23.0004
+L 355.191848 63.4716
+Q 355.191848 66.798 358.467065 66.798
+z
+" clip-path="url(#p2ffcbc1606)" style="fill: #edf5f7; stroke: #b9d2d9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 428.262748 68.440153
+Q 344.273359 79.272142 261.947246 89.88962
+" clip-path="url(#p2ffcbc1606)" style="fill: none; stroke: #087f8c; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 267.437097 91.803136
+L 261.947246 89.88962
+L 266.771969 86.645849
+z
+" clip-path="url(#p2ffcbc1606)" style="fill: #087f8c; stroke: #087f8c; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 96.449674 141.642
+L 420.150326 141.642
+Q 423.425543 141.642 423.425543 138.3156
+L 423.425543 95.0724
+Q 423.425543 91.746 420.150326 91.746
+L 96.449674 91.746
+Q 93.174457 91.746 93.174457 95.0724
+L 93.174457 138.3156
+Q 93.174457 141.642 96.449674 141.642
+z
+" clip-path="url(#p2ffcbc1606)" style="fill: #102c3e; stroke: #b9d2d9; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 258.3 145.028699
+Q 258.3 153.283668 258.3 159.861586
+" clip-path="url(#p2ffcbc1606)" style="fill: none; stroke: #087f8c; stroke-width: 1.5; stroke-linecap: round"/>
+    <path d="M 260.9 154.661586
+L 258.3 159.861586
+L 255.7 154.661586
+z
+" clip-path="url(#p2ffcbc1606)" style="fill: #087f8c; stroke: #087f8c; stroke-width: 1.5; stroke-linecap: round"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #102c3e" x="86.351087" y="38.553582" transform="rotate(-0 86.351087 38.553582)">ENDPOINT</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #49616f" x="86.351087" y="54.589838" transform="rotate(-0 86.351087 54.589838)">Process / file / publisher</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #102c3e" x="258.3" y="38.553582" transform="rotate(-0 258.3 38.553582)">NETWORK</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #49616f" x="258.3" y="54.589838" transform="rotate(-0 258.3 54.589838)">Device / service / packet</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #102c3e" x="430.248913" y="38.553582" transform="rotate(-0 430.248913 38.553582)">CONTEXT</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #49616f" x="430.248913" y="54.589838" transform="rotate(-0 430.248913 54.589838)">Inventory / posture / rules</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="258.3" y="111.540342" transform="rotate(-0 258.3 111.540342)">TRACEABLE EVIDENCE GRAPH</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #ffffff" x="258.3" y="128.602238" transform="rotate(-0 258.3 128.602238)">Deterministic links + explicit uncertainty</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #102c3e" x="258.3" y="176.292" transform="rotate(-0 258.3 176.292)">ML prioritization  /  grounded LLM explanation  /  analyst decision</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p2ffcbc1606">
+   <rect x="7.2" y="7.2" width="502.2" height="182.952"/>
+  </clipPath>
+ </defs>
+</svg>

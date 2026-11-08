@@ -1,5 +1,5 @@
 <article class="wp-card">
-  <a class="wp-card__image" href="{{ .RelPermalink }}" tabindex="-1" aria-hidden="true">
+  <a class="wp-card__image{{ if eq .Params.cover_style "diagram" }} wp-diagram-card{{ end }}" href="{{ .RelPermalink }}" tabindex="-1" aria-hidden="true">
     <img src="{{ printf "whitepapers/figures/%s" .Params.photo | relURL }}" alt="" width="810" height="1440" loading="lazy" decoding="async" />
   </a>
   <div class="wp-card__body">

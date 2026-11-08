@@ -3,18 +3,19 @@
   <header class="wp-hub-hero">
     <div class="wp-shell">
       <p class="wp-eyebrow">Orbitus Robotics / Research</p>
-      <h1>Engineering lessons<br>from a real robot.</h1>
+      <h1>Engineering evidence.<br>Shared openly.</h1>
       <div class="wp-hub-intro">{{ .Content }}</div>
       <p class="wp-hub-note">Full web editions, illustrated PDFs, and traceable evidence. Each paper identifies its publication date and evidence boundary.</p>
     </div>
   </header>
   <section class="wp-shell wp-hub-papers" aria-labelledby="series-title">
-    <div class="wp-section-heading"><div><p class="wp-eyebrow">The ROB controller series</p><h2 id="series-title">From diagnosis to a recoverable handoff.</h2></div></div>
+    <div class="wp-section-heading"><div><p class="wp-eyebrow">Robotics and cybersecurity</p><h2 id="series-title">From observations to defensible decisions.</h2></div></div>
     <div class="wp-cards">{{ range .RegularPages.ByWeight }}{{ partial "whitepaper-card.html" . }}{{ end }}</div>
     <div class="wp-reading-note">
       <h2>How to read this series</h2>
       <p>Start with the motion-transition study, then the controller compatibility audit and recovery plan. The fourth paper examines an older X-Hub computer as a dual-arm development candidate. Each paper introduces ROB’s purpose and software context, distinguishes observations from proposals, and identifies the physical measurements still needed.</p>
-      <p>Photos come from Kierie’s October 29 can-handling videos. They document earlier work with ROB; they do not show the replacement controller operating.</p>
+      <p>The fifth paper examines SignalAtlas, BlackViper, Apple Endpoint Security, and the next generation of LLM and machine-learning-assisted threat investigation. Its competitive analysis separates implemented capabilities from proposed integrations.</p>
+      <p>Robotics photos come from Kierie’s October 29 can-handling videos. They document earlier work with ROB; they do not show the replacement controller operating. Security diagrams are original conceptual illustrations.</p>
       <p>These are Orbitus Robotics technical white papers, not peer-reviewed journal articles. Each edition includes its source commits, limitations, and an AI-assistance disclosure.</p>
       <div class="wp-actions">
         <a class="wp-secondary" href="{{ "whitepapers/orbitus-robotics-whitepapers.bib" | relURL }}" download>Download citations (.bib)</a>
