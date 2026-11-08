@@ -1,0 +1,35 @@
+[
+  {
+    "id": "windows",
+    "label": "Windows",
+    "terminal": "PowerShell",
+    "architecture": "x64",
+    "command": "& { $p=Join-Path $env:TEMP ('redagent-'+[guid]::NewGuid()+'.ps1'); Invoke-WebRequest -UseBasicParsing https://www.orbitusrobotics.com/r/install.ps1 -OutFile $p -ErrorAction Stop; & $p }",
+    "script": "r/install.ps1",
+    "requirements": "Windows x64, PowerShell 5.1 or newer, and a device policy that permits this unsigned pilot script. Built and GUI-tested on Windows Server 2025; Windows 11 field validation remains pending.",
+    "location": "%LOCALAPPDATA%\\Programs\\Orbitus\\RedAgent",
+    "launch": "Open RedAgent from the Start menu."
+  },
+  {
+    "id": "macos",
+    "label": "macOS",
+    "terminal": "Terminal",
+    "architecture": "Apple Silicon + Intel",
+    "command": "d=$(mktemp -d) && curl -fsSL --proto \"=https\" --proto-redir \"=https\" https://www.orbitusrobotics.com/r/install.sh -o \"$d/install.sh\" && sh \"$d/install.sh\"",
+    "script": "r/install.sh",
+    "requirements": "Apple Silicon or Intel. The script chooses the native build, including under Rosetta. Built and GUI-tested on macOS 26 (Apple Silicon) and macOS 15 (Intel); older macOS compatibility is not yet established.",
+    "location": "~/Applications/RedAgent",
+    "launch": "Open RedAgent.app inside the installation folder in Finder."
+  },
+  {
+    "id": "linux",
+    "label": "Linux",
+    "terminal": "Terminal (sh/bash/zsh)",
+    "architecture": "x86_64",
+    "command": "d=$(mktemp -d) && curl -fsSL --proto \"=https\" --proto-redir \"=https\" https://www.orbitusrobotics.com/r/install.sh -o \"$d/install.sh\" && sh \"$d/install.sh\"",
+    "script": "r/install.sh",
+    "requirements": "x86_64 desktop Linux with glibc 2.35+, curl, tar, and X11 libraries. Built and GUI-tested on Ubuntu 22.04. No ARM Linux or musl/Alpine bundle is available.",
+    "location": "~/.local/share/RedAgent",
+    "launch": "Run ~/.local/share/RedAgent/RedAgent/RedAgent in a graphical desktop session."
+  }
+]

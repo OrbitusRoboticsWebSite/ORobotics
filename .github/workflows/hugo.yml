@@ -48,6 +48,11 @@ jobs:
       - name: Validate ROB gesture rig, scripts and rehearsal guards
         run: npm run test:gestures
 
+      - name: Validate RedAgent commands and generated installers
+        run: |
+          python3 scripts/redagent/render.py --check
+          node --test tests/redagent-portal.test.mjs
+
       - name: Build site (prefer npm run build if available)
         shell: bash
         run: |

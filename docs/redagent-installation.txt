@@ -1,0 +1,51 @@
+REDAGENT INSTALLATION PORTAL - 2026-11-08
+
+Canonical shortlink: https://www.orbitusrobotics.com/r/
+Scope: per-user desktop app installation. MDM enrollment is deferred.
+
+Source of truth: data/redagent_release.json. Native v0.2.0 application bundles
+were built from SignalAtlas e1e3002be85f95d4db556ffb3f68f699c5dcd085 by the
+RedAgent portability workflow run 42461104017. Their existing receipts retain
+the build platform and per-file hashes. The website does not rebuild the app.
+
+The public GitHub prerelease redagent-v0.2.0-pilot hosts these exact bundles.
+They are development packages without production signing/notarization. Keep
+them separate from any production-signed download. Do not overwrite release
+assets: publish a new version/tag and regenerate the pinned installers.
+
+Regenerate: python3 scripts/redagent/render.py
+Check: python3 scripts/redagent/render.py --check
+Portal tests: node --test tests/redagent-portal.test.mjs
+Real native installer tests: python3 tests/redagent-installers.py
+Offline fixture: add --archive /absolute/path/to/matching/native/bundle
+
+The installer validates the native bundle's pinned SHA-256 before extraction.
+It uses a same-filesystem staging directory, refuses unmanaged destination
+collisions, retains a prior managed install during repair, and records the
+source commit, archive checksum and mdmEnrolled=false. The existing app's
+evidence directories are not deleted. Repeat installs of an intact launcher
+with the same recorded bundle hash are no-ops (not a full integrity audit).
+
+macOS/Linux options: --dry-run, --prefix ABSOLUTE_PATH, --archive PATH.
+Windows options: -DryRun, -InstallDir ABSOLUTE_PATH, -ArchivePath PATH.
+The normal paths install for the signed-in user. Run in that user's session,
+not a root/SYSTEM MDM context. Managed all-user deployment will be designed
+when the management service is available. Windows adds a Start Menu shortcut.
+
+Optional scanning/capture engines and drivers are not included. The installer
+does not start the app, a background service, a scan, or a wireless operation.
+No system security or PowerShell execution policy is changed. Existing MDM
+policy can prevent unsigned scripts/apps. Production distribution requires
+appropriate signing and validation before broader corporate rollout.
+
+Flipper files are generated from the same command data as the page. Upload
+the .txt files to SD Card/badusb/, select OS, choose USB mode and keyboard
+layout, connect to the unlocked desktop, and press Run. Linux assumes a
+Ctrl+Alt+T terminal shortcut. Timing/focus and first-use prompts need physical
+validation. Standard Flipper firmware does not run the script solely because
+the cable was connected. No device ID spoofing or policy bypass is used.
+
+Publication: build/validate the Hugo site, publish the GitHub prerelease
+assets, pass the four native installer CI jobs, fast-forward origin/main,
+watch GitHub Pages deployment and verify the live page/scripts/asset hashes.
+Keep distribution status exact; CI is not physical Flipper acceptance.

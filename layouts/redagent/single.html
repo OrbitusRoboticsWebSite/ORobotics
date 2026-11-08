@@ -1,0 +1,45 @@
+{{ define "main" }}
+{{ $release := site.Data.redagent_release }}
+{{ $style := resources.Get "css/redagent.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
+<main id="main" class="ra-page">
+  <div class="ra-wrap">
+    <header class="ra-hero">
+      <p class="ra-eyebrow"><span class="ra-dot" aria-hidden="true"></span> Orbitus Robotics / security workbench</p>
+      <div class="ra-heading"><div><h1>RedAgent.<br><span>Ready for your machine.</span></h1><p class="ra-lede">One short link. Your platform’s install command.<br>Bring the desktop security workbench to your corporate computers.</p></div><div class="ra-release"><b>v{{ $release.version }}</b><span>Development pilot</span><a href="#downloads">Release files ↓</a></div></div>
+      <p class="ra-pilot">Pilot downloads are available. Production signing and notarization are pending; your device’s normal installation policies apply.</p>
+    </header>
+    <section id="install" class="ra-install" aria-labelledby="install-title">
+      <div class="ra-section-head"><h2 id="install-title">Install on your computer</h2><p id="ra-detection" role="status">Choose your platform below.</p></div>
+      <div class="ra-switch" aria-label="Choose platform">
+        {{ range site.Data.redagent_commands }}<button type="button" data-platform="{{ .id }}" aria-pressed="false">{{ .label }}<span>{{ .architecture }}</span></button>{{ end }}
+        <button type="button" id="ra-show-all" aria-pressed="true">All commands<span>Compare platforms</span></button>
+      </div>
+      {{ range site.Data.redagent_commands }}
+      <article class="ra-platform" data-panel="{{ .id }}">
+        <div class="ra-command-head"><h3>{{ .label }} <span>/ {{ .terminal }}</span></h3><button class="ra-copy" type="button" data-copy="command-{{ .id }}" hidden>Copy command</button></div>
+        <pre class="ra-terminal"><code id="command-{{ .id }}">{{ .command }}</code></pre>
+        <div class="ra-install-detail"><div><b>1. Run in {{ .terminal }}</b><p>Copy the complete command into your terminal. The installer detects the machine’s architecture and checks the release checksum before installing.</p><a href="{{ .script | relURL }}" download>Review installer script ↗</a></div><div><b>2. Open RedAgent</b><p>{{ .launch }}</p><code>{{ .location }}</code></div></div>
+        <details class="ra-requirements"><summary>Requirements and tested systems</summary><p>{{ .requirements }}</p></details>
+      </article>
+      {{ end }}
+      <p id="ra-copy-status" class="ra-copy-status" role="status" aria-live="polite"></p>
+      <noscript><p>JavaScript is disabled. All three commands are shown; select and copy the one for your computer.</p></noscript>
+      <div class="ra-install-note"><p><b>Installs for the signed-in user.</b> Python and the desktop UI are included. Nmap, Wireshark/TShark, capture drivers and other optional tools are installed separately.</p><p>Open the app when you’re ready to choose a test. MDM enrollment will be connected when the corporate management service is ready.</p></div>
+    </section>
+    <section class="ra-flipper" id="flipper" aria-labelledby="flipper-title">
+      <div><p class="ra-eyebrow">Your portable install key</p><h2 id="flipper-title">Take the command<br>with your Flipper Zero.</h2><p>The BadUSB scripts open a visible terminal and type the same install command. Choose the matching script for each corporate computer.</p><a class="ra-primary" href="{{ "r/RedAgent-Flipper-scripts.zip" | relURL }}" download>Download all 3 scripts <span aria-hidden="true">↓</span></a><div class="ra-text-links">{{ range site.Data.redagent_commands }}<a href="{{ printf "r/flipper/RedAgent-%s.txt" .id | relURL }}" download>{{ .label }} .txt</a>{{ end }}</div></div>
+      <ol class="ra-steps"><li><span>01</span><div><b>Load the scripts</b><p>Use qFlipper or the mobile app to copy the .txt files to <code>SD Card/badusb/</code>. Then close qFlipper.</p></div></li><li><span>02</span><div><b>Select the computer’s platform</b><p>Unlock the desktop. Open Bad USB, select its OS script, choose USB mode, and match the keyboard layout.</p></div></li><li><span>03</span><div><b>Connect and press Run</b><p>Watch the terminal for the installation result. Standard Flipper firmware uses the Run button to start the script after connection.</p></div></li></ol>
+      <p class="ra-flipper-note">Linux uses the Ctrl+Alt+T terminal shortcut; macOS uses Spotlight. First-time USB, keyboard, or system approval prompts may need your interaction. Scripts are provided for testing; physical execution on a Flipper is not yet verified. <a href="{{ "r/flipper/README.txt" | relURL }}">Setup notes</a> · <a href="https://docs.flipper.net/zero/bad-usb">Flipper instructions ↗</a></p>
+    </section>
+    <section id="downloads" class="ra-downloads" aria-labelledby="downloads-title">
+      <div class="ra-section-head"><div><p class="ra-eyebrow">Prefer a direct download?</p><h2 id="downloads-title">The same native builds.</h2></div><a href="{{ "r/release.json" | relURL }}">Release manifest ↗</a></div>
+      <p>Extract the complete archive and keep its application folder intact. Downloads are hosted in Orbitus Robotics’ GitHub release.</p>
+      <div class="ra-table-wrap"><table><thead><tr><th>Platform</th><th>Download</th><th>Integrity</th></tr></thead><tbody>{{ range $release.assets }}<tr><th scope="row">{{ .label }}</th><td><a href="{{ $release.downloadBase }}/{{ .filename }}">{{ .filename }}</a><small>{{ printf "%.1f" (div (float .bytes) 1048576.0) }} MB · {{ .bytes }} bytes</small></td><td><details><summary>SHA-256</summary><code>{{ .sha256 }}</code></details></td></tr>{{ end }}</tbody></table></div>
+      <p class="ra-footnote">Version {{ $release.version }} · {{ $release.date }} · Source <code>{{ substr $release.sourceCommit 0 12 }}</code>. Native bundle creation and GUI startup were checked in CI on all four build platforms. Capture hardware and managed-device rollout require separate validation.</p>
+    </section>
+    <footer class="ra-page-footer"><span>Keep this link handy.</span><a href="https://www.orbitusrobotics.com/r/">orbitusrobotics.com/r</a><a href="{{ "products/signalatlas/" | relURL }}">Explore SignalAtlas ↗</a></footer>
+  </div>
+</main>
+<script type="module" src="{{ "r/portal.mjs" | relURL }}"></script>
+{{ end }}

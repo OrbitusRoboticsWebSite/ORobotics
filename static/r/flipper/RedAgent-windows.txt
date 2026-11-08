@@ -1,0 +1,13 @@
+REM RedAgent 0.2.0 pilot installation - windows
+REM Use on your unlocked corporate computer. Match the Flipper keyboard layout to the host.
+REM Linux requires Ctrl+Alt+T to open a terminal. macOS requires Cmd+Space for Spotlight.
+REM Leaves the terminal visible. Installs for this user; no elevation, tests, or MDM enrollment.
+DEFAULT_STRING_DELAY 10
+DELAY 2000
+GUI r
+DELAY 1200
+STRING powershell.exe -NoLogo -NoProfile
+ENTER
+DELAY 4000
+STRING & { $p=Join-Path $env:TEMP ('redagent-'+[guid]::NewGuid()+'.ps1'); Invoke-WebRequest -UseBasicParsing https://www.orbitusrobotics.com/r/install.ps1 -OutFile $p -ErrorAction Stop; & $p }
+ENTER

@@ -1,0 +1,48 @@
+{
+  "version": "0.2.0",
+  "channel": "development-pilot",
+  "date": "2026-11-08",
+  "sourceCommit": "e1e3002be85f95d4db556ffb3f68f699c5dcd085",
+  "downloadBase": "https://github.com/OrbitusRoboticsWebSite/ORobotics/releases/download/redagent-v0.2.0-pilot",
+  "productionSigned": false,
+  "notarized": false,
+  "mdmEnrollmentConfigured": false,
+  "assets": [
+    {
+      "system": "Darwin",
+      "machine": "x86_64",
+      "label": "macOS \u00b7 Intel",
+      "filename": "RedAgent-0.2.0-Darwin-x86_64.tar.gz",
+      "bytes": 11233011,
+      "sha256": "e8c0573d9d324740f8794aee5cd8adab97967b88c96e9e6de065cd4575af3488",
+      "testedPlatform": "macOS-15.7.9-x86_64-i386-64bit"
+    },
+    {
+      "system": "Darwin",
+      "machine": "arm64",
+      "label": "macOS \u00b7 Apple Silicon",
+      "filename": "RedAgent-0.2.0-Darwin-arm64.tar.gz",
+      "bytes": 10496837,
+      "sha256": "a1b2cb61626b8e5b60e66c56936e79dfad05d43cc8543e09df81ee19bae5d354",
+      "testedPlatform": "macOS-26.7.2-arm64-arm-64bit"
+    },
+    {
+      "system": "Linux",
+      "machine": "x86_64",
+      "label": "Linux \u00b7 x64",
+      "filename": "RedAgent-0.2.0-Linux-x86_64.tar.gz",
+      "bytes": 24530803,
+      "sha256": "355c73e25c9517a026a5e6e70f5f3f8c818dd6d383cbe35bf6957dc96218816b",
+      "testedPlatform": "Linux-6.8.0-1070-azure-x86_64-with-glibc2.35"
+    },
+    {
+      "system": "Windows",
+      "machine": "AMD64",
+      "label": "Windows \u00b7 x64",
+      "filename": "RedAgent-0.2.0-Windows-AMD64.zip",
+      "bytes": 11668197,
+      "sha256": "c0081f7ad6efa47edee55d4e7474d86b7ef4f3dabdf747f80f685ad5323d48e5",
+      "testedPlatform": "Windows-2025Server-10.0.26100-SP0"
+    }
+  ]
+}
