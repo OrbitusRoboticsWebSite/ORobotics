@@ -55,11 +55,17 @@ try {
             }
         }
     }
-    if ((Get-FileHash -LiteralPath $bundle -Algorithm SHA256).Hash.ToLowerInvariant() -ne $expected) {
+    # Framework APIs also work when the host omits optional PowerShell module paths.
+    $sha = [Security.Cryptography.SHA256]::Create()
+    $stream = [IO.File]::OpenRead($bundle)
+    try { $actual = [BitConverter]::ToString($sha.ComputeHash($stream)).Replace('-', '').ToLowerInvariant() }
+    finally { $stream.Dispose(); $sha.Dispose() }
+    if ($actual -ne $expected) {
         throw 'SHA-256 mismatch; nothing was installed.'
     }
     $payload = Join-Path $work 'payload'
-    Expand-Archive -LiteralPath $bundle -DestinationPath $payload
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    [IO.Compression.ZipFile]::ExtractToDirectory($bundle, $payload)
     if (-not (Test-Path -LiteralPath (Join-Path $payload 'RedAgent\RedAgent.exe'))) { throw 'Verified archive is missing its executable.' }
     [ordered]@{ installer='orbitus-redagent'; version=$version; sourceCommit=$sourceCommit; archiveSHA256=$expected; distribution='development-pilot'; mdmEnrolled=$false } |
         ConvertTo-Json | Set-Content -LiteralPath (Join-Path $payload 'installation.json') -Encoding UTF8
