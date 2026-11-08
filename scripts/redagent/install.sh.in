@@ -37,7 +37,7 @@ if [ -z "$prefix" ]; then
 fi
 case "$prefix" in /*) ;; *) fail '--prefix must be an absolute path';; esac
 case "$prefix" in /|*/../*|*/..|*/./*|*/.|*/) fail 'Use a dedicated install directory without a trailing slash or dot segments';; esac
-url="$BASE_URL/$filename@DOWNLOAD_QUERY@"
+url="$BASE_URL/$filename"
 printf 'RedAgent %s pilot\nPlatform: %s/%s\nDownload: %s\nSHA-256: %s\nInstall to: %s\n' "$VERSION" "$system" "$machine" "$url" "$expected" "$prefix"
 if "$dry_run"; then printf '%s\n' 'Preview only; no download or installation.'; exit 0; fi
 if [ "$system" = Linux ]; then
@@ -73,7 +73,10 @@ if [ -n "$archive" ]; then
     cp "$archive" "$work/bundle.tar.gz"
 else
     command -v curl >/dev/null 2>&1 || fail 'curl is required'
-    curl --fail --show-error --location --proto '=https' --proto-redir '=https' --retry 2 --retry-all-errors --connect-timeout 20 --max-time 600 "$url" -o "$work/bundle.tar.gz"
+    if ! curl --fail --show-error --location --proto '=https' --proto-redir '=https' --retry 1 --retry-all-errors --connect-timeout 20 --max-time 600 "$url" -o "$work/bundle.tar.gz"; then
+        printf '%s\n' 'Retrying through the official GitHub release asset API...'
+        curl --fail --show-error --location --proto '=https' --proto-redir '=https' --retry 2 --retry-all-errors --connect-timeout 20 --max-time 600 -H 'Accept: application/octet-stream' -H 'X-GitHub-Api-Version: 2022-11-28' "$api_url" -o "$work/bundle.tar.gz"
+    fi
 fi
 if command -v shasum >/dev/null 2>&1; then actual=$(shasum -a 256 "$work/bundle.tar.gz" | awk '{print $1}')
 elif command -v sha256sum >/dev/null 2>&1; then actual=$(sha256sum "$work/bundle.tar.gz" | awk '{print $1}')

@@ -24,10 +24,9 @@ with tempfile.TemporaryDirectory(prefix='redagent-installer-test-') as scratch:
         archive = args.archive.resolve()
     else:
         archive = work / asset['filename']
-        url = f"{release['downloadBase']}/{asset['filename']}{release['downloadQuery']}"
         curl = shutil.which('curl.exe' if system == 'Windows' else 'curl')
         assert curl, 'curl is required for the CI release fixture download'
-        subprocess.run([curl, '--fail', '--show-error', '--silent', '--location', '--retry', '2', '--retry-all-errors', '--max-time', '120', url, '-o', str(archive)], check=True)
+        subprocess.run([curl, '--fail', '--show-error', '--silent', '--location', '--retry', '2', '--retry-all-errors', '--max-time', '120', '-H', 'Accept: application/octet-stream', '-H', 'X-GitHub-Api-Version: 2022-11-28', asset['apiUrl'], '-o', str(archive)], check=True)
     assert hashlib.sha256(archive.read_bytes()).hexdigest() == asset['sha256']
     dest = work / 'install with spaces'
     if system == 'Windows':
@@ -51,7 +50,8 @@ with tempfile.TemporaryDirectory(prefix='redagent-installer-test-') as scratch:
     assert not dest.exists(), 'Dry run wrote an installation'
     damaged = work / ('damaged.zip' if system == 'Windows' else 'damaged.tar.gz')
     damaged.write_bytes(b'not the signed-off release bundle')
-    assert 'SHA-256 mismatch' in run(bundle=damaged, succeeds=False)
+    rejected = run(bundle=damaged, succeeds=False)
+    assert 'SHA-256 mismatch' in ' '.join(rejected.split()), rejected
     assert not dest.exists(), 'Hash mismatch wrote an installation'
     collision = work / 'unmanaged'
     collision.mkdir()

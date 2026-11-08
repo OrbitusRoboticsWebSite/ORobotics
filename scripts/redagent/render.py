@@ -14,23 +14,22 @@ parser.add_argument('--check', action='store_true')
 args = parser.parse_args()
 release = json.loads((ROOT / 'data/redagent_release.json').read_text())
 base = release['downloadBase']
-query = release['downloadQuery']
 assert re.fullmatch(r'https://github.com/OrbitusRoboticsWebSite/ORobotics/releases/download/redagent-v[0-9.]+-pilot', base)
-assert re.fullmatch(r'\?download=1&release=[0-9.]+', query)
 assert re.fullmatch(r'[0-9.]+', release['version'])
 assert re.fullmatch(r'[a-f0-9]{40}', release['sourceCommit'])
-replacements = {'VERSION': release['version'], 'SOURCE_COMMIT': release['sourceCommit'], 'BASE_URL': base, 'DOWNLOAD_QUERY': query}
+replacements = {'VERSION': release['version'], 'SOURCE_COMMIT': release['sourceCommit'], 'BASE_URL': base}
 unix_cases = []
 for asset in release['assets']:
     assert re.fullmatch(r'[a-f0-9]{64}', asset['sha256'])
     assert re.fullmatch(r'RedAgent-[A-Za-z0-9_.-]+', asset['filename'])
+    assert re.fullmatch(r'https://api.github.com/repos/OrbitusRoboticsWebSite/ORobotics/releases/assets/[0-9]+', asset['apiUrl'])
     if asset['system'] == 'Windows':
-        replacements.update(WINDOWS_SHA256=asset['sha256'], WINDOWS_FILENAME=asset['filename'])
+        replacements.update(WINDOWS_SHA256=asset['sha256'], WINDOWS_FILENAME=asset['filename'], WINDOWS_API_URL=asset['apiUrl'])
     else:
         key = f"{asset['system']}/{asset['machine']}"
         assert key in ('Darwin/arm64', 'Darwin/x86_64', 'Linux/x86_64')
         exe = 'RedAgent.app/Contents/MacOS/RedAgent' if asset['system'] == 'Darwin' else 'RedAgent/RedAgent'
-        unix_cases.append(f"    {key}) filename='{asset['filename']}'; expected='{asset['sha256']}'; executable='{exe}';;")
+        unix_cases.append(f"    {key}) filename='{asset['filename']}'; expected='{asset['sha256']}'; executable='{exe}'; api_url='{asset['apiUrl']}';;")
 replacements['UNIX_ASSETS'] = '\n'.join(unix_cases)
 files = {}
 for name in ('install.sh', 'install.ps1'):

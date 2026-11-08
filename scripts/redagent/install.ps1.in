@@ -6,7 +6,8 @@ Set-StrictMode -Version Latest
 $version = '@VERSION@'
 $sourceCommit = '@SOURCE_COMMIT@'
 $expected = '@WINDOWS_SHA256@'
-$url = '@BASE_URL@/@WINDOWS_FILENAME@@DOWNLOAD_QUERY@'
+$url = '@BASE_URL@/@WINDOWS_FILENAME@'
+$apiUrl = '@WINDOWS_API_URL@'
 if ($env:OS -ne 'Windows_NT') { throw 'Use install.sh for macOS and Linux.' }
 $machine = if ($env:PROCESSOR_ARCHITEW6432) { $env:PROCESSOR_ARCHITEW6432 } else { $env:PROCESSOR_ARCHITECTURE }
 if ($machine -ne 'AMD64') { throw "Unsupported architecture: $machine. This pilot requires Windows x64." }
@@ -41,7 +42,11 @@ try {
         [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
         for ($attempt = 1; $attempt -le 3; $attempt++) {
             try {
-                Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile $bundle -TimeoutSec 600
+                if ($attempt -eq 3) {
+                    Invoke-WebRequest -UseBasicParsing -Uri $apiUrl -Headers @{ Accept='application/octet-stream'; 'X-GitHub-Api-Version'='2022-11-28' } -OutFile $bundle -TimeoutSec 600
+                } else {
+                    Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile $bundle -TimeoutSec 600
+                }
                 break
             } catch {
                 if ($attempt -eq 3) { throw }

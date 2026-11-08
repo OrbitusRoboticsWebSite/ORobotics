@@ -27,9 +27,9 @@ machine=$(uname -m)
 # A shell running under Rosetta reports x86_64; use the native Apple Silicon bundle.
 if [ "$system" = Darwin ] && [ "$(sysctl -in hw.optional.arm64 2>/dev/null || true)" = 1 ]; then machine=arm64; fi
 case "$system/$machine" in
-    Darwin/x86_64) filename='RedAgent-0.2.0-Darwin-x86_64.tar.gz'; expected='e8c0573d9d324740f8794aee5cd8adab97967b88c96e9e6de065cd4575af3488'; executable='RedAgent.app/Contents/MacOS/RedAgent';;
-    Darwin/arm64) filename='RedAgent-0.2.0-Darwin-arm64.tar.gz'; expected='a1b2cb61626b8e5b60e66c56936e79dfad05d43cc8543e09df81ee19bae5d354'; executable='RedAgent.app/Contents/MacOS/RedAgent';;
-    Linux/x86_64) filename='RedAgent-0.2.0-Linux-x86_64.tar.gz'; expected='355c73e25c9517a026a5e6e70f5f3f8c818dd6d383cbe35bf6957dc96218816b'; executable='RedAgent/RedAgent';;
+    Darwin/x86_64) filename='RedAgent-0.2.0-Darwin-x86_64.tar.gz'; expected='e8c0573d9d324740f8794aee5cd8adab97967b88c96e9e6de065cd4575af3488'; executable='RedAgent.app/Contents/MacOS/RedAgent'; api_url='https://api.github.com/repos/OrbitusRoboticsWebSite/ORobotics/releases/assets/723433706';;
+    Darwin/arm64) filename='RedAgent-0.2.0-Darwin-arm64.tar.gz'; expected='a1b2cb61626b8e5b60e66c56936e79dfad05d43cc8543e09df81ee19bae5d354'; executable='RedAgent.app/Contents/MacOS/RedAgent'; api_url='https://api.github.com/repos/OrbitusRoboticsWebSite/ORobotics/releases/assets/723433707';;
+    Linux/x86_64) filename='RedAgent-0.2.0-Linux-x86_64.tar.gz'; expected='355c73e25c9517a026a5e6e70f5f3f8c818dd6d383cbe35bf6957dc96218816b'; executable='RedAgent/RedAgent'; api_url='https://api.github.com/repos/OrbitusRoboticsWebSite/ORobotics/releases/assets/723433709';;
     *) fail "Unsupported platform: $system/$machine. Available: macOS arm64/x86_64 and Linux x86_64.";;
 esac
 if [ -z "$prefix" ]; then
@@ -39,7 +39,7 @@ if [ -z "$prefix" ]; then
 fi
 case "$prefix" in /*) ;; *) fail '--prefix must be an absolute path';; esac
 case "$prefix" in /|*/../*|*/..|*/./*|*/.|*/) fail 'Use a dedicated install directory without a trailing slash or dot segments';; esac
-url="$BASE_URL/$filename?download=1&release=0.2.0"
+url="$BASE_URL/$filename"
 printf 'RedAgent %s pilot\nPlatform: %s/%s\nDownload: %s\nSHA-256: %s\nInstall to: %s\n' "$VERSION" "$system" "$machine" "$url" "$expected" "$prefix"
 if "$dry_run"; then printf '%s\n' 'Preview only; no download or installation.'; exit 0; fi
 if [ "$system" = Linux ]; then
@@ -75,7 +75,10 @@ if [ -n "$archive" ]; then
     cp "$archive" "$work/bundle.tar.gz"
 else
     command -v curl >/dev/null 2>&1 || fail 'curl is required'
-    curl --fail --show-error --location --proto '=https' --proto-redir '=https' --retry 2 --retry-all-errors --connect-timeout 20 --max-time 600 "$url" -o "$work/bundle.tar.gz"
+    if ! curl --fail --show-error --location --proto '=https' --proto-redir '=https' --retry 1 --retry-all-errors --connect-timeout 20 --max-time 600 "$url" -o "$work/bundle.tar.gz"; then
+        printf '%s\n' 'Retrying through the official GitHub release asset API...'
+        curl --fail --show-error --location --proto '=https' --proto-redir '=https' --retry 2 --retry-all-errors --connect-timeout 20 --max-time 600 -H 'Accept: application/octet-stream' -H 'X-GitHub-Api-Version: 2022-11-28' "$api_url" -o "$work/bundle.tar.gz"
+    fi
 fi
 if command -v shasum >/dev/null 2>&1; then actual=$(shasum -a 256 "$work/bundle.tar.gz" | awk '{print $1}')
 elif command -v sha256sum >/dev/null 2>&1; then actual=$(sha256sum "$work/bundle.tar.gz" | awk '{print $1}')
