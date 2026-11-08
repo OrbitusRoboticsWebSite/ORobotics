@@ -9,7 +9,6 @@ import platform
 import shutil
 import subprocess
 import tempfile
-import urllib.request
 
 ROOT = Path(__file__).resolve().parents[1]
 release = json.loads((ROOT / 'data/redagent_release.json').read_text())
@@ -25,7 +24,10 @@ with tempfile.TemporaryDirectory(prefix='redagent-installer-test-') as scratch:
         archive = args.archive.resolve()
     else:
         archive = work / asset['filename']
-        urllib.request.urlretrieve(f"{release['downloadBase']}/{asset['filename']}", archive)
+        url = f"{release['downloadBase']}/{asset['filename']}{release['downloadQuery']}"
+        curl = shutil.which('curl.exe' if system == 'Windows' else 'curl')
+        assert curl, 'curl is required for the CI release fixture download'
+        subprocess.run([curl, '--fail', '--show-error', '--silent', '--location', '--retry', '2', '--retry-all-errors', '--max-time', '120', url, '-o', str(archive)], check=True)
     assert hashlib.sha256(archive.read_bytes()).hexdigest() == asset['sha256']
     dest = work / 'install with spaces'
     if system == 'Windows':
@@ -39,7 +41,10 @@ with tempfile.TemporaryDirectory(prefix='redagent-installer-test-') as scratch:
         prefix_flag, archive_flag, dry_flag = '--prefix', '--archive', '--dry-run'
         exe_relative = Path('RedAgent.app/Contents/MacOS/RedAgent' if system == 'Darwin' else 'RedAgent/RedAgent')
     def run(destination=dest, bundle=archive, flags=(), succeeds=True):
-        result = subprocess.run(base + [prefix_flag, str(destination), archive_flag, str(bundle), *flags], text=True, capture_output=True)
+        options = [prefix_flag, str(destination)]
+        if bundle is not None:
+            options += [archive_flag, str(bundle)]
+        result = subprocess.run(base + options + list(flags), text=True, capture_output=True)
         assert (result.returncode == 0) == succeeds, result.stdout + result.stderr
         return result.stdout + result.stderr
     run(flags=[dry_flag])
@@ -53,7 +58,8 @@ with tempfile.TemporaryDirectory(prefix='redagent-installer-test-') as scratch:
     (collision / 'keep.txt').write_text('existing user data')
     run(destination=collision, succeeds=False)
     assert (collision / 'keep.txt').read_text() == 'existing user data'
-    run()
+    # Exercise curl / Invoke-WebRequest inside the actual installer as well.
+    run(bundle=archive if args.archive else None)
     receipt = json.loads((dest / 'installation.json').read_text(encoding='utf-8-sig'))
     assert receipt['archiveSHA256'] == asset['sha256']
     assert receipt['mdmEnrolled'] is False
@@ -74,4 +80,4 @@ with tempfile.TemporaryDirectory(prefix='redagent-installer-test-') as scratch:
     assert (backups[0] / 'keep-evidence.txt').read_text() == 'prior data'
     assert (dest / exe_relative).is_file()
     assert not list(work.glob('.redagent-install*')), 'Temporary install data was left behind'
-    print(json.dumps({'platform': system, 'machine': machine, 'version': release['version'], 'verifiedFiles': len(build_receipt['files']), 'checks': ['preview', 'hash rejection', 'unmanaged collision', 'install', 'file integrity', 'idempotence', 'repair backup', 'cleanup'], 'appLaunched': False}))
+    print(json.dumps({'platform': system, 'machine': machine, 'version': release['version'], 'verifiedFiles': len(build_receipt['files']), 'checks': ['preview', 'hash rejection', 'unmanaged collision', 'install', 'file integrity', 'idempotence', 'repair backup', 'cleanup'], 'networkInstallerTested': not bool(args.archive), 'appLaunched': False}))

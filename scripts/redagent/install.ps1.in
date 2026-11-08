@@ -6,7 +6,7 @@ Set-StrictMode -Version Latest
 $version = '@VERSION@'
 $sourceCommit = '@SOURCE_COMMIT@'
 $expected = '@WINDOWS_SHA256@'
-$url = '@BASE_URL@/@WINDOWS_FILENAME@'
+$url = '@BASE_URL@/@WINDOWS_FILENAME@@DOWNLOAD_QUERY@'
 if ($env:OS -ne 'Windows_NT') { throw 'Use install.sh for macOS and Linux.' }
 $machine = if ($env:PROCESSOR_ARCHITEW6432) { $env:PROCESSOR_ARCHITEW6432 } else { $env:PROCESSOR_ARCHITECTURE }
 if ($machine -ne 'AMD64') { throw "Unsupported architecture: $machine. This pilot requires Windows x64." }
@@ -39,7 +39,16 @@ try {
     if ($ArchivePath) { Copy-Item -LiteralPath $ArchivePath -Destination $bundle }
     else {
         [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
-        Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile $bundle -TimeoutSec 600
+        for ($attempt = 1; $attempt -le 3; $attempt++) {
+            try {
+                Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile $bundle -TimeoutSec 600
+                break
+            } catch {
+                if ($attempt -eq 3) { throw }
+                Write-Warning "Download attempt $attempt failed. Retrying..."
+                Start-Sleep -Seconds (2 * $attempt)
+            }
+        }
     }
     if ((Get-FileHash -LiteralPath $bundle -Algorithm SHA256).Hash.ToLowerInvariant() -ne $expected) {
         throw 'SHA-256 mismatch; nothing was installed.'

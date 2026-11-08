@@ -14,10 +14,12 @@ parser.add_argument('--check', action='store_true')
 args = parser.parse_args()
 release = json.loads((ROOT / 'data/redagent_release.json').read_text())
 base = release['downloadBase']
+query = release['downloadQuery']
 assert re.fullmatch(r'https://github.com/OrbitusRoboticsWebSite/ORobotics/releases/download/redagent-v[0-9.]+-pilot', base)
+assert re.fullmatch(r'\?download=1&release=[0-9.]+', query)
 assert re.fullmatch(r'[0-9.]+', release['version'])
 assert re.fullmatch(r'[a-f0-9]{40}', release['sourceCommit'])
-replacements = {'VERSION': release['version'], 'SOURCE_COMMIT': release['sourceCommit'], 'BASE_URL': base}
+replacements = {'VERSION': release['version'], 'SOURCE_COMMIT': release['sourceCommit'], 'BASE_URL': base, 'DOWNLOAD_QUERY': query}
 unix_cases = []
 for asset in release['assets']:
     assert re.fullmatch(r'[a-f0-9]{64}', asset['sha256'])

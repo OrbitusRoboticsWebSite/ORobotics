@@ -4,6 +4,7 @@
   "date": "2026-11-08",
   "sourceCommit": "e1e3002be85f95d4db556ffb3f68f699c5dcd085",
   "downloadBase": "https://github.com/OrbitusRoboticsWebSite/ORobotics/releases/download/redagent-v0.2.0-pilot",
+  "downloadQuery": "?download=1&release=0.2.0",
   "productionSigned": false,
   "notarized": false,
   "mdmEnrollmentConfigured": false,
