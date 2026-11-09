@@ -8,7 +8,7 @@ draft: false
 
 **Secure local coding sessions.** ROBCodeAgent turns the Mac bridge into a focused Codex workspace and securely carries the same sessions to an iPhone or iPad on your local Wi-Fi network. ROBCodeAgent is made by Orbitus Robotics and works with a separately installed Codex CLI. It is independent of ROBController and Cerebro.
 
-ROBCodeAgent 0.1.2 is available on the [App Store](https://apps.apple.com/app/id6807303425) for iPhone and iPad. It includes session goals, optional voice, remaining-usage details, and direct question replies. The matching Mac bridge is available below. App Store distribution excludes China mainland. [Explore all Orbitus products](/products/).
+ROBCodeAgent 0.1.2 is available on the [App Store](https://apps.apple.com/app/id6807303425) for iPhone and iPad. Version 0.1.3 (build 1022) adds reviewed voice calls and script channels and is submitted, waiting for Apple review. The signed, notarized Mac bridge 0.1.3 is available below. The iPhone/iPad update is not yet publicly available; update both apps to use the new call features. App Store distribution excludes China mainland. [Explore all Orbitus products](/products/).
 
 The app and Mac companion now use the ROBCodeAgent name. Existing sessions and paired-device identities are preserved.
 
@@ -17,7 +17,9 @@ The app and Mac companion now use the ROBCodeAgent name. Existing sessions and p
 Keep several Codex conversations open in one horizontal session bar instead of spreading work across separate Terminal windows. Each tab has its own saved conversation, prompt draft, live stream, paging state, model, thinking effort, and Stop control, so sessions can work simultaneously without blocking or overwriting one another.
 
 - **Give each session a goal.** Set a verifiable outcome with an optional token budget. Inspect Codex's reported token/time usage, then pause, resume, edit, or clear the goal as work continues across turns.
-- **Talk through the work.** Start Voice beside the composer to send microphone audio through your paired Mac and hear AI-generated spoken replies. Mute or End Voice with a tap. Closing voice, leaving the app, or disconnecting stops capture. Current Codex realtime voice requires microphone permission, API-key authentication on the Mac, and realtime access; ChatGPT sign-in alone is not supported for voice. The offline demo uses sample text without opening a microphone.
+- **Call ROB with time to review.** In version 0.1.3, tap the phone icon and Start Call. Unmute to dictate on your device. Each unchanged transcript sends after a visible ten-second countdown after your last words; Send submits immediately. Tap to edit and automatic sending stops until you press Send. Failed sends keep your draft.
+- **Listen at your pace.** New session updates are read using a synthesized voice. Pause, Resume, or Replay an update. Calls start muted, and sending mutes the microphone for playback. Keep the app open on your local network; backgrounding, interruption, or disconnecting ends the call and holds your draft. Supported on-device dictation languages and microphone/speech permissions are required. Reviewed calls use your existing text-session sign-in and do not need a realtime API key.
+- **Bring scripts into the call.** The bundled `rob-call` helper opens named script channels, publishes updates, and consumes reviewed voice or typed replies as JSON. Your script decides what to do with a reply; the bridge never evaluates it as a shell command.
 
 - **Work natively on the Mac.** ROBCodeAgent Bridge now includes a terminal-style session workspace with searchable history, live command output, approvals, prompts, and per-session controls.
 - **Continue from iPhone or iPad.** Open the same saved sessions, read their history, send or steer prompts, and stop an individual turn from a paired device. New sessions appear automatically while connected—no Refresh button required.
@@ -60,16 +62,16 @@ Keep several Codex conversations open in one horizontal session bar instead of s
   </figure>
 </div>
 
-## See the multi-session workspace
+## Review requests and replay updates
 
 <div class="not-prose my-8 grid grid-cols-1 gap-6 md:grid-cols-2">
   <figure class="overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 p-3 shadow-2xl">
-    <img src="/images/robcodex/robcodex-iphone-goals.webp" width="660" height="1434" loading="lazy" alt="ROBCodeAgent session goal with an objective, active status, token budget, reported usage, and separate Pause and Clear controls" class="mx-auto h-auto w-full rounded-xl">
-    <figcaption class="px-2 pb-1 pt-3 text-sm text-slate-300">Keep a verifiable outcome visible across turns, with optional token budgets and explicit goal controls.</figcaption>
+    <img src="/images/robcodex/robcodex-iphone-voice.webp" width="660" height="1434" loading="lazy" alt="ROBCodeAgent 0.1.3 offline call demo with editable transcription, a ten-second send countdown, Mute, Send, and Replay" class="mx-auto h-auto w-full rounded-xl">
+    <figcaption class="px-2 pb-1 pt-3 text-sm text-slate-300">Review the words before sending. Editing cancels the countdown, and incoming updates have Pause, Resume, and Replay controls. This offline sample never opens a microphone.</figcaption>
   </figure>
   <figure class="overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 p-3 shadow-2xl">
-    <img src="/images/robcodex/robcodex-iphone-voice.webp" width="660" height="1434" loading="lazy" alt="ROBCodeAgent's clearly labeled offline voice demo showing sample transcript text, Mute, End Voice, and the API-key authentication requirement for live voice" class="mx-auto h-auto w-full rounded-xl">
-    <figcaption class="px-2 pb-1 pt-3 text-sm text-slate-300">Voice stays under your control. Live audio requires Codex API-key authentication on the Mac; this offline sample never opens a microphone.</figcaption>
+    <img src="/images/robcodex/robcodex-ipad-voice.webp" width="1032" height="1376" loading="lazy" alt="ROBCodeAgent 0.1.3 iPad call panel showing the reviewed transcript, automatic send countdown, and replayable spoken updates" class="mx-auto h-auto w-full rounded-xl">
+    <figcaption class="px-2 pb-1 pt-3 text-sm text-slate-300">The iPad call panel keeps dictation and playback controls together. Calls start muted; unmute when you want to make a request.</figcaption>
   </figure>
 </div>
 
@@ -80,24 +82,24 @@ Keep several Codex conversations open in one horizontal session bar instead of s
 
 <div class="not-prose my-8 grid grid-cols-1 gap-6 md:grid-cols-2">
   <figure class="overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 p-3 shadow-2xl">
-    <img src="/images/robcodex/robcodex-iphone-sessions.webp" width="736" height="1600" loading="lazy" alt="ROBCodeAgent on iPhone showing GPT-6 Astra, Thinking High, expanded Processing groups, commentary, thinking summaries, and command output" class="mx-auto h-auto w-full rounded-xl">
+    <img src="/images/robcodex/robcodex-iphone-sessions.webp" width="660" height="1434" loading="lazy" alt="ROBCodeAgent on iPhone showing GPT-6 Astra, Thinking High, expanded Processing groups, commentary, thinking summaries, and command output" class="mx-auto h-auto w-full rounded-xl">
     <figcaption class="px-2 pb-1 pt-3 text-sm text-slate-300">Processing groups open by default, with one-tap controls to collapse or expand session activity.</figcaption>
   </figure>
   <figure class="overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 p-3 shadow-2xl">
-    <img src="/images/robcodex/robcodex-ipad-sessions.webp" width="1400" height="1867" loading="lazy" alt="ROBCodeAgent on iPad showing simultaneous sessions, GPT-6 Astra and thinking-depth controls, expanded Processing groups, live progress, and command output" class="mx-auto h-auto w-full rounded-xl">
+    <img src="/images/robcodex/robcodex-ipad-sessions.webp" width="1032" height="1376" loading="lazy" alt="ROBCodeAgent on iPad showing simultaneous sessions, GPT-6 Astra and thinking-depth controls, expanded Processing groups, live progress, and command output" class="mx-auto h-auto w-full rounded-xl">
     <figcaption class="px-2 pb-1 pt-3 text-sm text-slate-300">iPad keeps simultaneous sessions and expanded processing history together, with the final response separate and easy to find.</figcaption>
   </figure>
 </div>
 
 ## Download ROBCodeAgent Bridge for Mac
 
-<p><a href="/downloads/robcodex/ROBCodeAgentBridge-macOS-universal-0.1.2.zip" download class="inline-block px-5 py-3 font-bold text-white no-underline bg-indigo-600 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300">Download ROBCodeAgent Bridge 0.1.2</a></p>
+<p><a href="/downloads/robcodex/ROBCodeAgentBridge-macOS-universal-0.1.3.zip" download class="inline-block px-5 py-3 font-bold text-white no-underline bg-indigo-600 rounded-lg hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300">Download ROBCodeAgent Bridge 0.1.3</a></p>
 
 The download is a universal application for Apple silicon and Intel Macs running macOS 14 or later. It is signed with the Orbitus Robotics Developer ID, uses Apple's hardened runtime, and is notarized by Apple.
 
-- Version: `0.1.2` (build 1020)
-- Size: 4,966,992 bytes
-- SHA-256: `dc896095dc00ca49f41ed80fbbe2edeb7d0d0731cd781f3413e691980b08934d`
+- Version: `0.1.3` (build 1022)
+- Size: 5,105,431 bytes
+- SHA-256: `32b2e73569a2c9f9606fac3d306e96d7469d065fd732c6dc6364d69739dc4505`
 
 ## Connect your devices
 
@@ -114,3 +116,17 @@ ROBCodeAgent deliberately keeps session permissions at **Allow Full Access**. It
 ## Help and privacy
 
 For installation or connection help, use the [Orbitus Robotics contact form](/contact/). Learn how local session data and pairing information are handled in the [ROBCodeAgent privacy policy](/privacy/robcodex/).
+
+## Send updates from a script
+
+With the 0.1.3 Mac bridge running, use its bundled helper (Python 3 required):
+
+```bash
+ROB_CALL="/Applications/ROBCodeAgent Bridge.app/Contents/Resources/rob-call"
+channel=$(python3 "$ROB_CALL" open "Build updates")
+python3 "$ROB_CALL" update "$channel" "The build passed."
+python3 "$ROB_CALL" listen "$channel" --timeout 300
+python3 "$ROB_CALL" close "$channel"
+```
+
+Open **Build updates** on your paired phone and start its call. `listen` returns one reviewed reply as JSON; scripts should handle expected requests explicitly. Exit 2 indicates a timeout. Bridge acceptance confirms queuing, not playback or execution. Channels and pending replies are stored in your private Mac application-support directory. Both apps require version 0.1.3 for script channels.

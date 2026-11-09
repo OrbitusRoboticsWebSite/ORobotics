@@ -13,7 +13,7 @@
       "platforms": "iPhone + iPad · Mac bridge",
       "category": "Developer tools",
       "headline": "Your coding sessions. Within reach.",
-      "description": "Keep multiple Codex sessions moving from iPhone or iPad. Follow live output, steer prompts, and continue work through the paired companion on your Mac.",
+      "description": "Keep Codex sessions moving from iPhone or iPad through your paired Mac. Version 0.1.2 is available; the 0.1.3 update adds reviewed voice calls, pause/replay, and script channels; it is submitted and waiting for Apple review.",
       "requirement": "Requires ROBCodeAgent Bridge, a working Codex CLI installation, and local Wi-Fi.",
       "page": "robcodex/",
       "icon": "images/products/app-store/robcodeagent.jpg",

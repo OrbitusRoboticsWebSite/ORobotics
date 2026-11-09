@@ -6,7 +6,7 @@ url: "/privacy/robcodex/"
 draft: false
 ---
 
-Last updated: October 24, 2026
+Last updated: November 8, 2026
 
 ROBCodeAgent does not collect, track, sell, or share personal data. It contains no advertising, third-party analytics, crash-reporting, or telemetry SDKs, and the iPhone and iPad app does not require an Orbitus Robotics account.
 
@@ -28,9 +28,15 @@ The Codex installation on your Mac may communicate with OpenAI according to your
 
 ## Optional voice and goals
 
-Voice starts only after you tap Start Voice and grant microphone permission. Live microphone audio travels through your encrypted local connection to the Mac, then to OpenAI using the Mac's existing Codex authentication. AI-generated spoken replies and transcript text return to the device that started voice. Orbitus Robotics does not receive or retain this audio, and the apps do not save audio recordings. Codex/OpenAI handles audio and conversation data according to the signed-in account's policies.
+In version 0.1.3, calls start muted. Unmute requests microphone and speech-recognition permission and uses Apple on-device recognition only when supported for the current language. Call audio is not uploaded or recorded. Your transcript stays in memory until you send it or the unchanged ten-second countdown expires. Editing cancels automatic sending. Sent text travels to the Mac and selected session. New updates are read locally using a synthesized voice, with a bounded in-memory replay history.
 
-Mute stops sending microphone samples. End Voice, closing the voice screen, backgrounding the app, or disconnecting stops capture and playback. Ending voice does not cancel coding work already running. Goals are stored with the Mac's Codex threads and can continue work across turns until paused, cleared, completed, or limited by Codex usage or an optional token budget.
+Sending mutes capture for playback. End Call, backgrounding, disconnection, interruption, or route removal ends audio and holds unsent text. Done dismisses the panel while a foreground call continues. Keep the app open while using a call. Ending a call does not cancel existing session work.
+
+Optional script channels store their most recent 50 events, receipts, and pending reviewed replies in `~/Library/Application Support/ROBCodeAgent/Calls` on the Mac, restricted to that Mac user. Paired devices can view script channels. Consumed replies are removed by the helper; channel records and receipts can be removed by the user from that directory. No internet relay, additional network listener, or shell evaluation is added.
+
+Earlier version 0.1.2 realtime voice sends microphone audio through the paired Mac to OpenAI using the Mac's Codex authentication; its audio and conversation data follow that account's policies. Upgrade both apps to use reviewed-text calls. Neither version saves audio recordings or sends content to Orbitus Robotics.
+
+Goals remain stored with the Mac's Codex threads and may continue across turns until paused, cleared, completed, or limited by Codex usage or an optional token budget.
 
 ## Offline demo and data deletion
 
