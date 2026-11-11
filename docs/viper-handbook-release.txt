@@ -1,33 +1,56 @@
-ROB Viper Security Operations Handbook / first edition / 2026-11-07
+ROB Viper documentation / handbook edition 1.1 / 2026-11-10
 
-Free PDF, EPUB and harmless exercise downloads. Copyright retained.
-Canonical page: https://www.orbitusrobotics.com/books/rob-viper-security-operations/
-Marketing: Books library, Viper product/support page, Products index.
-No existing ROB book identifiers, rights, prices or store records changed.
-This is a new digital handbook; no existing IngramSpark edition is affected.
+Free 75-page handbook PDF, reflowable EPUB, 35-page illustrated user manual,
+and unchanged harmless exercise downloads. Copyright retained.
+Canonical handbook: https://www.orbitusrobotics.com/books/rob-viper-security-operations/
+User guide: https://www.orbitusrobotics.com/products/rob-viper/guide/
+Updated discovery/support: Books library, Products index, Viper product and
+privacy pages, and RedAgent inventory workflow. The November 8 RedAgent
+pilot archives are unchanged and explicitly labeled as predating inventory.
+ROB Viper 0.8.1 (18) remains a development preview; no public installer added.
+
+Edition 1.1 covers launch-time Homebrew tool checks, per-user background
+scheduling, saved-policy recovery, platform CVEs and release filters,
+affected-product lookup, referenced source/test/patch text, RedAgent local
+inventory preparation and execution, saved results, full-list filtering,
+sorting, window resizing and evidence limits.
+
+Stable EPUB identifier retained: urn:uuid:5ea52839-a704-459e-9541-e7fc611cc22a.
+Apple ID 6831929244; existing vendor identifier b6d60f3dd8bc4.
+No other book identifier, rights, price or store record was changed.
+This digital handbook has no existing distributed IngramSpark edition.
 
 Artifact bytes and SHA-256: data/viper_handbook.json and the public
-static/downloads/rob-viper/handbook/SHA256SUMS.txt file.
-Manuscript, original screenshots, tests and upload receipt are maintained in
-the private EndpointExecutionMonitor repository under docs/security-handbook/.
+handbook/manual SHA256SUMS.txt files. Previous handbook edition 1.0 is
+preserved under static/downloads/rob-viper/handbook/archive/1.0/.
+Manuscript, screenshot provenance, validation and detailed publication
+receipt are maintained in EndpointExecutionMonitor/docs/security-handbook/.
 
 Validation completed:
-- 70 PDF pages rendered and visually reviewed; selectable text and bounds pass.
-- 30 chapter bookmarks; semantic EPUB navigation and 25 image descriptions.
-- EPUBCheck 5.4.0: no errors or warnings.
-- 10 helper tests and seven scoped scanner control cases pass.
-- Website desktop and 390px layouts reviewed in Chrome.
-- All local handbook links, artifact sizes and checksums verified.
-- Hugo build, gallery budget (399.7 MiB), App Store products, white papers and
-  project-subpath validators pass.
+- All 75 handbook and 35 manual PDF pages rendered and visually reviewed.
+- Handbook: 33 chapters, 26 UI figures, 27 described EPUB images.
+- EPUBCheck 5.4.0: no errors or warnings; nine shell examples syntax checked.
+- Ten exercise helper tests pass; seven first-edition live control cases are
+  historical evidence, not repeated for this documentation release.
+- EPUB chapter text, table and code reviewed at 720px and 390px in Chrome.
+- PDF bounds, navigation and artifact/source hashes pass.
+- Website product, handbook and guide layouts reviewed at desktop and 390px.
+- 375 local links/assets checked across seven related pages; current and
+  archived artifact sizes and checksums verified.
+- Hugo build, 423.8 MiB gallery budget, App Store products, white papers,
+  project-subpath checks and RedAgent portal checks pass.
 
-Apple accepted the EPUB and cover upload and displayed "You're almost done!"
-Rights & Pricing remains pending: the My Books page redirects to its dashboard
-in Chrome. The official catalog shortcut redirects to a missing Apps page.
-Safari authentication has been requested. No Apple price, review submission,
-or public store availability has been verified. Do not upload a duplicate book.
-Use the existing uploaded title to complete Free pricing and territories.
+Apple Books publication:
+- Updated the existing title with edition 1.1 EPUB, cover and description.
+- Portal response: "Your updates have been submitted. If you need to make
+  changes to dates, territories, or pricing, use iTunes Connect."
+- iTunes Connect lists version 1.1 uploaded November 10, 2026.
+- Saved Tier 0 (Free) in all 51 offered countries/regions, Digital Only,
+  release date November 10, 2026; DRM left off. Future-region enrollment off.
+- Actual summary: "Review Status Waiting for Review", "Not on 51 Stores".
+- The previous My Books redirect blocker is resolved after authentication.
+- Public availability is not verified; do not create a duplicate book.
 
 Deployment is automatic on main. Record the actual GitHub Pages run and live
-artifact checksum results in the private edition publication.json after deploy.
-Update the public status text only when supported by actual Apple evidence.
+artifact checksums in the private edition publication.json after deploy.
+Update public Apple status only when supported by actual store evidence.

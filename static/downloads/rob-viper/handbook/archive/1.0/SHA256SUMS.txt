@@ -1,0 +1,3 @@
+39e7ef6fe14e899eff76960b14af5e89eb5a56a9b9cb9e61d63bce3c5c1c9df7  ROB-Viper-Security-Operations-Handbook.epub
+ee2fce488fc4574f372407bd633af0f3365a76f128eb6900015f5ac442d1a544  ROB-Viper-Handbook-Exercises.zip
+be6bdbcf98ea1ea64a245fdcd307796157d3df65c08e6d3dd934d8dc6023fea8  ROB-Viper-Security-Operations-Handbook.pdf

@@ -3,27 +3,27 @@
   "subtitle": "Malware Triage, CVE Analysis, and macOS Hardening",
   "author": "Rodolfo Aramayo",
   "publisher": "OrbitusRobotics LLC",
-  "edition": "1.0",
-  "date": "2026-11-07",
+  "edition": "1.1",
+  "date": "2026-11-10",
   "price_usd": 0,
-  "pages": 70,
-  "chapters": 30,
-  "figures": 24,
-  "word_count": 13961,
-  "apple_status": "Files uploaded to Apple Books. Free pricing and store availability are still pending; download the PDF or EPUB here now.",
+  "pages": 75,
+  "chapters": 33,
+  "figures": 26,
+  "word_count": 15944,
+  "apple_status": "Edition 1.1 was submitted to the existing Apple Books record on November 10, 2026. Free pricing is saved for 51 countries and regions. Apple reports Waiting for Review and Not on Store; download the current PDF or EPUB here while review is pending.",
   "apple_url": "",
   "artifacts": {
+    "ROB-Viper-Security-Operations-Handbook.pdf": {
+      "bytes": 3151363,
+      "sha256": "33bd129a049d37a73e9d1fc58245125a47587d1db69d8c3a2c8f302da65b3465"
+    },
     "ROB-Viper-Security-Operations-Handbook.epub": {
-      "bytes": 4260518,
-      "sha256": "39e7ef6fe14e899eff76960b14af5e89eb5a56a9b9cb9e61d63bce3c5c1c9df7"
+      "bytes": 4599243,
+      "sha256": "177d453273500da5fe2de07b373bb00815052597808576a2d2aba274ea3cbc50"
     },
     "ROB-Viper-Handbook-Exercises.zip": {
       "bytes": 6421,
       "sha256": "ee2fce488fc4574f372407bd633af0f3365a76f128eb6900015f5ac442d1a544"
-    },
-    "ROB-Viper-Security-Operations-Handbook.pdf": {
-      "bytes": 2933292,
-      "sha256": "be6bdbcf98ea1ea64a245fdcd307796157d3df65c08e6d3dd934d8dc6023fea8"
     }
   },
   "contents": [
@@ -43,19 +43,25 @@
     "14 / Correlate behavior signals with events",
     "15 / Use controlled execution only in a prepared lab",
     "16 / What a CVE scan actually tells you",
-    "17 / Scan dependency manifests with Trivy",
-    "18 / A reproducible CVE analysis exercise",
-    "19 / Prioritize with context, CVSS, EPSS and KEV",
-    "20 / Remediate and prove the deployed change",
-    "21 / Use SBOMs and CI without hiding failures",
-    "22 / Build an organizational analysis workflow",
-    "23 / Plan an MDM pilot and central administration",
-    "24 / Schedule work at the right time",
-    "25 / Respond to a suspicious result",
-    "26 / Exercise the program with harmless controls",
-    "27 / Read posture and understand FileVault",
-    "28 / Export, retain and communicate evidence",
-    "29 / Case templates, checklists and daily reference",
-    "30 / Glossary, sources and edition evidence"
-  ]
+    "17 / Browse platform advisories with the CVE library",
+    "18 / Use the product index and inspect source evidence",
+    "19 / Run a RedAgent inventory and review the full list",
+    "20 / Scan dependency manifests with Trivy",
+    "21 / A reproducible CVE analysis exercise",
+    "22 / Prioritize with context, CVSS, EPSS and KEV",
+    "23 / Remediate and prove the deployed change",
+    "24 / Use SBOMs and CI without hiding failures",
+    "25 / Build an organizational analysis workflow",
+    "26 / Plan an MDM pilot and central administration",
+    "27 / Schedule work at the right time",
+    "28 / Respond to a suspicious result",
+    "29 / Exercise the program with harmless controls",
+    "30 / Read posture and understand FileVault",
+    "31 / Export, retain and communicate evidence",
+    "32 / Case templates, checklists and daily reference",
+    "33 / Glossary, sources and edition evidence"
+  ],
+  "apple_book_id": "6831929244",
+  "apple_review_status": "Waiting for Review",
+  "apple_verified_date": "2026-11-10"
 }
