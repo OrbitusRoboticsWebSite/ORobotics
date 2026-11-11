@@ -50,14 +50,17 @@ test('build configuration stays inactive by default and requires valid CloudKit 
   assert.throws(() => fleetConfig({ VIPER_FLEET_ENABLED: 'true' }));
   const env = { VIPER_FLEET_ENABLED: 'true', VIPER_FLEET_CONTAINER: 'iCloud.example.Fleet', VIPER_FLEET_ENVIRONMENT: 'production', VIPER_FLEET_API_TOKEN: 'public-test-token' };
   assert.equal(fleetConfig(env).enabled, true);
+  assert.equal(fleetConfig(env).commandsEnabled, false);
+  assert.equal(fleetConfig({ ...env, VIPER_FLEET_COMMANDS_ENABLED: 'true' }).commandsEnabled, true);
   for (const change of [{ VIPER_FLEET_CONTAINER: 'iCloud.bad/other' }, { VIPER_FLEET_ENVIRONMENT: 'bad' }, { VIPER_FLEET_API_TOKEN: '' }])
     assert.throws(() => fleetConfig({ ...env, ...change }));
 });
 test('public reporter download matches its published size and checksum', async () => {
   const manifest = JSON.parse(await readFile(new URL('../static/viper-fleet/reporter-manifest.json', import.meta.url), 'utf8'));
-  assert.equal(manifest.filename, 'ViperFleet-Reporter-0.2.0.zip');
+  assert.equal(manifest.filename, 'ViperFleet-Reporter-0.3.0.zip');
   const bytes = await readFile(new URL('../static/viper-fleet/' + manifest.filename, import.meta.url));
   assert.equal(bytes.length, manifest.bytes);
   assert.equal(createHash('sha256').update(bytes).digest('hex'), manifest.sha256);
-  assert.deepEqual(manifest.files.map(file => file.path).sort(), ['README.md', 'cloudkit.mjs', 'direct.test.mjs', 'report-direct.mjs', 'schema.ckdb', 'setup-direct.mjs'].sort());
+  assert.deepEqual(manifest.files.map(file => file.path).sort(), ['README.md', 'COMMANDS.md', 'cloudkit.mjs', 'direct.test.mjs', 'report-direct.mjs', 'schema.ckdb', 'setup-direct.mjs',
+    'queue-format.mjs', 'queue-cloud.mjs', 'queue-agent.mjs', 'queue-submit.mjs', 'enroll-commands.mjs', 'queue.test.mjs'].sort());
 });

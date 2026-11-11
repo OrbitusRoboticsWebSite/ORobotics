@@ -1,14 +1,14 @@
-REDAGENT INSTALLATION PORTAL - 2026-11-08
+REDAGENT INSTALLATION PORTAL - 2026-11-10
 
 Canonical shortlink: https://www.orbitusrobotics.com/r/
 Scope: per-user desktop app installation. MDM enrollment is deferred.
 
-Source of truth: data/redagent_release.json. Native v0.2.0 application bundles
-were built from SignalAtlas e1e3002be85f95d4db556ffb3f68f699c5dcd085 by the
-RedAgent portability workflow run 42461104017. Their existing receipts retain
+Source of truth: data/redagent_release.json. Native v0.3.0 application bundles
+were built from SignalAtlas 97659e722883fa35374bada47bf8b6d4ad15dc21 by the
+RedAgent portability workflow run 42979544964. Their existing receipts retain
 the build platform and per-file hashes. The website does not rebuild the app.
 
-The public GitHub prerelease redagent-v0.2.0-pilot hosts these exact bundles.
+The public GitHub prerelease redagent-v0.3.0-pilot hosts these exact bundles.
 They are development packages without production signing/notarization. Keep
 them separate from any production-signed download. Do not overwrite release
 assets: publish a new version/tag and regenerate the pinned installers.
@@ -49,3 +49,9 @@ Publication: build/validate the Hugo site, publish the GitHub prerelease
 assets, pass the four native installer CI jobs, fast-forward origin/main,
 watch GitHub Pages deployment and verify the live page/scripts/asset hashes.
 Keep distribution status exact; CI is not physical Flipper acceptance.
+
+Cloud Fleet 0.3: ViperLink payloads can be queued through CloudKit. In RedAgent,
+choose the private receiver profile, set a 1-1440 minute interval, and enable
+cloud commands while the app remains open. Node.js 22+ is required for this
+optional feature. Closing the owning app stops its receiver. No credentials
+are included in public downloads. See /viper-fleet/ and the reporter COMMANDS.md.

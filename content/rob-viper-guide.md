@@ -5,7 +5,7 @@ description: "ROB Viper 0.8.1: scanner updates, platform CVEs, affected-product 
 draft: false
 ---
 
-Updated November 10, 2026 for **ROB Viper 0.8.1 (18)** and the newer **RedAgent 0.2.0 development inventory build**. The Viper app remains a development preview with a public production installer pending. The [RedAgent pilot downloads](/r/#inventory) predate this inventory update; check that your build has the **Installed apps** tab before following these steps.
+Updated November 10, 2026 for **ROB Viper 0.8.1 (18)**. The **RedAgent 0.3.0 pilot downloads** now include the inventory workflow described here and the new Cloud Fleet controls. The Viper app remains a development preview with a public production installer pending. Install the current [RedAgent development pilot](/r/#inventory) and open its **Installed apps** tab to follow these steps.
 
 [Download the illustrated user manual (35 pages)](/downloads/rob-viper/manual/ROB-Viper-User-Manual-0.8.1.pdf) · [Manual SHA-256](/downloads/rob-viper/manual/SHA256SUMS.txt) · [Security Operations Handbook, PDF and EPUB](/books/rob-viper-security-operations/)
 

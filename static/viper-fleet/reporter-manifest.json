@@ -1,8 +1,8 @@
 {
-  "version": "0.2.0",
-  "filename": "ViperFleet-Reporter-0.2.0.zip",
-  "bytes": 13472,
-  "sha256": "bd29cb5caeae885bc1d07614afccd52ba3077d52391832de0676c3ecc78c6bbf",
+  "version": "0.3.0",
+  "filename": "ViperFleet-Reporter-0.3.0.zip",
+  "bytes": 33947,
+  "sha256": "55a46a876ae8689eaa6491b86ecb7bfb3c3981141a337777c79f949bcea9c1e5",
   "requires": "Node.js 22 or later",
   "containsCredentials": false,
   "files": [
@@ -28,13 +28,48 @@
     },
     {
       "path": "schema.ckdb",
-      "bytes": 690,
-      "sha256": "ce407b7d1e5a0ea218a99b0f9396d6cd84665b7389c436cdf5a7059aeb272402"
+      "bytes": 1762,
+      "sha256": "42c2274efbf8e494dee57a6168191dbde41a4664bce2dcdbd9f4acee79b33d3f"
     },
     {
       "path": "README.md",
-      "bytes": 9849,
-      "sha256": "21da72dca75fae0ea23a3462350c3d40bc3dea8df7c60a0c90cff42762ff9f0e"
+      "bytes": 10133,
+      "sha256": "bc5a0a71bba9fffe490f09d5720836068bd03b10429ec405c299aa0bb96a5998"
+    },
+    {
+      "path": "queue-format.mjs",
+      "bytes": 6830,
+      "sha256": "810b63462f594affd0a75a417acb5f09eefc2c9490ee6c7fa6e237e6640c185c"
+    },
+    {
+      "path": "queue-cloud.mjs",
+      "bytes": 3747,
+      "sha256": "cd15971a84d8ffe42ee3c5a4e545873f4d9277275c8b79439037b32e43765325"
+    },
+    {
+      "path": "queue-agent.mjs",
+      "bytes": 15661,
+      "sha256": "733d0a43078b1e751123b80b4db1c50228362ede21bfc76d37f1a06981036df9"
+    },
+    {
+      "path": "queue-submit.mjs",
+      "bytes": 4553,
+      "sha256": "edc59360e04745d6a6dd8f12de30db33fe4c63eb2809f3fa21750064a4034c4e"
+    },
+    {
+      "path": "enroll-commands.mjs",
+      "bytes": 2739,
+      "sha256": "010d2d38e214dea7c9fafea9771f1dc154e59dc0e12cf64ed3ed0194fa73c16f"
+    },
+    {
+      "path": "queue.test.mjs",
+      "bytes": 8662,
+      "sha256": "6fb0ca4a74581e0bd105dd0085acbd3a8aadde6a69b8770a146f323c5893eee3"
+    },
+    {
+      "path": "COMMANDS.md",
+      "bytes": 9562,
+      "sha256": "d24c11688acb3f4885b93791224a63672a597665b0026060116b2dde53c56669"
     }
   ]
 }

@@ -1,4 +1,4 @@
-RedAgent 0.2.0 - Flipper Zero USB installation scripts
+RedAgent 0.3.0 - Flipper Zero USB installation scripts
 
 1. Copy the three .txt scripts to SD Card/badusb/ using qFlipper or the Flipper mobile app.
 2. Close qFlipper. Unlock your corporate computer and select its OS script in Bad USB.

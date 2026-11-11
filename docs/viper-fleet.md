@@ -70,3 +70,27 @@ validators, and desktop/mobile browser checks. Verify the published ZIP and
 page bytes against their source after deployment. The reporter's own tests
 run in its repository on a macOS/Windows/Linux CI matrix. Mock tests do not
 establish Apple authorization, a live accepted report or physical host coverage.
+# Encrypted command queue (0.3 development pilot)
+
+The Queue a payload tab imports the existing ViperLink payload export and
+per-machine command-keys.json. It uses the signed-in CloudKit JS database and
+never imports the server private key. Keys and decrypted content remain in
+page memory and are cleared at sign-out. Jobs and returned files use the same
+AES-GCM format as the native macOS/iOS controller and Node receiver. Source:
+EndpointExecutionMonitor/ViperLink/Fleet/COMMANDS.md. Public downloads contain
+the complete operator instructions and no enrollment credentials.
+
+Activation is separate from status reporting: apply the additive development
+schema for ViperFleetCommand/ViperFleetBlob, then set the Actions variable
+VIPER_FLEET_COMMANDS_ENABLED=true. The default is false, displaying a staged
+queue while keeping status reporting available. Do not activate before the
+required owner permissions and live execution/receipt checks are verified.
+
+RedAgent 0.3 adds the visible receiver and 1–1440 minute check-in setting.
+Node.js 22 is required for cloud receiving; ordinary RedAgent features do not
+require it. Polling is opt-in and stops when RedAgent closes. ViperLink's
+native Cloud Fleet tab can queue without a Bonjour connection. Each host has
+its own command key; the shared CloudKit credential alone cannot forge a job
+for another enrolled host, but can disrupt the transport. Queue status is
+untrusted until the receipt decrypts successfully. This is not hardware
+attestation, and a controller holding the symmetric key can forge receipts.

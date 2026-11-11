@@ -3,11 +3,11 @@
 param([string]$InstallDir = '', [string]$ArchivePath = '', [switch]$DryRun)
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
-$version = '0.2.0'
-$sourceCommit = 'e1e3002be85f95d4db556ffb3f68f699c5dcd085'
-$expected = 'c0081f7ad6efa47edee55d4e7474d86b7ef4f3dabdf747f80f685ad5323d48e5'
-$url = 'https://github.com/OrbitusRoboticsWebSite/ORobotics/releases/download/redagent-v0.2.0-pilot/RedAgent-0.2.0-Windows-AMD64.zip'
-$apiUrl = 'https://api.github.com/repos/OrbitusRoboticsWebSite/ORobotics/releases/assets/723433711'
+$version = '0.3.0'
+$sourceCommit = '97659e722883fa35374bada47bf8b6d4ad15dc21'
+$expected = '76990bf5191593186d74718b626c137aa63a726b4e588963110961236b0517e4'
+$url = 'https://github.com/OrbitusRoboticsWebSite/ORobotics/releases/download/redagent-v0.3.0-pilot/RedAgent-0.3.0-Windows-AMD64.zip'
+$apiUrl = 'https://api.github.com/repos/OrbitusRoboticsWebSite/ORobotics/releases/assets/734584112'
 if ($env:OS -ne 'Windows_NT') { throw 'Use install.sh for macOS and Linux.' }
 $machine = if ($env:PROCESSOR_ARCHITEW6432) { $env:PROCESSOR_ARCHITEW6432 } else { $env:PROCESSOR_ARCHITECTURE }
 if ($machine -ne 'AMD64') { throw "Unsupported architecture: $machine. This pilot requires Windows x64." }

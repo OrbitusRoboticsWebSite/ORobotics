@@ -1,7 +1,10 @@
 import { platformNames, isRecent, versionLabel, filterMachines, exampleReport, sampleMachines, queryFleet } from './core.mjs';
+import { attachQueue } from './queue.mjs';
 
 const $ = id => document.getElementById(id);
 let machines = [], mode = 'locked', identity, container, config, generation = 0;
+const queue = attachQueue({ database: () => container.publicCloudDatabase, configuration: () => config,
+  authorized: () => Boolean(identity) && mode === 'live' && config?.commandsEnabled === true });
 function text(id, value) { $(id).textContent = value; }
 function clearRecords() { generation++; machines = []; $('details').close(); text('detail-json', ''); render(); }
 function render() {
@@ -67,7 +70,7 @@ for (const id of ['search', 'platform', 'flavor', 'status']) $(id).addEventListe
 document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {
   const view = button.dataset.view;
   for (const b of document.querySelectorAll('[data-view]')) b.setAttribute('aria-pressed', String(b === button));
-  $('fleet-view').hidden = view !== 'fleet'; $('report-view').hidden = view !== 'report';
+  $('fleet-view').hidden = view !== 'fleet'; $('report-view').hidden = view !== 'report'; $('queue-view').hidden = view !== 'queue'; queue.render();
 }));
 function showRequest() {
   text('request-example', `# Node.js 22 or later. Keep the profile and key outside the website.
@@ -92,17 +95,19 @@ async function loadFleet() {
   try {
     machines = await queryFleet(container.publicCloudDatabase, () => current === generation && Boolean(identity));
     mode = 'live'; updateFlavors(); render();
+    queue.render();
     text('auth-status', 'Authorized fleet access. Reports are held only in this page’s memory.');
     notice(`${config.environment === 'development' ? 'Development pilot' : 'Private fleet'} · CloudKit permissions authorize access. Health values are reported by each machine.`, 'Private connection');
   } catch {
     if (current !== generation) return;
-    mode = 'locked'; clearRecords();
+    mode = 'locked'; clearRecords(); queue.clear();
     text('auth-status', 'Fleet unavailable. Your account may not have the FleetAdmin role, or CloudKit could not complete the request.');
     notice('No fleet records displayed. Check your account access or retry the connection.', 'Access unavailable');
     $('refresh').disabled = false;
   }
 }
 async function setIdentity(value) {
+  queue.clear();
   identity = value?.userRecordName || value?.userIdentity?.userRecordName ? value : undefined;
   mode = 'locked'; clearRecords(); updateFlavors();
   if (identity) await loadFleet();
@@ -112,7 +117,7 @@ function watchAuth(signedIn) {
   const next = signedIn ? container.whenUserSignsOut() : container.whenUserSignsIn();
   next.then(value => { watchAuth(!signedIn); return setIdentity(signedIn ? undefined : value); }).catch(authFailed);
 }
-function authFailed() { identity = undefined; mode = 'locked'; clearRecords(); text('auth-status', 'Apple sign-in is unavailable. Reload to try again.'); notice('No corporate records are loaded.', 'Connection unavailable'); }
+function authFailed() { identity = undefined; mode = 'locked'; clearRecords(); queue.clear(); text('auth-status', 'Apple sign-in is unavailable. Reload to try again.'); notice('No corporate records are loaded.', 'Connection unavailable'); }
 async function initialize() {
   showRequest(); render();
   try {
