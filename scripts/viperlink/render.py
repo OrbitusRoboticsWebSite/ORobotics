@@ -93,6 +93,7 @@ with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as bundle:
     for name, content in flipper.items():
         outputs['static/v/flipper/' + name] = content
         info = zipfile.ZipInfo(name, (2026, 11, 11, 0, 0, 0))
+        info.create_system = 3
         info.compress_type = zipfile.ZIP_DEFLATED
         info.external_attr = 0o644 << 16
         bundle.writestr(info, content)

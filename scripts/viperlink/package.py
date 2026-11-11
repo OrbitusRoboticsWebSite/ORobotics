@@ -121,6 +121,7 @@ for the managed-install receipt. Re-running the installer verifies each file.
             (folder / name).write_bytes(data)
             entries.append({'name': name, 'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest()})
             info = zipfile.ZipInfo(name, (2026, 11, 11, 0, 0, 0))
+            info.create_system = 3
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = 0o644 << 16
             bundle.writestr(info, data)
@@ -130,5 +131,5 @@ for the managed-install receipt. Re-running the installer verifies each file.
                      archiveBytes=len(archive.getvalue()), archiveSHA256=hashlib.sha256(archive.getvalue()).hexdigest(),
                      archive=filename)
     release['components'].append(component)
-(ROOT / 'data/viperlink_release.json').write_text(json.dumps(release, indent=2) + '\n')
+(ROOT / 'data/viperlink_release.json').write_bytes((json.dumps(release, indent=2) + '\n').encode())
 print(json.dumps({c['id']: {'sourceBytes': c['installedBytes'], 'zipBytes': c['archiveBytes']} for c in release['components']}))
