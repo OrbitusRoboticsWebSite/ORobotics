@@ -56,6 +56,11 @@ jobs:
       - name: Validate Viper Fleet staging and filters
         run: node --test tests/viper-fleet.test.mjs tests/viper-queue.test.mjs
 
+      - name: Validate ViperLink minimal packages and Flipper commands
+        run: |
+          python3 scripts/viperlink/render.py --check
+          node --test tests/viperlink-portal.test.mjs
+
       - name: Build site (prefer npm run build if available)
         shell: bash
         run: |

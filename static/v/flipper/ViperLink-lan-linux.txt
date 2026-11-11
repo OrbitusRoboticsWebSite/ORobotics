@@ -1,0 +1,10 @@
+REM ViperLink 0.3.0 - LAN / VPN controller - Linux
+REM Use on your authorized, unlocked computer. Match its keyboard layout.
+REM Installs public source only. Credentials and starting the tool are separate.
+REM Visible terminal; no elevation, automatic service or policy changes.
+DEFAULT_STRING_DELAY 10
+DELAY 2000
+CTRL ALT t
+DELAY 4000
+STRING d=$(mktemp -d) && curl -fsSL --proto "=https" --proto-redir "=https" https://www.orbitusrobotics.com/v/install.sh -o "$d/install.sh" && sh "$d/install.sh" --component lan
+ENTER

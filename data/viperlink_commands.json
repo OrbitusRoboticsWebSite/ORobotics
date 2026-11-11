@@ -1,0 +1,92 @@
+[
+  {
+    "id": "windows",
+    "name": "Windows",
+    "terminal": "PowerShell 5.1+",
+    "script": "install.ps1",
+    "component": "cloud",
+    "componentName": "Cloud Fleet commands",
+    "command": "& { $p=Join-Path $env:TEMP ('viperlink-'+[guid]::NewGuid()+'.ps1'); Invoke-WebRequest -UseBasicParsing https://www.orbitusrobotics.com/v/install.ps1 -OutFile $p -ErrorAction Stop; & $p -Component cloud }",
+    "flipper": "ViperLink-cloud-windows.txt"
+  },
+  {
+    "id": "macos",
+    "name": "macOS",
+    "terminal": "Terminal",
+    "script": "install.sh",
+    "component": "cloud",
+    "componentName": "Cloud Fleet commands",
+    "command": "d=$(mktemp -d) && curl -fsSL --proto \"=https\" --proto-redir \"=https\" https://www.orbitusrobotics.com/v/install.sh -o \"$d/install.sh\" && sh \"$d/install.sh\" --component cloud",
+    "flipper": "ViperLink-cloud-macos.txt"
+  },
+  {
+    "id": "linux",
+    "name": "Linux",
+    "terminal": "Terminal",
+    "script": "install.sh",
+    "component": "cloud",
+    "componentName": "Cloud Fleet commands",
+    "command": "d=$(mktemp -d) && curl -fsSL --proto \"=https\" --proto-redir \"=https\" https://www.orbitusrobotics.com/v/install.sh -o \"$d/install.sh\" && sh \"$d/install.sh\" --component cloud",
+    "flipper": "ViperLink-cloud-linux.txt"
+  },
+  {
+    "id": "windows",
+    "name": "Windows",
+    "terminal": "PowerShell 5.1+",
+    "script": "install.ps1",
+    "component": "status",
+    "componentName": "Status reporting only",
+    "command": "& { $p=Join-Path $env:TEMP ('viperlink-'+[guid]::NewGuid()+'.ps1'); Invoke-WebRequest -UseBasicParsing https://www.orbitusrobotics.com/v/install.ps1 -OutFile $p -ErrorAction Stop; & $p -Component status }",
+    "flipper": "ViperLink-status-windows.txt"
+  },
+  {
+    "id": "macos",
+    "name": "macOS",
+    "terminal": "Terminal",
+    "script": "install.sh",
+    "component": "status",
+    "componentName": "Status reporting only",
+    "command": "d=$(mktemp -d) && curl -fsSL --proto \"=https\" --proto-redir \"=https\" https://www.orbitusrobotics.com/v/install.sh -o \"$d/install.sh\" && sh \"$d/install.sh\" --component status",
+    "flipper": "ViperLink-status-macos.txt"
+  },
+  {
+    "id": "linux",
+    "name": "Linux",
+    "terminal": "Terminal",
+    "script": "install.sh",
+    "component": "status",
+    "componentName": "Status reporting only",
+    "command": "d=$(mktemp -d) && curl -fsSL --proto \"=https\" --proto-redir \"=https\" https://www.orbitusrobotics.com/v/install.sh -o \"$d/install.sh\" && sh \"$d/install.sh\" --component status",
+    "flipper": "ViperLink-status-linux.txt"
+  },
+  {
+    "id": "windows",
+    "name": "Windows",
+    "terminal": "PowerShell 5.1+",
+    "script": "install.ps1",
+    "component": "lan",
+    "componentName": "LAN / VPN controller",
+    "command": "& { $p=Join-Path $env:TEMP ('viperlink-'+[guid]::NewGuid()+'.ps1'); Invoke-WebRequest -UseBasicParsing https://www.orbitusrobotics.com/v/install.ps1 -OutFile $p -ErrorAction Stop; & $p -Component lan }",
+    "flipper": "ViperLink-lan-windows.txt"
+  },
+  {
+    "id": "macos",
+    "name": "macOS",
+    "terminal": "Terminal",
+    "script": "install.sh",
+    "component": "lan",
+    "componentName": "LAN / VPN controller",
+    "command": "d=$(mktemp -d) && curl -fsSL --proto \"=https\" --proto-redir \"=https\" https://www.orbitusrobotics.com/v/install.sh -o \"$d/install.sh\" && sh \"$d/install.sh\" --component lan",
+    "flipper": "ViperLink-lan-macos.txt"
+  },
+  {
+    "id": "linux",
+    "name": "Linux",
+    "terminal": "Terminal",
+    "script": "install.sh",
+    "component": "lan",
+    "componentName": "LAN / VPN controller",
+    "command": "d=$(mktemp -d) && curl -fsSL --proto \"=https\" --proto-redir \"=https\" https://www.orbitusrobotics.com/v/install.sh -o \"$d/install.sh\" && sh \"$d/install.sh\" --component lan",
+    "flipper": "ViperLink-lan-linux.txt"
+  }
+]

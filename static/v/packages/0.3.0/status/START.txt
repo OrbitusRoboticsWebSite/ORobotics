@@ -1,0 +1,28 @@
+ViperLink 0.3.0 source development pilot
+Source: b1564f6eab63964bff4151295fac108026537375
+
+STATUS REPORTING CLIENT
+1. Install Node.js 22+ separately if needed.
+2. Follow the reporter README and private key registration instructions at:
+   https://www.orbitusrobotics.com/viper-fleet/
+3. Keep reporter-profile.json and fleet-private.pem in a private folder outside
+   the installation and Git. Use 700/600 permissions on Unix, or a user-only
+   folder ACL on Windows. This is a shared transport key with fleet record
+   access, not a write-only credential. Provision only trusted managed devices.
+4. Prepare status.json with truthful values using the example in that README.
+   This tool sends only your supplied JSON; it does not inventory this machine.
+5. From this installed component directory, validate locally without sending:
+   node report-direct.mjs --profile /absolute/private/reporter-profile.json --report /absolute/status.json --validate
+   Then send the report deliberately by omitting --validate.
+   Use quoted absolute Windows paths on Windows.
+6. The process exits after one report. No scheduler is installed. This package
+   has no command-receiver module; do not treat file selection as an OS sandbox.
+
+INSTALLATION AND REMOVAL
+Public packages contain source and these instructions only. No runtime, GUI,
+credentials, test suite, security policy change, or automatic startup is bundled.
+Keep private profiles separate. To remove this component, stop its foreground
+process and remove only its versioned installation directory. Revoke/rotate
+private credentials separately; deleting source files does not revoke access.
+The installer preserves other components and older versions. Read installation.txt
+for the managed-install receipt. Re-running the installer verifies each file.

@@ -1,0 +1,45 @@
+VIPERLINK MINIMAL INSTALLER - 2026-11-11
+
+Canonical: https://www.orbitusrobotics.com/v/
+Aliases: /viperlink/ and /products/viperlink/
+Version: 0.3.0 source development pilot, separate from native signed apps.
+
+The source manifest data/viperlink_release.json pins EndpointExecutionMonitor
+b1564f6eab63964bff4151295fac108026537375. package.py reads an explicit allowlist
+from that committed tree, never uncommitted files, credentials or device profiles.
+Runtime source is unmodified. START.txt is packaging documentation. Cloud and
+status use existing Node.js 22+, LAN uses Python 3.10+ with OpenSSL TLS 1.3.
+No GUI, test suite, bundled runtime, service or automatic enrollment is included.
+
+Components:
+- cloud: queue receiver and its four runtime dependencies. Execution target.
+- status: report-direct and cloudkit only. Reports operator-supplied JSON.
+- lan: portable Python controller. Not a Windows/Linux execution agent.
+
+package.py --source PATH --commit SHA regenerates packages intentionally.
+Do not silently mutate a published version: use a new version for runtime updates.
+render.py generates installers, commands, release.json and all nine Flipper files.
+render.py --check verifies every source/ZIP checksum and generated output.
+
+Installers download individual pinned source files over HTTPS. They stage in a
+private same-filesystem directory, verify all SHA-256 hashes, preserve unmanaged
+destinations and older versions, and verify all managed files on repeat installs.
+They reject symlink/reparse install paths and serialize operations with a lock.
+An interrupted installer can leave a lock for explicit operator review.
+Receipts record component, version and source commit. Profiles stay outside the
+installation. No policy changes, elevated launch, hidden terminal or credentials
+appear in install commands or BadUSB files. Hardware execution remains unverified.
+
+Validation:
+  python3 scripts/viperlink/render.py --check
+  node --test tests/viperlink-portal.test.mjs tests/redagent-portal.test.mjs
+  python3 tests/viperlink-installers.py
+Native installer CI runs these on macOS, Windows (PowerShell 5.1) and Linux.
+Tests install only in temporary directories and never start a receiver or submit
+a remote job. End-to-end field validation is separate from installer validation.
+
+Publication: run the website build and validators, inspect desktop/mobile layout,
+commit and push, pass cross-platform installer CI, then fast-forward origin/main.
+Wait for GitHub Pages deployment; compare every public /v/ file with local hashes.
+The static website is the distribution channel for these source components.
+Native ViperLink builds and the existing Fleet reporter release stay unchanged.

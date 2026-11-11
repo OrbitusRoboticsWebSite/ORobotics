@@ -1,0 +1,40 @@
+ViperLink 0.3.0 source development pilot
+Source: b1564f6eab63964bff4151295fac108026537375
+
+CLOUD FLEET COMMAND RECEIVER
+1. Install Node.js 22+ separately if it is not already on the machine.
+2. Have your administrator enroll this machine using the existing Fleet tools:
+   https://www.orbitusrobotics.com/viper-fleet/
+   Download the full reporter toolkit there and follow COMMANDS.md.
+   Enrollment needs a registered CloudKit reporting key and a new per-machine
+   command key. Keep receiver.json and fleet-private.pem in a private folder
+   outside this installation and outside Git. On Unix use mode 700 for that
+   folder and 600 for these files. On Windows use a user-only folder ACL.
+3. Review receiver.json locally. Set root to this machine's absolute shared
+   directory and create that directory without symlinks. Set intervalMinutes
+   to 1-1440 (default 5). Set enabled to true only when ready to accept commands.
+4. In this installed component directory run:
+   node queue-agent.mjs --profile /absolute/private/receiver.json --once
+   Or, for repeated check-ins while the terminal stays open:
+   node queue-agent.mjs --profile /absolute/private/receiver.json --watch
+   On Windows replace the profile path with a quoted absolute Windows path.
+5. Ctrl+C stops the foreground process. Set enabled=false in the private
+   profile to keep it disabled on future starts. No service or login item is
+   installed. Do not run a second receiver against a profile RedAgent owns.
+
+Commands execute with this account's normal permissions. Check-ins report host
+and OS status; this kit does not collect application inventory. The cloud
+transport credential is shared and can access other fleet records; enroll only
+trusted managed machines. Each machine's separate command key authenticates
+and encrypts its jobs. Queue acceptance is not proof of execution: verify the
+authenticated receipt in ViperLink or the Fleet portal. Production CloudKit
+activation is separate from this development pilot.
+
+INSTALLATION AND REMOVAL
+Public packages contain source and these instructions only. No runtime, GUI,
+credentials, test suite, security policy change, or automatic startup is bundled.
+Keep private profiles separate. To remove this component, stop its foreground
+process and remove only its versioned installation directory. Revoke/rotate
+private credentials separately; deleting source files does not revoke access.
+The installer preserves other components and older versions. Read installation.txt
+for the managed-install receipt. Re-running the installer verifies each file.

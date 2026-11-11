@@ -1,0 +1,13 @@
+REM ViperLink 0.3.0 - Cloud Fleet commands - Windows
+REM Use on your authorized, unlocked computer. Match its keyboard layout.
+REM Installs public source only. Credentials and starting the tool are separate.
+REM Visible terminal; no elevation, automatic service or policy changes.
+DEFAULT_STRING_DELAY 10
+DELAY 2000
+GUI r
+DELAY 1200
+STRING powershell.exe -NoLogo -NoProfile
+ENTER
+DELAY 4000
+STRING & { $p=Join-Path $env:TEMP ('viperlink-'+[guid]::NewGuid()+'.ps1'); Invoke-WebRequest -UseBasicParsing https://www.orbitusrobotics.com/v/install.ps1 -OutFile $p -ErrorAction Stop; & $p -Component cloud }
+ENTER

@@ -38,4 +38,4 @@ export function mountPortal(doc, nav) {
     });
   }
 }
-if (typeof document !== 'undefined') mountPortal(document, navigator);
+if (typeof document !== 'undefined' && document.getElementById('ra-show-all')) mountPortal(document, navigator);
