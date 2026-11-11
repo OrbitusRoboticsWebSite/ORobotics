@@ -53,6 +53,9 @@ jobs:
           python3 scripts/redagent/render.py --check
           node --test tests/redagent-portal.test.mjs
 
+      - name: Validate Viper Fleet staging and filters
+        run: node --test tests/viper-fleet.test.mjs
+
       - name: Build site (prefer npm run build if available)
         shell: bash
         run: |
@@ -68,6 +71,15 @@ jobs:
           MUSIMOTION_CLOUDKIT_ENVIRONMENT: production
           ROB_CLOUDKIT_LEADERBOARD_ENABLED: ${{ vars.ROB_CLOUDKIT_LEADERBOARD_ENABLED }}
           ROB_SCHOOL_CLOUDKIT_ENABLED: ${{ vars.ROB_SCHOOL_CLOUDKIT_ENABLED }}
+
+      - name: Configure Viper Fleet cloud connection
+        run: node scripts/configure-viper-fleet.mjs
+        env:
+          VIPER_FLEET_ENABLED: ${{ vars.VIPER_FLEET_ENABLED }}
+          VIPER_FLEET_CONTAINER: ${{ vars.VIPER_FLEET_CONTAINER }}
+          VIPER_FLEET_ENVIRONMENT: ${{ vars.VIPER_FLEET_ENVIRONMENT }}
+          VIPER_FLEET_INTAKE_URL: ${{ vars.VIPER_FLEET_INTAKE_URL }}
+          VIPER_FLEET_API_TOKEN: ${{ secrets.VIPER_FLEET_API_TOKEN }}
 
       - name: Validate optimized gallery output
         run: npm run validate

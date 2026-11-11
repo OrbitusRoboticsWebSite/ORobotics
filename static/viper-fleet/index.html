@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.apple-cloudkit.com; connect-src 'self' https://*.apple-cloudkit.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.apple.com https://*.icloud.com; frame-src https://*.apple.com https://*.icloud.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="theme-color" content="#0b1217">
+  <title>Viper Fleet · Orbitus Robotics</title>
+  <link rel="icon" href="./viper-link.png">
+  <link rel="stylesheet" href="./portal.css">
+  <script type="module" src="./portal.mjs"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to fleet console</a>
+  <header class="topbar">
+    <a class="brand" href="./"><img src="./viper-link.png" alt="" width="48" height="48"><span>VIPER <b>FLEET</b><small>ORBITUS ROBOTICS</small></span></a>
+    <span class="pill" id="connection-label">Staging preview</span>
+  </header>
+  <main id="main">
+    <section class="intro" aria-labelledby="title">
+      <div><p class="eyebrow">YOUR MACHINES. ONE CLEAR VIEW.</p><h1 id="title">Keep your fleet<br><span>within sight.</span></h1><p class="lede">A private status desk for your managed Macs, Windows PCs, and Linux machines.</p></div>
+      <aside class="access-card" aria-labelledby="access-heading">
+        <span class="lock" aria-hidden="true">◇</span><h2 id="access-heading">Administrator access</h2>
+        <p>Use your authorized Apple account to view corporate reports. Apple handles sign-in.</p>
+        <div id="apple-sign-in"></div><div id="apple-sign-out"></div>
+        <p id="auth-status" role="status">Private cloud connection pending. No corporate data is loaded.</p>
+        <div class="actions"><button id="demo" class="primary">Explore sample fleet <span aria-hidden="true">↗</span></button><button id="leave-demo" hidden>Close preview</button></div>
+      </aside>
+    </section>
+    <div class="notice" id="mode-notice" role="status">Staged portal · Live sign-in and machine reporting are not activated.</div>
+    <nav class="tabs" aria-label="Console sections"><button data-view="fleet" aria-pressed="true">Machines</button><button data-view="report" aria-pressed="false">Send a status report</button></nav>
+    <section id="fleet-view" aria-label="Fleet overview">
+      <div class="metrics">
+        <article><span>Machines in view</span><strong id="count-total">—</strong><small>Across selected filters</small></article>
+        <article><span>Recent check-ins</span><strong id="count-recent">—</strong><small>Received in the last 15 minutes</small></article>
+        <article><span>Needs attention</span><strong id="count-attention">—</strong><small>Reported by the machine</small></article>
+        <article><span>Stale reports</span><strong id="count-stale">—</strong><small>No recent check-in</small></article>
+      </div>
+      <section class="fleet-panel" aria-labelledby="machines-heading">
+        <div class="panel-heading"><div><p class="eyebrow" id="source-label">PRIVATE REGISTRY</p><h2 id="machines-heading">Managed machines</h2></div><button id="refresh" disabled>Refresh reports</button></div>
+        <div class="filters">
+          <label class="search">Search machines<input id="search" type="search" placeholder="Name, device ID, version, or tag…" maxlength="128" autocomplete="off"></label>
+          <label>Platform<select id="platform"><option value="">All platforms</option><option value="macos">macOS</option><option value="windows">Windows</option><option value="linux">Linux</option></select></label>
+          <label>Version / flavor<select id="flavor"><option value="">All versions</option></select></label>
+          <label>Report status<select id="status"><option value="">All statuses</option><option value="recent">Recent</option><option value="stale">Stale</option><option value="attention">Needs attention</option><option value="unknown">Unknown health</option></select></label>
+        </div>
+        <p id="results-status" class="results" role="status">Sign in to load your fleet, or explore the sample preview.</p>
+        <div class="table-wrap"><table><caption class="sr-only">Machine status reports</caption><thead><tr><th scope="col">Machine</th><th scope="col">Platform / version</th><th scope="col">Reported health</th><th scope="col">Last check-in</th><th scope="col">Details</th></tr></thead><tbody id="machines"></tbody></table></div>
+        <div class="empty" id="empty-state"><span aria-hidden="true">⌁</span><h3>Your fleet belongs to you.</h3><p>No machine records are included in this public page. The preview uses invented examples.</p></div>
+        <p class="footnote">Check-ins and health are self-reported. A recent report is not proof that a machine is secure or currently reachable.</p>
+      </section>
+    </section>
+    <section id="report-view" aria-labelledby="report-heading" hidden>
+      <div class="report-grid">
+        <article class="fleet-panel instructions"><p class="eyebrow">SMALL PAYLOAD. SIMPLE CHECK-IN.</p><h2 id="report-heading">Report from any platform.</h2><p>Once the intake is activated, an enrolled machine sends an HTTPS POST with a JSON status report and its own device credential.</p><ol><li>Get a device ID and credential from your administrator.</li><li>Fill in the status JSON and set <code>reportedAt</code> to the current UTC time.</li><li>Send it to the configured intake address. A successful response confirms storage.</li></ol><p class="callout" id="intake-status">Intake pending. This staged website does not currently accept or store reports.</p><p class="footnote">A device credential permits status submission for one machine. It does not grant access to the fleet. Keep credentials out of URLs, Git, and shared scripts.</p></article>
+        <article class="fleet-panel code-panel"><div class="panel-heading"><h2>Example request</h2><button id="copy-request">Copy template</button></div><p id="copy-status" role="status">Replace the example values before use.</p><pre id="request-example" tabindex="0"></pre><details><summary>Example status.json</summary><pre id="payload-example" tabindex="0"></pre></details></article>
+      </div>
+    </section>
+    <footer><span>ViperLink / Fleet preview 0.1</span><p>This page is unlisted and asks search engines not to index it. The URL is shareable; authentication and database permissions protect live records.</p></footer>
+  </main>
+  <dialog id="details"><div class="panel-heading"><h2 id="detail-title">Machine report</h2><button id="close-details" aria-label="Close machine report">Close</button></div><p id="detail-note"></p><pre id="detail-json" tabindex="0"></pre></dialog>
+</body>
+</html>
