@@ -41,15 +41,15 @@ export function decodeRecord(record) {
   if (!r || r.schemaVersion !== 1 || typeof r.deviceId !== 'string' || typeof r.hostLabel !== 'string'
       || !platformNames[r.os?.family] || !['ok', 'attention', 'unknown'].includes(r.health)
       || !Array.isArray(r.tags) || !r.tags.every(t => typeof t === 'string')) throw new Error('Invalid report');
-  const received = record.fields.receivedAt?.value;
-  if (typeof received !== 'number' || !Number.isFinite(received)) throw new Error('Missing receipt time');
+  const received = record.modified?.timestamp;
+  if (typeof received !== 'number' || !Number.isFinite(received) || received < 0 || received > 8640000000000000) throw new Error('Missing receipt time');
   return { ...r, receivedAt: new Date(received).toISOString() };
 }
 export async function queryFleet(database, isCurrent = () => true) {
-  let query = { recordType: 'ViperFleetStatus', sortBy: [{ fieldName: 'receivedAt', ascending: false }] };
+  let query = { recordType: 'ViperFleetStatus', sortBy: [{ systemFieldName: 'modifiedTimestamp', ascending: false }] };
   const byID = new Map(), seen = new Set();
   for (let page = 0; page < 50; page++) {
-    const response = await database.performQuery(query, { resultsLimit: 100, desiredKeys: ['payloadJSON', 'receivedAt'] });
+    const response = await database.performQuery(query, { resultsLimit: 100, desiredKeys: ['payloadJSON'] });
     if (!isCurrent()) throw new Error('Load superseded');
     if (response.hasErrors || response.errors?.length || !Array.isArray(response.records)) throw new Error('Access unavailable');
     for (const record of response.records) { const r = decodeRecord(record); if (!byID.has(r.deviceId)) byID.set(r.deviceId, r); }

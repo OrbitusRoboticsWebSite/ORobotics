@@ -1,7 +1,6 @@
 {
   "enabled": false,
-  "container": "iCloud.com.orbitusrobotics.ViperLink",
+  "container": "iCloud.orbitusrobotics.ViperFleet",
   "environment": "production",
-  "apiToken": "",
-  "intakeURL": ""
+  "apiToken": ""
 }

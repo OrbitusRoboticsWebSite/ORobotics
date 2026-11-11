@@ -78,7 +78,6 @@ jobs:
           VIPER_FLEET_ENABLED: ${{ vars.VIPER_FLEET_ENABLED }}
           VIPER_FLEET_CONTAINER: ${{ vars.VIPER_FLEET_CONTAINER }}
           VIPER_FLEET_ENVIRONMENT: ${{ vars.VIPER_FLEET_ENVIRONMENT }}
-          VIPER_FLEET_INTAKE_URL: ${{ vars.VIPER_FLEET_INTAKE_URL }}
           VIPER_FLEET_API_TOKEN: ${{ secrets.VIPER_FLEET_API_TOKEN }}
 
       - name: Validate optimized gallery output

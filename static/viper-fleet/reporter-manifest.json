@@ -1,0 +1,40 @@
+{
+  "version": "0.2.0",
+  "filename": "ViperFleet-Reporter-0.2.0.zip",
+  "bytes": 13472,
+  "sha256": "bd29cb5caeae885bc1d07614afccd52ba3077d52391832de0676c3ecc78c6bbf",
+  "requires": "Node.js 22 or later",
+  "containsCredentials": false,
+  "files": [
+    {
+      "path": "cloudkit.mjs",
+      "bytes": 7296,
+      "sha256": "b21182b73696ad88971080cb868668efb75413ddec9e19be9882d7b3a7b730e6"
+    },
+    {
+      "path": "report-direct.mjs",
+      "bytes": 3241,
+      "sha256": "f2dc880dd4e2ce8f963ce011d3c6dcc43f95052bb62de4626fc6f45f8af3457b"
+    },
+    {
+      "path": "setup-direct.mjs",
+      "bytes": 2321,
+      "sha256": "0bd2efda3c5402600fbe0bcd420fc624a8382a037ccaee7acfaae8035804dca1"
+    },
+    {
+      "path": "direct.test.mjs",
+      "bytes": 8181,
+      "sha256": "a4647da3ee2197e52bbaae46d3d84c85eb545d6a73e89ccb3d6eb4d9137e95ad"
+    },
+    {
+      "path": "schema.ckdb",
+      "bytes": 690,
+      "sha256": "ce407b7d1e5a0ea218a99b0f9396d6cd84665b7389c436cdf5a7059aeb272402"
+    },
+    {
+      "path": "README.md",
+      "bytes": 9849,
+      "sha256": "21da72dca75fae0ea23a3462350c3d40bc3dea8df7c60a0c90cff42762ff9f0e"
+    }
+  ]
+}

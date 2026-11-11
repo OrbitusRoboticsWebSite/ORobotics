@@ -1,53 +1,72 @@
-# Viper Fleet staged portal
+# Viper Fleet portal and direct CloudKit reporter
 
 Unlisted URL: https://www.orbitusrobotics.com/viper-fleet/
 
-The buildless portal is under `static/viper-fleet/`, so Hugo does not put it in
-its page list, search, RSS or sitemap. Do not add a navigation or catalog link.
-It requests `noindex, nofollow, noarchive`; anyone who knows or discovers the
-URL can load the shell and its invented sample data. Privacy relies on live
-CloudKit permissions, not on hiding this path. No private machine data belongs
-in this repository or static hosting output.
+The buildless portal lives under `static/viper-fleet/`, outside Hugo's page
+list, navigation, search, RSS and sitemap. Keep it unlisted. `noindex, nofollow,
+noarchive` asks crawlers to stay away; anyone who discovers the URL can load
+the shell and invented examples. CloudKit authorization protects live records.
+Never put private machine reports or signing keys in the website repository.
 
-Backend source, schema, provisioning and setup instructions are in
-`EndpointExecutionMonitor/ViperLink/Fleet/README.md` in the ROB Viper repository:
+## Direct reporting
+
+Container: **`iCloud.orbitusrobotics.ViperFleet`**. The managed machine sends
+signed HTTPS JSON directly to Apple; no Cloudflare Worker or intake service is
+used. The browser reads CloudKit through Apple-hosted authentication and the
+custom `FleetAdmin` role. Machine reports use a separate server-to-server key.
+
+Every holder of that shared server key can read, change and delete data in the
+container's public database scope. A dedicated key enables separate rotation
+and revocation; it is not a write-only or per-device permission. Only distribute
+it privately to trusted managed machines. Device IDs are record conventions,
+not server-enforced ownership boundaries. The dedicated container isolates
+fleet data from other applications and personal iCloud storage.
+
+Reporter source, setup tool, schema, tests and operator instructions remain in
+the ROB Viper codebase:
 https://github.com/RudyAramayo/EndpointExecutionMonitor/tree/main/ViperLink/Fleet
 
-## Current state
+The public `ViperFleet-Reporter-0.2.0.zip` contains source and documentation only,
+with size/SHA-256 in `reporter-manifest.json`. It needs Node.js 22 or later and no
+npm packages. It reads only an operator-supplied report; no host inventory,
+remote command, automatic schedule or file-transfer service is installed.
 
-Staging only. The source `config.json` disables live access and contains no
-credentials. Apple sign-in and real report storage have not been activated or
-tested against the new container. The sample button is local and displays five
-invented machines across macOS, Windows and Linux. The intake code exposes only
-status reporting, not remote command execution.
+## Activation state
 
-## Deployment configuration
+The development container, registered key and owner roles have been configured.
+Synthetic creation/update/read-back/sorting passed against Apple; anonymous
+querying was denied and anonymous lookup hid the existing test record.
+Source `config.json` remains disabled with no token. The deployment can enable
+a development pilot to verify Apple sign-in. Production and an unrelated
+signed-in account require separate checks. The sample button displays five
+invented machines across macOS, Windows and Linux.
 
-After the dedicated CloudKit production schema and FleetAdmin permissions have
-been verified, configure these repository Actions values:
+After verifying schema, owner role and anonymous/unrelated-user denial, set:
 
 | Kind | Name | Value |
 | --- | --- | --- |
-| Variable | `VIPER_FLEET_ENABLED` | `true` only after live acceptance checks |
-| Variable | `VIPER_FLEET_CONTAINER` | Dedicated ViperLink container ID |
-| Variable | `VIPER_FLEET_ENVIRONMENT` | `production` |
-| Variable | `VIPER_FLEET_INTAKE_URL` | Deployed HTTPS URL ending in `/v1/check-in` |
-| Secret | `VIPER_FLEET_API_TOKEN` | Origin-restricted website API token |
+| Variable | `VIPER_FLEET_ENABLED` | `true` after live permission checks |
+| Variable | `VIPER_FLEET_CONTAINER` | `iCloud.orbitusrobotics.ViperFleet` |
+| Variable | `VIPER_FLEET_ENVIRONMENT` | `production` (or deliberate development test) |
+| Secret | `VIPER_FLEET_API_TOKEN` | Website API token restricted to `https://www.orbitusrobotics.com` |
 
-The website API token is necessarily public in the rendered configuration.
-Never use a CloudKit private key, device bearer token or management token here.
-The new hook fails the build when enabled configuration is incomplete; missing
-enablement retains the inert preview. Turning the website off does not revoke
-device credentials or stop an already deployed Worker; disable/revoke those
-separately.
+The website API token is necessarily public in rendered configuration. Never
+substitute the private signing key or a CloudKit management token. Incomplete
+enabled configuration fails the build. Turning off the portal does not revoke
+reporting keys; use CloudKit Console to stop a compromised key.
 
-The frontend uses Apple's CloudKit JS sign-in, with data only in page memory.
-Only the FleetAdmin role can read `ViperFleetStatus` in the dedicated container's
-restricted public database scope. Test actual anonymous, unrelated Apple
-account and owner access before enabling live mode. No public leaderboard
-permissions or existing Musimotion data are changed.
+The portal keeps records only in memory and clears them at sign-out/failure.
+Receipt time comes from Apple's `modified.timestamp` system metadata and the
+query sorts by `modifiedTimestamp`; no client can set this receipt field.
+Reported health remains self-reported. FleetAdmin gets read only; FleetReporter grants create/read/write only to the
+verified server-key owner. Server keys inherit owner roles, so registration
+alone does not grant write access. World,
+Authenticated and Creator have no grants on `ViperFleetStatus`.
 
-Validation: `node --test tests/viper-fleet.test.mjs`, the standard website build
-and validators, and desktop/mobile browser checks. The full intake permission
-and signature tests live in the ROB Viper repository. Mock tests do not establish
-that Apple's live authorization or cloud deployment works.
+## Verification
+
+Run `node --test tests/viper-fleet.test.mjs`, the standard site build and
+validators, and desktop/mobile browser checks. Verify the published ZIP and
+page bytes against their source after deployment. The reporter's own tests
+run in its repository on a macOS/Windows/Linux CI matrix. Mock tests do not
+establish Apple authorization, a live accepted report or physical host coverage.

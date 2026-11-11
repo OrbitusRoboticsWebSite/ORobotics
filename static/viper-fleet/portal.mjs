@@ -39,7 +39,7 @@ function render() {
     const td = document.createElement('td'), button = document.createElement('button');
     button.className = 'row-action'; button.textContent = 'View report ↗'; button.setAttribute('aria-label', `View report for ${r.hostLabel}`);
     button.addEventListener('click', () => {
-      text('detail-title', r.hostLabel); text('detail-note', mode === 'demo' ? 'Invented sample report. This is not a real corporate machine.' : 'Device-reported status. Receipt time is assigned by the intake service.');
+      text('detail-title', r.hostLabel); text('detail-note', mode === 'demo' ? 'Invented sample report. This is not a real corporate machine.' : 'Device-reported status. Receipt time is the CloudKit server modification time.');
       text('detail-json', JSON.stringify(r, null, 2)); $('details').showModal();
     }); td.append(button); row.append(td); $('machines').append(row);
   }
@@ -69,13 +69,18 @@ document.querySelectorAll('[data-view]').forEach(button => button.addEventListen
   for (const b of document.querySelectorAll('[data-view]')) b.setAttribute('aria-pressed', String(b === button));
   $('fleet-view').hidden = view !== 'fleet'; $('report-view').hidden = view !== 'report';
 }));
-function showRequest(intakeURL = '') {
-  const endpoint = intakeURL || 'https://YOUR-INTAKE-HOST/v1/check-in';
-  text('request-example', `# Template only. Use your enrolled device ID in status.json.\n# Set VIPER_DEVICE_TOKEN securely for this shell session.\ncurl --fail-with-body --request POST \\\n  '${endpoint}' \\\n  --header "Authorization: Bearer $VIPER_DEVICE_TOKEN" \\\n  --header 'Content-Type: application/json' \\\n  --data-binary @status.json`);
-  text('payload-example', JSON.stringify(exampleReport(), null, 2));
+function showRequest() {
+  text('request-example', `# Node.js 22 or later. Keep the profile and key outside the website.
+# Validate locally first; this does not send a report.
+node report-direct.mjs --profile /private/reporter-profile.json --report status.json --validate
+
+# Send a signed HTTPS JSON request directly to Apple.
+node report-direct.mjs --profile /private/reporter-profile.json --report status.json`);
+  const { deviceId, reportedAt, ...payload } = exampleReport();
+  text('payload-example', JSON.stringify(payload, null, 2));
 }
 $('copy-request').addEventListener('click', async () => {
-  try { await navigator.clipboard.writeText($('request-example').textContent); text('copy-status', 'Template copied. Replace the endpoint and example report before use.'); }
+  try { await navigator.clipboard.writeText($('request-example').textContent); text('copy-status', 'Template copied. Set your private profile path and actual status before use.'); }
   catch { text('copy-status', 'Select and copy the template below.'); }
 });
 $('refresh').addEventListener('click', loadFleet);
@@ -88,7 +93,7 @@ async function loadFleet() {
     machines = await queryFleet(container.publicCloudDatabase, () => current === generation && Boolean(identity));
     mode = 'live'; updateFlavors(); render();
     text('auth-status', 'Authorized fleet access. Reports are held only in this page’s memory.');
-    notice('Private fleet · CloudKit permissions authorize access. Health values are reported by each machine.', 'Private connection');
+    notice(`${config.environment === 'development' ? 'Development pilot' : 'Private fleet'} · CloudKit permissions authorize access. Health values are reported by each machine.`, 'Private connection');
   } catch {
     if (current !== generation) return;
     mode = 'locked'; clearRecords();
@@ -103,8 +108,10 @@ async function setIdentity(value) {
   if (identity) await loadFleet();
   else { text('auth-status', 'Sign in with the Apple account authorized for this fleet.'); notice('Signed out · No corporate records are loaded.', 'Signed out'); }
 }
-function watchSignIn() { container.whenUserSignsIn().then(v => { setIdentity(v); watchSignIn(); }).catch(authFailed); }
-function watchSignOut() { container.whenUserSignsOut().then(() => { setIdentity(); watchSignOut(); }).catch(authFailed); }
+function watchAuth(signedIn) {
+  const next = signedIn ? container.whenUserSignsOut() : container.whenUserSignsIn();
+  next.then(value => { watchAuth(!signedIn); return setIdentity(signedIn ? undefined : value); }).catch(authFailed);
+}
 function authFailed() { identity = undefined; mode = 'locked'; clearRecords(); text('auth-status', 'Apple sign-in is unavailable. Reload to try again.'); notice('No corporate records are loaded.', 'Connection unavailable'); }
 async function initialize() {
   showRequest(); render();
@@ -114,18 +121,17 @@ async function initialize() {
     config = await result.json();
     if (config.enabled !== true) return;
     if (!/^iCloud\.[A-Za-z0-9.-]+$/.test(config.container) || !config.apiToken || !['production', 'development'].includes(config.environment)) throw new Error('Configuration incomplete');
-    if (config.intakeURL) {
-      const intake = new URL(config.intakeURL);
-      if (intake.protocol !== 'https:' || intake.username || intake.password || intake.search || intake.hash || intake.pathname !== '/v1/check-in' || !/^[A-Za-z0-9.-]+$/.test(intake.hostname)) throw new Error('Invalid intake URL');
-      showRequest(intake.href); text('intake-status', 'Send only from an enrolled machine using its assigned credential. Do not include passwords, personal files, or command output.');
-    }
+    text('intake-status', `Direct CloudKit reporting · ${config.environment === 'development' ? 'Development pilot: use synthetic reports while validating access.' : 'Use the profile issued by your administrator.'}`);
     await new Promise((resolve, reject) => {
       const script = document.createElement('script'); script.src = 'https://cdn.apple-cloudkit.com/ck/2/cloudkit.js';
       script.onload = resolve; script.onerror = reject; document.head.append(script);
     });
     window.CloudKit.configure({ containers: [{ containerIdentifier: config.container, environment: config.environment,
       apiTokenAuth: { apiToken: config.apiToken, persist: false, signInButton: { id: 'apple-sign-in' }, signOutButton: { id: 'apple-sign-out' } } }] });
-    container = window.CloudKit.getDefaultContainer(); watchSignIn(); watchSignOut(); await setIdentity(await container.setUpAuth());
+    container = window.CloudKit.getDefaultContainer();
+    const initial = await container.setUpAuth();
+    watchAuth(Boolean(initial?.userRecordName || initial?.userIdentity?.userRecordName));
+    await setIdentity(initial);
   } catch { authFailed(); }
 }
 initialize();
