@@ -74,6 +74,11 @@ with tempfile.TemporaryDirectory(prefix='redagent-installer-test-') as scratch:
     assert (dest / exe_relative).is_file()
     # Verify every installed application file against the source build receipt.
     build_receipt = json.loads((dest / 'receipt.json').read_text())
+    helper = dest / build_receipt['systemHelper']['path'].replace('\\', '/')
+    assert build_receipt['systemHelper']['headless'] is True
+    assert build_receipt['systemHelper']['installedByDefault'] is False
+    assert (helper / ('RedAgentHelper.exe' if system == 'Windows' else 'RedAgentHelper')).is_file()
+    assert (helper / ('node/node.exe' if system == 'Windows' else 'node/bin/node')).is_file()
     for relative, expected in build_receipt['files'].items():
         installed = dest / relative.replace('\\', '/')
         assert hashlib.sha256(installed.read_bytes()).hexdigest() == expected, relative

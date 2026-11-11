@@ -1,14 +1,15 @@
-REDAGENT INSTALLATION PORTAL - 2026-11-10
+REDAGENT INSTALLATION PORTAL - 2026-11-11
 
 Canonical shortlink: https://www.orbitusrobotics.com/r/
-Scope: per-user desktop app installation. MDM enrollment is deferred.
+Scope: per-user desktop controller plus an explicitly installed machine helper.
+Cloud Fleet check-ins are separate from native MDM enrollment.
 
-Source of truth: data/redagent_release.json. Native v0.3.0 application bundles
-were built from SignalAtlas 97659e722883fa35374bada47bf8b6d4ad15dc21 by the
-RedAgent portability workflow run 42979544964. Their existing receipts retain
+Source of truth: data/redagent_release.json. Native v0.4.0 application/helper bundles
+were built from SignalAtlas e0b8bf82b0f65d097352a1add7804aa6383a870c by the
+RedAgent portability workflow run 43113805345. Their existing receipts retain
 the build platform and per-file hashes. The website does not rebuild the app.
 
-The public GitHub prerelease redagent-v0.3.0-pilot hosts these exact bundles.
+The public GitHub prerelease redagent-v0.4.0-pilot hosts these exact bundles.
 They are development packages without production signing/notarization. Keep
 them separate from any production-signed download. Do not overwrite release
 assets: publish a new version/tag and regenerate the pinned installers.
@@ -29,8 +30,9 @@ with the same recorded bundle hash are no-ops (not a full integrity audit).
 macOS/Linux options: --dry-run, --prefix ABSOLUTE_PATH, --archive PATH.
 Windows options: -DryRun, -InstallDir ABSOLUTE_PATH, -ArchivePath PATH.
 The normal paths install for the signed-in user. Run in that user's session,
-not a root/SYSTEM MDM context. Managed all-user deployment will be designed
-when the management service is available. Windows adds a Start Menu shortcut.
+not a root/SYSTEM context. Windows adds a Start Menu shortcut. Then open
+Cloud Fleet > Install system helper and complete the platform's administrator
+authorization. The installer command itself never elevates or starts a service.
 
 Optional scanning/capture engines and drivers are not included. The installer
 does not start the app, a background service, a scan, or a wireless operation.
@@ -50,8 +52,26 @@ assets, pass the four native installer CI jobs, fast-forward origin/main,
 watch GitHub Pages deployment and verify the live page/scripts/asset hashes.
 Keep distribution status exact; CI is not physical Flipper acceptance.
 
-Cloud Fleet 0.3: ViperLink payloads can be queued through CloudKit. In RedAgent,
-choose the private receiver profile, set a 1-1440 minute interval, and enable
-cloud commands while the app remains open. Node.js 22+ is required for this
-optional feature. Closing the owning app stops its receiver. No credentials
-are included in public downloads. See /viper-fleet/ and the reporter COMMANDS.md.
+Cloud Fleet 0.4 and persistent execution:
+- launchd LaunchDaemon on macOS, automatic Windows Service, systemd on Linux.
+- All GUI execution, inventory, campaign queues, Cloud Fleet check-ins and saved
+  job results belong to the machine helper. GUI closure leaves them running.
+- macOS runs as the installation account; Windows uses LocalService; Linux uses
+  the configured unprivileged account. Other users do not automatically gain
+  control access. Inputs must be readable by that fixed service account.
+- Python/Tk and a verified, pinned Node.js 22 runtime are bundled. Keep the entire
+  archive together; Windows/Linux need the adjacent RedAgentHelper directory.
+- Private enrollment is imported separately. Public downloads have no keys.
+  For 0.3 migration, disable/close the old receiver first and retain its journal.
+- Choose a 1-1440 minute check-in interval (default five), enable cloud commands,
+  and use Check in now, Disable cloud commands, or Stop job explicitly.
+- The local control connection uses installation-specific TLS and a protected
+  credential; it binds only to loopback and rejects browser-origin requests.
+- Service installation, supervisor recovery after a forced crash, retained jobs,
+  and uninstall were tested on all four native CI platforms. This does not claim
+  physical reboot/logout, Windows 11 field testing, or hardware capture acceptance.
+- System helper state is in /Library/Application Support/Orbitus/RedAgent,
+  %ProgramData%\Orbitus\RedAgent, or /var/lib/redagent. Uninstall unregisters the
+  service and preserves enrollment/evidence. Interrupted jobs never auto-replay.
+- Sleep, disk unlock, shutdown and network loss constrain delivery. Cloud Fleet
+  remains an application command channel, not a hosted Apple/Windows MDM server.

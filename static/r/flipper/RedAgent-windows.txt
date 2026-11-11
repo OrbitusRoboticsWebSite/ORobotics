@@ -1,4 +1,4 @@
-REM RedAgent 0.3.0 pilot installation - windows
+REM RedAgent 0.4.0 pilot installation - windows
 REM Use on your unlocked corporate computer. Match the Flipper keyboard layout to the host.
 REM Linux requires Ctrl+Alt+T to open a terminal. macOS requires Cmd+Space for Spotlight.
 REM Leaves the terminal visible. Installs for this user; no elevation, tests, or MDM enrollment.

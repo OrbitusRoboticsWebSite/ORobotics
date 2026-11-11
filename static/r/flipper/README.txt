@@ -1,4 +1,4 @@
-RedAgent 0.3.0 - Flipper Zero USB installation scripts
+RedAgent 0.4.0 - Flipper Zero USB installation scripts
 
 1. Copy the three .txt scripts to SD Card/badusb/ using qFlipper or the Flipper mobile app.
 2. Close qFlipper. Unlock your corporate computer and select its OS script in Bad USB.
@@ -20,6 +20,11 @@ policies may block scripts or unsigned apps; use your approved administration pr
 The scripts do not change execution policy, disable security tools, enter passwords,
 enroll in MDM, or start a test. Python/Tk are bundled; scanning tools are separate.
 After installation open the GUI from the location printed by the installer.
+Cloud Fleet > Install system helper opens the normal administrator prompt.
+The helper uses launchd, Windows Services, or systemd to keep accepted jobs and
+enabled Cloud Fleet check-ins running across GUI closure and user sessions.
+This separate step is visible and is not automated by these Flipper scripts.
+Import your private enrollment afterward; Python/Tk and Node.js are bundled.
 
 Hardware execution on a Flipper has not yet been verified.
 Official instructions: https://docs.flipper.net/zero/bad-usb

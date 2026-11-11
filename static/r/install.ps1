@@ -3,11 +3,11 @@
 param([string]$InstallDir = '', [string]$ArchivePath = '', [switch]$DryRun)
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
-$version = '0.3.0'
-$sourceCommit = '97659e722883fa35374bada47bf8b6d4ad15dc21'
-$expected = '76990bf5191593186d74718b626c137aa63a726b4e588963110961236b0517e4'
-$url = 'https://github.com/OrbitusRoboticsWebSite/ORobotics/releases/download/redagent-v0.3.0-pilot/RedAgent-0.3.0-Windows-AMD64.zip'
-$apiUrl = 'https://api.github.com/repos/OrbitusRoboticsWebSite/ORobotics/releases/assets/734584112'
+$version = '0.4.0'
+$sourceCommit = 'e0b8bf82b0f65d097352a1add7804aa6383a870c'
+$expected = 'eea8b25d01c45ca07c71b6692c9156fadf4f951bc8874df4cd7b00fd7c3668c5'
+$url = 'https://github.com/OrbitusRoboticsWebSite/ORobotics/releases/download/redagent-v0.4.0-pilot/RedAgent-0.4.0-Windows-AMD64.zip'
+$apiUrl = 'https://api.github.com/repos/OrbitusRoboticsWebSite/ORobotics/releases/assets/737183489'
 if ($env:OS -ne 'Windows_NT') { throw 'Use install.sh for macOS and Linux.' }
 $machine = if ($env:PROCESSOR_ARCHITEW6432) { $env:PROCESSOR_ARCHITEW6432 } else { $env:PROCESSOR_ARCHITECTURE }
 if ($machine -ne 'AMD64') { throw "Unsupported architecture: $machine. This pilot requires Windows x64." }
@@ -89,6 +89,8 @@ try {
     if ($backup) { Write-Host "Previous installation retained: $backup" }
     Write-Host 'Pilot build; production signing pending. Follow your normal device policy.'
     Write-Host 'MDM enrollment is not configured. Optional scanning/capture tools are installed separately.'
+    Write-Host 'For persistent operation, open Cloud Fleet > Install system helper and complete the administrator prompt.'
+    Write-Host 'Then import your private enrollment and enable cloud commands. Closing the GUI leaves the helper running.'
 } catch {
     if ($backup -and -not $placed -and -not (Test-Path -LiteralPath $InstallDir)) {
         Move-Item -LiteralPath $backup -Destination $InstallDir

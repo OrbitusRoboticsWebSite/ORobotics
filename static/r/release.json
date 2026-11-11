@@ -1,52 +1,55 @@
 {
-  "version": "0.3.0",
+  "version": "0.4.0",
   "channel": "development-pilot",
-  "date": "2026-11-10",
-  "sourceCommit": "97659e722883fa35374bada47bf8b6d4ad15dc21",
-  "downloadBase": "https://github.com/OrbitusRoboticsWebSite/ORobotics/releases/download/redagent-v0.3.0-pilot",
+  "date": "2026-11-11",
+  "sourceCommit": "e0b8bf82b0f65d097352a1add7804aa6383a870c",
+  "downloadBase": "https://github.com/OrbitusRoboticsWebSite/ORobotics/releases/download/redagent-v0.4.0-pilot",
   "productionSigned": false,
   "notarized": false,
   "mdmEnrollmentConfigured": false,
+  "systemHelperIncluded": true,
+  "systemHelperInstalledByDefault": false,
+  "ciRun": "https://github.com/RudyAramayo/SignalAtlas/actions/runs/43113805345",
   "assets": [
     {
-      "system": "Darwin",
-      "machine": "x86_64",
-      "label": "macOS \u00b7 Intel",
-      "filename": "RedAgent-0.3.0-Darwin-x86_64.tar.gz",
-      "bytes": 13561263,
-      "sha256": "1aebcd407306afd8c9090f6bcad6ad4f0fcb641e7802dfc98abc05cb5ac0fd67",
+      "filename": "RedAgent-0.4.0-Darwin-x86_64.tar.gz",
+      "bytes": 63763052,
+      "sha256": "750e8511cfb99edfa9356c3fda66338df3e5968c5ed2dfd34e426a5b3427276c",
       "testedPlatform": "macOS-15.7.9-x86_64-i386-64bit",
-      "apiUrl": "https://api.github.com/repos/OrbitusRoboticsWebSite/ORobotics/releases/assets/734584110"
-    },
-    {
-      "system": "Darwin",
-      "machine": "arm64",
-      "label": "macOS \u00b7 Apple Silicon",
-      "filename": "RedAgent-0.3.0-Darwin-arm64.tar.gz",
-      "bytes": 12826710,
-      "sha256": "6240ec905103cb667ef5875df9e24a43a9a9399076b9c86a20a166a0a88fb87e",
-      "testedPlatform": "macOS-26.7.2-arm64-arm-64bit",
-      "apiUrl": "https://api.github.com/repos/OrbitusRoboticsWebSite/ORobotics/releases/assets/734584107"
-    },
-    {
-      "system": "Linux",
       "machine": "x86_64",
-      "label": "Linux \u00b7 x64",
-      "filename": "RedAgent-0.3.0-Linux-x86_64.tar.gz",
-      "bytes": 25917325,
-      "sha256": "5a7c17f69f3b39f01e1c9fa8e4dd47672b1a7cf41926a84c256b65dafb0a19b9",
-      "testedPlatform": "Linux-6.8.0-1070-azure-x86_64-with-glibc2.35",
-      "apiUrl": "https://api.github.com/repos/OrbitusRoboticsWebSite/ORobotics/releases/assets/734584108"
+      "system": "Darwin",
+      "label": "macOS \u00b7 Intel",
+      "apiUrl": "https://api.github.com/repos/OrbitusRoboticsWebSite/ORobotics/releases/assets/737183488"
     },
     {
-      "system": "Windows",
-      "machine": "AMD64",
-      "label": "Windows \u00b7 x64",
-      "filename": "RedAgent-0.3.0-Windows-AMD64.zip",
-      "bytes": 12606725,
-      "sha256": "76990bf5191593186d74718b626c137aa63a726b4e588963110961236b0517e4",
+      "filename": "RedAgent-0.4.0-Darwin-arm64.tar.gz",
+      "bytes": 62599822,
+      "sha256": "654800d384bd3eab2269b47e935fa70f9f9af881c887318ffd918be60fbf01f5",
+      "testedPlatform": "macOS-26.7.2-arm64-arm-64bit",
+      "machine": "arm64",
+      "system": "Darwin",
+      "label": "macOS \u00b7 Apple Silicon",
+      "apiUrl": "https://api.github.com/repos/OrbitusRoboticsWebSite/ORobotics/releases/assets/737183487"
+    },
+    {
+      "filename": "RedAgent-0.4.0-Linux-x86_64.tar.gz",
+      "bytes": 98213910,
+      "sha256": "2500e4cb405c3e5832ffe59a735dffbec1cc2c770adccde1700cc9ce09bd60c6",
+      "testedPlatform": "Linux-6.8.0-1070-azure-x86_64-with-glibc2.35",
+      "machine": "x86_64",
+      "system": "Linux",
+      "label": "Linux \u00b7 x64",
+      "apiUrl": "https://api.github.com/repos/OrbitusRoboticsWebSite/ORobotics/releases/assets/737183490"
+    },
+    {
+      "filename": "RedAgent-0.4.0-Windows-AMD64.zip",
+      "bytes": 60047899,
+      "sha256": "eea8b25d01c45ca07c71b6692c9156fadf4f951bc8874df4cd7b00fd7c3668c5",
       "testedPlatform": "Windows-2025Server-10.0.26100-SP0",
-      "apiUrl": "https://api.github.com/repos/OrbitusRoboticsWebSite/ORobotics/releases/assets/734584112"
+      "machine": "AMD64",
+      "system": "Windows",
+      "label": "Windows \u00b7 x64",
+      "apiUrl": "https://api.github.com/repos/OrbitusRoboticsWebSite/ORobotics/releases/assets/737183489"
     }
   ]
 }

@@ -102,3 +102,4 @@ else
     printf 'Launch from your desktop terminal: "%s/RedAgent/RedAgent"\n' "$prefix"
 fi
 printf '%s\n' 'Pilot build; production signing/notarization pending. Follow your normal device policy.' 'MDM enrollment is not configured. Optional scanning/capture tools are installed separately.'
+printf '%s\n' 'For persistent operation, open Cloud Fleet > Install system helper and complete the administrator prompt.' 'Then import your private enrollment and enable cloud commands. Closing the GUI leaves the helper running.'
