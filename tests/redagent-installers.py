@@ -26,7 +26,15 @@ with tempfile.TemporaryDirectory(prefix='redagent-installer-test-') as scratch:
         archive = work / asset['filename']
         curl = shutil.which('curl.exe' if system == 'Windows' else 'curl')
         assert curl, 'curl is required for the CI release fixture download'
-        subprocess.run([curl, '--fail', '--show-error', '--silent', '--location', '--retry', '2', '--retry-all-errors', '--max-time', '120', '-H', 'Accept: application/octet-stream', '-H', 'X-GitHub-Api-Version: 2022-11-28', asset['apiUrl'], '-o', str(archive)], check=True)
+        # Exercise the public download route first, just like the installers.
+        # Anonymous API requests can be rate-limited on shared CI runner IPs.
+        urls = [release['downloadBase'] + '/' + asset['filename'], asset['apiUrl']]
+        for index, url in enumerate(urls):
+            headers = ['-H', 'Accept: application/octet-stream', '-H', 'X-GitHub-Api-Version: 2022-11-28'] if index else []
+            result = subprocess.run([curl, '--fail', '--show-error', '--silent', '--location', '--retry', '2', '--retry-all-errors', '--max-time', '120', *headers, url, '-o', str(archive)])
+            if result.returncode == 0:
+                break
+        result.check_returncode()
     assert hashlib.sha256(archive.read_bytes()).hexdigest() == asset['sha256']
     dest = work / 'install with spaces'
     if system == 'Windows':
