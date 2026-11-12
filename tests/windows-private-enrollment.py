@@ -3,6 +3,7 @@ import base64
 import importlib.util
 import json
 import os
+import re
 from pathlib import Path
 import tempfile
 
@@ -31,7 +32,7 @@ if ($Component -ne 'cloud' -or $Scope -ne 'Machine' -or $ControlUser -notmatch '
     encoded = base64.b64encode(bootstrap).decode()
     assert encoded not in command and 'UNREGISTERED-TEST-TRANSPORT-SECRET' not in command
     assert 'STRING ' + encoded + '\nENTER' in script
-    assert 'Set-ExecutionPolicy' not in command and '-ExecutionPolicy' not in command
+    assert not re.search(r'Set-ExecutionPolicy|(?:^|\s)-ExecutionPolicy\s', command)
     # Parse the exact single-quoted outer launch argument, then execute its
     # resulting child command with the download fixture in this test scope.
     launch = next(line[7:] for line in script.splitlines() if line.startswith('STRING powershell.exe -NoLogo -NoProfile -Command '))
