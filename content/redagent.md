@@ -4,5 +4,5 @@ url: "/r/"
 aliases: ["/products/redagent/"]
 type: "redagent"
 draft: false
-description: "Install the RedAgent security measurement workbench on Windows, macOS or Linux. Copy your platform's command or download Flipper Zero installation scripts."
+description: "Install RedAgent on Windows, macOS or Linux. Browse all ten ViperLink Flipper scripts plus four RedAgent scripts, including Windows administrator startup installers."
 ---

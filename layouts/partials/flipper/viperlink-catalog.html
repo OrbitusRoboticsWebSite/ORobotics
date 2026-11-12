@@ -1,0 +1,28 @@
+{{ $commands := site.Data.viperlink_commands }}
+{{ $administrators := where $commands "adminFlipper" "ne" nil }}
+{{ $count := add (len $commands) (len $administrators) }}
+<div class="ra-flipper-catalog" id="viperlink-flipper" aria-labelledby="viperlink-flipper-title">
+  <div class="ra-section-head">
+    <div><p class="ra-eyebrow">ViperLink / focused remote tools</p><h3 id="viperlink-flipper-title">All {{ $count }} ViperLink Flipper scripts</h3></div>
+    <a class="ra-primary" href="{{ "v/ViperLink-Flipper-scripts.zip" | relURL }}" download>Download all {{ $count }} ViperLink scripts <span aria-hidden="true">↓</span></a>
+  </div>
+  <p>Choose a component and operating system. User scripts install for the signed-in user; the Windows Cloud administrator script requests UAC approval and starts the receiver at boot.</p>
+  <div class="ra-table-wrap">
+    <table class="ra-flipper-table" aria-label="ViperLink Flipper script downloads">
+      <thead><tr><th scope="col">Component</th><th scope="col">Windows</th><th scope="col">macOS</th><th scope="col">Linux</th></tr></thead>
+      <tbody>
+        {{ range site.Data.viperlink_release.components }}
+        <tr><th scope="row">{{ .name }}<small>{{ .role }}</small></th>
+          {{ range where $commands "component" .id }}
+          <td data-platform-label="{{ .name }}"><a href="{{ printf "v/flipper/%s" .flipper | relURL }}" download aria-label="{{ .componentName }} — {{ .name }} user Flipper script">User .txt ↓</a>
+            {{ with .adminFlipper }}<a href="{{ printf "v/flipper/%s" . | relURL }}" download aria-label="Cloud Fleet — Windows administrator and startup Flipper script">Admin + startup .txt ↓</a>{{ end }}
+          </td>
+          {{ end }}
+        </tr>
+        {{ end }}
+      </tbody>
+    </table>
+  </div>
+  <p class="ra-catalog-note">User installs need Node.js 22+ for Cloud Fleet and status reporting, or Python 3.10+ for the LAN / VPN controller. The Windows Cloud administrator install includes Node.js. Private enrollment is separate; keep one receiver per profile.</p>
+  <div class="ra-text-links"><a href="{{ "v/#setup" | relURL }}">Enrollment, startup and removal →</a><a href="{{ "v/flipper/README.txt" | relURL }}">ViperLink script guide</a><a href="{{ "v/installers.json" | relURL }}">ViperLink sizes and checksums</a></div>
+</div>

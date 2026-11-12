@@ -9,7 +9,9 @@ b1564f6eab63964bff4151295fac108026537375. package.py reads an explicit allowlist
 from that committed tree, never uncommitted files, credentials or device profiles.
 Runtime source is unmodified. START.txt is packaging documentation. Cloud and
 status use existing Node.js 22+, LAN uses Python 3.10+ with OpenSSL TLS 1.3.
-No GUI, test suite, bundled runtime, service or automatic enrollment is included.
+User installs include no GUI, test suite, runtime, service or automatic enrollment.
+The separate Windows Cloud administrator installer adds a pinned private Node
+runtime and a visible LocalService startup task after normal UAC approval.
 
 Components:
 - cloud: queue receiver and its four runtime dependencies. Execution target.
@@ -18,8 +20,13 @@ Components:
 
 package.py --source PATH --commit SHA regenerates packages intentionally.
 Do not silently mutate a published version: use a new version for runtime updates.
-render.py generates installers, commands, release.json and all nine Flipper files.
+render.py generates installers, commands, release.json and all ten Flipper files:
+nine user scripts plus the Windows Cloud administrator/startup script.
 render.py --check verifies every source/ZIP checksum and generated output.
+Both /r/#viperlink-flipper and /v/#viperlink-flipper render the same shared
+layouts/partials/flipper/viperlink-catalog.html from that command data. All ten
+individual downloads, the complete ZIP, setup guide and integrity manifest appear
+on both pages. /r/ also retains the four separately labeled RedAgent scripts.
 
 Installers download individual pinned source files over HTTPS. They stage in a
 private same-filesystem directory, verify all SHA-256 hashes, preserve unmanaged
@@ -27,19 +34,26 @@ destinations and older versions, and verify all managed files on repeat installs
 They reject symlink/reparse install paths and serialize operations with a lock.
 An interrupted installer can leave a lock for explicit operator review.
 Receipts record component, version and source commit. Profiles stay outside the
-installation. No policy changes, elevated launch, hidden terminal or credentials
-appear in install commands or BadUSB files. Hardware execution remains unverified.
+installation. No policy changes, hidden terminal or credentials appear in install
+commands or BadUSB files. Only the explicit Windows administrator script requests
+an elevated installer; it never types approval or credentials. The receiver runs
+as LocalService and waits for separate enrollment. Hardware execution remains
+unverified.
 
 Validation:
   python3 scripts/viperlink/render.py --check
   node --test tests/viperlink-portal.test.mjs tests/redagent-portal.test.mjs
   python3 tests/viperlink-installers.py
 Native installer CI runs these on macOS, Windows (PowerShell 5.1) and Linux.
-Tests install only in temporary directories and never start a receiver or submit
-a remote job. End-to-end field validation is separate from installer validation.
+User tests install in temporary directories. The disposable Windows CI machine
+also exercises machine installation, waiting-for-enrollment startup, forced-stop
+recovery, repeat installation and cleanup. Tests never submit a live remote job.
+End-to-end field validation is separate from installer validation.
 
 Publication: run the website build and validators, inspect desktop/mobile layout,
 commit and push, pass cross-platform installer CI, then fast-forward origin/main.
-Wait for GitHub Pages deployment; compare every public /v/ file with local hashes.
+Before deployment, run python3 scripts/viperlink/verify-public.py --directory public.
+Wait for GitHub Pages deployment, then run it without --directory to compare both
+public catalogs, every /r/ and /v/ file, and both Flipper ZIPs with the checkout.
 The static website is the distribution channel for these source components.
 Native ViperLink builds and the existing Fleet reporter release stay unchanged.

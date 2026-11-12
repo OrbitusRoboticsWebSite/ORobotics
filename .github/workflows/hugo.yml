@@ -77,6 +77,9 @@ jobs:
           ROB_CLOUDKIT_LEADERBOARD_ENABLED: ${{ vars.ROB_CLOUDKIT_LEADERBOARD_ENABLED }}
           ROB_SCHOOL_CLOUDKIT_ENABLED: ${{ vars.ROB_SCHOOL_CLOUDKIT_ENABLED }}
 
+      - name: Validate complete Flipper catalogs and downloads
+        run: python3 scripts/viperlink/verify-public.py --directory public
+
       - name: Configure Viper Fleet cloud connection
         run: node scripts/configure-viper-fleet.mjs
         env:

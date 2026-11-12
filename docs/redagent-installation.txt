@@ -3,6 +3,10 @@ REDAGENT INSTALLATION PORTAL - 2026-11-11
 Canonical shortlink: https://www.orbitusrobotics.com/r/
 Scope: per-user desktop controller plus an explicitly installed machine helper.
 Cloud Fleet check-ins are separate from native MDM enrollment.
+The Flipper section now lists all four RedAgent scripts AND all ten ViperLink
+scripts. ViperLink downloads use the same shared catalog and canonical /v/
+files as the ViperLink page; each product keeps its own correctly named ZIP.
+The catalog includes all three platforms and both Windows receiver scopes.
 
 Source of truth: data/redagent_release.json. Native v0.4.0 application/helper bundles
 were built from SignalAtlas e0b8bf82b0f65d097352a1add7804aa6383a870c by the
@@ -28,14 +32,18 @@ evidence directories are not deleted. Repeat installs of an intact launcher
 with the same recorded bundle hash are no-ops (not a full integrity audit).
 
 macOS/Linux options: --dry-run, --prefix ABSOLUTE_PATH, --archive PATH.
-Windows options: -DryRun, -InstallDir ABSOLUTE_PATH, -ArchivePath PATH.
+Windows options: -DryRun, -InstallDir ABSOLUTE_PATH, -ArchivePath PATH,
+-Scope User|Machine, and -ControlUser SID for the administrator machine install.
 The normal paths install for the signed-in user. Run in that user's session,
 not a root/SYSTEM context. Windows adds a Start Menu shortcut. Then open
 Cloud Fleet > Install system helper and complete the platform's administrator
-authorization. The installer command itself never elevates or starts a service.
+authorization. The user installer does not elevate or start a service. The
+separate Windows administrator command requests normal UAC approval and installs
+for all users plus the automatic LocalService helper, starting it immediately.
 
 Optional scanning/capture engines and drivers are not included. The installer
-does not start the app, a background service, a scan, or a wireless operation.
+does not start the desktop app, a scan, or a wireless operation. Only the explicit
+Windows administrator path starts the background helper during installation.
 No system security or PowerShell execution policy is changed. Existing MDM
 policy can prevent unsigned scripts/apps. Production distribution requires
 appropriate signing and validation before broader corporate rollout.
@@ -51,6 +59,10 @@ Publication: build/validate the Hugo site, publish the GitHub prerelease
 assets, pass the four native installer CI jobs, fast-forward origin/main,
 watch GitHub Pages deployment and verify the live page/scripts/asset hashes.
 Keep distribution status exact; CI is not physical Flipper acceptance.
+The Pages build validates that /r/ and /v/ both expose all ten ViperLink scripts,
+that /r/ retains its four RedAgent scripts, and that both ZIPs and downloads match
+the source files. Run python3 scripts/viperlink/verify-public.py --directory public
+after building locally; omit --directory to verify the deployed website.
 
 Cloud Fleet 0.4 and persistent execution:
 - launchd LaunchDaemon on macOS, automatic Windows Service, systemd on Linux.
