@@ -68,10 +68,11 @@ try:
         shortcut = Path(os.environ['ProgramData']) / 'Microsoft/Windows/Start Menu/Programs/RedAgent.lnk'
         assert shortcut.is_file(), 'All-user Start menu shortcut missing'
     else:
-        details = json.loads(ps("$s=New-Object -ComObject Schedule.Service; $s.Connect(); $t=$s.GetFolder('\\').GetTask('Orbitus ViperLink Cloud'); @{xml=$t.Xml;state=$t.State}|ConvertTo-Json -Compress"))
+        details = json.loads(ps("$s=New-Object -ComObject Schedule.Service; $s.Connect(); $t=$s.GetFolder('\\').GetTask('Orbitus ViperLink Cloud'); @{xml=$t.Xml;state=$t.State;hidden=$t.Definition.Settings.Hidden}|ConvertTo-Json -Compress"))
         assert '<BootTrigger>' in details['xml'], details
         assert '<UserId>S-1-5-19</UserId>' in details['xml'], details
-        assert '<Hidden>false</Hidden>' in details['xml'], details
+        # Task Scheduler omits default-valued settings when exporting XML.
+        assert details['hidden'] is False, details
         assert '<ExecutionTimeLimit>PT0S</ExecutionTimeLimit>' in details['xml'], details
         status_file = data / 'startup-status.json'
         def waiting():
