@@ -10,7 +10,8 @@ Windows Cloud Fleet has two choices:
 - ViperLink-cloud-windows-admin.txt: normal UAC approval, protected Program Files
   installation for all users, verified private Node runtime, and the visible
   "Orbitus ViperLink Cloud" task in Task Scheduler. It runs as LocalService at
-  boot before login, starts now, and waits for enrollment. It retries failures.
+  boot before login, starts now, and waits for enrollment. A one-minute recovery
+  trigger restarts it if stopped; existing running instances are left alone.
   Put private receiver.json and fleet-private.pem in
   %ProgramData%\Orbitus\ViperLink; use its Workspace as the shared root.
   Only the installing operator and administrators can provision credentials.

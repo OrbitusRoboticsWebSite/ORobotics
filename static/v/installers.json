@@ -9,13 +9,13 @@
     },
     {
       "path": "v/install.ps1",
-      "bytes": 14694,
-      "sha256": "9b424c30c7cfeda1f8dae7ae941e2199e3ac798b75440c662a2c8b2bb73d4af6"
+      "bytes": 15258,
+      "sha256": "3cf4664eb1df979e64d517cad8f6c6cbfd38b485565467223288dc442eddbd74"
     },
     {
       "path": "v/flipper/ViperLink-cloud-windows.txt",
       "bytes": 1645,
-      "sha256": "690a54dd38145f303a0f1f7b8b373f6d48549b719dac739ad1c3eb752f1fbeb3"
+      "sha256": "f3e2f3910788aeced337bf97a343ada080c86b14419d7ea2c30eae7a95865513"
     },
     {
       "path": "v/flipper/ViperLink-cloud-macos.txt",
@@ -30,7 +30,7 @@
     {
       "path": "v/flipper/ViperLink-status-windows.txt",
       "bytes": 1647,
-      "sha256": "f42fc10d5873ab8c1edfee2ede07f2c9925743a164d1feed1e84dae614b127a4"
+      "sha256": "d1a5caf5c01b6ddb1c954e0d020fec7237573e5afa2be69023b7cbbf49c8bc06"
     },
     {
       "path": "v/flipper/ViperLink-status-macos.txt",
@@ -45,7 +45,7 @@
     {
       "path": "v/flipper/ViperLink-lan-windows.txt",
       "bytes": 1643,
-      "sha256": "d06930394c2bf366436416d813eeddaa229f1e1e066a6492074419830589f9b8"
+      "sha256": "de8bd52536698513dc0326905d0997ad38424bb7f29bb972ebf976284ddab8bb"
     },
     {
       "path": "v/flipper/ViperLink-lan-macos.txt",
@@ -60,17 +60,17 @@
     {
       "path": "v/flipper/ViperLink-cloud-windows-admin.txt",
       "bytes": 2514,
-      "sha256": "08ac2efba473f0cdcb4417b92d75676e601e7f172751084e990ffbf60c0ce49f"
+      "sha256": "331a2667a24260734ea66311ae09a3497e35d7a86f0c80d175e9bb4d9ec2dc67"
     },
     {
       "path": "v/flipper/README.txt",
-      "bytes": 2986,
-      "sha256": "2f5018590d1182df2a9fb5e6a573c87098f7b766edd100f419bc02f5a66c1002"
+      "bytes": 3064,
+      "sha256": "d718322e6129ac45df1305668b1150dbde859b9b19f4282860d42ac996428e56"
     },
     {
       "path": "v/ViperLink-Flipper-scripts.zip",
-      "bytes": 9190,
-      "sha256": "eca0a3d2017783a36cc5b36611e37453929199a0f1d5e161c83a28ede4821786"
+      "bytes": 9235,
+      "sha256": "2315fb4c14fd73fbe7a86c2cf70fa0f3c5d755dc389d3d1f7ae9a740d8740c01"
     },
     {
       "path": "v/release.json",

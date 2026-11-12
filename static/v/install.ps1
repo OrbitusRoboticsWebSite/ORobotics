@@ -161,6 +161,13 @@ function Complete-MachineInstallation {
     $task.Settings.RestartCount = 255
     $trigger = $task.Triggers.Create(8)
     $trigger.Delay = 'PT30S'
+    # RestartOnFailure alone did not recover an externally terminated manual
+    # start in native Windows testing. A repeating trigger also recovers that
+    # case; IgnoreNew guarantees it never starts a second running instance.
+    $recovery = $task.Triggers.Create(1)
+    $recovery.StartBoundary = [DateTime]::Now.AddMinutes(1).ToString('yyyy-MM-ddTHH:mm:ss')
+    $recovery.Repetition.Interval = 'PT1M'
+    $recovery.Repetition.StopAtDurationEnd = $false
     $action = $task.Actions.Create(0)
     $action.Path = $node
     $action.WorkingDirectory = $data
@@ -172,6 +179,7 @@ function Complete-MachineInstallation {
     Write-Host "Installed for all users. Startup task: $name (LocalService, before login)."
     Write-Host "Private enrollment: $data\receiver.json and fleet-private.pem. Shared folder: $data\Workspace"
     Write-Host "The task is started and waits for enrollment. Set enabled=true only when ready. Status: $data\startup-status.json"
+    Write-Host 'A one-minute recovery trigger restarts a stopped receiver without launching duplicates.'
     Write-Host 'To stop automatic operation: disable the task in Task Scheduler, then end its running instance. Enrollment is retained.'
 }
 

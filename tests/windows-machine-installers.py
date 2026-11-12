@@ -74,6 +74,8 @@ try:
         # Task Scheduler omits default-valued settings when exporting XML.
         assert details['hidden'] is False, details
         assert '<ExecutionTimeLimit>PT0S</ExecutionTimeLimit>' in details['xml'], details
+        assert '<TimeTrigger>' in details['xml'] and '<Interval>PT1M</Interval>' in details['xml'], details
+        assert '<MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>' in details['xml'], details
         status_file = data / 'startup-status.json'
         def waiting():
             status = json.loads(status_file.read_text())
@@ -88,6 +90,15 @@ try:
     assert 'POLICY_UNCHANGED' in repeat.stdout
     assert sentinel.read_text() == 'retained enrollment evidence'
     print(json.dumps({'product': product, 'checks': ['Restricted policy unchanged', 'machine install', 'LocalService', 'startup definition', 'crash recovery', 'repeat install preserves data'], 'physicalRebootTested': False, 'privateEnrollmentUsed': False}))
+except Exception:
+    if product == 'viperlink':
+        try:
+            print(ps("$s=New-Object -ComObject Schedule.Service; $s.Connect(); $t=$s.GetFolder('\\').GetTask('Orbitus ViperLink Cloud'); @{state=$t.State;lastResult=$t.LastTaskResult;nextRun=$t.NextRunTime;xml=$t.Xml}|ConvertTo-Json -Compress"))
+            status = data / 'startup-status.json'
+            if status.exists(): print(status.read_text())
+        except Exception:
+            pass
+    raise
 finally:
     if product == 'redagent':
         executable = helper / 'RedAgentHelper.exe'
