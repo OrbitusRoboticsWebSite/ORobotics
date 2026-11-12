@@ -10,3 +10,4 @@ yarn-error.log
 .netlify
 yarn-error.log/public
 /resources/_gen
+__pycache__/

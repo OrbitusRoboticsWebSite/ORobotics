@@ -1,4 +1,6 @@
 *.pdf binary
 # Release bytes are hashed; preserve them on Windows checkouts too.
+static/r/** -text
 static/v/** -text
+data/redagent*.json text eol=lf
 data/viperlink*.json text eol=lf
