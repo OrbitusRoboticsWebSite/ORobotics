@@ -7,7 +7,7 @@ import subprocess
 import sys
 import time
 
-from windows_bootstrap_support import ROOT, bootstrap_process
+from windows_bootstrap_support import ROOT, bootstrap_process, windows_environment
 
 assert os.name == 'nt', 'Run on a disposable Windows host'
 product = sys.argv[1]
@@ -22,7 +22,7 @@ if product == 'redagent':
 
 
 def ps(command):
-    result = subprocess.run(['powershell.exe', '-NoLogo', '-NoProfile', '-Command', command], text=True, capture_output=True)
+    result = subprocess.run(['powershell.exe', '-NoLogo', '-NoProfile', '-Command', command], env=windows_environment(), text=True, capture_output=True)
     assert result.returncode == 0, result.stdout + result.stderr
     return result.stdout.strip()
 

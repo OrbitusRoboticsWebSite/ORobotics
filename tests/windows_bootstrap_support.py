@@ -15,6 +15,13 @@ def quote(value):
     return "'" + str(value).replace("'", "''") + "'"
 
 
+def windows_environment():
+    # Actions launches Python from PowerShell 7. Its inherited module directory
+    # points at Core-only assemblies that Windows PowerShell 5.1 cannot load.
+    # Let the child initialize its own normal module paths, as Explorer does.
+    return {key: value for key, value in os.environ.items() if key.lower() != 'psmodulepath'}
+
+
 def bootstrap_process(product, options=(), installer=None, command=None, setup='', policy='Restricted'):
     route = 'r' if product == 'redagent' else 'v'
     installer = Path(installer or ROOT / f'static/{route}/install.ps1')
@@ -48,7 +55,7 @@ try {
     Write-Host 'POLICY_UNCHANGED'
 }
 '''
-    env = dict(os.environ, ORBITUS_TEST_INSTALLER=str(installer),
+    env = dict(windows_environment(), ORBITUS_TEST_INSTALLER=str(installer),
                ORBITUS_TEST_URL=f'https://www.orbitusrobotics.com/{route}/install.ps1',
                ORBITUS_TEST_STARTUP=str(ROOT / 'static/v/windows-startup.mjs'),
                ORBITUS_TEST_POLICY=policy)
