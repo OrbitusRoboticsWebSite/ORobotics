@@ -40,7 +40,14 @@ test('all nine Flipper scripts match their component and platform, with visible 
     const script=await readFile(new URL(`../static/v/flipper/${entry.flipper}`,import.meta.url),'utf8');
     assert.ok(script.includes(`STRING ${entry.command}\nENTER\n`));
     assert.ok(entry.command.includes(entry.id==='windows' ? `-Component ${entry.component}` : `--component ${entry.component}`));
-    assert.doesNotMatch(script,/ExecutionPolicy|Unblock-File|sudo|xattr|spctl|WindowStyle Hidden|ENCODED/i);
+    assert.doesNotMatch(script,/Set-ExecutionPolicy|(?:^|\s)-ExecutionPolicy\s|Unblock-File|sudo|xattr|spctl|WindowStyle Hidden|ENCODED/i);
+    if (entry.adminCommand) {
+      const admin = await readFile(new URL(`../static/v/flipper/${entry.adminFlipper}`, import.meta.url), 'utf8');
+      assert.ok(admin.includes(`STRING ${entry.adminCommand}\nENTER\n`));
+      assert.match(admin, /-Verb RunAs/);
+      assert.match(admin, /-Scope Machine/);
+      assert.doesNotMatch(admin, /Set-ExecutionPolicy|(?:^|\s)-ExecutionPolicy\s|WindowStyle Hidden|ENCODED/i);
+    }
     for (const line of script.trim().split('\n')) assert.match(line,/^(REM|DEFAULT_STRING_DELAY|DELAY|GUI|CTRL|STRING|ENTER)( |$)/);
   }
 });

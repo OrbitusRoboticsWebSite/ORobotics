@@ -52,7 +52,14 @@ test('Flipper files type the exact published command without policy changes', as
     const payload = await readFile(new URL(`../static/r/flipper/RedAgent-${entry.id}.txt`, import.meta.url), 'utf8');
     assert.ok(payload.includes(`STRING ${entry.command}\nENTER\n`));
     assert.match(payload, /DEFAULT_STRING_DELAY 10/);
-    assert.doesNotMatch(payload, /ExecutionPolicy|Unblock-File|sudo|xattr|spctl|WindowStyle Hidden|ENCODED/i);
+    assert.doesNotMatch(payload, /Set-ExecutionPolicy|(?:^|\s)-ExecutionPolicy\s|Unblock-File|sudo|xattr|spctl|WindowStyle Hidden|ENCODED/i);
+    if (entry.adminCommand) {
+      const admin = await readFile(new URL('../static/r/flipper/RedAgent-windows-admin.txt', import.meta.url), 'utf8');
+      assert.ok(admin.includes(`STRING ${entry.adminCommand}\nENTER\n`));
+      assert.match(admin, /-Verb RunAs/);
+      assert.match(admin, /-Scope Machine/);
+      assert.doesNotMatch(admin, /Set-ExecutionPolicy|(?:^|\s)-ExecutionPolicy\s|WindowStyle Hidden|ENCODED/i);
+    }
     for (const line of payload.trim().split('\n')) assert.match(line, /^(REM|DEFAULT_STRING_DELAY|DELAY|GUI|CTRL|STRING|ENTER)( |$)/);
   }
 });

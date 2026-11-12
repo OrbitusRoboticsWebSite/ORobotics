@@ -4,7 +4,8 @@ param(
     [ValidateSet('cloud','status','lan')][string]$Component = 'cloud',
     [string]$InstallDir,
     [string]$SourceDir,
-    [switch]$DryRun
+    [switch]$DryRun,
+    [ValidateSet('User','Machine')][string]$Scope = 'User', [string]$ControlUser = ''
 )
 $ErrorActionPreference = 'Stop'
 $version = '0.3.0'
@@ -75,20 +76,129 @@ $components = @'
 }
 '@ | ConvertFrom-Json
 $files = $components.$Component
-if (-not $InstallDir) { $InstallDir = Join-Path $env:LOCALAPPDATA 'Programs\Orbitus\ViperLink' }
+# Included in the checksum-pinned installer. Only called for explicit Machine scope.
+function Assert-MachineHash([string]$Path, [string]$Expected) {
+    $hash = [Security.Cryptography.SHA256]::Create()
+    $stream = [IO.File]::OpenRead($Path)
+    try { $actual = [BitConverter]::ToString($hash.ComputeHash($stream)).Replace('-','').ToLowerInvariant() }
+    finally { $stream.Dispose(); $hash.Dispose() }
+    if ($actual -ne $Expected) { throw "SHA-256 mismatch: $Path" }
+}
+
+function Complete-MachineInstallation {
+    if ($Scope -ne 'Machine') { return }
+    $data = Join-Path $env:ProgramData 'Orbitus\ViperLink'
+    Assert-RegularPath $data
+    $null = New-Item -ItemType Directory -Path $data -Force
+    $null = New-Item -ItemType Directory -Path (Join-Path $data 'Workspace') -Force
+    # Only the operator and administrators can provision fleet credentials.
+    & icacls.exe $data /inheritance:r /grant:r '*S-1-5-18:(OI)(CI)F' '*S-1-5-32-544:(OI)(CI)F' '*S-1-5-19:(OI)(CI)M' ("*$($ControlUser):(OI)(CI)M") | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to protect machine enrollment.' }
+    $runtime = Join-Path $InstallDir 'runtime-22.23.5'
+    Assert-RegularPath $runtime
+    $node = Join-Path $runtime 'node.exe'
+    $stage = Join-Path $InstallDir ('.machine-' + [guid]::NewGuid())
+    $null = New-Item -ItemType Directory -Path $stage
+    try {
+        if (-not (Test-Path -LiteralPath $node)) {
+            $zip = Join-Path $stage 'node.zip'
+            Invoke-WebRequest -UseBasicParsing 'https://nodejs.org/dist/v22.23.5/node-v22.23.5-win-x64.zip' -OutFile $zip -TimeoutSec 600 -ErrorAction Stop
+            Assert-MachineHash $zip '4a191082e9706866830379d577d2cc8a50c776fcd9436a8d061b063ed0d9a0e3'
+            Add-Type -AssemblyName System.IO.Compression.FileSystem
+            $archive = [IO.Compression.ZipFile]::OpenRead($zip)
+            $unpacked = Join-Path $stage 'runtime'
+            $null = New-Item -ItemType Directory -Path $unpacked
+            try {
+                foreach ($name in @('node.exe','LICENSE')) {
+                    $entry = $archive.GetEntry('node-v22.23.5-win-x64/' + $name)
+                    if (-not $entry) { throw 'Verified Node archive is incomplete.' }
+                    [IO.Compression.ZipFileExtensions]::ExtractToFile($entry, (Join-Path $unpacked $name))
+                }
+            } finally { $archive.Dispose() }
+            if (Test-Path -LiteralPath $runtime) { throw 'Existing runtime is incomplete; it was preserved for administrator review.' }
+            [IO.Directory]::Move($unpacked, $runtime)
+        }
+        Assert-MachineHash $node '247e9693d316da9857e44990e5e11709f596f18112251b8026ec6eed80bdf38a'
+        $startup = Join-Path $stage 'windows-startup.mjs'
+        Invoke-WebRequest -UseBasicParsing 'https://www.orbitusrobotics.com/v/windows-startup.mjs' -OutFile $startup -TimeoutSec 120 -ErrorAction Stop
+        Assert-MachineHash $startup '5d173921f2c1267357f7662154946ded2c550864977a035cc2973b5479a9a5b1'
+        $startupPath = Join-Path $InstallDir 'windows-startup.mjs'
+        Assert-RegularPath $startupPath
+        Copy-Item -LiteralPath $startup -Destination $startupPath -Force
+    } finally { Remove-Item -LiteralPath $stage -Recurse -Force }
+    # Executable code is read-only to standard users and the service account.
+    & icacls.exe $InstallDir /inheritance:r /grant:r '*S-1-5-18:(OI)(CI)F' '*S-1-5-32-544:(OI)(CI)F' '*S-1-5-32-545:(OI)(CI)RX' '*S-1-5-19:(OI)(CI)RX' | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to protect machine code.' }
+    & icacls.exe (Join-Path $InstallDir '*') /reset /T | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to protect machine files.' }
+    $scheduler = New-Object -ComObject Schedule.Service
+    $scheduler.Connect()
+    $folder = $scheduler.GetFolder('\')
+    $name = 'Orbitus ViperLink Cloud'
+    $existing = $null
+    try { $existing = $folder.GetTask($name) } catch [System.Runtime.InteropServices.COMException] { if ($_.Exception.HResult -ne -2147024894) { throw } }
+    if ($existing) {
+        if ($existing.Definition.RegistrationInfo.Source -ne 'orbitus-viperlink') { throw 'An unmanaged task uses this name; it was preserved.' }
+        $existing.Stop(0)
+    }
+    $task = $scheduler.NewTask(0)
+    $task.RegistrationInfo.Source = 'orbitus-viperlink'
+    $task.RegistrationInfo.Author = 'Orbitus Robotics'
+    $task.RegistrationInfo.Description = 'ViperLink Cloud Fleet receiver. Runs as LocalService at boot; waits for private enrollment and enabled=true. Manage or disable in Task Scheduler.'
+    $task.Principal.UserId = 'S-1-5-19'
+    $task.Principal.LogonType = 5
+    $task.Principal.RunLevel = 0
+    $task.Settings.Enabled = $true
+    $task.Settings.Hidden = $false
+    $task.Settings.StartWhenAvailable = $true
+    $task.Settings.DisallowStartIfOnBatteries = $false
+    $task.Settings.StopIfGoingOnBatteries = $false
+    $task.Settings.ExecutionTimeLimit = 'PT0S'
+    $task.Settings.MultipleInstances = 2
+    $task.Settings.RestartInterval = 'PT1M'
+    $task.Settings.RestartCount = 255
+    $trigger = $task.Triggers.Create(8)
+    $trigger.Delay = 'PT30S'
+    $action = $task.Actions.Create(0)
+    $action.Path = $node
+    $action.WorkingDirectory = $data
+    $action.Arguments = '"' + $startupPath + '" --data "' + $data + '" --component "' + $destination + '"'
+    # Task definition is administrator-controlled, visible, and uses no stored password.
+    $registered = $folder.RegisterTaskDefinition($name, $task, 6, 'S-1-5-19', $null, 5, 'D:P(A;;GA;;;SY)(A;;GA;;;BA)(A;;GRGX;;;LS)')
+    $null = $registered.Run($null)
+    [IO.File]::WriteAllText((Join-Path $InstallDir 'machine-install.json'), (@{installer='orbitus-viperlink'; scope='Machine'; task=$name; data=$data; operator=$ControlUser} | ConvertTo-Json))
+    Write-Host "Installed for all users. Startup task: $name (LocalService, before login)."
+    Write-Host "Private enrollment: $data\receiver.json and fleet-private.pem. Shared folder: $data\Workspace"
+    Write-Host "The task is started and waits for enrollment. Set enabled=true only when ready. Status: $data\startup-status.json"
+    Write-Host 'To stop automatic operation: disable the task in Task Scheduler, then end its running instance. Enrollment is retained.'
+}
+
+if ($Scope -eq 'Machine') {
+    if ($Component -ne 'cloud') { throw 'Machine startup is for the Cloud Fleet receiver. Status and LAN controller packages use the user installer.' }
+    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = New-Object Security.Principal.WindowsPrincipal($identity)
+    if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) { throw 'Use the administrator install command and approve the Windows UAC prompt.' }
+    if (-not $ControlUser) { $ControlUser = $identity.User.Value }
+    if ($ControlUser -notmatch '^S-1-5-(\d+-)*\d+$') { throw 'Invalid installing operator SID.' }
+    if (($env:PROCESSOR_ARCHITECTURE -ne 'AMD64') -and ($env:PROCESSOR_ARCHITEW6432 -ne 'AMD64')) { throw 'The machine installer requires Windows x64.' }
+    $machineInstall = Join-Path $env:ProgramFiles 'Orbitus\ViperLink'
+    if ($InstallDir -and [IO.Path]::GetFullPath($InstallDir) -ne $machineInstall) { throw 'Machine installs use the protected Program Files location.' }
+    $InstallDir = $machineInstall
+} elseif (-not $InstallDir) { $InstallDir = Join-Path $env:LOCALAPPDATA 'Programs\Orbitus\ViperLink' }
 if (-not [IO.Path]::IsPathRooted($InstallDir)) { throw 'Use an absolute installation directory.' }
 $InstallDir = [IO.Path]::GetFullPath($InstallDir)
 if ($InstallDir -eq [IO.Path]::GetPathRoot($InstallDir)) { throw 'Choose a dedicated ViperLink directory.' }
 $destination = Join-Path (Join-Path $InstallDir $Component) $version
-Write-Host "ViperLink $version source pilot`nComponent: $Component`nInstall to: $destination"
+Write-Host "ViperLink $version source pilot`nComponent: $Component`nScope: $Scope`nInstall to: $destination"
 if ($Component -eq 'lan') { Write-Host 'Requires Python 3.10+ with OpenSSL TLS 1.3; this is a LAN controller, not an execution target.' }
+elseif ($Scope -eq 'Machine') { Write-Host 'Includes a verified private Node runtime, all-user files and a startup task. Private Fleet enrollment remains separate.' }
 else { Write-Host 'Requires an existing Node.js 22+ runtime and private Fleet enrollment.' }
 if ($DryRun) { $files | Format-Table; return }
 if ($Component -eq 'lan') {
     if (-not (Get-Command python -ErrorAction SilentlyContinue)) { throw 'Install Python 3.10+ from python.org or your approved package manager first.' }
     & python -c 'import sys,ssl; sys.exit(0 if sys.version_info >= (3,10) and ssl.HAS_TLSv1_3 and ssl.OPENSSL_VERSION_INFO >= (1,1,1) else 1)'
     if ($LASTEXITCODE -ne 0) { throw 'Python needs version 3.10+ and OpenSSL TLS 1.3.' }
-} else {
+} elseif ($Scope -eq 'User') {
     if (-not (Get-Command node -ErrorAction SilentlyContinue)) { throw 'Install Node.js 22+ from nodejs.org or your approved package manager first.' }
     $nodeVersion = & node --version
     if ($LASTEXITCODE -ne 0 -or $nodeVersion -notmatch '^v(\d+)\.' -or [int]$Matches[1] -lt 22) { throw 'Node.js 22+ is required.' }
@@ -131,6 +241,7 @@ try {
         if (-not (Test-Path -LiteralPath $receiptPath -PathType Leaf)) { throw 'Existing directory is unmanaged; it was preserved.' }
         if ((Get-Content -LiteralPath $receiptPath -Raw).Trim() -ne $receipt) { throw 'Existing receipt differs; it was preserved.' }
         Test-Files $destination
+        Complete-MachineInstallation
         Write-Host "ViperLink $Component is already installed and verified."; return
     }
     $work = Join-Path $parent ('.install-' + [guid]::NewGuid())
@@ -147,8 +258,9 @@ try {
     [IO.File]::WriteAllText((Join-Path $work 'installation.txt'), $receipt + "`n")
     [IO.Directory]::Move($work, $destination)
     $work = $null
+    Complete-MachineInstallation
     Write-Host "Installed ViperLink $Component. Read: $destination\START.txt"
-    Write-Host 'Installation is complete. Enrollment and execution have not been started.'
+    if ($Scope -eq 'User') { Write-Host 'User installation complete. No startup task, enrollment or receiver was started.' }
 } finally {
     if ($work -and (Test-Path -LiteralPath $work)) { Remove-Item -LiteralPath $work -Recurse -Force }
     $lock.Dispose()

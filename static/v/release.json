@@ -105,5 +105,16 @@
       "archiveSHA256": "465c17f75f4a35c9a857cd72abbad5f02dbc2b7913f345d16db2d19eea7ec7de",
       "archive": "ViperLink-lan-0.3.0.zip"
     }
-  ]
+  ],
+  "windowsAdministrator": {
+    "component": "cloud",
+    "scope": "machine",
+    "startup": "Task Scheduler boot trigger",
+    "account": "LocalService",
+    "includesPrivateNodeRuntime": true,
+    "enrollmentIncluded": false,
+    "startupSourceCommit": "98e2d50757a008204322e51ca6af425a6f7ab079",
+    "startupBytes": 2983,
+    "startupSHA256": "5d173921f2c1267357f7662154946ded2c550864977a035cc2973b5479a9a5b1"
+  }
 }

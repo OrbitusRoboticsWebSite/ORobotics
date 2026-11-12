@@ -10,6 +10,8 @@ import sys
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / 'scripts'))
+from windows_bootstrap import windows_command, administrator_command
 parser = argparse.ArgumentParser()
 parser.add_argument('--check', action='store_true')
 args = parser.parse_args()
@@ -36,6 +38,11 @@ for component in release['components']:
     cases.append(f"        {component['id']}) cat <<'FILES'\n{lines}\nFILES\n            ;;")
 replacements = {'VERSION': release['version'], 'SOURCE_COMMIT': release['sourceCommit'],
                 'FILE_CASES': '\n'.join(cases), 'FILE_MAP': "@'\n" + json.dumps(file_map, indent=2) + "\n'@ | ConvertFrom-Json"}
+runtime = json.loads((ROOT / 'data/viperlink_windows_runtime.json').read_text())
+replacements['MACHINE_FUNCTIONS'] = (ROOT / 'scripts/viperlink/windows-machine.ps1.in').read_text()
+for key, field in [('VERSION','version'),('URL','url'),('SHA256','sha256'),('FOLDER','folder'),('BINARY_SHA256','binarySHA256')]:
+    replacements['NODE_' + key] = runtime[field]
+replacements['STARTUP_SHA256'] = hashlib.sha256((ROOT / 'static/v/windows-startup.mjs').read_bytes()).hexdigest()
 outputs = {}
 for filename in ['install.sh', 'install.ps1']:
     data = (ROOT / 'scripts/viperlink' / (filename + '.in')).read_text()
@@ -55,22 +62,50 @@ for component in release['components']:
     for platform in platforms:
         mode = component['id']
         if platform['id'] == 'windows':
-            command = "& { $p=Join-Path $env:TEMP ('viperlink-'+[guid]::NewGuid()+'.ps1'); Invoke-WebRequest -UseBasicParsing https://www.orbitusrobotics.com/v/install.ps1 -OutFile $p -ErrorAction Stop; & $p -Component " + mode + ' }'
+            command = windows_command('viperlink', outputs['static/v/install.ps1'], '-Component ' + mode)
         else:
             command = 'd=$(mktemp -d) && curl -fsSL --proto "=https" --proto-redir "=https" https://www.orbitusrobotics.com/v/install.sh -o "$d/install.sh" && sh "$d/install.sh" --component ' + mode
         filename = f"ViperLink-{mode}-{platform['id']}.txt"
         commands.append({**platform, 'component': mode, 'componentName': component['name'], 'command': command, 'flipper': filename})
+        if platform['id'] == 'windows' and mode == 'cloud':
+            commands[-1]['adminCommand'] = administrator_command('viperlink', outputs['static/v/install.ps1'], '-Component cloud')
+            commands[-1]['adminFlipper'] = 'ViperLink-cloud-windows-admin.txt'
         lines = [f"REM ViperLink {release['version']} - {component['name']} - {platform['name']}",
                  'REM Use on your authorized, unlocked computer. Match its keyboard layout.',
                  'REM Installs public source only. Credentials and starting the tool are separate.',
                  'REM Visible terminal; no elevation, automatic service or policy changes.',
                  'DEFAULT_STRING_DELAY 10', 'DELAY 2000', *openers[platform['id']], 'STRING ' + command, 'ENTER']
         flipper[filename] = ('\n'.join(lines) + '\n').encode('ascii')
+entry = next(c for c in commands if c.get('adminCommand'))
+flipper[entry['adminFlipper']] = ('\n'.join([
+    'REM ViperLink Cloud Windows administrator install: all users and a machine startup task.',
+    'REM Use on your authorized unlocked computer. Match its keyboard layout.',
+    'REM Approve the normal UAC prompt yourself. No approval or password is typed.',
+    'REM Includes verified Node runtime. Runs as LocalService and waits for private enrollment.',
+    'DEFAULT_STRING_DELAY 10', 'DELAY 2000', *openers['windows'],
+    'STRING ' + entry['adminCommand'], 'ENTER']) + '\n').encode('ascii')
 flipper['README.txt'] = '''ViperLink Flipper Zero install scripts
 Select the component AND operating system in the filename.
 cloud: Cloud Fleet command receiver; Node.js 22+ required.
 status: Status JSON reporter only; Node.js 22+ required.
 lan: LAN/VPN controller only; Python 3.10+ with OpenSSL TLS 1.3 required.
+
+Windows Cloud Fleet has two choices:
+- ViperLink-cloud-windows.txt: current user only, foreground receiver, Node.js
+  22+ installed separately, no elevation or automatic startup.
+- ViperLink-cloud-windows-admin.txt: normal UAC approval, protected Program Files
+  installation for all users, verified private Node runtime, and the visible
+  "Orbitus ViperLink Cloud" task in Task Scheduler. It runs as LocalService at
+  boot before login, starts now, and waits for enrollment. It retries failures.
+  Put private receiver.json and fleet-private.pem in
+  %ProgramData%\Orbitus\ViperLink; use its Workspace as the shared root.
+  Only the installing operator and administrators can provision credentials.
+  Set enabled=true when ready. startup-status.json records the latest state.
+  Keep only one receiver for an enrollment; stop the foreground receiver first.
+  To stop automatic operation, disable the task, then end its running instance.
+  To uninstall, delete that task and the Program Files installation. Preserve
+  or revoke private enrollment separately; deleting files does not revoke keys.
+The status reporter and LAN controller retain their user installation scripts.
 
 Copy .txt scripts into SD Card/badusb/ using qFlipper or the mobile app.
 Close qFlipper. Unlock your authorized computer. Choose the matching script,
@@ -80,9 +115,17 @@ Handle first-use keyboard, USB and OS prompts normally. Adjust delays if needed.
 The visible terminal types exactly the command shown at:
 https://www.orbitusrobotics.com/v/
 
-Runtime installation and private enrollment remain separate. These scripts do
-not install a service, start a receiver, alter execution policy, enter passwords
-or embed credentials. A missing runtime causes a clear error before installation.
+Windows: replace older .txt files if you saw "running scripts is disabled".
+The updated command verifies the installer SHA-256, then runs its contents as
+visible console commands. It does not launch a .ps1 file or change execution policy.
+It stops for configured Group Policy, AllSigned, or constrained language sessions;
+use your administrator-approved distribution process on those machines.
+If the installer checksum changes, download fresh Flipper scripts from the website.
+
+The user scripts do not install startup tasks or start receivers. Their runtime
+installation remains separate. The Windows Cloud administrator script installs
+its runtime and startup task explicitly after UAC approval. No script alters
+execution policy, enters passwords, enables commands or embeds credentials.
 Normal managed-device policy applies to these unsigned source pilot scripts.
 Physical Flipper execution and timing have not been verified.
 https://docs.flipper.net/zero/bad-usb

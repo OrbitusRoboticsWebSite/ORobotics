@@ -9,6 +9,7 @@ import platform
 import shutil
 import subprocess
 import tempfile
+from windows_bootstrap_support import bootstrap_process, assert_published_commands
 
 ROOT = Path(__file__).resolve().parents[1]
 release = json.loads((ROOT / 'data/redagent_release.json').read_text())
@@ -38,9 +39,7 @@ with tempfile.TemporaryDirectory(prefix='redagent-installer-test-') as scratch:
     assert hashlib.sha256(archive.read_bytes()).hexdigest() == asset['sha256']
     dest = work / 'install with spaces'
     if system == 'Windows':
-        shell = shutil.which('powershell.exe') or shutil.which('pwsh')
-        # Execute under the runner's normal policy, with no policy override.
-        base = [shell, '-NoProfile', '-File', str(ROOT / 'static/r/install.ps1')]
+        assert_published_commands()
         prefix_flag, archive_flag, dry_flag = '-InstallDir', '-ArchivePath', '-DryRun'
         exe_relative = Path('RedAgent/RedAgent.exe')
     else:
@@ -51,7 +50,8 @@ with tempfile.TemporaryDirectory(prefix='redagent-installer-test-') as scratch:
         options = [prefix_flag, str(destination)]
         if bundle is not None:
             options += [archive_flag, str(bundle)]
-        result = subprocess.run(base + options + list(flags), text=True, capture_output=True)
+        result = (bootstrap_process('redagent', options + list(flags)) if system == 'Windows'
+                  else subprocess.run(base + options + list(flags), text=True, capture_output=True))
         assert (result.returncode == 0) == succeeds, result.stdout + result.stderr
         return result.stdout + result.stderr
     run(flags=[dry_flag])

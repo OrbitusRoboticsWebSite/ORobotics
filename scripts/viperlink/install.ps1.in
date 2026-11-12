@@ -4,27 +4,41 @@ param(
     [ValidateSet('cloud','status','lan')][string]$Component = 'cloud',
     [string]$InstallDir,
     [string]$SourceDir,
-    [switch]$DryRun
+    [switch]$DryRun,
+    [ValidateSet('User','Machine')][string]$Scope = 'User', [string]$ControlUser = ''
 )
 $ErrorActionPreference = 'Stop'
 $version = '@VERSION@'
 $base = 'https://www.orbitusrobotics.com/v/packages/@VERSION@'
 $components = @FILE_MAP@
 $files = $components.$Component
-if (-not $InstallDir) { $InstallDir = Join-Path $env:LOCALAPPDATA 'Programs\Orbitus\ViperLink' }
+@MACHINE_FUNCTIONS@
+if ($Scope -eq 'Machine') {
+    if ($Component -ne 'cloud') { throw 'Machine startup is for the Cloud Fleet receiver. Status and LAN controller packages use the user installer.' }
+    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = New-Object Security.Principal.WindowsPrincipal($identity)
+    if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) { throw 'Use the administrator install command and approve the Windows UAC prompt.' }
+    if (-not $ControlUser) { $ControlUser = $identity.User.Value }
+    if ($ControlUser -notmatch '^S-1-5-(\d+-)*\d+$') { throw 'Invalid installing operator SID.' }
+    if (($env:PROCESSOR_ARCHITECTURE -ne 'AMD64') -and ($env:PROCESSOR_ARCHITEW6432 -ne 'AMD64')) { throw 'The machine installer requires Windows x64.' }
+    $machineInstall = Join-Path $env:ProgramFiles 'Orbitus\ViperLink'
+    if ($InstallDir -and [IO.Path]::GetFullPath($InstallDir) -ne $machineInstall) { throw 'Machine installs use the protected Program Files location.' }
+    $InstallDir = $machineInstall
+} elseif (-not $InstallDir) { $InstallDir = Join-Path $env:LOCALAPPDATA 'Programs\Orbitus\ViperLink' }
 if (-not [IO.Path]::IsPathRooted($InstallDir)) { throw 'Use an absolute installation directory.' }
 $InstallDir = [IO.Path]::GetFullPath($InstallDir)
 if ($InstallDir -eq [IO.Path]::GetPathRoot($InstallDir)) { throw 'Choose a dedicated ViperLink directory.' }
 $destination = Join-Path (Join-Path $InstallDir $Component) $version
-Write-Host "ViperLink $version source pilot`nComponent: $Component`nInstall to: $destination"
+Write-Host "ViperLink $version source pilot`nComponent: $Component`nScope: $Scope`nInstall to: $destination"
 if ($Component -eq 'lan') { Write-Host 'Requires Python 3.10+ with OpenSSL TLS 1.3; this is a LAN controller, not an execution target.' }
+elseif ($Scope -eq 'Machine') { Write-Host 'Includes a verified private Node runtime, all-user files and a startup task. Private Fleet enrollment remains separate.' }
 else { Write-Host 'Requires an existing Node.js 22+ runtime and private Fleet enrollment.' }
 if ($DryRun) { $files | Format-Table; return }
 if ($Component -eq 'lan') {
     if (-not (Get-Command python -ErrorAction SilentlyContinue)) { throw 'Install Python 3.10+ from python.org or your approved package manager first.' }
     & python -c 'import sys,ssl; sys.exit(0 if sys.version_info >= (3,10) and ssl.HAS_TLSv1_3 and ssl.OPENSSL_VERSION_INFO >= (1,1,1) else 1)'
     if ($LASTEXITCODE -ne 0) { throw 'Python needs version 3.10+ and OpenSSL TLS 1.3.' }
-} else {
+} elseif ($Scope -eq 'User') {
     if (-not (Get-Command node -ErrorAction SilentlyContinue)) { throw 'Install Node.js 22+ from nodejs.org or your approved package manager first.' }
     $nodeVersion = & node --version
     if ($LASTEXITCODE -ne 0 -or $nodeVersion -notmatch '^v(\d+)\.' -or [int]$Matches[1] -lt 22) { throw 'Node.js 22+ is required.' }
@@ -67,6 +81,7 @@ try {
         if (-not (Test-Path -LiteralPath $receiptPath -PathType Leaf)) { throw 'Existing directory is unmanaged; it was preserved.' }
         if ((Get-Content -LiteralPath $receiptPath -Raw).Trim() -ne $receipt) { throw 'Existing receipt differs; it was preserved.' }
         Test-Files $destination
+        Complete-MachineInstallation
         Write-Host "ViperLink $Component is already installed and verified."; return
     }
     $work = Join-Path $parent ('.install-' + [guid]::NewGuid())
@@ -83,8 +98,9 @@ try {
     [IO.File]::WriteAllText((Join-Path $work 'installation.txt'), $receipt + "`n")
     [IO.Directory]::Move($work, $destination)
     $work = $null
+    Complete-MachineInstallation
     Write-Host "Installed ViperLink $Component. Read: $destination\START.txt"
-    Write-Host 'Installation is complete. Enrollment and execution have not been started.'
+    if ($Scope -eq 'User') { Write-Host 'User installation complete. No startup task, enrollment or receiver was started.' }
 } finally {
     if ($work -and (Test-Path -LiteralPath $work)) { Remove-Item -LiteralPath $work -Recurse -Force }
     $lock.Dispose()

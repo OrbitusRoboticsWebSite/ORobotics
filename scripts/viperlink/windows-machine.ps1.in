@@ -1,0 +1,96 @@
+# Included in the checksum-pinned installer. Only called for explicit Machine scope.
+function Assert-MachineHash([string]$Path, [string]$Expected) {
+    $hash = [Security.Cryptography.SHA256]::Create()
+    $stream = [IO.File]::OpenRead($Path)
+    try { $actual = [BitConverter]::ToString($hash.ComputeHash($stream)).Replace('-','').ToLowerInvariant() }
+    finally { $stream.Dispose(); $hash.Dispose() }
+    if ($actual -ne $Expected) { throw "SHA-256 mismatch: $Path" }
+}
+
+function Complete-MachineInstallation {
+    if ($Scope -ne 'Machine') { return }
+    $data = Join-Path $env:ProgramData 'Orbitus\ViperLink'
+    Assert-RegularPath $data
+    $null = New-Item -ItemType Directory -Path $data -Force
+    $null = New-Item -ItemType Directory -Path (Join-Path $data 'Workspace') -Force
+    # Only the operator and administrators can provision fleet credentials.
+    & icacls.exe $data /inheritance:r /grant:r '*S-1-5-18:(OI)(CI)F' '*S-1-5-32-544:(OI)(CI)F' '*S-1-5-19:(OI)(CI)M' ("*$($ControlUser):(OI)(CI)M") | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to protect machine enrollment.' }
+    $runtime = Join-Path $InstallDir 'runtime-@NODE_VERSION@'
+    Assert-RegularPath $runtime
+    $node = Join-Path $runtime 'node.exe'
+    $stage = Join-Path $InstallDir ('.machine-' + [guid]::NewGuid())
+    $null = New-Item -ItemType Directory -Path $stage
+    try {
+        if (-not (Test-Path -LiteralPath $node)) {
+            $zip = Join-Path $stage 'node.zip'
+            Invoke-WebRequest -UseBasicParsing '@NODE_URL@' -OutFile $zip -TimeoutSec 600 -ErrorAction Stop
+            Assert-MachineHash $zip '@NODE_SHA256@'
+            Add-Type -AssemblyName System.IO.Compression.FileSystem
+            $archive = [IO.Compression.ZipFile]::OpenRead($zip)
+            $unpacked = Join-Path $stage 'runtime'
+            $null = New-Item -ItemType Directory -Path $unpacked
+            try {
+                foreach ($name in @('node.exe','LICENSE')) {
+                    $entry = $archive.GetEntry('@NODE_FOLDER@/' + $name)
+                    if (-not $entry) { throw 'Verified Node archive is incomplete.' }
+                    [IO.Compression.ZipFileExtensions]::ExtractToFile($entry, (Join-Path $unpacked $name))
+                }
+            } finally { $archive.Dispose() }
+            if (Test-Path -LiteralPath $runtime) { throw 'Existing runtime is incomplete; it was preserved for administrator review.' }
+            [IO.Directory]::Move($unpacked, $runtime)
+        }
+        Assert-MachineHash $node '@NODE_BINARY_SHA256@'
+        $startup = Join-Path $stage 'windows-startup.mjs'
+        Invoke-WebRequest -UseBasicParsing 'https://www.orbitusrobotics.com/v/windows-startup.mjs' -OutFile $startup -TimeoutSec 120 -ErrorAction Stop
+        Assert-MachineHash $startup '@STARTUP_SHA256@'
+        $startupPath = Join-Path $InstallDir 'windows-startup.mjs'
+        Assert-RegularPath $startupPath
+        Copy-Item -LiteralPath $startup -Destination $startupPath -Force
+    } finally { Remove-Item -LiteralPath $stage -Recurse -Force }
+    # Executable code is read-only to standard users and the service account.
+    & icacls.exe $InstallDir /inheritance:r /grant:r '*S-1-5-18:(OI)(CI)F' '*S-1-5-32-544:(OI)(CI)F' '*S-1-5-32-545:(OI)(CI)RX' '*S-1-5-19:(OI)(CI)RX' | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to protect machine code.' }
+    & icacls.exe (Join-Path $InstallDir '*') /reset /T | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to protect machine files.' }
+    $scheduler = New-Object -ComObject Schedule.Service
+    $scheduler.Connect()
+    $folder = $scheduler.GetFolder('\')
+    $name = 'Orbitus ViperLink Cloud'
+    $existing = $null
+    try { $existing = $folder.GetTask($name) } catch [System.Runtime.InteropServices.COMException] { if ($_.Exception.HResult -ne -2147024894) { throw } }
+    if ($existing) {
+        if ($existing.Definition.RegistrationInfo.Source -ne 'orbitus-viperlink') { throw 'An unmanaged task uses this name; it was preserved.' }
+        $existing.Stop(0)
+    }
+    $task = $scheduler.NewTask(0)
+    $task.RegistrationInfo.Source = 'orbitus-viperlink'
+    $task.RegistrationInfo.Author = 'Orbitus Robotics'
+    $task.RegistrationInfo.Description = 'ViperLink Cloud Fleet receiver. Runs as LocalService at boot; waits for private enrollment and enabled=true. Manage or disable in Task Scheduler.'
+    $task.Principal.UserId = 'S-1-5-19'
+    $task.Principal.LogonType = 5
+    $task.Principal.RunLevel = 0
+    $task.Settings.Enabled = $true
+    $task.Settings.Hidden = $false
+    $task.Settings.StartWhenAvailable = $true
+    $task.Settings.DisallowStartIfOnBatteries = $false
+    $task.Settings.StopIfGoingOnBatteries = $false
+    $task.Settings.ExecutionTimeLimit = 'PT0S'
+    $task.Settings.MultipleInstances = 2
+    $task.Settings.RestartInterval = 'PT1M'
+    $task.Settings.RestartCount = 255
+    $trigger = $task.Triggers.Create(8)
+    $trigger.Delay = 'PT30S'
+    $action = $task.Actions.Create(0)
+    $action.Path = $node
+    $action.WorkingDirectory = $data
+    $action.Arguments = '"' + $startupPath + '" --data "' + $data + '" --component "' + $destination + '"'
+    # Task definition is administrator-controlled, visible, and uses no stored password.
+    $registered = $folder.RegisterTaskDefinition($name, $task, 6, 'S-1-5-19', $null, 5, 'D:P(A;;GA;;;SY)(A;;GA;;;BA)(A;;GRGX;;;LS)')
+    $null = $registered.Run($null)
+    [IO.File]::WriteAllText((Join-Path $InstallDir 'machine-install.json'), (@{installer='orbitus-viperlink'; scope='Machine'; task=$name; data=$data; operator=$ControlUser} | ConvertTo-Json))
+    Write-Host "Installed for all users. Startup task: $name (LocalService, before login)."
+    Write-Host "Private enrollment: $data\receiver.json and fleet-private.pem. Shared folder: $data\Workspace"
+    Write-Host "The task is started and waits for enrollment. Set enabled=true only when ready. Status: $data\startup-status.json"
+    Write-Host 'To stop automatic operation: disable the task in Task Scheduler, then end its running instance. Enrollment is retained.'
+}

@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import tempfile
 import unittest
+from windows_bootstrap_support import bootstrap_process, assert_published_commands
 
 ROOT = Path(__file__).resolve().parents[1]
 RELEASE = json.loads((ROOT / 'data/viperlink_release.json').read_text())
@@ -23,12 +24,13 @@ class InstallerTests(unittest.TestCase):
     def run_install(self, component='cloud', source=None, success=True, extra=()):
         source = source or ROOT / 'static/v/packages' / RELEASE['version'] / component
         if os.name == 'nt':
-            command = ['powershell.exe', '-NoLogo', '-NoProfile', '-File', str(ROOT / 'static/v/install.ps1'),
-                       '-Component', component, '-InstallDir', str(self.prefix), '-SourceDir', str(source), *extra]
+            assert_published_commands()
+            result = bootstrap_process('viperlink',
+                       ['-Component', component, '-InstallDir', str(self.prefix), '-SourceDir', str(source), *extra])
         else:
             command = ['sh', str(ROOT / 'static/v/install.sh'), '--component', component,
                        '--prefix', str(self.prefix), '--source-dir', str(source), *extra]
-        result = subprocess.run(command, text=True, capture_output=True, timeout=60)
+            result = subprocess.run(command, text=True, capture_output=True, timeout=60)
         if success:
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         else:

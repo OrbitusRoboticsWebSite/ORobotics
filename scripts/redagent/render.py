@@ -9,6 +9,8 @@ import zipfile
 import io
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / 'scripts'))
+from windows_bootstrap import windows_command, administrator_command
 parser = argparse.ArgumentParser()
 parser.add_argument('--check', action='store_true')
 args = parser.parse_args()
@@ -40,12 +42,13 @@ for name in ('install.sh', 'install.ps1'):
     files['static/r/' + name] = template.encode()
 
 unix = 'd=$(mktemp -d) && curl -fsSL --proto "=https" --proto-redir "=https" https://www.orbitusrobotics.com/r/install.sh -o "$d/install.sh" && sh "$d/install.sh"'
-windows = "& { $p=Join-Path $env:TEMP ('redagent-'+[guid]::NewGuid()+'.ps1'); Invoke-WebRequest -UseBasicParsing https://www.orbitusrobotics.com/r/install.ps1 -OutFile $p -ErrorAction Stop; & $p }"
+windows = windows_command('redagent', files['static/r/install.ps1'])
 commands = [
-    {'id': 'windows', 'label': 'Windows', 'terminal': 'PowerShell', 'architecture': 'x64', 'command': windows, 'script': 'r/install.ps1', 'requirements': 'Windows x64, PowerShell 5.1 or newer, and a device policy that permits this unsigned pilot script. Built and GUI-tested on Windows Server 2025; Windows 11 field validation remains pending.', 'location': '%LOCALAPPDATA%\\Programs\\Orbitus\\RedAgent', 'launch': 'Open RedAgent from the Start menu.'},
+    {'id': 'windows', 'label': 'Windows', 'terminal': 'PowerShell', 'architecture': 'x64', 'command': windows, 'script': 'r/install.ps1', 'requirements': 'Windows x64 and PowerShell 5.1 or newer. The console command supports the default Restricted policy without changing it; it verifies the installer SHA-256 before executing its contents. Group Policy, AllSigned, or constrained language sessions require your administrator-approved installation process. Built and GUI-tested on Windows Server 2025; Windows 11 field validation remains pending.', 'location': '%LOCALAPPDATA%\\Programs\\Orbitus\\RedAgent', 'launch': 'Open RedAgent from the Start menu.'},
     {'id': 'macos', 'label': 'macOS', 'terminal': 'Terminal', 'architecture': 'Apple Silicon + Intel', 'command': unix, 'script': 'r/install.sh', 'requirements': 'Apple Silicon or Intel. The script chooses the native build, including under Rosetta. Built and GUI-tested on macOS 26 (Apple Silicon) and macOS 15 (Intel); older macOS compatibility is not yet established.', 'location': '~/Applications/RedAgent', 'launch': 'Open RedAgent.app inside the installation folder in Finder.'},
     {'id': 'linux', 'label': 'Linux', 'terminal': 'Terminal (sh/bash/zsh)', 'architecture': 'x86_64', 'command': unix, 'script': 'r/install.sh', 'requirements': 'x86_64 desktop Linux with glibc 2.35+, curl, tar, and X11 libraries. Built and GUI-tested on Ubuntu 22.04. No ARM Linux or musl/Alpine bundle is available.', 'location': '~/.local/share/RedAgent', 'launch': 'Run ~/.local/share/RedAgent/RedAgent/RedAgent in a graphical desktop session.'},
 ]
+commands[0]['adminCommand'] = administrator_command('redagent', files['static/r/install.ps1'])
 files['data/redagent_commands.json'] = (json.dumps(commands, indent=2) + '\n').encode()
 files['static/r/release.json'] = (json.dumps(release, indent=2) + '\n').encode()
 flipper_files = {}
@@ -61,15 +64,33 @@ for os_name, opener in {
              'REM Leaves the terminal visible. Installs for this user; no elevation, tests, or MDM enrollment.',
              'DEFAULT_STRING_DELAY 10', 'DELAY 2000', *opener, 'STRING ' + command, 'ENTER']
     flipper_files[f'RedAgent-{os_name}.txt'] = ('\n'.join(lines) + '\n').encode('ascii')
+flipper_files['RedAgent-windows-admin.txt'] = ('\n'.join([
+    'REM RedAgent Windows administrator install: all users and automatic system helper at boot.',
+    'REM Use on your authorized unlocked computer. Match its keyboard layout.',
+    'REM Approve the normal UAC prompt yourself. No approval or password is typed.',
+    'REM Starts the helper as LocalService. Private enrollment and enabling commands remain separate.',
+    'DEFAULT_STRING_DELAY 10', 'DELAY 2000', 'GUI r', 'DELAY 1200',
+    'STRING powershell.exe -NoLogo -NoProfile', 'ENTER', 'DELAY 4000',
+    'STRING ' + commands[0]['adminCommand'], 'ENTER']) + '\n').encode('ascii')
 readme = f'''RedAgent {release['version']} - Flipper Zero USB installation scripts
 
-1. Copy the three .txt scripts to SD Card/badusb/ using qFlipper or the Flipper mobile app.
+1. Copy the .txt scripts to SD Card/badusb/ using qFlipper or the Flipper mobile app.
 2. Close qFlipper. Unlock your corporate computer and select its OS script in Bad USB.
 3. Choose USB mode and the keyboard layout that matches the computer.
 4. Connect by USB, then press Run on the Flipper. Standard firmware requires this Run action.
 5. Watch the visible terminal for "Installed RedAgent" or "already installed".
 
 These scripts type the same commands shown at https://www.orbitusrobotics.com/r/.
+Windows has two choices:
+- RedAgent-windows.txt: current user only, no automatic startup or elevation.
+- RedAgent-windows-admin.txt: normal UAC approval, app in Program Files for all
+  users, common Start menu shortcut, and Windows Service starting before login.
+  The service runs as LocalService. The original operator and administrators
+  control it; fleet credentials are not shared with every Windows user.
+  Private enrollment and enabling cloud commands still require your action.
+  To stop it, use Windows Services > Orbitus RedAgent Helper. To remove the
+  service, run RedAgentHelper.exe uninstall from an administrator terminal;
+  enrollment and evidence are retained.
 They do not detect the host OS: select the Windows, macOS, or Linux script yourself.
 The website recommends a platform; the installer independently detects architecture.
 Linux uses Ctrl+Alt+T; configure that terminal shortcut first if your desktop lacks it.
@@ -78,6 +99,12 @@ USB accessory, or system approval prompts may need your normal interaction. Incr
 DELAY values if a slower machine is not ready before typing starts.
 
 Internet access to www.orbitusrobotics.com and GitHub release assets is needed.
+Windows: replace older .txt files if you saw "running scripts is disabled".
+The updated command verifies the installer SHA-256, then runs its contents as
+visible console commands. It does not launch a .ps1 file or change execution policy.
+It stops for configured Group Policy, AllSigned, or constrained language sessions;
+use your administrator-approved distribution process on those machines.
+If the installer checksum changes, download fresh Flipper scripts from the website.
 This is a development pilot without production signing/notarization. Managed device
 policies may block scripts or unsigned apps; use your approved administration process.
 The scripts do not change execution policy, disable security tools, enter passwords,
@@ -86,7 +113,8 @@ After installation open the GUI from the location printed by the installer.
 Cloud Fleet > Install system helper opens the normal administrator prompt.
 The helper uses launchd, Windows Services, or systemd to keep accepted jobs and
 enabled Cloud Fleet check-ins running across GUI closure and user sessions.
-This separate step is visible and is not automated by these Flipper scripts.
+The Windows administrator script performs this helper step after normal UAC approval.
+The other scripts leave the helper installation as a separate visible step.
 Import your private enrollment afterward; Python/Tk and Node.js are bundled.
 
 Hardware execution on a Flipper has not yet been verified.
@@ -100,6 +128,7 @@ archive = io.BytesIO()
 with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as bundle:
     for name, content in flipper_files.items():
         info = zipfile.ZipInfo(name, (2026, 11, 8, 0, 0, 0))
+        info.create_system = 3
         info.compress_type = zipfile.ZIP_DEFLATED
         info.external_attr = 0o644 << 16
         bundle.writestr(info, content)

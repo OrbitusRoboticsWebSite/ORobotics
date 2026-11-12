@@ -1,9 +1,9 @@
 name: RedAgent installation portal
 on:
   push:
-    paths: ['scripts/redagent/**', 'static/r/**', 'data/redagent*', 'tests/redagent*', '.github/workflows/redagent-installers.yml']
+    paths: ['scripts/redagent/**', 'scripts/windows_bootstrap.py', 'static/r/**', 'data/redagent*', 'tests/redagent*', 'tests/windows*', '.github/workflows/redagent-installers.yml']
   pull_request:
-    paths: ['scripts/redagent/**', 'static/r/**', 'data/redagent*', 'tests/redagent*', '.github/workflows/redagent-installers.yml']
+    paths: ['scripts/redagent/**', 'scripts/windows_bootstrap.py', 'static/r/**', 'data/redagent*', 'tests/redagent*', 'tests/windows*', '.github/workflows/redagent-installers.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -28,3 +28,8 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - name: Test published bundle installation without launching the app
         run: python tests/redagent-installers.py
+      - name: Reproduce Restricted policy and check the Windows machine install
+        if: runner.os == 'Windows'
+        run: |
+          python tests/windows-bootstrap.py
+          python tests/windows-machine-installers.py redagent
