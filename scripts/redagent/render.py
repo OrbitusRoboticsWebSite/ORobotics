@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Keep the portal, pinned installers, and Flipper commands on one release."""
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -133,6 +134,11 @@ with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as bundle:
         info.external_attr = 0o644 << 16
         bundle.writestr(info, content)
 files['static/r/RedAgent-Flipper-scripts.zip'] = archive.getvalue()
+manifest = {'product': 'RedAgent', 'applicationVersion': release['version'], 'files': [
+    {'path': name.removeprefix('static/'), 'bytes': len(content), 'sha256': hashlib.sha256(content).hexdigest()}
+    for name, content in files.items() if name.startswith('static/')
+]}
+files['static/r/installers.json'] = (json.dumps(manifest, indent=2) + '\n').encode()
 stale = []
 for relative, content in files.items():
     destination = ROOT / relative

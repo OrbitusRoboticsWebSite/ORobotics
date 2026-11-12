@@ -1,0 +1,51 @@
+{
+  "product": "RedAgent",
+  "applicationVersion": "0.4.0",
+  "files": [
+    {
+      "path": "r/install.sh",
+      "bytes": 6660,
+      "sha256": "1d323a1877cb5815a9d813392972f7fbfb4537f641fd62b61d4a85e4537fff8a"
+    },
+    {
+      "path": "r/install.ps1",
+      "bytes": 8557,
+      "sha256": "4d67af181ef8d56c9c304d44564792e7bcbd76fcc1267a73e40286d4d06dca33"
+    },
+    {
+      "path": "r/release.json",
+      "bytes": 2266,
+      "sha256": "405ddb5aedaf70d95f257e001e22be400ab554cf71a3bddc918cefa5242825ba"
+    },
+    {
+      "path": "r/flipper/RedAgent-windows.txt",
+      "bytes": 1673,
+      "sha256": "dc6c5b1d5b0b72040b39af40b7998bbb7f43676b9d75b7d98c5d9325ecddcd58"
+    },
+    {
+      "path": "r/flipper/RedAgent-macos.txt",
+      "bytes": 599,
+      "sha256": "b76d234338a364a6cd3fd97ac7edbbafd5f01cc44b03b21319e405516435e9b3"
+    },
+    {
+      "path": "r/flipper/RedAgent-linux.txt",
+      "bytes": 550,
+      "sha256": "e56611923a95580cc8f8490e6c6260aa1d65a5782d9025e5c6647eccdce02131"
+    },
+    {
+      "path": "r/flipper/RedAgent-windows-admin.txt",
+      "bytes": 2505,
+      "sha256": "4e188456cab9e3b180cc34737e5cf5b7f1c08a5a9b1bf9e714a28a45d1e53e0b"
+    },
+    {
+      "path": "r/flipper/README.txt",
+      "bytes": 3388,
+      "sha256": "2034a7ccbf137b9f7df359770a6031ad7fa1dadf4213d2fa613ff14a7161e057"
+    },
+    {
+      "path": "r/RedAgent-Flipper-scripts.zip",
+      "bytes": 5162,
+      "sha256": "c275614294e86665a197d5678ac10e2db2a7049af79a9534e2c674604fbe2404"
+    }
+  ]
+}

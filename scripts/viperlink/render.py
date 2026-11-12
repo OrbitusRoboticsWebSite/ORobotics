@@ -43,6 +43,7 @@ replacements['MACHINE_FUNCTIONS'] = (ROOT / 'scripts/viperlink/windows-machine.p
 for key, field in [('VERSION','version'),('URL','url'),('SHA256','sha256'),('FOLDER','folder'),('BINARY_SHA256','binarySHA256')]:
     replacements['NODE_' + key] = runtime[field]
 replacements['STARTUP_SHA256'] = hashlib.sha256((ROOT / 'static/v/windows-startup.mjs').read_bytes()).hexdigest()
+assert replacements['STARTUP_SHA256'] == release['windowsAdministrator']['startupSHA256']
 outputs = {}
 for filename in ['install.sh', 'install.ps1']:
     data = (ROOT / 'scripts/viperlink' / (filename + '.in')).read_text()
@@ -143,6 +144,14 @@ with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as bundle:
 outputs['static/v/ViperLink-Flipper-scripts.zip'] = archive.getvalue()
 outputs['data/viperlink_commands.json'] = (json.dumps(commands, indent=2) + '\n').encode()
 outputs['static/v/release.json'] = (json.dumps(release, indent=2) + '\n').encode()
+outputs['static/v/windows-runtime.json'] = (json.dumps(runtime, indent=2) + '\n').encode()
+manifest = {'product': 'ViperLink', 'packageVersion': release['version'], 'files': [
+    {'path': name.removeprefix('static/'), 'bytes': len(content), 'sha256': hashlib.sha256(content).hexdigest()}
+    for name, content in outputs.items() if name.startswith('static/')
+]}
+startup = (ROOT / 'static/v/windows-startup.mjs').read_bytes()
+manifest['files'].append({'path': 'v/windows-startup.mjs', 'bytes': len(startup), 'sha256': hashlib.sha256(startup).hexdigest()})
+outputs['static/v/installers.json'] = (json.dumps(manifest, indent=2) + '\n').encode()
 stale = []
 for relative, content in outputs.items():
     path = ROOT / relative
