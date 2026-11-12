@@ -9,13 +9,13 @@
     },
     {
       "path": "v/install.ps1",
-      "bytes": 14571,
-      "sha256": "e14312eab8075d75eac0f3db43934c55738a668c7415f3e8b878280ec752eaf7"
+      "bytes": 14694,
+      "sha256": "9b424c30c7cfeda1f8dae7ae941e2199e3ac798b75440c662a2c8b2bb73d4af6"
     },
     {
       "path": "v/flipper/ViperLink-cloud-windows.txt",
       "bytes": 1645,
-      "sha256": "25d3b75d1dffc36782ca5b00afae0feaaf880ad6dc81f7f679b1dd679ea298cd"
+      "sha256": "690a54dd38145f303a0f1f7b8b373f6d48549b719dac739ad1c3eb752f1fbeb3"
     },
     {
       "path": "v/flipper/ViperLink-cloud-macos.txt",
@@ -30,7 +30,7 @@
     {
       "path": "v/flipper/ViperLink-status-windows.txt",
       "bytes": 1647,
-      "sha256": "6ec92c9473c51f4d448db3979701a4d1838bdb78c7234e84f8395a27cc30eca5"
+      "sha256": "f42fc10d5873ab8c1edfee2ede07f2c9925743a164d1feed1e84dae614b127a4"
     },
     {
       "path": "v/flipper/ViperLink-status-macos.txt",
@@ -45,7 +45,7 @@
     {
       "path": "v/flipper/ViperLink-lan-windows.txt",
       "bytes": 1643,
-      "sha256": "d095bd9c23fce57fce61da7c376de95e6bad92c5b84d240e4ce27045aa58fb3e"
+      "sha256": "d06930394c2bf366436416d813eeddaa229f1e1e066a6492074419830589f9b8"
     },
     {
       "path": "v/flipper/ViperLink-lan-macos.txt",
@@ -60,7 +60,7 @@
     {
       "path": "v/flipper/ViperLink-cloud-windows-admin.txt",
       "bytes": 2514,
-      "sha256": "2f9b9ee080ba0edb50227389a734e61eeb566da10ecf2d6360447446ba9a9706"
+      "sha256": "08ac2efba473f0cdcb4417b92d75676e601e7f172751084e990ffbf60c0ce49f"
     },
     {
       "path": "v/flipper/README.txt",
@@ -69,8 +69,8 @@
     },
     {
       "path": "v/ViperLink-Flipper-scripts.zip",
-      "bytes": 9193,
-      "sha256": "ec39e3e0296e4210f7a70e85397963dbedd700a4447a4f82c26e8287cc481005"
+      "bytes": 9190,
+      "sha256": "eca0a3d2017783a36cc5b36611e37453929199a0f1d5e161c83a28ede4821786"
     },
     {
       "path": "v/release.json",

@@ -58,7 +58,9 @@ function Complete-MachineInstallation {
     $folder = $scheduler.GetFolder('\')
     $name = 'Orbitus ViperLink Cloud'
     $existing = $null
-    try { $existing = $folder.GetTask($name) } catch [System.Runtime.InteropServices.COMException] { if ($_.Exception.HResult -ne -2147024894) { throw } }
+    # PowerShell maps HRESULT 0x80070002 to FileNotFoundException (and can wrap
+    # it in MethodInvocationException), not necessarily COMException.
+    try { $existing = $folder.GetTask($name) } catch { if ($_.Exception.GetBaseException().HResult -ne -2147024894) { throw } }
     if ($existing) {
         if ($existing.Definition.RegistrationInfo.Source -ne 'orbitus-viperlink') { throw 'An unmanaged task uses this name; it was preserved.' }
         $existing.Stop(0)

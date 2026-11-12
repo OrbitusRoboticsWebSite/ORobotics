@@ -94,7 +94,7 @@ finally:
             result = subprocess.run([str(executable), 'uninstall'], capture_output=True, text=True)
             assert result.returncode == 0, result.stdout + result.stderr
     else:
-        ps("$s=New-Object -ComObject Schedule.Service; $s.Connect(); $f=$s.GetFolder('\\'); try { $t=$f.GetTask('Orbitus ViperLink Cloud'); $t.Stop(0); $f.DeleteTask('Orbitus ViperLink Cloud',0) } catch { if ($_.Exception.HResult -ne -2147024894) { throw } }")
+        ps("$s=New-Object -ComObject Schedule.Service; $s.Connect(); $f=$s.GetFolder('\\'); try { $t=$f.GetTask('Orbitus ViperLink Cloud'); $t.Stop(0); $f.DeleteTask('Orbitus ViperLink Cloud',0) } catch { if ($_.Exception.GetBaseException().HResult -ne -2147024894) { throw } }")
     for folder in [install, data] + ([helper] if product == 'redagent' else []):
         if folder.exists():
             until(lambda folder=folder: (shutil.rmtree(folder), True)[1], 20)
