@@ -55,5 +55,6 @@ def administrator_command(product, installer, arguments=''):
             "$sid=[Security.Principal.WindowsIdentity]::GetCurrent().User.Value; "
             "$c='" + command.replace("'", "''") + "'; "
             "$c=$c.Replace('ORBITUS_CALLER_SID',$sid); "
-            "Start-Process -FilePath (Join-Path $PSHOME 'powershell.exe') -Verb RunAs "
+            "$exe=if ($PSVersionTable.PSEdition -eq 'Core') { 'pwsh.exe' } else { 'powershell.exe' }; "
+            "Start-Process -FilePath (Join-Path $PSHOME $exe) -Verb RunAs "
             "-ArgumentList ('-NoLogo -NoProfile -NoExit -Command '+[char]34+$c+[char]34) -ErrorAction Stop }")

@@ -59,8 +59,8 @@
     },
     {
       "path": "v/flipper/ViperLink-cloud-windows-admin.txt",
-      "bytes": 2514,
-      "sha256": "331a2667a24260734ea66311ae09a3497e35d7a86f0c80d175e9bb4d9ec2dc67"
+      "bytes": 2591,
+      "sha256": "f613166c079a5c253a9df70d100537c08b243f3a3d3576710aa76833efcdfc64"
     },
     {
       "path": "v/flipper/README.txt",
@@ -69,8 +69,8 @@
     },
     {
       "path": "v/ViperLink-Flipper-scripts.zip",
-      "bytes": 9235,
-      "sha256": "2315fb4c14fd73fbe7a86c2cf70fa0f3c5d755dc389d3d1f7ae9a740d8740c01"
+      "bytes": 9279,
+      "sha256": "78dcfee6d4c195bd6fe9b7e20c32856c2947a788ea0cf37c10066f83cf6cb37c"
     },
     {
       "path": "v/release.json",

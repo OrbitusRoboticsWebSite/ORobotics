@@ -34,8 +34,8 @@
     },
     {
       "path": "r/flipper/RedAgent-windows-admin.txt",
-      "bytes": 2505,
-      "sha256": "7093b2dacfe2a32c912327e490505ea5c6c9841d855e6e157f2afd1bce952260"
+      "bytes": 2582,
+      "sha256": "c8d281889de03a04d0f767d522882df512ca9a3627f8d6a21c43aadb8ff3303b"
     },
     {
       "path": "r/flipper/README.txt",
@@ -44,8 +44,8 @@
     },
     {
       "path": "r/RedAgent-Flipper-scripts.zip",
-      "bytes": 5160,
-      "sha256": "386a7244edaf54af313f0b5efcff3864742a1271ef4274bb73ee3b8896db1a9a"
+      "bytes": 5204,
+      "sha256": "7a362cfc1c6ef28eecddfc60b67deb784d3d0d718fb5fa6236528d64e8ba156b"
     }
   ]
 }
