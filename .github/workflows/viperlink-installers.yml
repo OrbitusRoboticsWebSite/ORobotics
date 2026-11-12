@@ -1,9 +1,9 @@
 name: ViperLink minimal installers
 on:
   push:
-    paths: ['scripts/viperlink/**', 'scripts/windows_bootstrap.py', 'static/v/**', 'data/viperlink*', 'tests/viperlink*', 'tests/windows*', 'layouts/viperlink/**', '.github/workflows/viperlink-installers.yml']
+    paths: ['.gitattributes', 'scripts/viperlink/**', 'scripts/windows_bootstrap.py', 'static/v/**', 'data/viperlink*', 'tests/viperlink*', 'tests/windows*', 'layouts/viperlink/**', '.github/workflows/viperlink-installers.yml']
   pull_request:
-    paths: ['scripts/viperlink/**', 'scripts/windows_bootstrap.py', 'static/v/**', 'data/viperlink*', 'tests/viperlink*', 'tests/windows*', 'layouts/viperlink/**', '.github/workflows/viperlink-installers.yml']
+    paths: ['.gitattributes', 'scripts/viperlink/**', 'scripts/windows_bootstrap.py', 'static/v/**', 'data/viperlink*', 'tests/viperlink*', 'tests/windows*', 'layouts/viperlink/**', '.github/workflows/viperlink-installers.yml']
 permissions:
   contents: read
 jobs:

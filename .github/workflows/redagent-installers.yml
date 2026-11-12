@@ -1,9 +1,9 @@
 name: RedAgent installation portal
 on:
   push:
-    paths: ['scripts/redagent/**', 'scripts/windows_bootstrap.py', 'static/r/**', 'data/redagent*', 'tests/redagent*', 'tests/windows*', '.github/workflows/redagent-installers.yml']
+    paths: ['.gitattributes', 'scripts/redagent/**', 'scripts/windows_bootstrap.py', 'static/r/**', 'data/redagent*', 'tests/redagent*', 'tests/windows*', '.github/workflows/redagent-installers.yml']
   pull_request:
-    paths: ['scripts/redagent/**', 'scripts/windows_bootstrap.py', 'static/r/**', 'data/redagent*', 'tests/redagent*', 'tests/windows*', '.github/workflows/redagent-installers.yml']
+    paths: ['.gitattributes', 'scripts/redagent/**', 'scripts/windows_bootstrap.py', 'static/r/**', 'data/redagent*', 'tests/redagent*', 'tests/windows*', '.github/workflows/redagent-installers.yml']
   workflow_dispatch:
 permissions:
   contents: read
