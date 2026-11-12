@@ -5,6 +5,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import tempfile
 import time
 
 from windows_bootstrap_support import ROOT, bootstrap_process, windows_environment
@@ -84,11 +85,39 @@ try:
         before = status['pid']
         subprocess.run(['taskkill.exe', '/PID', str(before), '/F'], check=True, capture_output=True)
         until(lambda: (state := waiting()) and state['pid'] != before, 90)
+        # Stop and disable recovery before creating an unregistered test profile.
+        # No real credential or live CloudKit request is used by this test.
+        ps("$s=New-Object -ComObject Schedule.Service; $s.Connect(); $t=$s.GetFolder('\\').GetTask('Orbitus ViperLink Cloud'); $t.Enabled=$false; $t.Stop(0)")
+        fixture = Path(tempfile.mkdtemp(prefix='viper-enrollment-fixture-')) / 'bootstrap.json'
+        code = r'''
+const { generateKeyPairSync } = await import('node:crypto');
+const { writeFile } = await import('node:fs/promises');
+const { createAuthority } = await import(process.env.ORBITUS_AUTHORITY_MODULE);
+const { privateKey, ...publicAuthority } = await createAuthority();
+const privateKeyPEM = generateKeyPairSync('ec', { namedCurve: 'prime256v1' }).privateKey.export({ type: 'pkcs8', format: 'pem' });
+await writeFile(process.env.ORBITUS_FIXTURE, JSON.stringify({version:1,kind:'viperlink-auto-enrollment',container:'iCloud.orbitusrobotics.ViperFleet',environment:'development',keyID:'UNREGISTERED-CI-ONLY',privateKeyPEM,intervalMinutes:5,enrollmentAuthority:publicAuthority}));
+'''
+        source = ROOT / 'static/v/packages' / version / 'cloud'
+        env = dict(os.environ, ORBITUS_FIXTURE=str(fixture), ORBITUS_AUTHORITY_MODULE=(source / 'enrollment-format.mjs').as_uri())
+        subprocess.run(['node', '--input-type=module', '-e', code], env=env, check=True, capture_output=True)
+        enrolled = subprocess.run(['node', str(source / 'auto-enroll.mjs'), '--bootstrap', str(fixture), '--data', str(data)], check=True, capture_output=True, text=True)
+        assert json.loads(enrolled.stdout)['enabled'] is True
+        profile = data / 'receiver.json'
+        value = json.loads(profile.read_text()); original_id = value['deviceId']
+        value['enabled'] = False
+        profile.write_text(json.dumps(value))
+        options += ['-EnrollmentFile', str(fixture)]
     # Reinstallation must preserve data and keep exactly one machine definition.
     repeat = bootstrap_process(product, options)
     assert repeat.returncode == 0, repeat.stdout + repeat.stderr
     assert 'POLICY_UNCHANGED' in repeat.stdout
     assert sentinel.read_text() == 'retained enrollment evidence'
+    if product == 'viperlink':
+        assert json.loads(profile.read_text())['deviceId'] == original_id
+        assert json.loads(profile.read_text())['enabled'] is False
+        until(lambda: json.loads(status_file.read_text())['status'] == 'disabled')
+        fixture.unlink()
+        fixture.parent.rmdir()
     print(json.dumps({'product': product, 'checks': ['Restricted policy unchanged', 'machine install', 'LocalService', 'startup definition', 'crash recovery', 'repeat install preserves data'], 'physicalRebootTested': False, 'privateEnrollmentUsed': False}))
 except Exception:
     if product == 'viperlink':

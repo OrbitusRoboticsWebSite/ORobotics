@@ -1,9 +1,9 @@
 {
-  "version": "0.3.0",
+  "version": "0.4.0",
   "date": "2026-11-11",
   "channel": "source-development-pilot",
   "sourceRepository": "https://github.com/RudyAramayo/EndpointExecutionMonitor",
-  "sourceCommit": "b1564f6eab63964bff4151295fac108026537375",
+  "sourceCommit": "b0ce7131a3f103b761be176d378065fc3fa62966",
   "bundlesRuntime": false,
   "containsCredentials": false,
   "installsService": false,
@@ -18,8 +18,8 @@
       "files": [
         {
           "name": "cloudkit.mjs",
-          "bytes": 7296,
-          "sha256": "b21182b73696ad88971080cb868668efb75413ddec9e19be9882d7b3a7b730e6"
+          "bytes": 7455,
+          "sha256": "a0aa910e4386ecaf4f503ed996b7af626f117a49bd0c8d9d0de45f49cf6cd4a4"
         },
         {
           "name": "report-direct.mjs",
@@ -38,19 +38,29 @@
         },
         {
           "name": "queue-agent.mjs",
-          "bytes": 15661,
-          "sha256": "733d0a43078b1e751123b80b4db1c50228362ede21bfc76d37f1a06981036df9"
+          "bytes": 15728,
+          "sha256": "18bef831319e44b596b56c0391e120c160d38e1bdcfa5a2d50434f8689aec116"
+        },
+        {
+          "name": "enrollment-format.mjs",
+          "bytes": 5897,
+          "sha256": "0e5fdd29fbf2e6983cd85b6cb9f3afe829c3823d42bdf97f425c5594ed6ad438"
+        },
+        {
+          "name": "auto-enroll.mjs",
+          "bytes": 4302,
+          "sha256": "a94342acfe08811c4fed33f2e2dc93045dd4162e183cdb6a27f1c24dc256a24a"
         },
         {
           "name": "START.txt",
-          "bytes": 2575,
-          "sha256": "963fe89721d238951c771e8e3c0110ff7ae409bec2dd1a62701f73bb2267d50c"
+          "bytes": 3410,
+          "sha256": "762f8e6d761f8d3cef2788d896f29cc0db0c9524906b6348a5e75bcf1946c2aa"
         }
       ],
-      "installedBytes": 39350,
-      "archiveBytes": 15348,
-      "archiveSHA256": "444e350bcbf661876748d6106d82973019124ae988a8db430648bbbc78fd5770",
-      "archive": "ViperLink-cloud-0.3.0.zip"
+      "installedBytes": 50610,
+      "archiveBytes": 19552,
+      "archiveSHA256": "04243de06acfee26f8b8b78ce4febe85c5223d87b09cb8b4910871b636bd3d46",
+      "archive": "ViperLink-cloud-0.4.0.zip"
     },
     {
       "id": "status",
@@ -62,8 +72,8 @@
       "files": [
         {
           "name": "cloudkit.mjs",
-          "bytes": 7296,
-          "sha256": "b21182b73696ad88971080cb868668efb75413ddec9e19be9882d7b3a7b730e6"
+          "bytes": 7455,
+          "sha256": "a0aa910e4386ecaf4f503ed996b7af626f117a49bd0c8d9d0de45f49cf6cd4a4"
         },
         {
           "name": "report-direct.mjs",
@@ -71,15 +81,25 @@
           "sha256": "f2dc880dd4e2ce8f963ce011d3c6dcc43f95052bb62de4626fc6f45f8af3457b"
         },
         {
+          "name": "enrollment-format.mjs",
+          "bytes": 5897,
+          "sha256": "0e5fdd29fbf2e6983cd85b6cb9f3afe829c3823d42bdf97f425c5594ed6ad438"
+        },
+        {
+          "name": "queue-format.mjs",
+          "bytes": 6830,
+          "sha256": "810b63462f594affd0a75a417acb5f09eefc2c9490ee6c7fa6e237e6640c185c"
+        },
+        {
           "name": "START.txt",
-          "bytes": 1798,
-          "sha256": "23ba0966847ffb65aa34a5a518d2bf59802c56cf72f5657d799311acd89dde44"
+          "bytes": 1872,
+          "sha256": "c9a4cb0412aabab3c239787c49c48daca2662141729ea7ec62a4de4af8643c99"
         }
       ],
-      "installedBytes": 12335,
-      "archiveBytes": 5373,
-      "archiveSHA256": "51f49ba6a3622356b0d46186b554dd3905ae336697e88f249243a4b072895681",
-      "archive": "ViperLink-status-0.3.0.zip"
+      "installedBytes": 25295,
+      "archiveBytes": 10052,
+      "archiveSHA256": "18727242eac33bda862bd8f2b670cef35726a90dc0b14a8aa00c6d54e4c041ca",
+      "archive": "ViperLink-status-0.4.0.zip"
     },
     {
       "id": "lan",
@@ -96,24 +116,25 @@
         },
         {
           "name": "START.txt",
-          "bytes": 1997,
-          "sha256": "7b1cdaeb8916e11fa0bb29ca82e2d926955f6be326c10af1cd95829867755eeb"
+          "bytes": 2071,
+          "sha256": "aa6500eb90cee472c74d2a05ab83a0a05f87c3fe7c137efbef5c3bc60aae79d8"
         }
       ],
-      "installedBytes": 11761,
-      "archiveBytes": 4561,
-      "archiveSHA256": "465c17f75f4a35c9a857cd72abbad5f02dbc2b7913f345d16db2d19eea7ec7de",
-      "archive": "ViperLink-lan-0.3.0.zip"
+      "installedBytes": 11835,
+      "archiveBytes": 4588,
+      "archiveSHA256": "3f52e5c2a2f6d9a255c4adf185302e56cef7c39f035f66fd1ca6a2b89457315c",
+      "archive": "ViperLink-lan-0.4.0.zip"
     }
   ],
   "windowsAdministrator": {
     "component": "cloud",
     "scope": "machine",
-    "startup": "Task Scheduler boot trigger",
+    "startup": "Task Scheduler boot and recovery triggers",
     "account": "LocalService",
     "includesPrivateNodeRuntime": true,
     "enrollmentIncluded": false,
-    "startupSourceCommit": "98e2d50757a008204322e51ca6af425a6f7ab079",
+    "supportsPrivateAutomaticEnrollment": true,
+    "startupSourceCommit": "b0ce7131a3f103b761be176d378065fc3fa62966",
     "startupBytes": 2983,
     "startupSHA256": "5d173921f2c1267357f7662154946ded2c550864977a035cc2973b5479a9a5b1"
   }

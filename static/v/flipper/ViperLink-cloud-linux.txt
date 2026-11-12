@@ -1,4 +1,4 @@
-REM ViperLink 0.3.0 - Cloud Fleet commands - Linux
+REM ViperLink 0.4.0 - Cloud Fleet commands - Linux
 REM Use on your authorized, unlocked computer. Match its keyboard layout.
 REM Installs public source only. Credentials and starting the tool are separate.
 REM Visible terminal; no elevation, automatic service or policy changes.

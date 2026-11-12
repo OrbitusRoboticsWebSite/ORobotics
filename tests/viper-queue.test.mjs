@@ -2,8 +2,18 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { validateKeys, checkedRecords } from '../static/viper-fleet/queue.mjs';
 import { seal, unseal, validateBundle } from '../static/viper-fleet/queue-format.mjs';
+import { createAuthority, sealEnrollment, discoverEnrollments } from '../static/viper-fleet/enrollment-format.mjs';
 const config = { container: 'iCloud.orbitusrobotics.ViperFleet', environment: 'development' };
 const device = { deviceId: '00000000-0000-4000-8000-000000000001', name: 'Test host', commandKey: btoa('x'.repeat(32)) };
+test('web accepts an empty discovery profile and learns a newly enrolled machine without server secrets', async () => {
+  const authority = await createAuthority(), { privateKey, ...publicAuthority } = authority;
+  const profile = { version: 1, ...config, devices: [], enrollmentAuthority: authority };
+  assert.deepEqual(validateKeys(profile, config), []);
+  assert.throws(() => validateKeys({ ...profile, enrollmentAuthority: publicAuthority }, config));
+  const report = { deviceId: device.deviceId, hostLabel: device.name, enrollment: await sealEnrollment(device, publicAuthority, config) };
+  assert.deepEqual(await discoverEnrollments([report], authority, config), [device]);
+  await assert.rejects(discoverEnrollments([report], authority, { ...config, environment: 'production' }));
+});
 test('web imports only matching per-machine command keys, never the server key', () => {
   const p = { version: 1, ...config, devices: [device] };
   assert.deepEqual(validateKeys(p, config), [device]);

@@ -14,12 +14,24 @@ parser.add_argument('--source', required=True, type=Path)
 parser.add_argument('--commit', required=True)
 args = parser.parse_args()
 commit = subprocess.check_output(['git', '-C', str(args.source), 'rev-parse', args.commit + '^{commit}'], text=True).strip()
-version = '0.3.0'
+version = '0.4.0'
 components = [
     {'id': 'cloud', 'name': 'Cloud Fleet commands', 'role': 'Execution target', 'runtime': 'Node.js 22+',
      'description': 'Receive ordered commands and file transfers over outbound HTTPS. Works beyond the local network.',
-     'entry': 'queue-agent.mjs', 'files': ['cloudkit.mjs', 'report-direct.mjs', 'queue-format.mjs', 'queue-cloud.mjs', 'queue-agent.mjs'],
+     'entry': 'queue-agent.mjs', 'files': ['cloudkit.mjs', 'report-direct.mjs', 'queue-format.mjs', 'queue-cloud.mjs', 'queue-agent.mjs', 'enrollment-format.mjs', 'auto-enroll.mjs'],
      'start': '''CLOUD FLEET COMMAND RECEIVER
+WINDOWS ADMINISTRATOR INSTALLATION
+The private automatic-enrollment Flipper script installs a verified Node runtime,
+creates a unique machine identity, enables check-ins, and starts the visible
+Orbitus ViperLink Cloud task as LocalService after normal UAC approval. Each
+new PC appears after its first online report. Reinstallation preserves identity,
+journal and disabled state. Data and Workspace are in
+%ProgramData%\\Orbitus\\ViperLink. startup-status.json records the actual result.
+The generic public administrator script waits for private enrollment. Obtain
+your administrator's PRIVATE script; fleet credentials are never public downloads.
+To stop automatic operation, disable the task and end its running instance.
+
+USER INSTALLATION / MANUAL ENROLLMENT
 1. Install Node.js 22+ separately if it is not already on the machine.
 2. Have your administrator enroll this machine using the existing Fleet tools:
    https://www.orbitusrobotics.com/viper-fleet/
@@ -50,7 +62,7 @@ activation is separate from this development pilot.
 '''},
     {'id': 'status', 'name': 'Status reporting only', 'role': 'Reporting client', 'runtime': 'Node.js 22+',
      'description': 'Send a status JSON file that you prepare. The command receiver is omitted from this package.',
-     'entry': 'report-direct.mjs', 'files': ['cloudkit.mjs', 'report-direct.mjs'],
+     'entry': 'report-direct.mjs', 'files': ['cloudkit.mjs', 'report-direct.mjs', 'enrollment-format.mjs', 'queue-format.mjs'],
      'start': '''STATUS REPORTING CLIENT
 1. Install Node.js 22+ separately if needed.
 2. Follow the reporter README and private key registration instructions at:
@@ -96,6 +108,15 @@ Use the Cloud Fleet commands component when this computer should receive jobs.
 release = {'version': version, 'date': '2026-11-11', 'channel': 'source-development-pilot',
            'sourceRepository': 'https://github.com/RudyAramayo/EndpointExecutionMonitor', 'sourceCommit': commit,
            'bundlesRuntime': False, 'containsCredentials': False, 'installsService': False, 'components': []}
+startup = subprocess.check_output(['git', '-C', str(args.source), 'show', f'{commit}:ViperLink/Fleet/windows-startup.mjs'])
+(ROOT / 'static/v/windows-startup.mjs').write_bytes(startup)
+release['windowsAdministrator'] = {
+    'component': 'cloud', 'scope': 'machine', 'startup': 'Task Scheduler boot and recovery triggers',
+    'account': 'LocalService', 'includesPrivateNodeRuntime': True,
+    'enrollmentIncluded': False, 'supportsPrivateAutomaticEnrollment': True,
+    'startupSourceCommit': commit, 'startupBytes': len(startup),
+    'startupSHA256': hashlib.sha256(startup).hexdigest(),
+}
 for component in components:
     component = dict(component)
     payload = {}
@@ -105,7 +126,8 @@ for component in components:
     payload['START.txt'] = (f"ViperLink {version} source development pilot\nSource: {commit}\n\n" + component.pop('start') + '''
 INSTALLATION AND REMOVAL
 Public packages contain source and these instructions only. No runtime, GUI,
-credentials, test suite, security policy change, or automatic startup is bundled.
+credentials, test suite or security policy change is bundled in these ZIPs.
+The separate Windows administrator installer adds its runtime and startup task.
 Keep private profiles separate. To remove this component, stop its foreground
 process and remove only its versioned installation directory. Revoke/rotate
 private credentials separately; deleting source files does not revoke access.

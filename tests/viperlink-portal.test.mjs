@@ -54,7 +54,7 @@ test('all nine Flipper scripts match their component and platform, with visible 
 
 test('status-only package excludes receiver code and source imports stay inside each package', async () => {
   const release=JSON.parse(await readFile(new URL('../data/viperlink_release.json',import.meta.url),'utf8'));
-  assert.deepEqual(release.components.find(c=>c.id==='status').files.map(f=>f.name).sort(),['START.txt','cloudkit.mjs','report-direct.mjs']);
+  assert.deepEqual(release.components.find(c=>c.id==='status').files.map(f=>f.name).sort(),['START.txt','cloudkit.mjs','enrollment-format.mjs','queue-format.mjs','report-direct.mjs']);
   for (const component of release.components) {
     const names=new Set(component.files.map(f=>f.name));
     for (const file of component.files.filter(f=>f.name.endsWith('.mjs'))) {

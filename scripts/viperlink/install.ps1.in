@@ -5,13 +5,15 @@ param(
     [string]$InstallDir,
     [string]$SourceDir,
     [switch]$DryRun,
-    [ValidateSet('User','Machine')][string]$Scope = 'User', [string]$ControlUser = ''
+    [ValidateSet('User','Machine')][string]$Scope = 'User', [string]$ControlUser = '',
+    [string]$EnrollmentFile = ''
 )
 $ErrorActionPreference = 'Stop'
 $version = '@VERSION@'
 $base = 'https://www.orbitusrobotics.com/v/packages/@VERSION@'
 $components = @FILE_MAP@
 $files = $components.$Component
+if ($EnrollmentFile -and ($Scope -ne 'Machine' -or $Component -ne 'cloud')) { throw 'Automatic enrollment requires the Windows Cloud machine installer.' }
 @MACHINE_FUNCTIONS@
 if ($Scope -eq 'Machine') {
     if ($Component -ne 'cloud') { throw 'Machine startup is for the Cloud Fleet receiver. Status and LAN controller packages use the user installer.' }
@@ -31,7 +33,7 @@ if ($InstallDir -eq [IO.Path]::GetPathRoot($InstallDir)) { throw 'Choose a dedic
 $destination = Join-Path (Join-Path $InstallDir $Component) $version
 Write-Host "ViperLink $version source pilot`nComponent: $Component`nScope: $Scope`nInstall to: $destination"
 if ($Component -eq 'lan') { Write-Host 'Requires Python 3.10+ with OpenSSL TLS 1.3; this is a LAN controller, not an execution target.' }
-elseif ($Scope -eq 'Machine') { Write-Host 'Includes a verified private Node runtime, all-user files and a startup task. Private Fleet enrollment remains separate.' }
+elseif ($Scope -eq 'Machine') { Write-Host 'Includes a verified private Node runtime, all-user files and a startup task. A supplied private bootstrap enrolls this machine automatically.' }
 else { Write-Host 'Requires an existing Node.js 22+ runtime and private Fleet enrollment.' }
 if ($DryRun) { $files | Format-Table; return }
 if ($Component -eq 'lan') {

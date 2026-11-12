@@ -22,7 +22,7 @@ def windows_environment():
     return {key: value for key, value in os.environ.items() if key.lower() != 'psmodulepath'}
 
 
-def bootstrap_process(product, options=(), installer=None, command=None, setup='', policy='Restricted'):
+def bootstrap_process(product, options=(), installer=None, command=None, setup='', policy='Restricted', input_text=None):
     route = 'r' if product == 'redagent' else 'v'
     installer = Path(installer or ROOT / f'static/{route}/install.ps1')
     arguments = ' '.join(str(x) if str(x).startswith('-') else quote(x) for x in options)
@@ -62,7 +62,7 @@ try {
     # This test only sets a restrictive policy for its child PowerShell process.
     # The generated installer never sets policy at any scope.
     return subprocess.run(['powershell.exe', '-NoLogo', '-NoProfile', '-ExecutionPolicy', policy,
-                           '-Command', source], env=env, text=True, capture_output=True, timeout=240)
+                           '-Command', source], env=env, text=True, input=input_text, capture_output=True, timeout=240)
 
 
 def assert_published_commands():

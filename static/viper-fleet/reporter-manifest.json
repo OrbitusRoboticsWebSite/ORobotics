@@ -1,15 +1,14 @@
 {
-  "version": "0.3.0",
-  "filename": "ViperFleet-Reporter-0.3.0.zip",
-  "bytes": 33947,
-  "sha256": "55a46a876ae8689eaa6491b86ecb7bfb3c3981141a337777c79f949bcea9c1e5",
+  "version": "0.4.0",
+  "filename": "ViperFleet-Reporter-0.4.0.zip",
+  "sourceCommit": "b0ce7131a3f103b761be176d378065fc3fa62966",
   "requires": "Node.js 22 or later",
   "containsCredentials": false,
   "files": [
     {
       "path": "cloudkit.mjs",
-      "bytes": 7296,
-      "sha256": "b21182b73696ad88971080cb868668efb75413ddec9e19be9882d7b3a7b730e6"
+      "bytes": 7455,
+      "sha256": "a0aa910e4386ecaf4f503ed996b7af626f117a49bd0c8d9d0de45f49cf6cd4a4"
     },
     {
       "path": "report-direct.mjs",
@@ -48,8 +47,8 @@
     },
     {
       "path": "queue-agent.mjs",
-      "bytes": 15661,
-      "sha256": "733d0a43078b1e751123b80b4db1c50228362ede21bfc76d37f1a06981036df9"
+      "bytes": 15728,
+      "sha256": "18bef831319e44b596b56c0391e120c160d38e1bdcfa5a2d50434f8689aec116"
     },
     {
       "path": "queue-submit.mjs",
@@ -68,8 +67,30 @@
     },
     {
       "path": "COMMANDS.md",
-      "bytes": 9562,
-      "sha256": "d24c11688acb3f4885b93791224a63672a597665b0026060116b2dde53c56669"
+      "bytes": 12217,
+      "sha256": "b084e214605662f7c3a802e7a4b4c7a035e9d2878c907a5dec0860383010b503"
+    },
+    {
+      "path": "enrollment-format.mjs",
+      "bytes": 5897,
+      "sha256": "0e5fdd29fbf2e6983cd85b6cb9f3afe829c3823d42bdf97f425c5594ed6ad438"
+    },
+    {
+      "path": "auto-enroll.mjs",
+      "bytes": 4302,
+      "sha256": "a94342acfe08811c4fed33f2e2dc93045dd4162e183cdb6a27f1c24dc256a24a"
+    },
+    {
+      "path": "make-bootstrap.mjs",
+      "bytes": 3492,
+      "sha256": "50cda83c7feba2e8ee99d52ee085b03f76406b190bd74b9a476c8d32abd94945"
+    },
+    {
+      "path": "enrollment.test.mjs",
+      "bytes": 6964,
+      "sha256": "e6ac1155dcf103825aafa04dca868a846bed0a98a292f587c225f89f34aad3cb"
     }
-  ]
+  ],
+  "bytes": 41749,
+  "sha256": "c5d701b7d6cfa0649670a1cf4ec5d54e9436459f8fba2e277a92f75362a83429"
 }

@@ -1,0 +1,33 @@
+ViperLink 0.4.0 source development pilot
+Source: b0ce7131a3f103b761be176d378065fc3fa62966
+
+LAN / VPN CONTROLLER
+1. Install Python 3.10+ with OpenSSL TLS 1.3. Apple's older system Python with
+   LibreSSL is insufficient. Use python.org or your approved package manager.
+2. An administrator must start an existing native ViperLink host and provision
+   a unique controller profile. The native host/agent currently requires macOS;
+   it is not included here. No NAT traversal or public Internet relay is added.
+3. Transfer that profile privately to this controller. Keep it outside this
+   install and Git. It grants access to the host's registered execution targets.
+4. From this directory inspect the command help, then list the host's clients:
+   python3 viperlink.py --help
+   python3 viperlink.py --profile /absolute/private/controller.json clients
+   On Windows use python and a quoted absolute Windows profile path.
+5. Select the intended target explicitly for operations. The certificate is
+   pinned and each device authenticates with its own secret. Revoke profiles at
+   the host when access should end.
+
+This is a controller, not a Windows/Linux execution agent or a background
+service. The Python protocol client was tested against a Mac host on macOS;
+physical Windows/Linux LAN interoperability needs separate field validation.
+Use the Cloud Fleet commands component when this computer should receive jobs.
+
+INSTALLATION AND REMOVAL
+Public packages contain source and these instructions only. No runtime, GUI,
+credentials, test suite or security policy change is bundled in these ZIPs.
+The separate Windows administrator installer adds its runtime and startup task.
+Keep private profiles separate. To remove this component, stop its foreground
+process and remove only its versioned installation directory. Revoke/rotate
+private credentials separately; deleting source files does not revoke access.
+The installer preserves other components and older versions. Read installation.txt
+for the managed-install receipt. Re-running the installer verifies each file.

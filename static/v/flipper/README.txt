@@ -16,6 +16,11 @@ Windows Cloud Fleet has two choices:
   %ProgramData%\Orbitus\ViperLink; use its Workspace as the shared root.
   Only the installing operator and administrators can provision credentials.
   Set enabled=true when ready. startup-status.json records the latest state.
+  For fire-and-forget enrollment, use your administrator's PRIVATE automatic-
+  enrollment script instead. It creates a fresh identity on each new PC, enables
+  check-ins and preserves existing enrollment on repeat installs. Public scripts
+  cannot contain your fleet credentials. See the automatic-enrollment section
+  at https://www.orbitusrobotics.com/v/#automatic-enrollment.
   Keep only one receiver for an enrollment; stop the foreground receiver first.
   To stop automatic operation, disable the task, then end its running instance.
   To uninstall, delete that task and the Program Files installation. Preserve

@@ -53,6 +53,15 @@ function Complete-MachineInstallation {
     if ($LASTEXITCODE -ne 0) { throw 'Unable to protect machine code.' }
     & icacls.exe (Join-Path $InstallDir '*') /reset /T | Out-Null
     if ($LASTEXITCODE -ne 0) { throw 'Unable to protect machine files.' }
+    if ($EnrollmentFile) {
+        if (-not [IO.Path]::IsPathRooted($EnrollmentFile)) { throw 'Use an absolute private bootstrap path.' }
+        Assert-RegularPath $EnrollmentFile
+        if (-not (Test-Path -LiteralPath $EnrollmentFile -PathType Leaf)) { throw 'Private enrollment bootstrap was not found.' }
+        # Local identities are created before startup; existing identities and
+        # disabled settings are preserved by the enrollment tool.
+        & $node (Join-Path $destination 'auto-enroll.mjs') --bootstrap $EnrollmentFile --data $data
+        if ($LASTEXITCODE -ne 0) { throw 'Automatic enrollment failed; existing fleet state was preserved.' }
+    }
     $scheduler = New-Object -ComObject Schedule.Service
     $scheduler.Connect()
     $folder = $scheduler.GetFolder('\')
@@ -100,7 +109,8 @@ function Complete-MachineInstallation {
     [IO.File]::WriteAllText((Join-Path $InstallDir 'machine-install.json'), (@{installer='orbitus-viperlink'; scope='Machine'; task=$name; data=$data; operator=$ControlUser} | ConvertTo-Json))
     Write-Host "Installed for all users. Startup task: $name (LocalService, before login)."
     Write-Host "Private enrollment: $data\receiver.json and fleet-private.pem. Shared folder: $data\Workspace"
-    Write-Host "The task is started and waits for enrollment. Set enabled=true only when ready. Status: $data\startup-status.json"
+    if ($EnrollmentFile) { Write-Host "Automatic enrollment is configured. The receiver starts now. Status: $data\startup-status.json" }
+    else { Write-Host "The task is started and waits for enrollment. Use your private provisioned installer for automatic enrollment. Status: $data\startup-status.json" }
     Write-Host 'A one-minute recovery trigger restarts a stopped receiver without launching duplicates.'
     Write-Host 'To stop automatic operation: disable the task in Task Scheduler, then end its running instance. Enrollment is retained.'
 }

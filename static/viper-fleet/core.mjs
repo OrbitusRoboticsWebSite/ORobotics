@@ -43,6 +43,7 @@ export function decodeRecord(record) {
       || !Array.isArray(r.tags) || !r.tags.every(t => typeof t === 'string')) throw new Error('Invalid report');
   const received = record.modified?.timestamp;
   if (typeof received !== 'number' || !Number.isFinite(received) || received < 0 || received > 8640000000000000) throw new Error('Missing receipt time');
+  if (r.enrollment && record.recordName !== `device-${r.deviceId}`) throw new Error('Enrollment record identity mismatch');
   return { ...r, receivedAt: new Date(received).toISOString() };
 }
 export async function queryFleet(database, isCurrent = () => true) {

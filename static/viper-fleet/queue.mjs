@@ -1,8 +1,10 @@
 import { check, uuid, from64, filename, sha256, seal, unseal, validateDescriptor, blobName, validateBundle, fleetLimits } from './queue-format.mjs';
+import { validateAuthority, discoverEnrollments } from './enrollment-format.mjs';
 
 export function validateKeys(value, config) {
   check(value?.version === 1 && value.container === config.container && value.environment === config.environment
-    && !value.privateKeyPEM && Array.isArray(value.devices) && value.devices.length > 0 && value.devices.length <= 1000, 'Choose command-keys.json for this container and environment. Keep the server private key out of the browser.');
+    && !value.privateKeyPEM && Array.isArray(value.devices) && (value.devices.length > 0 || value.enrollmentAuthority) && value.devices.length <= 1000, 'Choose command-keys.json for this container and environment. Keep the server private key out of the browser.');
+  if (value.enrollmentAuthority) validateAuthority(value.enrollmentAuthority, true);
   const ids = new Set();
   for (const d of value.devices) { check(uuid.test(d.deviceId) && d.deviceId === d.deviceId.toLowerCase() && !ids.has(d.deviceId)
     && typeof d.name === 'string' && d.name.length && d.name.length <= 80 && from64(d.commandKey).length === 32, 'Invalid or duplicate enrolled machine'); ids.add(d.deviceId); }
@@ -14,7 +16,7 @@ export function checkedRecords(response) {
 }
 export function attachQueue({ database, configuration, authorized }) {
   const $ = id => document.getElementById(id);
-  let devices = [], bundle, busy = false, generation = 0, urls = [];
+  let devices = [], authority, fleetReports = [], bundle, busy = false, generation = 0, urls = [];
   const notice = message => { $('queue-status').textContent = message; };
   function render() {
     if (configuration()?.enabled && configuration()?.commandsEnabled !== true)
@@ -24,7 +26,7 @@ export function attachQueue({ database, configuration, authorized }) {
     $('queue-target').disabled = busy; $('queue-keys').disabled = busy || !authorized(); $('queue-payload').disabled = busy || !authorized();
   }
   function clear() {
-    generation++; devices = []; bundle = undefined; busy = false;
+    generation++; devices = []; authority = undefined; fleetReports = []; bundle = undefined; busy = false;
     $('queue-target').replaceChildren(new Option('Import your command keys first', ''));
     $('queue-keys').value = ''; $('queue-payload').value = ''; $('queue-preview').textContent = '';
     $('queue-jobs').replaceChildren(); $('queue-receipt').textContent = ''; $('queue-downloads').replaceChildren();
@@ -35,6 +37,23 @@ export function attachQueue({ database, configuration, authorized }) {
     check(authorized(), 'Sign in with fleet access first'); const device = devices.find(d => d.deviceId === $('queue-target').value);
     check(device, 'Choose an enrolled machine'); const current = generation;
     return { device, db: database(), current, guard() { check(current === generation && authorized(), 'Session changed; refresh the queue to check any pending submission'); } };
+  }
+  function showDevices() {
+    const selected = $('queue-target').value;
+    $('queue-target').replaceChildren(...devices.map(d => new Option(d.name, d.deviceId)));
+    if (devices.some(d => d.deviceId === selected)) $('queue-target').value = selected;
+    if (!devices.length) $('queue-target').replaceChildren(new Option('Waiting for enrolled machines to check in', ''));
+  }
+  async function discover() {
+    if (!authority || !authorized()) return;
+    const current = generation;
+    const next = await discoverEnrollments(fleetReports, authority, configuration(), devices);
+    check(current === generation && authorized(), 'Sign-in changed during machine discovery');
+    devices = next; showDevices(); render();
+  }
+  async function updateFleet(reports) {
+    fleetReports = reports;
+    if (!busy) { try { await discover(); } catch (e) { notice(e.message || 'Unable to discover enrolled machines'); } }
   }
   async function create(ctx, record) {
     ctx.guard(); const response = await ctx.db.newRecordsBatch().create(record).commit(); ctx.guard();
@@ -49,11 +68,12 @@ export function attachQueue({ database, configuration, authorized }) {
     finally { busy = false; render(); }
   }
   $('queue-keys').addEventListener('change', () => guarded(async () => {
-    devices = []; $('queue-target').replaceChildren(new Option('Import your command keys first', '')); $('queue-jobs').replaceChildren();
+    devices = []; authority = undefined; $('queue-target').replaceChildren(new Option('Import your command keys first', '')); $('queue-jobs').replaceChildren();
     check(authorized(), 'Sign in first'); const file = $('queue-keys').files[0]; check(file && file.size <= 1048576, 'Command key file is too large');
     const current = generation, parsed = JSON.parse(await file.text()); check(current === generation && authorized(), 'Sign-in changed');
-    devices = validateKeys(parsed, configuration()); $('queue-target').replaceChildren(...devices.map(d => new Option(d.name, d.deviceId)));
-    notice(`${devices.length} enrolled machines loaded. Choose a target and payload.`);
+    devices = validateKeys(parsed, configuration()); authority = parsed.enrollmentAuthority;
+    await discover(); showDevices();
+    notice(devices.length ? `${devices.length} enrolled machines loaded. Choose a target and payload.` : 'Automatic discovery is ready. Refresh the fleet after a new machine checks in.');
   }));
   $('queue-payload').addEventListener('change', () => guarded(async () => {
     bundle = undefined; $('queue-preview').textContent = '';
@@ -110,5 +130,5 @@ export function attachQueue({ database, configuration, authorized }) {
   }
   $('queue-refresh').addEventListener('click', () => guarded(() => refresh(context())));
   $('queue-target').addEventListener('change', () => { $('queue-jobs').replaceChildren(); $('queue-receipt').textContent = ''; });
-  clear(); return { clear, render };
+  clear(); return { clear, render, updateFleet };
 }

@@ -27,3 +27,6 @@ jobs:
       - name: Verify Windows machine startup task
         if: runner.os == 'Windows'
         run: python tests/windows-machine-installers.py viperlink
+      - name: Verify private automatic enrollment input
+        if: runner.os == 'Windows'
+        run: python tests/windows-private-enrollment.py

@@ -5,18 +5,19 @@ param(
     [string]$InstallDir,
     [string]$SourceDir,
     [switch]$DryRun,
-    [ValidateSet('User','Machine')][string]$Scope = 'User', [string]$ControlUser = ''
+    [ValidateSet('User','Machine')][string]$Scope = 'User', [string]$ControlUser = '',
+    [string]$EnrollmentFile = ''
 )
 $ErrorActionPreference = 'Stop'
-$version = '0.3.0'
-$base = 'https://www.orbitusrobotics.com/v/packages/0.3.0'
+$version = '0.4.0'
+$base = 'https://www.orbitusrobotics.com/v/packages/0.4.0'
 $components = @'
 {
   "cloud": [
     {
       "name": "cloudkit.mjs",
-      "bytes": 7296,
-      "sha256": "b21182b73696ad88971080cb868668efb75413ddec9e19be9882d7b3a7b730e6"
+      "bytes": 7455,
+      "sha256": "a0aa910e4386ecaf4f503ed996b7af626f117a49bd0c8d9d0de45f49cf6cd4a4"
     },
     {
       "name": "report-direct.mjs",
@@ -35,20 +36,30 @@ $components = @'
     },
     {
       "name": "queue-agent.mjs",
-      "bytes": 15661,
-      "sha256": "733d0a43078b1e751123b80b4db1c50228362ede21bfc76d37f1a06981036df9"
+      "bytes": 15728,
+      "sha256": "18bef831319e44b596b56c0391e120c160d38e1bdcfa5a2d50434f8689aec116"
+    },
+    {
+      "name": "enrollment-format.mjs",
+      "bytes": 5897,
+      "sha256": "0e5fdd29fbf2e6983cd85b6cb9f3afe829c3823d42bdf97f425c5594ed6ad438"
+    },
+    {
+      "name": "auto-enroll.mjs",
+      "bytes": 4302,
+      "sha256": "a94342acfe08811c4fed33f2e2dc93045dd4162e183cdb6a27f1c24dc256a24a"
     },
     {
       "name": "START.txt",
-      "bytes": 2575,
-      "sha256": "963fe89721d238951c771e8e3c0110ff7ae409bec2dd1a62701f73bb2267d50c"
+      "bytes": 3410,
+      "sha256": "762f8e6d761f8d3cef2788d896f29cc0db0c9524906b6348a5e75bcf1946c2aa"
     }
   ],
   "status": [
     {
       "name": "cloudkit.mjs",
-      "bytes": 7296,
-      "sha256": "b21182b73696ad88971080cb868668efb75413ddec9e19be9882d7b3a7b730e6"
+      "bytes": 7455,
+      "sha256": "a0aa910e4386ecaf4f503ed996b7af626f117a49bd0c8d9d0de45f49cf6cd4a4"
     },
     {
       "name": "report-direct.mjs",
@@ -56,9 +67,19 @@ $components = @'
       "sha256": "f2dc880dd4e2ce8f963ce011d3c6dcc43f95052bb62de4626fc6f45f8af3457b"
     },
     {
+      "name": "enrollment-format.mjs",
+      "bytes": 5897,
+      "sha256": "0e5fdd29fbf2e6983cd85b6cb9f3afe829c3823d42bdf97f425c5594ed6ad438"
+    },
+    {
+      "name": "queue-format.mjs",
+      "bytes": 6830,
+      "sha256": "810b63462f594affd0a75a417acb5f09eefc2c9490ee6c7fa6e237e6640c185c"
+    },
+    {
       "name": "START.txt",
-      "bytes": 1798,
-      "sha256": "23ba0966847ffb65aa34a5a518d2bf59802c56cf72f5657d799311acd89dde44"
+      "bytes": 1872,
+      "sha256": "c9a4cb0412aabab3c239787c49c48daca2662141729ea7ec62a4de4af8643c99"
     }
   ],
   "lan": [
@@ -69,13 +90,14 @@ $components = @'
     },
     {
       "name": "START.txt",
-      "bytes": 1997,
-      "sha256": "7b1cdaeb8916e11fa0bb29ca82e2d926955f6be326c10af1cd95829867755eeb"
+      "bytes": 2071,
+      "sha256": "aa6500eb90cee472c74d2a05ab83a0a05f87c3fe7c137efbef5c3bc60aae79d8"
     }
   ]
 }
 '@ | ConvertFrom-Json
 $files = $components.$Component
+if ($EnrollmentFile -and ($Scope -ne 'Machine' -or $Component -ne 'cloud')) { throw 'Automatic enrollment requires the Windows Cloud machine installer.' }
 # Included in the checksum-pinned installer. Only called for explicit Machine scope.
 function Assert-MachineHash([string]$Path, [string]$Expected) {
     $hash = [Security.Cryptography.SHA256]::Create()
@@ -131,6 +153,15 @@ function Complete-MachineInstallation {
     if ($LASTEXITCODE -ne 0) { throw 'Unable to protect machine code.' }
     & icacls.exe (Join-Path $InstallDir '*') /reset /T | Out-Null
     if ($LASTEXITCODE -ne 0) { throw 'Unable to protect machine files.' }
+    if ($EnrollmentFile) {
+        if (-not [IO.Path]::IsPathRooted($EnrollmentFile)) { throw 'Use an absolute private bootstrap path.' }
+        Assert-RegularPath $EnrollmentFile
+        if (-not (Test-Path -LiteralPath $EnrollmentFile -PathType Leaf)) { throw 'Private enrollment bootstrap was not found.' }
+        # Local identities are created before startup; existing identities and
+        # disabled settings are preserved by the enrollment tool.
+        & $node (Join-Path $destination 'auto-enroll.mjs') --bootstrap $EnrollmentFile --data $data
+        if ($LASTEXITCODE -ne 0) { throw 'Automatic enrollment failed; existing fleet state was preserved.' }
+    }
     $scheduler = New-Object -ComObject Schedule.Service
     $scheduler.Connect()
     $folder = $scheduler.GetFolder('\')
@@ -178,7 +209,8 @@ function Complete-MachineInstallation {
     [IO.File]::WriteAllText((Join-Path $InstallDir 'machine-install.json'), (@{installer='orbitus-viperlink'; scope='Machine'; task=$name; data=$data; operator=$ControlUser} | ConvertTo-Json))
     Write-Host "Installed for all users. Startup task: $name (LocalService, before login)."
     Write-Host "Private enrollment: $data\receiver.json and fleet-private.pem. Shared folder: $data\Workspace"
-    Write-Host "The task is started and waits for enrollment. Set enabled=true only when ready. Status: $data\startup-status.json"
+    if ($EnrollmentFile) { Write-Host "Automatic enrollment is configured. The receiver starts now. Status: $data\startup-status.json" }
+    else { Write-Host "The task is started and waits for enrollment. Use your private provisioned installer for automatic enrollment. Status: $data\startup-status.json" }
     Write-Host 'A one-minute recovery trigger restarts a stopped receiver without launching duplicates.'
     Write-Host 'To stop automatic operation: disable the task in Task Scheduler, then end its running instance. Enrollment is retained.'
 }
@@ -201,7 +233,7 @@ if ($InstallDir -eq [IO.Path]::GetPathRoot($InstallDir)) { throw 'Choose a dedic
 $destination = Join-Path (Join-Path $InstallDir $Component) $version
 Write-Host "ViperLink $version source pilot`nComponent: $Component`nScope: $Scope`nInstall to: $destination"
 if ($Component -eq 'lan') { Write-Host 'Requires Python 3.10+ with OpenSSL TLS 1.3; this is a LAN controller, not an execution target.' }
-elseif ($Scope -eq 'Machine') { Write-Host 'Includes a verified private Node runtime, all-user files and a startup task. Private Fleet enrollment remains separate.' }
+elseif ($Scope -eq 'Machine') { Write-Host 'Includes a verified private Node runtime, all-user files and a startup task. A supplied private bootstrap enrolls this machine automatically.' }
 else { Write-Host 'Requires an existing Node.js 22+ runtime and private Fleet enrollment.' }
 if ($DryRun) { $files | Format-Table; return }
 if ($Component -eq 'lan') {
@@ -230,7 +262,7 @@ $lockPath = Join-Path $InstallDir '.install-lock'
 # CreateNew refuses a concurrent installer; remove only the lock this process owns.
 $lock = [IO.File]::Open($lockPath, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None)
 $work = $null
-$receipt = "orbitus-viperlink $version $Component b1564f6eab63964bff4151295fac108026537375"
+$receipt = "orbitus-viperlink $version $Component b0ce7131a3f103b761be176d378065fc3fa62966"
 function Test-Files([string]$Directory) {
     foreach ($file in $files) {
         $path = Join-Path $Directory $file.name

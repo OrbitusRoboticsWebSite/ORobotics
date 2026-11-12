@@ -95,7 +95,7 @@ async function loadFleet() {
   try {
     machines = await queryFleet(container.publicCloudDatabase, () => current === generation && Boolean(identity));
     mode = 'live'; updateFlavors(); render();
-    queue.render();
+    await queue.updateFleet(machines); queue.render();
     text('auth-status', 'Authorized fleet access. Reports are held only in this page’s memory.');
     notice(`${config.environment === 'development' ? 'Development pilot' : 'Private fleet'} · CloudKit permissions authorize access. Health values are reported by each machine.`, 'Private connection');
   } catch {

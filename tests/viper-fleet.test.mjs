@@ -57,10 +57,11 @@ test('build configuration stays inactive by default and requires valid CloudKit 
 });
 test('public reporter download matches its published size and checksum', async () => {
   const manifest = JSON.parse(await readFile(new URL('../static/viper-fleet/reporter-manifest.json', import.meta.url), 'utf8'));
-  assert.equal(manifest.filename, 'ViperFleet-Reporter-0.3.0.zip');
+  assert.equal(manifest.filename, 'ViperFleet-Reporter-0.4.0.zip');
   const bytes = await readFile(new URL('../static/viper-fleet/' + manifest.filename, import.meta.url));
   assert.equal(bytes.length, manifest.bytes);
   assert.equal(createHash('sha256').update(bytes).digest('hex'), manifest.sha256);
   assert.deepEqual(manifest.files.map(file => file.path).sort(), ['README.md', 'COMMANDS.md', 'cloudkit.mjs', 'direct.test.mjs', 'report-direct.mjs', 'schema.ckdb', 'setup-direct.mjs',
-    'queue-format.mjs', 'queue-cloud.mjs', 'queue-agent.mjs', 'queue-submit.mjs', 'enroll-commands.mjs', 'queue.test.mjs'].sort());
+    'queue-format.mjs', 'queue-cloud.mjs', 'queue-agent.mjs', 'queue-submit.mjs', 'enroll-commands.mjs', 'queue.test.mjs',
+    'enrollment-format.mjs', 'auto-enroll.mjs', 'make-bootstrap.mjs', 'enrollment.test.mjs'].sort());
 });
