@@ -36,7 +36,8 @@ function Complete-Installation {
         & (Join-Path $helper 'RedAgentHelper.exe') install --source $helper --control-user $ControlUser
         if ($LASTEXITCODE -ne 0) { throw 'App installed, but the system helper could not be installed. Review the error above.' }
         $service = Get-Service -Name OrbitusRedAgent -ErrorAction Stop
-        if ($service.Status -ne 'Running') { throw 'The installed system helper did not start.' }
+        # SCM can return while the replacement is still START_PENDING.
+        $service.WaitForStatus([System.ServiceProcess.ServiceControllerStatus]::Running, [TimeSpan]::FromSeconds(45))
         if ((Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Services\OrbitusRedAgent').Start -ne 2) { throw 'Helper automatic startup was not configured.' }
     }
     $folder = if ($Scope -eq 'Machine') { 'CommonPrograms' } else { 'Programs' }
