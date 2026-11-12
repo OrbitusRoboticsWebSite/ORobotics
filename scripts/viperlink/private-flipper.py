@@ -32,7 +32,7 @@ def private_command(installer):
         "$sid=[Security.Principal.WindowsIdentity]::GetCurrent().User.Value; "
         "$folder=Join-Path $env:LOCALAPPDATA ('Orbitus-ViperLink-enrollment-'+[guid]::NewGuid()); "
         "$null=New-Item -ItemType Directory -Path $folder; "
-        "try { & icacls.exe $folder /inheritance:r /grant:r ($sid+':(OI)(CI)F') '*S-1-5-18:(OI)(CI)F' '*S-1-5-32-544:(OI)(CI)F' | Out-Null; "
+        "try { & icacls.exe $folder /inheritance:r /grant:r ('*'+$sid+':(OI)(CI)F') '*S-1-5-18:(OI)(CI)F' '*S-1-5-32-544:(OI)(CI)F' | Out-Null; "
         "if ($LASTEXITCODE -ne 0) { throw 'Unable to protect private enrollment.' }; "
         "$bootstrap=Join-Path $folder 'bootstrap.json'; [IO.File]::WriteAllBytes($bootstrap,$bytes); $bytes=$null; $profile=$null; "
         "$c='" + install.replace("'", "''") + "'; "
