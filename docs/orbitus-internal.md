@@ -49,7 +49,10 @@ boundary: CloudKit record permissions are.
 
 1. In CloudKit Console, create **Orbitus Internal** with identifier
    `iCloud.orbitusrobotics.Internal` in the company's developer team.
-2. Save a management token in the local Keychain with
+2. Prefer CloudKit Console for schema deployment and export when a management
+   token is not already available. The importer accepts a freshly exported
+   production schema with an operator-verified receipt (below). Alternatively,
+   save an authorized management token in the local Keychain with
    `xcrun cktool save-token --type management`. Do not paste tokens into chat,
    shell arguments, Git, issue descriptions or screenshots.
 3. Validate and import `scripts/internal/schema.ckdb` into the new container's
@@ -92,8 +95,8 @@ node scripts/internal/prepare-import.mjs \
   --output /private/private-import.json
 ```
 
-Publish only after roles are assigned. The importer exports and audits the live
-production schema using the Keychain management token, verifies the signing-key
+Publish only after roles are assigned. The importer audits a fresh production
+schema from Console or exports it using the Keychain management token, verifies the signing-key
 owner, creates synthetic canaries, tests owner read and anonymous denial, then
 verifies the local package. It uploads immutable chunks and reads every document
 back to verify its digest before changing the catalog. Existing documents are
@@ -105,6 +108,19 @@ node scripts/internal/publish-private.mjs \
   --package /private/private-import.json \
   --receipt /private/import-receipt.json
 ```
+
+To avoid provisioning a developer-team management token, select the exact
+container's **Production** environment in CloudKit Console, inspect its roles,
+and use **Export Schema**. Save the downloaded bytes privately. After observing
+the export, create a private JSON receipt with `schemaVersion: 1`, `container`,
+`teamID`, `environment: "production"`, absolute `schemaFile`, `exportedAt` (UTC
+ISO timestamp), `sha256` of the downloaded file, and `sourceURL` of the observed
+production Console page. Pass `--console-schema-receipt /private/export.json`.
+The importer checks the container, team, environment, Apple source URL, digest
+and a 30-minute freshness window, then performs the same grant audit and live
+access probes. This receipt records **operator-verified Console evidence**, not
+a cryptographic Apple attestation; never construct it from the local template
+or an unobserved download. The import receipt identifies which method was used.
 
 An optional `--unapproved-token-file /private/test-account-token.txt` runs an
 additional live signed-in negative test. It verifies the token belongs to a

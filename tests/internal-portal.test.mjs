@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
 import { PortalRepository, AccessError, packageDocument, validateCatalog, safeURL, CHUNK_BYTES, CATALOG_ID, ADMIN_ID, identityName } from '../static/internal/core.mjs';
 import { internalConfig } from '../scripts/configure-internal.mjs';
-import { auditSchema, deniedLookup, CloudClient } from '../scripts/internal/cloud.mjs';
+import { auditSchema, deniedLookup, CloudClient, verifyConsoleSchemaExport } from '../scripts/internal/cloud.mjs';
 import { generateKeyPairSync, verify, createHash } from 'node:crypto';
 const meta = { title: 'Synthetic QA file', filename: 'synthetic.txt', mime: 'text/plain', category: 'QA', summary: 'Invented test bytes', version: '1.0', date: '2026-11-13' };
 const emptyCatalog = () => ({ schemaVersion: 1, title: 'Synthetic test catalog', updatedAt: '2026-11-13', documents: [], news: [], work: [], whitepapers: [] });
@@ -97,6 +97,19 @@ test('access denial checks reject expired authentication, unrelated errors and l
   assert.equal(deniedLookup({ serverErrorCode: 'BAD_REQUEST' }, ['known']), false);
   assert.equal(deniedLookup({ serverErrorCode: 'ACCESS_DENIED', records: [{ fields: { private: 'x' } }] }, ['known']), false);
   assert.equal(deniedLookup({ records: [{ recordName: 'known', serverErrorCode: 'NOT_FOUND' }] }, ['known']), true);
+});
+test('Console export evidence rejects wrong containers, development, stale exports and altered bytes', () => {
+  const p = { container: 'iCloud.orbitusrobotics.Internal', teamID: 'TESTTEAM01' }, schema = 'synthetic schema bytes', now = Date.parse('2026-11-13T23:00:00Z');
+  const receipt = { schemaVersion: 1, ...p, environment: 'production', exportedAt: new Date(now).toISOString(), sha256: createHash('sha256').update(schema).digest('hex'), sourceURL: `https://icloud.developer.apple.com/dashboard/database/teams/${p.teamID}/containers/${p.container}/environments/PRODUCTION/types` };
+  assert.equal(verifyConsoleSchemaExport(receipt, schema, p, now).method, 'operator-verified-console-export');
+  for (const change of [
+    { container: 'iCloud.some.OtherApp' }, { teamID: 'OTHERTEAM1' }, { environment: 'development' },
+    { sourceURL: receipt.sourceURL.replace('/PRODUCTION/', '/DEVELOPMENT/') },
+    { sourceURL: receipt.sourceURL.replace('icloud.developer.apple.com', 'example.com') },
+    { exportedAt: new Date(now - 31 * 60000).toISOString() },
+    { exportedAt: new Date(now + 2 * 60000).toISOString() }, { exportedAt: 'invalid' },
+  ]) assert.throws(() => verifyConsoleSchemaExport({ ...receipt, ...change }, schema, p, now));
+  assert.throws(() => verifyConsoleSchemaExport(receipt, `${schema} changed`, p, now));
 });
 test('CloudKit signed requests use UTC seconds and sign the exact request body and path', async () => {
   const { privateKey, publicKey } = generateKeyPairSync('ec', { namedCurve: 'prime256v1' });

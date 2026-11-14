@@ -1,6 +1,18 @@
 import { createHash, createPrivateKey, sign } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+export function verifyConsoleSchemaExport(receipt, schema, profile, now = Date.now()) {
+  const exportedAt = Date.parse(receipt.exportedAt), age = now - exportedAt;
+  const expectedPrefix = `/dashboard/database/teams/${profile.teamID}/containers/${profile.container}/environments/PRODUCTION/`;
+  let source; try { source = new URL(receipt.sourceURL); } catch { throw new Error('Invalid Console export source'); }
+  if (receipt.schemaVersion !== 1 || receipt.container !== profile.container || receipt.teamID !== profile.teamID || receipt.environment !== 'production' ||
+      source.origin !== 'https://icloud.developer.apple.com' || !source.pathname.startsWith(expectedPrefix) ||
+      !Number.isFinite(age) || age < -60000 || age > 30 * 60000 ||
+      receipt.sha256 !== createHash('sha256').update(schema).digest('hex')) {
+    throw new Error('Console export is stale, mismatched or not from the verified production container');
+  }
+  return { method: 'operator-verified-console-export', sourceURL: source.href, exportedAt: receipt.exportedAt, sha256: receipt.sha256 };
+}
 export function auditSchema(schema) {
   const grants = {};
   for (const type of ['InternalCatalog','InternalDocumentChunk','InternalAdminGate','InternalStaffRoster']) {
