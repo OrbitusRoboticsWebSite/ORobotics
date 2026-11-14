@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdn.apple-cloudkit.com; style-src 'self' 'unsafe-inline'; img-src 'self' https://www.orbitusrobotics.com data:; connect-src 'self' https://*.apple-cloudkit.com https://*.icloud.com https://*.apple.com; frame-src https://*.apple.com https://*.icloud.com https://*.apple-cloudkit.com; font-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta name="description" content="The private employee workspace for Orbitus Robotics.">
+  <title>Orbitus Internal — Employee workspace</title>
+  <link rel="stylesheet" href="./portal.css"><script type="module" src="./portal.mjs"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div id="locked" class="entry">
+    <header class="entry-header"><a class="brand" href="./"><span class="orbit-mark" aria-hidden="true">O</span><span>ORBITUS<span class="brand-sub">INTERNAL</span></span></a><span class="eyebrow">Employee workspace</span></header>
+    <main id="main" class="entry-main">
+      <div class="entry-story"><span class="eyebrow coral">Ideas become<br>things we build.</span><h1>Our work.<br>One place.</h1><p>The company’s home for research, progress and the work ahead.</p><div class="orbit-art" aria-hidden="true"><i></i><i></i><i></i><b></b><span>OR / INTERNAL</span></div></div>
+      <section class="sign-in-card" aria-labelledby="welcome-title"><span class="lock-icon" aria-hidden="true">↗</span><p class="eyebrow">Orbitus Robotics</p><h2 id="welcome-title">Welcome inside.</h2><p>Sign in with your approved Apple account to open the employee workspace.</p><div id="apple-sign-in"></div><p id="auth-status" role="status">Checking the workspace connection…</p><button id="retry" class="secondary" hidden>Check access again</button><div class="access-note"><span aria-hidden="true">●</span> Employee access is required.<br><span class="note-detail">Your administrator manages access. An Apple account alone does not grant membership.</span></div><p id="identity-note" class="identity-note" hidden></p></section>
+    </main>
+    <footer class="entry-footer"><span>Orbitus Robotics · Internal workspace</span><a href="https://www.orbitusrobotics.com/" rel="noreferrer">Public website ↗</a></footer>
+  </div>
+
+  <div id="workspace" class="workspace" hidden>
+    <aside class="sidebar"><a class="brand" href="./"><span class="orbit-mark" aria-hidden="true">O</span><span>ORBITUS<span class="brand-sub">INTERNAL</span></span></a><p class="nav-caption">THE WORKSPACE</p><nav aria-label="Workspace">
+      <button data-view="home" aria-current="page"><span aria-hidden="true">◈</span>Overview</button>
+      <button data-view="documents"><span aria-hidden="true">▤</span>Document library</button>
+      <button data-view="news"><span aria-hidden="true">◷</span>Company journal</button>
+      <button data-view="work"><span aria-hidden="true">▦</span>Work & deliverables</button>
+      <button data-view="whitepapers"><span aria-hidden="true">▧</span>White papers</button>
+      <button data-view="admin" id="admin-nav" hidden><span aria-hidden="true">⚙</span>Publishing</button>
+    </nav><div class="sidebar-bottom"><span class="connection-dot"></span><span id="access-label">Employee access</span><p>Private company workspace</p><button id="lock" class="sidebar-lock">Lock workspace ↗</button></div></aside>
+    <div class="workspace-body"><header class="topbar"><span id="breadcrumb">Workspace / Overview</span><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search the workspace" aria-label="Search the workspace" autocomplete="off"></label><button id="refresh" class="icon-button" aria-label="Refresh content">↻</button><span class="avatar" aria-label="Employee account">OR</span></header>
+    <main id="workspace-main" tabindex="-1"><div id="workspace-notice" class="workspace-notice" role="status" hidden></div>
+      <section id="home-view" class="view"><div class="page-heading"><div><p class="eyebrow">The Orbitus workspace</p><h1>Good work starts here.</h1><p>Keep up with the ideas, releases and decisions moving us forward.</p></div><span id="edition-date" class="edition-date"></span></div>
+      <div class="overview-grid"><article id="featured" class="feature-card"></article><aside class="at-a-glance"><p class="eyebrow">At a glance</p><h2>Built. Documented.<br>Moving forward.</h2><div id="metrics" class="metrics"></div><p id="catalog-date" class="muted"></p></aside></div>
+      <div class="section-heading"><h2>Pick up where the work is</h2><button data-go="documents" class="text-button">Open the library ↗</button></div><div id="quick-documents" class="card-grid"></div>
+      <div class="section-heading"><h2>Across the company</h2><button data-go="work" class="text-button">All deliverables ↗</button></div><div id="recent-work" class="work-list"></div></section>
+      <section id="documents-view" class="view" hidden><div class="page-heading"><div><p class="eyebrow">Knowledge, together</p><h1>Document library</h1><p>Current editions, source notes and the detail behind the work.</p></div></div><div class="filter-bar"><label>Collection <select id="document-category"><option value="">All collections</option></select></label><span id="document-count" class="muted"></span></div><div id="documents" class="card-grid library-grid"></div></section>
+      <section id="news-view" class="view" hidden><div class="page-heading"><div><p class="eyebrow">Inside Orbitus</p><h1>Company journal</h1><p>Research notes, team updates and milestones worth sharing.</p></div></div><div id="news" class="news-grid"></div></section>
+      <section id="work-view" class="view" hidden><div class="page-heading"><div><p class="eyebrow">Progress with context</p><h1>Work & deliverables</h1><p>What shipped, what is developing and what still needs verification.</p></div></div><div id="work" class="work-list"></div></section>
+      <section id="whitepapers-view" class="view" hidden><div class="page-heading"><div><p class="eyebrow">Engineering, on record</p><h1>White papers</h1><p>The research library and its latest documented editions.</p></div></div><div id="whitepapers" class="card-grid library-grid"></div></section>
+      <section id="admin-view" class="view" hidden><div class="page-heading"><div><p class="eyebrow">Administrator workspace</p><h1>Publishing</h1><p>Publish verified documents and update the employee catalog.</p></div></div><div class="admin-grid"><section class="panel"><h2>Add a document</h2><p>Files are stored as protected CloudKit records. A complete read-back and checksum check happens before publication.</p><form id="upload-form"><label>File<input type="file" id="document-file" accept=".pdf,.txt,.json,.zip" required></label><label>Title<input id="document-title" maxlength="180" required></label><label>Collection<select id="upload-category"><option>Prototypes</option><option>Research</option><option>Operations</option></select></label><label>Version<input id="document-version" value="1.0" maxlength="100"></label><label>Summary<textarea id="document-summary" maxlength="3000" rows="3"></textarea></label><button class="primary" type="submit">Upload and publish</button></form></section><section class="panel"><h2>Update the company catalog</h2><p>Import a prepared catalog to publish newsletters, deliverables and paper updates. Existing file editions are preserved when you import an editorial update.</p><label>Catalog JSON<input type="file" id="catalog-file" accept=".json,application/json"></label><button id="publish-catalog" class="primary">Validate and publish catalog</button><button id="export-catalog" class="secondary">Download current catalog</button><hr><h3>Employee access</h3><p>Membership is managed with the InternalEmployee and InternalAdmin roles in CloudKit Console. Verify each account before assigning a role.</p><a href="https://icloud.developer.apple.com/" target="_blank" rel="noopener noreferrer">Open CloudKit Console ↗</a><p id="admin-result" role="status"></p></section></div></section>
+    </main><footer class="workspace-footer"><span>Orbitus Robotics · For employees</span><span id="footer-version"></span></footer></div>
+  </div>
+  <div id="auth-controls"><div id="apple-sign-out"></div></div>
+  <dialog id="article-dialog"><button id="close-article" class="dialog-close" aria-label="Close article">×</button><div id="article-content"></div></dialog>
+  <noscript><p class="no-script">JavaScript is required for Apple sign-in. Private content is not included in this page.</p></noscript>
+</body></html>

@@ -1,0 +1,40 @@
+// Dedicated container only: iCloud.orbitusrobotics.Internal.
+// Never import over a different app's schema. No anonymous/authenticated-default grants.
+DEFINE SCHEMA
+    CREATE ROLE InternalAdmin;
+    CREATE ROLE InternalEmployee;
+    RECORD TYPE Users (
+        "___createTime" TIMESTAMP,
+        "___createdBy" REFERENCE,
+        "___etag" STRING,
+        "___modTime" TIMESTAMP,
+        "___modifiedBy" REFERENCE,
+        "___recordID" REFERENCE,
+        roles LIST<INT64>,
+        GRANT WRITE TO "_creator",
+        GRANT READ TO "_world"
+    );
+    RECORD TYPE InternalCatalog (
+        "___recordID" REFERENCE,
+        payloadJSON STRING,
+        GRANT READ TO InternalEmployee,
+        GRANT CREATE, READ, WRITE TO InternalAdmin
+    );
+    RECORD TYPE InternalDocumentChunk (
+        "___recordID" REFERENCE,
+        documentID STRING,
+        chunkIndex INT64,
+        data STRING,
+        GRANT READ TO InternalEmployee,
+        GRANT CREATE, READ, WRITE TO InternalAdmin
+    );
+    RECORD TYPE InternalAdminGate (
+        "___recordID" REFERENCE,
+        enabled INT64,
+        GRANT CREATE, READ, WRITE TO InternalAdmin
+    );
+    RECORD TYPE InternalStaffRoster (
+        "___recordID" REFERENCE,
+        payloadJSON STRING,
+        GRANT CREATE, READ, WRITE TO InternalAdmin
+    );
