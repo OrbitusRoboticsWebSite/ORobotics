@@ -6,7 +6,7 @@ import { execFile } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
-import { CloudClient, readProfile, auditSchema, deniedLookup, verifyConsoleSchemaExport } from './cloud.mjs';
+import { CloudClient, readProfile, auditSchema, deniedLookup, verifyConsoleSchemaExport, callerIdentity } from './cloud.mjs';
 import { PortalRepository, validateCatalog, CATALOG_ID, ADMIN_ID } from '../../static/internal/core.mjs';
 const run = promisify(execFile);
 const args = Object.fromEntries(process.argv.slice(2).reduce((a, v, i, all) => { if (v.startsWith('--')) a.push([v.slice(2), all[i + 1]]); return a; }, []));
@@ -29,13 +29,13 @@ try {
     schemaEvidence = { method: 'cktool-live-export', exportedAt: new Date().toISOString() };
   }
   const grants = auditSchema(schema);
-  const owner = await client.call('users/caller', {});
+  const owner = callerIdentity(await client.call('users/caller', {}));
   if (owner.userRecordName !== p.expectedAdminRecordName) throw new Error('Signing key owner does not match the verified administrator');
   let unapprovedToken, stranger;
   if (args['unapproved-token-file']) {
     unapprovedToken = (await readFile(args['unapproved-token-file'], 'utf8')).trim();
     if (!unapprovedToken) throw new Error('The test-account token is empty');
-    stranger = await client.call('users/caller', {}, unapprovedToken);
+    stranger = callerIdentity(await client.call('users/caller', {}, unapprovedToken));
     if (!stranger.userRecordName || stranger.userRecordName === owner.userRecordName) throw new Error('The negative-test account must be signed in and different from the administrator');
   }
   const id = randomUUID(), canaries = [

@@ -33,11 +33,18 @@ export async function readProfile(filename) {
   if (key.asymmetricKeyType !== 'ec' || key.asymmetricKeyDetails?.namedCurve !== 'prime256v1') throw new Error('A P-256 signing key is required');
   return { ...profile, key };
 }
+export function callerIdentity(response) {
+  const identity = response.userRecordName ? response : response.users?.length === 1 ? response.users[0] : null;
+  if (response.httpStatus !== 200 || response.serverErrorCode || !identity?.userRecordName ||
+      (response.users && (response.users.length !== 1 || response.users[0].userRecordName !== identity.userRecordName))) throw new Error('CloudKit did not verify the current identity');
+  return identity;
+}
 export class CloudClient {
   constructor(profile) { this.profile = profile; }
   async call(operation, payload, webToken = null) {
     const { container, environment, keyID, key, apiToken } = this.profile;
-    const route = `/database/1/${container}/${environment}/public/${operation}`, body = JSON.stringify(payload);
+    const route = `/database/1/${container}/${environment}/public/${operation}`;
+    const method = operation === 'users/caller' ? 'GET' : 'POST', body = method === 'GET' ? '' : JSON.stringify(payload);
     let query = '', headers = { 'Content-Type': 'application/json' };
     if (webToken !== null) {
       query = `?${new URLSearchParams({ ckAPIToken: apiToken, ...(webToken ? { ckWebAuthToken: webToken } : {}) })}`;
@@ -47,7 +54,7 @@ export class CloudClient {
       headers = { ...headers, 'X-Apple-CloudKit-Request-KeyID': keyID, 'X-Apple-CloudKit-Request-ISO8601Date': date,
         'X-Apple-CloudKit-Request-SignatureV1': sign('sha256', Buffer.from(`${date}:${digest}:${route}`), key).toString('base64') };
     }
-    const response = await fetch(`https://api.apple-cloudkit.com${route}${query}`, { method: 'POST', body, headers, signal: AbortSignal.timeout(30000), redirect: 'error' });
+    const response = await fetch(`https://api.apple-cloudkit.com${route}${query}`, { method, ...(method === 'POST' ? { body } : {}), headers, signal: AbortSignal.timeout(30000), redirect: 'error' });
     let data; try { data = await response.json(); } catch { throw new Error('CloudKit response was not JSON'); }
     return { httpStatus: response.status, ...data };
   }

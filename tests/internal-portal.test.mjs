@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
 import { PortalRepository, AccessError, packageDocument, validateCatalog, safeURL, CHUNK_BYTES, CATALOG_ID, ADMIN_ID, identityName } from '../static/internal/core.mjs';
 import { internalConfig } from '../scripts/configure-internal.mjs';
-import { auditSchema, deniedLookup, CloudClient, verifyConsoleSchemaExport } from '../scripts/internal/cloud.mjs';
+import { auditSchema, deniedLookup, CloudClient, verifyConsoleSchemaExport, callerIdentity } from '../scripts/internal/cloud.mjs';
 import { generateKeyPairSync, verify, createHash } from 'node:crypto';
 const meta = { title: 'Synthetic QA file', filename: 'synthetic.txt', mime: 'text/plain', category: 'QA', summary: 'Invented test bytes', version: '1.0', date: '2026-11-13' };
 const emptyCatalog = () => ({ schemaVersion: 1, title: 'Synthetic test catalog', updatedAt: '2026-11-13', documents: [], news: [], work: [], whitepapers: [] });
@@ -111,15 +111,26 @@ test('Console export evidence rejects wrong containers, development, stale expor
   ]) assert.throws(() => verifyConsoleSchemaExport({ ...receipt, ...change }, schema, p, now));
   assert.throws(() => verifyConsoleSchemaExport(receipt, `${schema} changed`, p, now));
 });
-test('CloudKit signed requests use UTC seconds and sign the exact request body and path', async () => {
+test('CloudKit signed requests use GET for caller identity and POST for records, signing the exact body', async () => {
   const { privateKey, publicKey } = generateKeyPairSync('ec', { namedCurve: 'prime256v1' });
   const original = globalThis.fetch;
   globalThis.fetch = async (url, request) => {
     const date = request.headers['X-Apple-CloudKit-Request-ISO8601Date']; assert.match(date, /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$/);
-    const bodyHash = createHash('sha256').update(request.body).digest('base64');
+    const caller = new URL(url).pathname.endsWith('/users/caller');
+    assert.equal(request.method, caller ? 'GET' : 'POST');
+    if (caller) assert.equal(request.body, undefined); else assert.equal(request.body, '{"records":[]}');
+    const bodyHash = createHash('sha256').update(request.body || '').digest('base64');
     assert.equal(verify('sha256', Buffer.from(`${date}:${bodyHash}:${new URL(url).pathname}`), publicKey, Buffer.from(request.headers['X-Apple-CloudKit-Request-SignatureV1'], 'base64')), true);
-    return { status: 200, json: async () => ({ userRecordName: 'synthetic-owner' }) };
+    return { status: 200, json: async () => caller ? { users: [{ userRecordName: 'synthetic-owner' }] } : { records: [] } };
   };
-  try { const response = await new CloudClient({ container: 'iCloud.orbitusrobotics.Internal', environment: 'production', keyID: 'synthetic', key: privateKey }).call('users/caller', {}); assert.equal(response.userRecordName, 'synthetic-owner'); }
+  try {
+    const client = new CloudClient({ container: 'iCloud.orbitusrobotics.Internal', environment: 'production', keyID: 'synthetic', key: privateKey });
+    assert.equal(callerIdentity(await client.call('users/caller', {})).userRecordName, 'synthetic-owner');
+    assert.deepEqual((await client.call('records/lookup', { records: [] })).records, []);
+    assert.throws(() => callerIdentity({ httpStatus: 200, users: [] }));
+    assert.equal(callerIdentity({ httpStatus: 200, userRecordName: 'direct-owner' }).userRecordName, 'direct-owner');
+    assert.throws(() => callerIdentity({ httpStatus: 200, userRecordName: 'one', users: [{ userRecordName: 'another' }] }));
+    assert.throws(() => callerIdentity({ httpStatus: 401, serverErrorCode: 'AUTHENTICATION_FAILED', users: [{ userRecordName: 'synthetic-owner' }] }));
+  }
   finally { globalThis.fetch = original; }
 });
