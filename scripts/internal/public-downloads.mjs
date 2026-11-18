@@ -52,7 +52,9 @@ async function uploadAsset(client,name,encrypted) {
   if(!upload.ok)throw new Error(`Asset upload failed (${upload.status})`);
   const data=await upload.json(),asset=data.singleFile;
   if(!asset?.receipt || !asset.fileChecksum || asset.size!==encrypted.length)throw new Error('Asset receipt mismatch');
-  await client.create({recordName:name,recordType:RECORD_TYPE,fields:{payloadJSON:{value:'{"version":1,"kind":"encrypted-part"}'},asset:{type:'ASSET',value:asset}}});
+  // CloudKit infers the field type from the deployed schema. The upload receipt
+  // is the Asset dictionary; "ASSET" is not a Web Services value-type tag.
+  await client.create({recordName:name,recordType:RECORD_TYPE,fields:{payloadJSON:{value:'{"version":1,"kind":"encrypted-part"}'},asset:{value:asset}}});
 }
 async function publishMetadata(client,token,meta) {
   const name=await recordName(token),existing=await lookup(client,name);
