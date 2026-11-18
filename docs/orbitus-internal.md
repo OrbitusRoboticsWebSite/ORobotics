@@ -148,6 +148,57 @@ shell does not revoke user roles or previously issued credentials.
 
 ## Publishing and maintenance
 
+### Explicit links for preview packages
+
+Ordinary uploads still use the protected catalog and chunk record types. Their
+permissions and 20 MiB limit are unchanged. A separate, opt-in download path is
+available at `/internal/download/`. Opening that address alone lists no files.
+
+`InternalPublicDownload` allows anonymous **read of ciphertext only** and
+administrator create/read/write. It has no query/search indexes. An administrator
+explicitly lists each allowed ZIP or tar.gz in a private inventory with
+`visibility: "public-link"` and `public: true` on every file. The existing portal
+upload form never publishes this type. The publisher checks the administrator,
+audits a fresh production schema and verifies anonymous denial on private records
+before publishing. It never changes record grants or employee membership.
+
+Each file gets an independent random 256-bit capability in the URL fragment.
+HKDF-SHA-256 derives an AES-256-GCM key; authenticated contexts bind ciphertext
+to each opaque record identifier. Both metadata and file bytes are encrypted.
+Files use 8 MiB encrypted asset parts, with authenticated decryption and whole-file
+SHA-256 verification before a browser creates a download. Keys and actual file
+links are never written to website source, Git, configuration or CloudKit.
+The URL fragment is not sent in HTTP requests; the page has no analytics,
+uses no-referrer, and omits cookies/CloudKit account tokens on requests.
+
+The optional review-page link decrypts a collection of individual links. Share
+the individual link when a recipient should receive just one package. Possession
+of a complete link grants access; forwarded links work too. This does not identify
+or bind a recipient, and downloaded files cannot be recalled. Browser history,
+clipboard access, extensions and a compromised host/page remain outside this
+capability's protection. Do not put link keys in tickets, public commits or logs.
+
+Prepare and publish with private paths **outside any Git checkout**:
+
+```sh
+node scripts/internal/public-downloads.mjs --prepare /private/inventory.json --plan /private/download-plan.json
+node scripts/internal/public-downloads.mjs --publish yes --plan /private/download-plan.json --profile /private/cloudkit-admin/profile.json --schema-receipt /private/current-console-export.json --receipt /private/download-receipt.json
+```
+
+Preparation uploads nothing. Publication encrypts assets before upload, verifies
+anonymous download/decryption/checksums, then creates the immutable file manifest.
+Interrupted runs reuse the same private plan and verify existing parts. A fresh
+edition requires a new plan and new keys. Store private plans and receipts with
+the original artifacts. No real artifact or link is bundled into the public shell.
+
+Deploy the additive `InternalPublicDownload` schema only after comparing the live
+production export: the four existing private types must keep their exact grants.
+Export and audit the deployed production schema before the first real upload.
+To withdraw a share, an administrator can remove its manifest and encrypted part
+records in CloudKit after preserving the private receipt and original file. Existing
+downloaded copies and already fetched asset URLs may remain usable; do not promise
+immediate recall or erase originals as part of withdrawal.
+
 The administrator Publishing screen uploads and verifies files and imports
 editorial catalog updates. Employees cannot publish, even by bypassing the UI,
 because CloudKit denies writes. Rendered text uses textContent rather than HTML;

@@ -1,5 +1,5 @@
 // Dedicated container only: iCloud.orbitusrobotics.Internal.
-// Never import over a different app's schema. No anonymous/authenticated-default grants.
+// Private types retain their existing grants. Only opt-in encrypted downloads allow World read.
 DEFINE SCHEMA
     CREATE ROLE InternalAdmin;
     CREATE ROLE InternalEmployee;
@@ -36,5 +36,13 @@ DEFINE SCHEMA
     RECORD TYPE InternalStaffRoster (
         "___recordID" REFERENCE,
         payloadJSON STRING,
+        GRANT CREATE, READ, WRITE TO InternalAdmin
+    );
+    // Ciphertext only. Each file has a random link key kept outside website source.
+    RECORD TYPE InternalPublicDownload (
+        "___recordID" REFERENCE,
+        payloadJSON STRING,
+        asset ASSET,
+        GRANT READ TO "_world",
         GRANT CREATE, READ, WRITE TO InternalAdmin
     );

@@ -57,7 +57,7 @@ jobs:
         run: node --test tests/viper-fleet.test.mjs tests/viper-queue.test.mjs
 
       - name: Validate private employee portal boundaries
-        run: node --test tests/internal-portal.test.mjs
+        run: node --test tests/internal-portal.test.mjs tests/internal-downloads.test.mjs
 
       - name: Validate ViperLink minimal packages and Flipper commands
         run: |

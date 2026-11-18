@@ -79,7 +79,8 @@ test('private record types have only explicit employee and administrator grants'
 test('public shell contains no private company content, local paths, PDFs or persisted session cache', async () => {
   const directory = new URL('../static/internal/', import.meta.url);
   for (const file of await readdir(directory)) {
-    assert.ok(['index.html','portal.css','portal.mjs','core.mjs','config.json'].includes(file), `Unexpected static file ${file}`);
+    assert.ok(['index.html','portal.css','portal.mjs','core.mjs','config.json','download'].includes(file), `Unexpected static file ${file}`);
+    if (file === 'download') continue; // Its generic, ciphertext-only shell is tested separately.
     const source = await readFile(new URL(file, directory), 'utf8');
     assert.doesNotMatch(source, /\/Users\/|BEGIN PRIVATE KEY|localStorage|sessionStorage|indexedDB/);
   }
