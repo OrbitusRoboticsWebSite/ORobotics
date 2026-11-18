@@ -86,5 +86,5 @@ export async function downloadFile(meta, token, lookup, fetchAsset = fetch, prog
     const plain = await unseal(encrypted, token, name); requireThat(plain.length === expected, 'Part size mismatch');
     bytes.set(plain, offset); offset += plain.length; progress(offset / meta.bytes);
   }
-  signal?.throwIfAborted(); requireThat(offset === meta.bytes && await sha256(bytes) === meta.sha256, 'Package checksum mismatch'); return bytes;
+  signal?.throwIfAborted(); requireThat(offset === meta.bytes && await sha256(bytes) === meta.sha256, 'Package checksum mismatch'); signal?.throwIfAborted(); return bytes;
 }

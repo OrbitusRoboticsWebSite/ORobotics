@@ -167,7 +167,8 @@ HKDF-SHA-256 derives an AES-256-GCM key; authenticated contexts bind ciphertext
 to each opaque record identifier. Both metadata and file bytes are encrypted.
 Files use 8 MiB encrypted asset parts, with authenticated decryption and whole-file
 SHA-256 verification before a browser creates a download. Keys and actual file
-links are never written to website source, Git, configuration or CloudKit.
+links are never written to website source, Git or configuration. CloudKit holds
+only encrypted metadata, including any links inside an encrypted review page.
 The URL fragment is not sent in HTTP requests; the page has no analytics,
 uses no-referrer, and omits cookies/CloudKit account tokens on requests.
 
