@@ -19,6 +19,146 @@
     "viper_focused_tests": "44 executed, 5 optional skips, 0 failures; final capture generator passed",
     "website_visual_inspection": "Pending: Computer Use native pipe startup failed during the user's service restart"
   },
-  "publication": "Prepared; deployment and public byte verification pending",
-  "app_release": "No public Viper app release or replacement of production downloads in this documentation update"
+  "publication": "Published; public pages, PDF and all fourteen screenshots verified.",
+  "app_release": "No public Viper app release or replacement of production downloads in this documentation update",
+  "deployment": {
+    "commit": "9dc323401cbec22fe1aabfe38bb5f4eec86a59c1",
+    "run": "https://github.com/OrbitusRoboticsWebSite/ORobotics/actions/runs/44621126990",
+    "conclusion": "success",
+    "verified_at": "2026-11-19T21:42:43.949736+00:00"
+  },
+  "public_verification": [
+    {
+      "path": "/products/rob-viper/investigations/",
+      "status": 200,
+      "bytes": 46574,
+      "sha256": "bfa17b2eb37a4043a07cba070fdc600f8a32bf817f117acd00ef442ae303b8fe"
+    },
+    {
+      "path": "/products/rob-viper/guide/",
+      "status": 200,
+      "bytes": 20262,
+      "sha256": "3b5bcdf0ca765b886a260d8b2318a57929e914eb73772815fabedb8a94ada120"
+    },
+    {
+      "path": "/products/rob-viper/privacy/",
+      "status": 200,
+      "bytes": 24176,
+      "sha256": "4a45a7f7046dec95fe178d5c69823170ab0d1c4dec29e8fe31ae4dc7fd551798"
+    },
+    {
+      "path": "/products/rob-viper/",
+      "status": 200,
+      "bytes": 28158,
+      "sha256": "14fb1c4ea12e02e3096d0a5dc408e12dcaf4cfb151e3029ca9d66f774f85cb0b"
+    },
+    {
+      "path": "/products/",
+      "status": 200,
+      "bytes": 28151,
+      "sha256": "24678185b1ae4014e2ca16e350c063d2f82e65f4a25dcd96cdcd352ea0289936"
+    },
+    {
+      "path": "/downloads/rob-viper/manual/ROB-Viper-User-Manual-0.8.1-build19.pdf",
+      "status": 200,
+      "bytes": 4737929,
+      "sha256": "437e6cd59befe21db5c4ee6493320d2a3a93d422911c66dabbab4282c8ef3b34"
+    },
+    {
+      "path": "/downloads/rob-viper/manual/manifest.json",
+      "status": 200,
+      "bytes": 3623,
+      "sha256": "a5c78383b2f6ecd8b7f73ae0327e67796d0f5ba5f5b4186933c8958a917f7263"
+    },
+    {
+      "path": "/downloads/rob-viper/manual/SHA256SUMS.txt",
+      "status": 200,
+      "bytes": 204,
+      "sha256": "7846de467796faec1a24380447d2144587577f5516b3048593bd3f8cc0948e98"
+    },
+    {
+      "path": "/downloads/rob-viper/manual/screenshots/27-binary-settings.png",
+      "status": 200,
+      "bytes": 65369,
+      "sha256": "aa47139428edb3099766db93f4178a9f105d4dd055b70b44a8a4981288e988a3"
+    },
+    {
+      "path": "/downloads/rob-viper/manual/screenshots/28-binary-report.png",
+      "status": 200,
+      "bytes": 59819,
+      "sha256": "2786acb089f0ca24c440fae3f587668cd1b46e7472367f7acea9f4c4653f55d6"
+    },
+    {
+      "path": "/downloads/rob-viper/manual/screenshots/29-local-network.png",
+      "status": 200,
+      "bytes": 110594,
+      "sha256": "e57498feb59c51b03551734598f5ba9cf6f1a8128d587c5a3f9b81b8f9084b3b"
+    },
+    {
+      "path": "/downloads/rob-viper/manual/screenshots/30-device-identity.png",
+      "status": 200,
+      "bytes": 51389,
+      "sha256": "17993d282047df5acc96d668def1255cf9f2c8e41d0f09cfd60811da5c4a0754"
+    },
+    {
+      "path": "/downloads/rob-viper/manual/screenshots/31-investigation-scope.png",
+      "status": 200,
+      "bytes": 44901,
+      "sha256": "24d1593151e0f7ecc33ed040849071dd08b99720f459f724e90eb309456a8314"
+    },
+    {
+      "path": "/downloads/rob-viper/manual/screenshots/32-investigation-plan.png",
+      "status": 200,
+      "bytes": 118539,
+      "sha256": "437c162ac7ff4931a96941eeaf7345d3fe4192e7063cddac8766a0b1a9249ad4"
+    },
+    {
+      "path": "/downloads/rob-viper/manual/screenshots/33-investigation-workers.png",
+      "status": 200,
+      "bytes": 101087,
+      "sha256": "29d115efaad809b640f54ec2ec16764603846d538c684c47b7f6de3e6f4aeddc"
+    },
+    {
+      "path": "/downloads/rob-viper/manual/screenshots/34-investigation-graph.png",
+      "status": 200,
+      "bytes": 90169,
+      "sha256": "77955e19dcc18c9bba2fc92373ada6f8b5a99dda3fbeda23d6e5031a4144d29d"
+    },
+    {
+      "path": "/downloads/rob-viper/manual/screenshots/35-investigation-report.png",
+      "status": 200,
+      "bytes": 120032,
+      "sha256": "2accf6a65d38971d6857ecae94e96a61d1ecb9d17bb22b1b87644d5c39db6db0"
+    },
+    {
+      "path": "/downloads/rob-viper/manual/screenshots/36-investigation-evidence.png",
+      "status": 200,
+      "bytes": 74973,
+      "sha256": "1eee8e5cbd0da67b71a214c288295dae6ba22a892f9481a6569166c9a643c918"
+    },
+    {
+      "path": "/downloads/rob-viper/manual/screenshots/37-evidence-citation.png",
+      "status": 200,
+      "bytes": 61616,
+      "sha256": "189c0c7b4979b2cdbe72288b52ba03efe62f6599ebc2b41ea9b854d4837f9f0a"
+    },
+    {
+      "path": "/downloads/rob-viper/manual/screenshots/38-partial-report.png",
+      "status": 200,
+      "bytes": 115275,
+      "sha256": "f06298235142b6f0d5a8f21a1f77cb43876418a65a60b52b379dbe9e51d0b4c6"
+    },
+    {
+      "path": "/downloads/rob-viper/manual/screenshots/39-detection-catalog.png",
+      "status": 200,
+      "bytes": 122658,
+      "sha256": "cb82071685f9d8305d2b369475121950ee6158c1b2708232c5571080c03f7151"
+    },
+    {
+      "path": "/downloads/rob-viper/manual/screenshots/40-resume-work.png",
+      "status": 200,
+      "bytes": 107710,
+      "sha256": "2820d8c83c4c2634038613f476876a40cbeb6fdabc0e31dbcd3f7fdf1d122eea"
+    }
+  ]
 }

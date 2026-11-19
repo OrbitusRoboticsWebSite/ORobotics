@@ -1,7 +1,7 @@
 ---
 title: "ROB Viper user manual and RedAgent inventory guide"
 url: "/products/rob-viper/guide/"
-description: "ROB Viper 0.8.1: scanner updates, platform CVEs, affected-product lookup, public test and patch reading, and the full RedAgent installed-app inventory."
+description: "ROB Viper 0.8.1 (19): illustrated binary review, local discovery, AI planning and evidence-linked investigations, plus scanner and RedAgent inventory workflows."
 draft: false
 ---
 
