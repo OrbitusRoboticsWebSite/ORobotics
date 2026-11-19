@@ -20,7 +20,7 @@ The scan matched Xcode project bundle identifiers across the dev folder against 
 | CodeAtlas: 3D Code Map | CodeAtlas | 6807302975 | macOS 1.0 available | Add direct App Store calls to action |
 | LingonXRob Plist Editor | LingonXRob | 6807102073 | macOS 1.0.0 available | Add product card and dedicated product page |
 | ROB Training | ROBTrainingGames | 6805294621 | iOS 1.0 available | Add product card; replace stale waiting-for-review copy |
-| Musimotion Pro | git.musimotion | 750098892 | macOS 1.0.0 waiting for review; iOS 1.0.0 rejected | Advertise as upcoming, without a download claim |
+| Musimotion Pro | git.musimotion | 750098892 | macOS 1.0.0 build 7 approved, pending developer release; iOS 1.0.0 rejected | November 19 check: approved is not public; advertise visionOS as development preview |
 | ROB Training Vision | ROBTrainingGames | 6805295387 | visionOS 1.0 prepare for submission | Label the separate spatial edition as a development preview |
 
 The 11 historical account records had no matching bundle identifiers in local project configuration and did not appear in the US public developer catalog. They were not promoted as available. SignalAtlas explicitly identifies its iPhone edition as a development prototype, not an App Store submission; the robot-control stack remains advertised separately.
@@ -59,3 +59,9 @@ App Store Connect version `3eaeb309-9d1f-4b40-a18a-16c6a818e388` has processed b
 The matching universal Mac bridge is Developer ID signed, accepted by Apple notarization, stapled, and accepted by Gatekeeper. Public archive: `/downloads/robcodex/ROBCodeAgentBridge-macOS-universal-0.1.3.zip`, 5,105,431 bytes, SHA-256 `32b2e73569a2c9f9606fac3d306e96d7469d065fd732c6dc6364d69739dc4505`. Legacy-name aliases contain the same bytes. The app repository release record captures final website deployment and public-download verification.
 
 The site-size budget is 425 MiB for this release, accommodating the three matching bridge ZIPs while preserving earlier downloads. The complete rebuilt site is 417.4 MiB; per-media validation remains unchanged.
+
+## Musimotion spatial preview documentation — November 19, 2026
+
+Mac 1.0.0 build 7 and all four related purchase/subscription review items are approved. The manual release action has not been performed, and the US Mac storefront lookup had no public result. China compliance remains pending. The spatial behavior changes are a development preview, not the approved binary or a new App Store submission. The product page, pending catalog entry, and visionOS guide identify that distinction. The source regression receipt records 99 Mac tests and 11 visionOS simulator tests passing; physical headset acceptance remains open.
+
+The text guide at `/products/musimotion/vision-guide/` matches the application repository's `docs/VISIONOS_USER_GUIDE.md` and documents baseline `8dc75b6`. It explicitly identifies its missing illustrated walkthrough. Fresh Simulator captures and remaining desktop/mobile visual inspection are blocked by the Computer Use connection failure after the user enabled AnyApp; no substitute captures are presented as current evidence. The guide's desktop layout was inspected before that failure. Build, product catalog, gallery, white-paper integrity, and subpath validation accompany publication; the private release receipt records the resulting deployment and public response hashes. This documentation publication does not complete headset acceptance or release the app.

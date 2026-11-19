@@ -12,6 +12,7 @@
       <a href="#watch">Watch</a>
       <a href="#community">Community</a>
       <a href="#plans">Plans</a>
+      <a href="{{ "products/musimotion/vision-guide/" | relURL }}">Vision guide</a>
     </div>
   </nav>
 
@@ -26,7 +27,7 @@
         <a class="musimotion-button musimotion-button--primary" href="#watch">See it in motion <span aria-hidden="true">↓</span></a>
         <a class="musimotion-button" href="#plans">Explore launch plans</a>
       </div>
-      <p class="musimotion-status"><span aria-hidden="true"></span> Musimotion Pro for Mac is submitted and awaiting Apple review. The iPhone and iPad release is not yet available; visionOS remains in development.</p>
+      <p class="musimotion-status"><span aria-hidden="true"></span> Mac 1.0.0 is approved and awaiting manual release as of November 19, 2026. It is not yet publicly available. iPhone and iPad are not yet available; visionOS is a development preview.</p>
     </div>
     <div class="musimotion-hero__stage" aria-label="Musimotion running on iPad">
       {{ $editor := resources.Get "images/products/musimotion/01-editor.webp" }}
@@ -46,7 +47,7 @@
     <div><strong>Keyframes</strong><span>Motion on a real timeline</span></div>
     <div><strong>SpriteKit</strong><span>Live physics and particles</span></div>
     <div><strong>SharePlay</strong><span>Create together</span></div>
-    <div><strong>3 platforms</strong><span>One native experience</span></div>
+    <div><strong>Native platforms</strong><span>Shared projects, distinct workflows</span></div>
   </section>
 
   <section id="watch" class="musimotion-showreel" aria-labelledby="musimotion-watch-title">
@@ -179,6 +180,17 @@
     </article>
   </section>
 
+  <section id="vision-preview" class="musimotion-create" aria-labelledby="musimotion-vision-title">
+    <div class="musimotion-section-head musimotion-section-head--wide">
+      <p class="musimotion-kicker"><span>Development preview</span> Updated November 19, 2026</p>
+      <h2 id="musimotion-vision-title">Start in a window.<br>Enter 3D when you are ready.</h2>
+      <p>The native visionOS preview adds explicit Enter 3D and Exit 3D controls, adjustable Stage height, Reduce ambient motion, and optional floating 3D Tools. Object dragging preserves the point you grabbed; the initial stage sits behind the editor so its canvas does not intercept window controls.</p>
+      <p>The Mac and spatial projections share a document model, but feature parity is incomplete. Standalone spatial saving, some image/effect rendering, exact spatial audio timing, and live stroke playback still need work. The automated suite passes 99 Mac tests and 11 visionOS simulator tests; physical headset comfort and real hand tracking remain unverified.</p>
+      <div class="musimotion-actions"><a class="musimotion-button musimotion-button--primary" href="{{ "products/musimotion/vision-guide/" | relURL }}">Follow the visionOS guide <span aria-hidden="true">→</span></a></div>
+      <p>Mac requires macOS 15 or later. The spatial target requires visionOS 2 or later; on-device AI planning requires compatible hardware, supported regions, and OS 26 or later. This preview is source-tested and simulator-tested, with no public visionOS download or physical-headset installation claimed.</p>
+    </div>
+  </section>
+
   <section id="community" class="musimotion-community" aria-labelledby="musimotion-community-title">
     <div class="musimotion-section-head">
       <p class="musimotion-kicker"><span>Studio preview</span> Community publishing</p>
@@ -199,9 +211,9 @@
 
   <section id="plans" class="musimotion-plans" aria-labelledby="musimotion-plans-title">
     <div class="musimotion-section-head musimotion-section-head--wide">
-      <p class="musimotion-kicker"><span>Planned launch model</span> Clear upgrades, no export credits</p>
+      <p class="musimotion-kicker"><span>Approved Mac launch plans</span> Release pending</p>
       <h2 id="musimotion-plans-title">Create freely. Pay when your work needs to travel.</h2>
-      <p>The app will remain a free download, and the editor stays useful for everyone. A permanent purchase unlocks professional local export; Studio supports the services that continue over time. These plans are being implemented and are not yet available for purchase.</p>
+      <p>The app is configured as a free download. A permanent purchase unlocks professional local export; Studio supports ongoing collaboration services. Apple has approved the Mac app and these purchase items. Manual release is pending, so they are not yet publicly available for purchase.</p>
     </div>
 
     <div class="musimotion-price-grid">
@@ -243,7 +255,7 @@
 
     <div class="musimotion-comparison" tabindex="0" role="region" aria-label="Scrollable Musimotion plan comparison">
       <table>
-        <caption>Planned Musimotion capabilities by plan</caption>
+        <caption>Mac launch capabilities by plan; visionOS preview limitations are described in the guide</caption>
         <thead><tr><th scope="col">Capability</th><th scope="col">Free</th><th scope="col">Pro Export</th><th scope="col">Studio</th></tr></thead>
         <tbody>
           <tr><th scope="row">Create, edit, animate, paint, use physics</th><td><span class="musimotion-check">Yes</span></td><td><span class="musimotion-check">Yes</span></td><td><span class="musimotion-check">Yes</span></td></tr>
@@ -258,7 +270,7 @@
         </tbody>
       </table>
     </div>
-    <p class="musimotion-pricing-note">Suggested launch prices in USD and subject to storefront changes. Studio includes professional export while subscribed, so no second purchase is required. The planned universal purchase will cover iPadOS, macOS, and visionOS under one App Store record.</p>
+    <p class="musimotion-pricing-note">Configured US launch prices, verified November 19, 2026; prices and availability vary by storefront. Studio includes professional export while subscribed. Other platform releases remain pending. China mainland availability awaits compliance verification.</p>
   </section>
 
   <section class="musimotion-fairness" aria-labelledby="musimotion-fairness-title">
@@ -279,7 +291,7 @@
     <img src="{{ $closingIcon.RelPermalink }}" width="{{ $closingIcon.Width }}" height="{{ $closingIcon.Height }}" alt="Musimotion app icon" loading="lazy" decoding="async">
     <p class="musimotion-kicker"><span>Musimotion</span> Coming to Apple platforms</p>
     <h2>Make the presentation<br>only you can perform.</h2>
-    <p>Musimotion 1.0 and its paid plans are still being prepared. Contact Orbitus Robotics for launch news, product questions, or early collaboration.</p>
+    <p>Musimotion Pro for Mac and its paid plans are approved, with manual release pending. Read the visionOS development guide for the spatial workflow, current limitations, and recovery steps, or contact Orbitus Robotics for product support.</p>
     <div class="musimotion-actions">
       <a class="musimotion-button musimotion-button--primary" href="{{ "contact/" | relURL }}">Contact Orbitus Robotics <span aria-hidden="true">↗</span></a>
       <a class="musimotion-button" href="{{ "products/" | relURL }}">Explore every product</a>

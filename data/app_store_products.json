@@ -76,10 +76,12 @@
       "app_id": "750098892",
       "bundle_id": "com.orbitusrobotics.MusimotionPro",
       "source_project": "git.musimotion",
-      "status": "submitted",
-      "platforms": "Mac release awaiting review",
-      "description": "An expressive studio for animation, painting, physics, and live performance. macOS 1.0.0 is submitted and waiting for Apple review; the iPhone and iPad release is not yet available.",
-      "page": "products/musimotion/"
+      "status": "approved",
+      "platforms": "Mac approved · Release pending",
+      "description": "An expressive studio for animation, painting, physics, and performance. Mac 1.0.0 is approved and awaiting manual release. The visionOS development preview has a guided spatial workflow; iPhone and iPad are not yet available.",
+      "page": "products/musimotion/",
+      "icon": "images/products/musimotion/app-icon.webp",
+      "verified_at": "2026-11-19"
     },
     {
       "slug": "rob-training-vision",

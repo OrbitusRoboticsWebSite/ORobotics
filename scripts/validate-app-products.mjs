@@ -21,7 +21,7 @@ for (const app of catalog.products) {
   for (const field of ["name", "bundle_id", "source_project", "platforms", "description", "page"]) {
     assert.ok(typeof app[field] === "string" && app[field].trim(), `${app.slug}: missing ${field}`);
   }
-  assert.ok(["available", "submitted", "draft"].includes(app.status), `${app.slug}: invalid status`);
+  assert.ok(["available", "approved", "submitted", "draft"].includes(app.status), `${app.slug}: invalid status`);
   assert.match(app.page, /^[a-z0-9/-]+\/(?:#[a-z0-9-]+)?$/);
   assert.ok(!app.page.includes(".."));
   const [route, anchor] = app.page.split("#");
