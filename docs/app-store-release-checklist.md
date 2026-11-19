@@ -2,6 +2,8 @@
 
 An App Store submission includes its company website advertisement. This applies to new products, updates, resubmissions, and companion releases.
 
+User-facing feature changes also require documentation, guided screenshots and website publication, including installed development previews before any store submission. Follow `docs/feature-documentation-checklist.txt` and `AGENTS.md`; preserve accurate release status.
+
 1. Identify the product by bundle ID and App Store ID. Read current App Store Connect version states and the public storefront. Keep draft, uploaded, submitted, review-pending, and publicly available states distinct.
 2. Add or update `data/app_store_products.json` and the product/support page. Include a clear description, platforms, accurate product imagery, compatibility, requirements, release highlights, support/privacy links, and the public App Store URL when available. Do not expose internal review contact information or credentials.
 3. Keep `/products/` complete. Live applications get a store link; upcoming products get an accurate status and a working product-page link. A released older version and a review-pending update must be described separately. Never advertise an App Store variant as having capabilities exclusive to a separately distributed edition.

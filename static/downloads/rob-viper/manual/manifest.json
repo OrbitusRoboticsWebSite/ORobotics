@@ -1,0 +1,126 @@
+{
+  "manual": "ROB Viper 0.8.1 (19)",
+  "edition_date": "2026-11-19",
+  "feature_source_commit": "821dda4",
+  "pages": 51,
+  "screenshots": [
+    {
+      "file": "27-binary-settings.png",
+      "pixels": [
+        1040,
+        420
+      ],
+      "sha256": "aa47139428edb3099766db93f4178a9f105d4dd055b70b44a8a4981288e988a3"
+    },
+    {
+      "file": "28-binary-report.png",
+      "pixels": [
+        1040,
+        480
+      ],
+      "sha256": "2786acb089f0ca24c440fae3f587668cd1b46e7472367f7acea9f4c4653f55d6"
+    },
+    {
+      "file": "29-local-network.png",
+      "pixels": [
+        1180,
+        930
+      ],
+      "sha256": "e57498feb59c51b03551734598f5ba9cf6f1a8128d587c5a3f9b81b8f9084b3b"
+    },
+    {
+      "file": "30-device-identity.png",
+      "pixels": [
+        950,
+        370
+      ],
+      "sha256": "17993d282047df5acc96d668def1255cf9f2c8e41d0f09cfd60811da5c4a0754"
+    },
+    {
+      "file": "31-investigation-scope.png",
+      "pixels": [
+        640,
+        540
+      ],
+      "sha256": "24d1593151e0f7ecc33ed040849071dd08b99720f459f724e90eb309456a8314"
+    },
+    {
+      "file": "32-investigation-plan.png",
+      "pixels": [
+        1050,
+        880
+      ],
+      "sha256": "437c162ac7ff4931a96941eeaf7345d3fe4192e7063cddac8766a0b1a9249ad4"
+    },
+    {
+      "file": "33-investigation-workers.png",
+      "pixels": [
+        1050,
+        730
+      ],
+      "sha256": "29d115efaad809b640f54ec2ec16764603846d538c684c47b7f6de3e6f4aeddc"
+    },
+    {
+      "file": "34-investigation-graph.png",
+      "pixels": [
+        1160,
+        710
+      ],
+      "sha256": "77955e19dcc18c9bba2fc92373ada6f8b5a99dda3fbeda23d6e5031a4144d29d"
+    },
+    {
+      "file": "35-investigation-report.png",
+      "pixels": [
+        1090,
+        700
+      ],
+      "sha256": "2accf6a65d38971d6857ecae94e96a61d1ecb9d17bb22b1b87644d5c39db6db0"
+    },
+    {
+      "file": "36-investigation-evidence.png",
+      "pixels": [
+        1090,
+        650
+      ],
+      "sha256": "1eee8e5cbd0da67b71a214c288295dae6ba22a892f9481a6569166c9a643c918"
+    },
+    {
+      "file": "37-evidence-citation.png",
+      "pixels": [
+        900,
+        610
+      ],
+      "sha256": "189c0c7b4979b2cdbe72288b52ba03efe62f6599ebc2b41ea9b854d4837f9f0a"
+    },
+    {
+      "file": "38-partial-report.png",
+      "pixels": [
+        1090,
+        740
+      ],
+      "sha256": "f06298235142b6f0d5a8f21a1f77cb43876418a65a60b52b379dbe9e51d0b4c6"
+    },
+    {
+      "file": "39-detection-catalog.png",
+      "pixels": [
+        1090,
+        870
+      ],
+      "sha256": "cb82071685f9d8305d2b369475121950ee6158c1b2708232c5571080c03f7151"
+    },
+    {
+      "file": "40-resume-work.png",
+      "pixels": [
+        1050,
+        730
+      ],
+      "sha256": "2820d8c83c4c2634038613f476876a40cbeb6fdabc0e31dbcd3f7fdf1d122eea"
+    }
+  ],
+  "capture_notes": "Native Viper UI, November 6 and 10, 2026; November 19 feature panels use clearly labeled synthetic fixtures rendered from production SwiftUI components. No live scan, model call or policy mutation was invoked for those captures. Legacy captures are historical examples; current tools and library captures are labeled. Selected scope uses harmless fixtures. Crops are labeled. No pixels were fabricated. Network records are historical, filtering remained OFF. No enforcement or schedule was enabled.",
+  "pdf_sha256": "437e6cd59befe21db5c4ee6493320d2a3a93d422911c66dabbab4282c8ef3b34",
+  "pdf_file": "ROB-Viper-User-Manual-0.8.1-build19.pdf",
+  "pdf_bytes": 4737929,
+  "pdf_image_count": 39,
+  "description": "Published new-feature screenshots; PDF includes 25 earlier historical images."
+}

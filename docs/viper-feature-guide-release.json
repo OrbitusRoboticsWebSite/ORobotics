@@ -1,0 +1,24 @@
+{
+  "date": "2026-11-19",
+  "feature_source_commit": "821dda4",
+  "documentation_source_commit": "03ad4fe",
+  "edition": "0.8.1 (19) development preview",
+  "new_workflows": 15,
+  "new_images": 14,
+  "manual_pages": 51,
+  "manual_unique_images": 39,
+  "manual_bytes": 4737929,
+  "manual_sha256": "437e6cd59befe21db5c4ee6493320d2a3a93d422911c66dabbab4282c8ef3b34",
+  "capture_provenance": "Production SwiftUI components rendered with isolated synthetic fixtures. No live scans, specimen execution, model requests or policy changes for the captures.",
+  "validation": {
+    "website_tests": "127 passed; initial missing dependency resolved with npm ci",
+    "website_build": "passed",
+    "gallery_catalog_whitepapers_subpaths": "passed",
+    "guide_links_alternative_text_source_sync_hashes": "passed",
+    "pdf": "51 pages rendered and inspected; structural, text bounds, overlap, bookmark, link and hash validation passed",
+    "viper_focused_tests": "44 executed, 5 optional skips, 0 failures; final capture generator passed",
+    "website_visual_inspection": "Pending: Computer Use native pipe startup failed during the user's service restart"
+  },
+  "publication": "Prepared; deployment and public byte verification pending",
+  "app_release": "No public Viper app release or replacement of production downloads in this documentation update"
+}

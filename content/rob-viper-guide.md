@@ -5,9 +5,13 @@ description: "ROB Viper 0.8.1: scanner updates, platform CVEs, affected-product 
 draft: false
 ---
 
-Updated November 10, 2026 for **ROB Viper 0.8.1 (18)**. The **RedAgent 0.3.0 pilot downloads** now include the inventory workflow described here and the new Cloud Fleet controls. The Viper app remains a development preview with a public production installer pending. Install the current [RedAgent development pilot](/r/#inventory) and open its **Installed apps** tab to follow these steps.
+Updated November 19, 2026 for **ROB Viper 0.8.1 (19)**. The installed development build now includes binary review, local network discovery and investigation orchestration. The Viper app remains a **development preview; public production installer pending**.
 
-[Download the illustrated user manual (35 pages)](/downloads/rob-viper/manual/ROB-Viper-User-Manual-0.8.1.pdf) · [Manual SHA-256](/downloads/rob-viper/manual/SHA256SUMS.txt) · [Security Operations Handbook, PDF and EPUB](/books/rob-viper-security-operations/)
+[Start the new illustrated walkthrough](/products/rob-viper/investigations/) — fifteen workflows with fourteen new screenshots covering binary review, Codex sharing settings, device identity, scoped plans, concurrent workers, persistent graphs, citations, private exports, incomplete reports and recovery.
+
+[Download the updated illustrated manual (51 pages)](/downloads/rob-viper/manual/ROB-Viper-User-Manual-0.8.1-build19.pdf) · [Manual SHA-256](/downloads/rob-viper/manual/SHA256SUMS.txt) · [Earlier November 10 manual (35 pages)](/downloads/rob-viper/manual/ROB-Viper-User-Manual-0.8.1.pdf) · [Security Operations Handbook, PDF and EPUB](/books/rob-viper-security-operations/)
+
+The workflows below describe earlier scanner and inventory features. Use the current [RedAgent pilot](/r/#inventory) for its **Installed apps** workflow; Viper development features and RedAgent distribution are separate.
 
 ## What changed
 

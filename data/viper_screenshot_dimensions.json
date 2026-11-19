@@ -1,0 +1,58 @@
+{
+  "27-binary-settings.png": [
+    1040,
+    420
+  ],
+  "28-binary-report.png": [
+    1040,
+    480
+  ],
+  "29-local-network.png": [
+    1180,
+    930
+  ],
+  "30-device-identity.png": [
+    950,
+    370
+  ],
+  "31-investigation-scope.png": [
+    640,
+    540
+  ],
+  "32-investigation-plan.png": [
+    1050,
+    880
+  ],
+  "33-investigation-workers.png": [
+    1050,
+    730
+  ],
+  "34-investigation-graph.png": [
+    1160,
+    710
+  ],
+  "35-investigation-report.png": [
+    1090,
+    700
+  ],
+  "36-investigation-evidence.png": [
+    1090,
+    650
+  ],
+  "37-evidence-citation.png": [
+    900,
+    610
+  ],
+  "38-partial-report.png": [
+    1090,
+    740
+  ],
+  "39-detection-catalog.png": [
+    1090,
+    870
+  ],
+  "40-resume-work.png": [
+    1050,
+    730
+  ]
+}

@@ -935,9 +935,9 @@ async function main() {
   }
   expect(
     // Includes the gallery archive, recycling videos, and three 2026 clips loaded on demand.
-    // Preserve previous releases while adding the signed 0.1.3 bridge and its two download aliases.
-    publicBytes <= 425 * 1024 * 1024,
-    `Published site exceeds 425 MiB: ${(publicBytes / 1024 / 1024).toFixed(1)} MiB`,
+    // Preserve prior releases, including signed bridge aliases and both illustrated Viper manual editions.
+    publicBytes <= 440 * 1024 * 1024,
+    `Published site exceeds 440 MiB: ${(publicBytes / 1024 / 1024).toFixed(1)} MiB`,
   );
 
   const htmlFiles = publicFiles.filter((file) => path.extname(file).toLowerCase() === ".html");

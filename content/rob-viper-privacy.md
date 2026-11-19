@@ -39,4 +39,16 @@ The CVE library retrieves public records from NVD and official CVE publisher dat
 
 Prepare RedAgent test exports a local plan, a SHA-256-pinned application index and instructions. Preparation does not inspect a host. A compatible RedAgent collector runs locally on the explicitly named computer and retains installed metadata, candidate CVEs, coverage gaps and integrity receipts in a private case folder. It does not upload that inventory, execute inventoried apps, run CVE tests or deploy patches. Software names, versions, hostnames and paths may be sensitive; review exports before sharing. A name match needs product/version review, and No index match is not a safety verdict.
 
-Last updated November 10, 2026.
+## Binary review and investigation planning
+
+The November 19 development feature guide distinguishes two optional Codex uses. **Binary review** sends bounded signature, string, scanner and disassembly excerpts to OpenAI through the existing Codex login. Excerpts can include proprietary code or embedded data; the full binary stays local. The review is advisory and cannot grant execution trust or alter policy. Automatic review queues authenticated Deny/Would deny execution decisions; it is not universal inspection of every launch. Audit still permits execution. The background agent needs access and a recent heartbeat; missing, stale or dropped events remain coverage gaps.
+
+**Generate AI plan** sends the investigation goal, network label, selected CIDRs and scope settings to OpenAI. Device inventory, flow records and packet bodies are excluded. Users should avoid secrets in the goal. The plan is constrained to the selected scope and built-in workers, and must be reviewed and explicitly run. A local plan is also available. Model calls have bounded time, output and rate limits. No model result changes execution or network policy.
+
+Local discovery sends fixed TCP probes to configured authorized private subnets and uses Bonjour/reverse DNS; MAC vendor lookup is offline. Automatic refresh runs while Viper is open. Saved observations and local device labels may contain sensitive identities and addresses. A configured router relationship is not authenticated physical topology.
+
+Investigation plans, journals, graphs and source evidence persist privately on the Mac. Workers run while the main app is open; interrupted work resumes only by explicit choice. The saved-only default sends no new discovery probes for that investigation. The separate automatic discovery setting may still refresh while the app is open. Reports show stale evidence, collector failures and missing telemetry. Local JSON export includes exact retained evidence bytes, hashes and citations, so review it before sharing. ARTEX is neither required nor executed; external tool/model adapters and HTTP-header/ARTEX-guard-log ingestion are not included.
+
+[Guided screenshots and sharing controls](/products/rob-viper/investigations/).
+
+Last updated November 19, 2026.

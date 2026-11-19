@@ -1,1 +1,2 @@
+437e6cd59befe21db5c4ee6493320d2a3a93d422911c66dabbab4282c8ef3b34  ROB-Viper-User-Manual-0.8.1-build19.pdf
 d9ce84cafb9e81f837355910bf85ea3904dacbb9c9b09774f89c90ea21c87acb  ROB-Viper-User-Manual-0.8.1.pdf

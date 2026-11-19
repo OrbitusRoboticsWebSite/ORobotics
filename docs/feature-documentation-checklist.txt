@@ -1,0 +1,25 @@
+FEATURE DOCUMENTATION AND WEBSITE RELEASE CHECKLIST
+Standing authorization: AGENTS.md. Apply to installed previews and releases.
+
+1. Identify the actual changed UI/behavior and installed/source/public versions.
+2. Update README/help, ORCHESTRATION.txt or other affected feature docs, and the
+   illustrated user manual. Explain permissions, model sharing and limits.
+3. Capture actual UI with privacy-safe, clearly labeled demonstration data.
+   Cover entry point, actions, expected results, error/gap states and recovery.
+   Give exact labels, numbered steps, captions and web alternative text.
+4. Regenerate PDF and HTML; verify hashes, links and selectable text, render
+   every changed PDF page, and inspect all images and desktop/mobile layouts.
+5. Update the canonical product page, products index, guide and privacy text
+   where relevant. Keep public release status and production downloads accurate.
+6. Review the diff, preserve unrelated work, run appropriate validation, commit
+   and push all intended changes to configured upstreams.
+7. Deploy the website; verify public pages, images, PDF size and SHA-256. Record
+   commit/deployment and validation evidence, or report the concrete blocker.
+
+Do not infer live collection or model behavior from synthetic UI fixtures.
+Do not change policy or permissions solely to make a documentation image green.
+Existing book/store release workflows apply when those editions are changed.
+
+2026-11-19: the site budget is 440 MiB (observed build 430.2 MiB), retaining
+the prior manual and production companion downloads alongside the 51-page
+feature manual and 14 native UI screenshots. Individual media checks remain.
