@@ -2,12 +2,12 @@
 title: "Musimotion 2D and volumetric presentation guide"
 url: "/products/musimotion/vision-guide/"
 draft: false
-description: "Read 2D projects, animate solid 3D volumes, enter full immersion on Vision Pro, create hand-tracked arcade scenes, and generate a techno soundtrack on Mac, iPad and Vision Pro."
+description: "Read 2D projects, select and edit objects in 3D, open or import scene templates, create immersive scenes on Vision Pro and generate your own soundtrack."
 ---
 
 [Back to Musimotion]({{< relref "musimotion.md" >}}) · [Product support]({{< relref "contact.md" >}})
 
-Version 1.5 · November 19, 2026 · Development preview
+Version 1.6 · November 19, 2026 · Development preview
 
 Read existing **2D presentations**, switch to **3D Volume** for solid objects and
 ink at different depths, and present inside **Full Immersion** on Vision Pro.
@@ -17,7 +17,8 @@ none of those designer assets have been redrawn. To make a party scene, follow
 the [birthday surprise walkthrough](#8-make-a-birthday-surprise). To build a music game,
 follow [Create a rhythm scene](#9-create-a-rhythm-scene). You can also
 [generate a soundtrack](#10-generate-a-soundtrack) for a 2D or spatial scene,
-or [play Droid Arena](#11-play-droid-arena) in Full Immersion.
+or [play Droid Arena](#11-play-droid-arena) in Full Immersion. For a project
+you are editing, see [Select, edit and copy objects](#12-select-edit-and-copy-objects).
 
 This guide describes development source, not an App Store release. The Mac
 1.0.0 build 7 approval is a separate release awaiting manual publication at the
@@ -26,7 +27,7 @@ each device. Keep a backup before opening a new 3D project in older software:
 older builds do not understand the additional mode, camera and spatial ink data.
 
 Images show actual application UI with demonstration content. The Vision Pro
-pictures come from simulator recordings. Other captures identify their
+pictures come from simulator recordings and direct simulator screenshots. Other captures identify their
 platform. Select any picture to see its full size. [Capture provenance]({{< asset-url "images/musimotion/visionos/provenance.json" >}})
 Simulator evidence does not establish physical headset comfort or hand tracking.
 
@@ -41,6 +42,14 @@ Simulator evidence does not establish physical headset comfort or hand tracking.
 4. On Vision Pro, **3D Setup** opens the optional spatial controls; **Artwork
    Editor** returns to the original editor. They edit the same project.
 
+{{< musimotion-capture "editor-ipad-timeline-collapsed.webp" "iPad transport with Timeline in the control row and a separate scrubber beneath it" >}}
+
+*iPad, landscape. The layer tracks are hidden. Timeline sits above the full-width scrubber, whose thumb is near the nine-second mark.*
+
+{{< musimotion-capture "editor-ipad-timeline-expanded.webp" "iPad layer tracks above the Hide control and the separate playhead slider" >}}
+
+*iPad, landscape. The layer tracks are visible. Hide collapses the tracks while the same scrubber remains available below.*
+
 {{< musimotion-capture "original-artwork.webp" "Original iPad artwork and turquoise timeline inside the Vision Pro editor" >}}
 
 *Start in the familiar editor. Choosing a spatial workspace is optional.*
@@ -52,10 +61,15 @@ mode preserves the saved depth information for later 3D playback.*
 
 ## 2. Make a banner cross the canvas in 3D
 
-1. Choose **3D Volume** above the artwork canvas, then **Banner Exercise**.
-   Alternatively, choose **3D Setup → Effects → Add Banner Exercise** on Vision
-   Pro. Either action appends an eight-second scene and preserves existing scenes.
-2. Select **Welcome Banner** using **Object** or the Layers list. Choose **Edit
+1. Choose **Templates → Welcome Banner → Import into Presentation**. On Vision
+   Pro you can also open **Project → Templates**. Import appends an editable
+   eight-second scene. To start a separate project, choose **Open as New Presentation**.
+
+   {{< musimotion-capture "editor-mac-welcome-template.webp" "Mac Templates browser with Welcome Banner selected above Open as New Presentation and Import into Presentation" >}}
+
+   *Mac. Import adds this banner scene after the existing scenes. Open creates a separate document in the library.*
+
+2. Click a visible letter of **Welcome Banner**, or select it in **Objects**. Choose **Edit
    XYZ** and inspect the three supplied poses. Time is relative to this scene.
 3. Tap a field or its label to edit, then choose **Save XYZ Keyframe**. Saving at an existing time
    replaces that pose. Scrub between the poses to see the interpolation.
@@ -68,7 +82,7 @@ mode preserves the saved depth information for later 3D playback.*
 
 {{< musimotion-capture "banner-setup.webp" "Banner exercise in the spatial Effects panel" >}}
 
-*The generated scene is synthetic test content. It is also the input to the
+*Earlier development capture of the synthetic banner. Use **Templates** in the current editor. It is also the input to the
 cross-platform depth, save/reopen and rendered-movie tests.*
 
 {{< musimotion-capture "xyz-keyframe.webp" "Edit XYZ form with scene time and separate X, Y and Z fields" >}}
@@ -249,19 +263,17 @@ remains the acceptance gate for hands, gaze, repeated grabs and longer sessions.
 
 Select any picture below to enlarge the controls.
 
-1. Open the artwork editor and choose **Celebration** above the canvas or from
-   the original **Effects** side tab. Choose
-   **Add Birthday Surprise** to append a 16-second scene. It opens in **3D Volume**.
+1. Choose **Templates → Birthday Surprise → Import into Presentation** to add a 16-second scene. It opens in **3D Volume**.
    The first three seconds count down from three. At three seconds, the gold
    **Happy Birthday!** greeting moves forward as balloons and confetti begin to
    fall. Fireworks start two seconds after the effects cue.
 
    {{< musimotion-capture "birthday-01.webp" "Mac Celebration Effects sheet with Add Birthday Surprise, Add Balloon Drop and Add Fireworks" >}}
 
-   *Mac. Add a complete scene or apply one effect to the selected scene.*
+   *Earlier Mac development capture of the effects controls. The current editor opens the complete birthday scene from Templates.*
 
 2. To decorate a scene you already have, select that scene first, choose
-   **Celebration**, then **Add Balloon Drop** or **Add Fireworks**. Turn
+   **Objects → Add Celebration Effects…**, then **Add Balloon Drop** or **Add Fireworks**. Turn
    **Balloon Drop**, **Fireworks** and **Confetti** on or off independently.
    **Remove Effects** clears these decorations. The countdown and greeting are
    editable text layers and can be selected or removed separately.
@@ -332,16 +344,16 @@ checksum and source test.
 
 ## 9. Create a rhythm scene
 
-1. Open the artwork editor and choose **Rhythm Studio → Add Rhythm Scene**.
+1. Open the artwork editor and choose **Templates → Rhythm Stage → Import into Presentation**.
    The new scene starts with *Orbit Pulse*, an original 120 BPM song. The
    two-second lead-in gives the first shape time to approach. The song then
    plays for 16 seconds, with 32 targets on the default chart.
 
    {{< musimotion-capture "rhythm-vision-add.webp" "Rhythm Studio on Vision Pro Simulator with Add Rhythm Scene over the original illustrated editor" >}}
 
-   *Vision Pro Simulator. Choose Add Rhythm Scene to place Orbit Pulse on the timeline.*
+   *Earlier Vision Pro Simulator capture of the rhythm starter. In the current editor, import Rhythm Stage from Templates.*
 
-2. To use your own music, open **Rhythm Studio → Song → Choose Song…**.
+2. To use your own music, choose **Objects → Rhythm Settings… → Song → Choose Song…**.
    Pick a local audio file between half a second and 30 minutes long, up to
    128 MB. Musimotion measures rhythmic accents on the device and embeds the
    audio in the project. If you hear an accent where a target should arrive,
@@ -506,14 +518,14 @@ bright open hats and a melodic metallic hook.”
 
 ## 11. Play Droid Arena
 
-1. On Vision Pro, open the **Project** menu and choose **Add Droid Arena**. This adds a
+1. On Vision Pro, choose **Project → Templates → Droid Arena → Import into Presentation**. This adds a
    new 42-second scene. Select **Full Immersion** to stand inside the arena.
    Each of its three waves lasts 14 seconds. Look for an energized droid as
    it prepares to release a glowing pulse.
 
    {{< musimotion-capture "droid-vision-arena-menu.webp" "Vision Pro simulator Project menu with Add Droid Arena above Save on Device" >}}
 
-   *Vision Pro simulator. Add Droid Arena is the first item in Project. The Full Immersion control is visible behind the menu.*
+   *Earlier Vision Pro Simulator capture of the Project menu. In the current editor, Project opens Templates. Full Immersion remains above the stage.*
 
 2. Start with **Preview Waves** to see the formations and the incoming pulses
    before playing. The first wave has three droids, the second has four
@@ -577,6 +589,100 @@ all three waves. On Vision Pro, use **Full Immersion** to play.
 The preview shows the authored droid formations and incoming pulses. The
 [native sample manifest]({{< asset-url "downloads/musimotion/visionos/droid-beats-manifest.json" >}}) records the
 project, movie and music checksums and the composer credited for each take.
+
+## 12. Select, edit and copy objects
+
+1. Open your presentation and pause at a time when the object is visible.
+   On Mac, click a shape or visible lettering once in **2D** or **3D Volume**.
+   Where an arrow and a banner overlap, clicking the
+   arrow selects it. Clicking exposed lettering selects the banner. A 3D
+   ink stroke is selectable along the part drawn by the current time.
+   **Inspector** opens for the selected object. If a brush is active,
+   finish painting before selecting an object on the canvas.
+
+   To add the example arrow, open **Shapes**, enter `arrowshape.left.circle.fill`
+   in **Search all SF Symbols**, and select **Use exact symbol** or press Return.
+   Close **Shapes** to work on the canvas again.
+
+   {{< musimotion-capture "editor-mac-arrow-search.webp" "Mac Shapes palette showing arrowshape.left.circle.fill in the search field and the matching Use exact symbol action" >}}
+
+   *Mac, synthetic presentation. The exact name brings up the mint action and the matching arrow in the results below.*
+
+   {{< musimotion-capture "editor-mac-welcome-arrow.webp" "The selected WELCOME lettering near the left of the 3D box and a separate teal circular arrow near its center" >}}
+
+   *Mac. The outline is on the welcome lettering. Click the small teal arrow near the center of the box to switch objects.*
+
+2. To reach an object behind another object, a hidden object or a silent
+   audio layer, choose **Objects** above the canvas. Select the scene, then
+   the object's row. You can also select paint buffers, ink and particle
+   strokes, emitters and the scene's celebration, rhythm or droid settings.
+   Choosing an object from this list works even when its layer is outside
+   the current playhead time.
+
+3. In **Inspector**, change **Name**, then use the controls for that object.
+   For a shape, change its color, scale or rotation. **Edit XYZ** sets a
+   precise position at a chosen time in a 3D scene. Text, media, strokes
+   and scene effects each expose controls for the data they contain. For a balloon drop, open **Celebration Effects…** to
+   adjust balloon count, fall speed, wind and bounce. For a droid
+   formation, **Droid Arena Settings…** changes its number of waves.
+
+   {{< musimotion-capture "editor-mac-selected-arrow.webp" "Mac camera with the arrow outlined beside the Inspector showing arrowshape.left.circle.fill, Color, Opacity, Scale and Rotation" >}}
+
+   *Mac. After one click, the outline moves to the arrow. Its SF Symbol name and appearance controls appear in Inspector.*
+
+4. If an object from an older presentation has the same **Enters** and
+   **Exits** times at the very end of its scene, it has no time to appear during
+   playback. Select it in **Objects**. At the top of **Inspector**, choose
+   **Use Final Second**. In an eight-second scene, an 8.00–8.00
+   second layer then spans 7.00–8.00. The playhead moves to 7.00 so
+   the object is visible immediately. For a different interval, edit
+   **Enters** or **Exits** in the inspector’s **Timeline** section.
+
+   {{< musimotion-capture "editor-mac-recover-arrow.webp" "Mac Inspector showing This object starts at the end of the scene above Use Final Second for Left Arrow" >}}
+
+   *Mac, synthetic legacy project. Left Arrow is selected even though the camera has no arrow to draw at the current time.*
+
+   {{< musimotion-capture "editor-mac-recovered-arrow.webp" "Mac Objects list with Left Arrow selected, visible arrow in front of the welcome lettering, and transport showing seven of eight seconds" >}}
+
+   *Mac. Use Final Second moved the playhead to 00:07. The camera shows the arrow and the welcome text together. The original eight-second duration is preserved.*
+
+5. Choose **Edit Object → Copy**, select a destination scene, then choose
+   **Paste**. Select the pasted copy and edit its name or color. The
+   source keeps its own settings. On Mac, use **⌘C**, **⌘X** and **⌘V**
+   for the selected object. Inside a text field, these shortcuts edit
+   the selected text. Use **Duplicate** for another copy in the same
+   scene, or **Cut** to move it. For a scene effect, **Duplicate
+   in New Scene** creates a separate scene with an editable effect. A
+   copied rhythm chart brings its song and custom panorama with it.
+
+   {{< musimotion-capture "editor-mac-pasted-arrow.webp" "Mac Objects list showing Welcome Banner, arrowshape.left.circle.fill and a checked arrowshape.left.circle.fill Copy" >}}
+
+   *Mac. The checkmark identifies the pasted arrow. Both the original arrow and the Welcome Banner remain in the scene.*
+
+6. Use **Timeline** to show the layer tracks and **Hide** to collapse them.
+   Drag the scrubber below the transport controls to find the frame you
+   want. The toggle and the scrubber have separate hit areas in both states.
+
+   {{< musimotion-capture "editor-mac-timeline-collapsed.webp" "Mac transport with the Timeline button on its own row above the playhead" >}}
+
+   *Mac. Timeline opens the tracks. The playhead is at nine seconds.*
+
+   {{< musimotion-capture "editor-mac-timeline-expanded.webp" "Mac transport with the Hide button above the playhead while the layer tracks are visible" >}}
+
+   *Mac. The tracks are open. Hide sits above the scrubber, including when the thumb moves beneath it.*
+
+7. To start from existing artwork, choose **Templates**. Select **Welcome
+   Banner**, **Birthday Surprise**, **Rhythm Stage** or **Droid Arena**.
+   **Import into Presentation** adds a scene to the project you are editing.
+   Undo removes that import. **Open as New Presentation** saves your
+   current work in the library and opens a separate editable project.
+   If saving fails, the browser displays the error and keeps your
+   current presentation open. On Vision Pro, **Project → Templates**
+   opens the same browser from the spatial workspace.
+
+   {{< musimotion-capture "editor-vision-templates.webp" "Vision Pro simulator Templates browser with four scene choices and buttons to open or import the selected Droid Arena" >}}
+
+   *Vision Pro simulator. Droid Arena is selected. Choose Open as New Presentation or Import into Presentation at the bottom of the sheet.*
 
 ## AI, sharing and support
 

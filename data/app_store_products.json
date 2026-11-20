@@ -78,7 +78,7 @@
       "source_project": "git.musimotion",
       "status": "approved",
       "platforms": "Mac approved · Release pending",
-      "description": "An animation and painting studio. Mac 1.0.0 is approved and awaiting manual release. The development preview reads 2D projects, animates 3D objects and Sumi ink, and adds birthday greetings, falling balloons, confetti and fireworks on Mac, iPad and Vision Pro. Play hand-tracked rhythm and droid arcade scenes on Vision Pro. Generate music for any scene on Mac, iPad and Vision Pro, including techno with an editable tempo.",
+      "description": "An animation and painting studio. Mac 1.0.0 is approved and awaiting manual release. The development preview reads 2D projects, animates 3D objects and Sumi ink, and adds birthday greetings, falling balloons, confetti and fireworks on Mac, iPad and Vision Pro. Play hand-tracked rhythm and droid arcade scenes on Vision Pro. Generate a techno soundtrack for any scene. Use the development editor to select and copy 3D objects or import an editable scene template.",
       "page": "products/musimotion/",
       "icon": "images/products/musimotion/app-icon.webp",
       "verified_at": "2026-11-19"

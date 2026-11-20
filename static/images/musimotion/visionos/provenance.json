@@ -1,6 +1,6 @@
 {
   "date": "2026-11-19",
-  "guide_version": "1.5",
+  "guide_version": "1.6",
   "captures": [
     {
       "file": "original-artwork.webp",
@@ -614,6 +614,246 @@
         1600,
         900
       ]
+    },
+    {
+      "file": "editor-vision-templates.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "vision-templates2.xcresult",
+      "test": "SpatialAuthoringUITests/testCreateDroidArenaAndPreviewWaves()",
+      "activity": "46 Choose a scene template",
+      "source": "Direct simctl screenshot during the native UI test.",
+      "source_sha256": "f7861f8e33b1de667f0b4eb84eb8db26d812a7408bc03e905c2c8171f0bde0ee",
+      "source_dimensions": [
+        3840,
+        2160
+      ],
+      "dimensions": [
+        1000,
+        990
+      ],
+      "transformation": "Cropped the native frame to (1420, 690, 2420, 1680) and encoded it as WebP at quality 93.",
+      "sha256": "04f8e5191c5ab35fb5fe58b99228bcaa6497655220a48f0849cdcb9270b877fc",
+      "content": "Development UI, demonstration project. Droid Arena is selected in the shared Templates browser."
+    },
+    {
+      "file": "editor-ipad-timeline-collapsed.webp",
+      "platform": "iPad Pro 13-inch (M5), iPadOS 26.5 Simulator",
+      "source_result": "ipad-editor3.xcresult",
+      "test": "VolumetricCompatibilityUITests/testTimelineControlsLeaveTheEntireScrubberReachable()",
+      "activity": "Timeline - Separate scrubber and Show Timeline",
+      "source_file": "596ECB69-86A7-4809-AF5B-A82A55DDCB23.png",
+      "source_sha256": "b746950ebe2360faa7639f81b85434d524eaea1a0241e1cfe1bf63ef96f3078d",
+      "source_dimensions": [
+        2752,
+        2064
+      ],
+      "dimensions": [
+        1420,
+        152
+      ],
+      "transformation": "Native window capture, orientation normalized. Crop (0, 1770, 2752, 2064). Fit within 1420 x 1550. WebP quality 93.",
+      "sha256": "24bfde31e8e327e632831c76bd22fb10709726efe3b14da7fd34499b4ced1151",
+      "content": "Synthetic default presentation at nine seconds. The layer tracks are hidden. Timeline sits above the full-width scrubber, whose thumb is near the nine-second mark."
+    },
+    {
+      "file": "editor-ipad-timeline-expanded.webp",
+      "platform": "iPad Pro 13-inch (M5), iPadOS 26.5 Simulator",
+      "source_result": "ipad-editor3.xcresult",
+      "test": "VolumetricCompatibilityUITests/testTimelineControlsLeaveTheEntireScrubberReachable()",
+      "activity": "Timeline - Separate scrubber and Hide Timeline",
+      "source_file": "2548D10A-990C-4B38-9B94-785CCCF17A7B.png",
+      "source_sha256": "2247c40202ff2b088a915c64dbc2974c9135cc38879e498f0cb70b2203bfdbb7",
+      "source_dimensions": [
+        2752,
+        2064
+      ],
+      "dimensions": [
+        1420,
+        366
+      ],
+      "transformation": "Native window capture, orientation normalized. Crop (0, 1355, 2752, 2064). Fit within 1420 x 1550. WebP quality 93.",
+      "sha256": "3f3cdccd8053e92de0aed69cfb78fd227b3db7abb9ea3f4031b78dd42777902f",
+      "content": "Synthetic default presentation at nine seconds. The layer tracks are visible. Hide collapses the tracks while the same scrubber remains available below."
+    },
+    {
+      "file": "editor-mac-welcome-template.webp",
+      "platform": "macOS 26.6.2, Mac mini, isolated development build",
+      "source_result": "mac-pick-ui3.xcresult",
+      "test": "VolumetricCompatibilityUITests/testOpenTemplateAsSeparatePresentation()",
+      "activity": "Template 01 - Open or import Welcome Banner",
+      "source_file": "Template 01 - Open or import Welcome Banner_0_9BA912E8-CB44-4E76-AD36-ED21C2A80134.png",
+      "source_sha256": "2dfdbbe43af487d2123c197cdc1dbd30972442d74f6dab382042c5bb902aa29f",
+      "source_dimensions": [
+        980,
+        712
+      ],
+      "dimensions": [
+        486,
+        460
+      ],
+      "transformation": "Native window capture, orientation normalized. Crop (247, 125, 733, 585). Fit within 1420 x 1550. WebP quality 93.",
+      "sha256": "a3f918bee6ca45e944a3541216ad74957fef75473d13186628ba135191e39841",
+      "content": "Synthetic default presentation. The actual Mac Templates sheet has Welcome Banner selected."
+    },
+    {
+      "file": "editor-mac-timeline-collapsed.webp",
+      "platform": "macOS 26.6.2, Mac mini, isolated development build",
+      "source_result": "mac-pick-ui3.xcresult",
+      "test": "VolumetricCompatibilityUITests/testTimelineControlsLeaveTheEntireScrubberReachable()",
+      "activity": "Timeline - Separate scrubber and Show Timeline",
+      "source_file": "Timeline - Separate scrubber and Show Timeline_0_7F0C044B-79C9-4655-A941-137C0E22491E.png",
+      "source_sha256": "bf6d7bbcec05f493c6c77ef4721e645dfc63b17122acf0e33c263060696d6c1c",
+      "source_dimensions": [
+        980,
+        712
+      ],
+      "dimensions": [
+        980,
+        112
+      ],
+      "transformation": "Native window capture, orientation normalized. Crop (0, 600, 980, 712). Fit within 1420 x 1550. WebP quality 93.",
+      "sha256": "171eb8ceb853149ef055d8fa310b4bb7c0b3187d61c44284c0ed9c162295d409",
+      "content": "Synthetic ten-second presentation at nine seconds, showing the separate Mac transport and scrubber."
+    },
+    {
+      "file": "editor-mac-timeline-expanded.webp",
+      "platform": "macOS 26.6.2, Mac mini, isolated development build",
+      "source_result": "mac-pick-ui3.xcresult",
+      "test": "VolumetricCompatibilityUITests/testTimelineControlsLeaveTheEntireScrubberReachable()",
+      "activity": "Timeline - Separate scrubber and Hide Timeline",
+      "source_file": "Timeline - Separate scrubber and Hide Timeline_0_8748781F-892E-4980-9D6F-1F79E97448BC.png",
+      "source_sha256": "c3de164c309f9d7b2f5bbebb5da0f4f0966992d7b1dccb77c5758c9e144c0c1b",
+      "source_dimensions": [
+        980,
+        712
+      ],
+      "dimensions": [
+        980,
+        197
+      ],
+      "transformation": "Native window capture, orientation normalized. Crop (0, 515, 980, 712). Fit within 1420 x 1550. WebP quality 93.",
+      "sha256": "5c766813d5af302f90bf49011310bc581045e5798566619200de614ec78e64df",
+      "content": "Synthetic ten-second presentation at nine seconds, showing the separate Mac transport and scrubber."
+    },
+    {
+      "file": "editor-mac-recover-arrow.webp",
+      "platform": "macOS 26.6.2, Mac mini, isolated development build",
+      "source_result": "mac-pick-ui5.xcresult",
+      "test": "VolumetricCompatibilityUITests/testRepairSavedArrowWithNoVisibleFrames()",
+      "activity": "Recovery 01 - Original final-frame arrow",
+      "source_file": "AC42E8C0-E33A-4C33-A968-9654C3A7A21C.png",
+      "source_sha256": "3439a13326fe966ce959c3e7fbd647a765bd050a442525e643a0c0ae2842db3f",
+      "source_dimensions": [
+        980,
+        712
+      ],
+      "dimensions": [
+        303,
+        279
+      ],
+      "transformation": "Native window capture, orientation normalized. Crop (677, 110, 980, 389). Fit within 1420 x 1550. WebP quality 93.",
+      "sha256": "c94286fea6fb6ec8d8bd796facc7b4ed9b04cb8a8e2fc09402e54e7a30e24bb0",
+      "content": "The legacy layer has a zero-length interval at the scene end. The Inspector offers a timing repair."
+    },
+    {
+      "file": "editor-mac-recovered-arrow.webp",
+      "platform": "macOS 26.6.2, Mac mini, isolated development build",
+      "source_result": "mac-pick-ui5.xcresult",
+      "test": "VolumetricCompatibilityUITests/testRepairSavedArrowWithNoVisibleFrames()",
+      "activity": "Recovery 02 - Arrow occupies the final second",
+      "source_file": "A6B71770-0AA1-461D-9044-7686DDA310EA.png",
+      "source_sha256": "03dd30c0f3869f788c8eeb5b82439e8afb1407ce253cacf39975a68caee51d3d",
+      "source_dimensions": [
+        980,
+        712
+      ],
+      "dimensions": [
+        980,
+        712
+      ],
+      "transformation": "Native window capture, orientation normalized. Crop full frame. Fit within 1420 x 1550. WebP quality 93.",
+      "sha256": "3a3bc076ffcc4206ceb1d737852f3771cef7057ffc7fafb23e3561705495f8e5",
+      "content": "The edited legacy layer is visible and the playhead has moved to seven seconds."
+    },
+    {
+      "file": "editor-mac-arrow-search.webp",
+      "platform": "macOS 26.6.2, Mac mini, isolated development build",
+      "source_result": "mac-pick-ui8.xcresult",
+      "test": "VolumetricCompatibilityUITests/testClickArrowInWelcomeVolumeAndPasteIndependentObject()",
+      "activity": "Shapes 01 - Add an exact SF Symbol",
+      "source_file": "C2B0BFD1-3076-41F4-A5C9-C34FEADFC739.png",
+      "source_sha256": "771e3f0556264833a1047a00f55812fbc19adcbb2a2efdfb56341bd2be31010e",
+      "source_dimensions": [
+        980,
+        712
+      ],
+      "dimensions": [
+        442,
+        323
+      ],
+      "transformation": "Native window capture, orientation normalized. Crop (70, 143, 512, 466). Fit within 1420 x 1550. WebP quality 93.",
+      "sha256": "abe9862ef9ce7b25601fd6e0c866518c2c7c6d83b341163664755543d79ee49f",
+      "content": "An exact SF Symbol name is entered in the native search field and the matching action is displayed."
+    },
+    {
+      "file": "editor-mac-welcome-arrow.webp",
+      "platform": "macOS 26.6.2, Mac mini, isolated development build",
+      "source_result": "mac-pick-ui8.xcresult",
+      "test": "VolumetricCompatibilityUITests/testClickArrowInWelcomeVolumeAndPasteIndependentObject()",
+      "activity": "Objects 01 - Welcome banner and arrow",
+      "source_file": "299F8CB0-E0A6-4090-94CE-4905412530A7.png",
+      "source_sha256": "5d2a4d22f04dffd11410562ae3c82812d6cd870ee0dd1f9985558831b7b5507a",
+      "source_dimensions": [
+        980,
+        712
+      ],
+      "dimensions": [
+        437,
+        287
+      ],
+      "transformation": "Native window capture, orientation normalized. Crop (167, 222, 604, 509). Fit within 1420 x 1550. WebP quality 93.",
+      "sha256": "1a17c75bdb1ec0cb5b4bf36cbd11e38d6b085d0301baa23dd0e6ad9d9920b445",
+      "content": "A synthetic Welcome Banner is selected in the camera view and the unselected arrow appears near the center."
+    },
+    {
+      "file": "editor-mac-selected-arrow.webp",
+      "platform": "macOS 26.6.2, Mac mini, isolated development build",
+      "source_result": "mac-pick-ui8.xcresult",
+      "test": "VolumetricCompatibilityUITests/testClickArrowInWelcomeVolumeAndPasteIndependentObject()",
+      "activity": "Objects 02 - Clicked arrow and inspector",
+      "source_file": "F3719C13-CF8A-49A0-848A-5796C1312627.png",
+      "source_sha256": "b6bfc91bf200476f7be45109be11c2aa84fcb156629a5a89ef5b2f54769029e2",
+      "source_dimensions": [
+        980,
+        712
+      ],
+      "dimensions": [
+        791,
+        450
+      ],
+      "transformation": "Native window capture, orientation normalized. Crop (189, 115, 980, 565). Fit within 1420 x 1550. WebP quality 93.",
+      "sha256": "892bf9821e6b40b778cabb6c26e8d523ab036d48a7fc5ecc2ee8275182dbd126",
+      "content": "A native click on the arrow moved the selection outline and opened the inspector for the exact symbol."
+    },
+    {
+      "file": "editor-mac-pasted-arrow.webp",
+      "platform": "macOS 26.6.2, Mac mini, isolated development build",
+      "source_result": "mac-pick-ui8.xcresult",
+      "test": "VolumetricCompatibilityUITests/testClickArrowInWelcomeVolumeAndPasteIndependentObject()",
+      "activity": "Objects 03 - Arrow copied and pasted",
+      "source_file": "CEE256D5-FCCB-4095-99FE-5EFE5381E7F3.png",
+      "source_sha256": "d91892a8dad761d6a6c70ab44e7f899eb83165eac92f0e04621713d5546969ef",
+      "source_dimensions": [
+        980,
+        712
+      ],
+      "dimensions": [
+        299,
+        123
+      ],
+      "transformation": "Native window capture, orientation normalized. Crop (67, 224, 366, 347). Fit within 1420 x 1550. WebP quality 93.",
+      "sha256": "c04776eba980f30722f3cc41d6a75e8ad5c0011e102d81e5f3c14042f346b04c",
+      "content": "The object list shows Welcome Banner, the original arrow and a separate selected arrow with Copy in its name."
     }
   ]
 }

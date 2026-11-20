@@ -157,3 +157,20 @@ The 127 site tests passed, along with the eight-product catalog, gallery and
 white-paper checks and subpath rendering of 91 HTML files. Local publication
 checks verified the four public routes and their 53 linked resources,
 including the natural dimensions and checksums of all 41 guide screenshots.
+
+
+## November 19, 2026 · Musimotion object editing and scene templates
+
+Guide 1.6 documents the development build for Mac, iPad and Vision Pro. The
+Objects list exposes authored content, including items outside the current
+playhead time. The Mac walkthrough shows selecting overlapping artwork,
+inspecting timing, copying an object and using the timeline transport.
+The Templates sheet offers a separate library document or an editable scene
+import. Twelve new annotated captures bring the guide to 53 native Mac and
+simulator images. The Mac run that added an arrow, clicked it in the 3D camera
+and pasted a copy passed all 152 selected tests. The four spatial template
+workflows passed in the 73-test Vision Pro simulator run.
+Website validation covered 127 tests, the eight-product catalog, and 69 guide,
+image and sample resources. The production build measured 448.5 MiB.
+See the [illustrated guide](../content/musimotion-vision-guide.md) and its
+[capture provenance](../static/images/musimotion/visionos/provenance.json).

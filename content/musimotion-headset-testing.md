@@ -55,8 +55,8 @@ must stay `not_run`. Only internal testing is assumed.
     choose Front/Right side, inspect depth ink and keyframes, export a movie,
     then reopen the package on Vision Pro. Check that all source data survives.
 
-11. **Surrounding birthday scene.** In the artwork editor choose **Celebration →
-    Add Birthday Surprise**. With the playhead at the start, enter Full Immersion
+11. **Surrounding birthday scene.** In the artwork editor choose **Templates → Birthday Surprise →
+    Import into Presentation**. With the playhead at the start, enter Full Immersion
     and press Play. From a comfortable seated position, check the countdown,
     greeting, overhead drop, surrounding balloons and localized fireworks. Pause
     and resume. Record whether the transport stayed reachable and the scene
