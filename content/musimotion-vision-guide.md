@@ -2,19 +2,20 @@
 title: "Musimotion 2D and volumetric presentation guide"
 url: "/products/musimotion/vision-guide/"
 draft: false
-description: "Read 2D projects, animate solid 3D volumes, enter full immersion on Vision Pro, and render the same presentations on Mac and iPad."
+description: "Read 2D projects, animate solid 3D volumes, enter full immersion on Vision Pro, create hand-tracked rhythm scenes with songs and panoramas, and render presentations on Mac and iPad."
 ---
 
 [Back to Musimotion]({{< relref "musimotion.md" >}}) · [Product support]({{< relref "contact.md" >}})
 
-Version 1.3 · November 19, 2026 · Development preview
+Version 1.4 · November 19, 2026 · Development preview
 
 Read existing **2D presentations**, switch to **3D Volume** for solid objects and
 ink at different depths, and present inside **Full Immersion** on Vision Pro.
 Mac and iPad render the same saved 3D project through a movable camera. The
 illustrated sidebar, timeline and radial menus reuse the original iPad artwork;
 none of those designer assets have been redrawn. To make a party scene, follow
-the [birthday surprise walkthrough](#8-make-a-birthday-surprise).
+the [birthday surprise walkthrough](#8-make-a-birthday-surprise). To build a music game,
+follow [Create a rhythm scene](#9-create-a-rhythm-scene).
 
 This guide describes development source, not an App Store release. The Mac
 1.0.0 build 7 approval is a separate release awaiting manual publication at the
@@ -326,6 +327,111 @@ To try the same scene used in the package test, download the
 unzip it, and open the enclosed project on Mac, iPad or Vision Pro.
 The [sample manifest]({{< asset-url "downloads/musimotion/visionos/birthday-manifest.json" >}}) records its size,
 checksum and source test.
+
+## 9. Create a rhythm scene
+
+1. Open the artwork editor and choose **Rhythm Studio → Add Rhythm Scene**.
+   The new scene starts with *Orbit Pulse*, an original 120 BPM song. The
+   two-second lead-in gives the first shape time to approach. The song then
+   plays for 16 seconds, with 32 targets on the default chart.
+
+   [![Rhythm Studio on Vision Pro Simulator with Add Rhythm Scene over the original illustrated editor]({{< asset-url "images/musimotion/visionos/rhythm-vision-add.webp" >}})]({{< asset-url "images/musimotion/visionos/rhythm-vision-add.webp" >}})
+
+   *Vision Pro Simulator. Choose Add Rhythm Scene to place Orbit Pulse on the timeline.*
+
+2. To use your own music, open **Rhythm Studio → Song → Choose Song…**.
+   Pick a local audio file between half a second and 30 minutes long, up to
+   128 MB. Musimotion measures rhythmic accents on the device and embeds the
+   audio in the project. If you hear an accent where a target should arrive,
+   use **Timing adjustment** to move the chart up to half a second earlier
+   or later. This keeps your edits to individual targets.
+
+   For a song with a steady tempo or no detected beats, enter its **Tempo
+   (BPM)** and **First beat (song seconds)**, then choose **Apply Beat Grid**.
+   For example, enter 120 and 0.35 if the first beat occurs 0.35 seconds into
+   a 120 BPM recording. **Use Detected Beats** restores the analyzed accents
+   when available. Replacing the song or changing the underlying beat grid
+   clears per-target edits, so settle the timing before designing the chart.
+
+   [![Mac Rhythm Studio Song tab showing the title and analyzed target count for Studio rhythm demo]({{< asset-url "images/musimotion/visionos/mac-rhythm-06.webp" >}})]({{< asset-url "images/musimotion/visionos/mac-rhythm-06.webp" >}})
+
+   *Mac. The synthetic recording has finished importing. The title and target count identify the new chart.*
+
+3. Open **Chart**. Use **Target density** to choose **Every beat** or **Every
+   other beat**. **Approach time** controls how long you can see the target
+   before it arrives. Select a target with **Previous**, **Next** or the
+   slider. Set its **Hand** (left or right), **Lane** (inner or outer) and
+   **Shape** (cube, orb or diamond). Use **Reset This Target** to restore
+   its generated settings.
+
+   [![Mac Chart tab showing Target 2, its arrival time and the controls for hand, lane and shape]({{< asset-url "images/musimotion/visionos/mac-rhythm-03.webp" >}})]({{< asset-url "images/musimotion/visionos/mac-rhythm-03.webp" >}})
+
+   *Mac. Use Previous or Next to choose which target to edit.*
+
+   **Preview Beat** closes the sheet and pauses the 3D view at the selected
+   target's arrival. **Play Song** plays from the start of the scene.
+   On Mac or iPad, use the original transport to pause or seek.
+
+   [![iPad Simulator with colored targets in the 3D camera preview above the original turquoise transport]({{< asset-url "images/musimotion/visionos/ipad-rhythm-05.webp" >}})]({{< asset-url "images/musimotion/visionos/ipad-rhythm-05.webp" >}})
+
+   *iPad Simulator. Preview Beat pauses the chart at the arrival time of the selected target.*
+
+4. Open **Panorama** and select **Aurora**, **Sunset** or **Midnight**.
+   To use your own scene, choose **Import Panorama…** and select a wide
+   2:1 equirectangular image. The app embeds it in the presentation.
+   **Use Theme Instead** returns to the built-in environment. The bounded
+   volume frames the approach from the front. Mac and iPad place the camera
+   inside the panorama. In Full Immersion the panorama wraps behind you as well.
+
+   [![Vision Pro Simulator showing the three panorama themes and the Import Panorama button]({{< asset-url "images/musimotion/visionos/rhythm-vision-panorama.webp" >}})]({{< asset-url "images/musimotion/visionos/rhythm-vision-panorama.webp" >}})
+
+   *Vision Pro Simulator. Select a theme or import a 2:1 image to surround the lane.*
+
+   [![Mac Rhythm Studio displaying the recovery message after importing a square panorama]({{< asset-url "images/musimotion/visionos/mac-rhythm-07.webp" >}})]({{< asset-url "images/musimotion/visionos/mac-rhythm-07.webp" >}})
+
+   *Mac. A square image triggers the aspect-ratio message. Use Import Panorama again to choose an equirectangular image.*
+
+5. On Vision Pro, face the direction you want the targets to approach from,
+   open **Full Immersion** and choose **Play with Hands**. Allow hand tracking
+   and hold both hands comfortably in view. Sweep the cyan left saber through a single-striped cyan
+   target as it arrives. Use the coral right saber for double-striped coral
+   targets. A successful cut splits the shape and adds one to **Hits**. Keep your feet in place as you follow the incoming shapes.
+
+   [![Cyan and coral targets in front of a starry mountain panorama with Play with Hands and Preview Music above the lane]({{< asset-url "images/musimotion/visionos/rhythm-vision-immersion.webp" >}})]({{< asset-url "images/musimotion/visionos/rhythm-vision-immersion.webp" >}})
+
+   *Vision Pro Simulator. A single stripe marks left targets. Two stripes mark right targets. The controls offer hand play and music preview.*
+
+   If hand access is off or unavailable, choose **Preview Music** to hear
+   the song and watch the chart. To resume after tracking loss, return your
+   hands to view and choose **Play with Hands**. Enable **Reduce motion** to omit the split animation.
+   Targets still approach on the beat, and the panorama stays fixed. **Pause** interrupts the round. **Restart Round**
+   resets the playhead and score. **Exit 3D** returns to the editor. Tracked
+   poses are used during play and are kept in memory.
+
+   [![Vision Pro Simulator music preview showing three targets in the lane, with a coral diamond in front of two distant targets]({{< asset-url "images/musimotion/visionos/rhythm-vision-preview.webp" >}})]({{< asset-url "images/musimotion/visionos/rhythm-vision-preview.webp" >}})
+
+   *Vision Pro Simulator. Preview Music plays the song and target sequence. Hits stays at zero during preview.*
+
+   [![A message above the immersive stage says hand tracking is unavailable here and offers Preview Music]({{< asset-url "images/musimotion/visionos/rhythm-vision-recovery.webp" >}})]({{< asset-url "images/musimotion/visionos/rhythm-vision-recovery.webp" >}})
+
+   *Vision Pro Simulator. The fallback gives you a way to play the song when the headset cannot supply hand tracking.*
+
+6. Save the presentation and open it in a matching development build on
+   Mac, iPad or Vision Pro. The project contains the audio, editable chart
+   and any imported panorama. **Export Video** renders the authored sequence
+   and music from the saved viewpoint. Live hand poses and hit scores belong
+   to the current round.
+
+Download the [Orbit Pulse sample]({{< asset-url "downloads/musimotion/visionos/MusimotionVR-Orbit-Pulse.musimotion.zip" >}})
+to try the chart used in the package test. Unzip the download and open the
+enclosed `.musimotion` project. The [sample manifest]({{< asset-url "downloads/musimotion/visionos/rhythm-manifest.json" >}})
+lists the download size and the checksums for the archive, presentation and
+embedded song.
+
+[Play the 18-second Orbit Pulse movie with sound]({{< asset-url "downloads/musimotion/visionos/Orbit-Pulse-Rhythm-Stage.mp4" >}})
+(1.85 MB). This camera-view export starts with a still mountain horizon.
+The first cyan cube reaches the lane marker as the music begins at two
+seconds. Cyan and coral shapes alternate with the beat for the rest of the song.
 
 ## AI, sharing and support
 

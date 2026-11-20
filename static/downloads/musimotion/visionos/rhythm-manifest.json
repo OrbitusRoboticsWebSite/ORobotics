@@ -1,0 +1,28 @@
+{
+  "file": "MusimotionVR-Orbit-Pulse.musimotion.zip",
+  "bytes": 585553,
+  "sha256": "c6573abc0e0c8fd7bb36d6db57b768538a47db456c4664ddccb20bc9c61fb177",
+  "manifest_sha256": "79dd75d6bf6173ce99323a8f3be4c02ad81c5a356f53a8ca49050d63ad4e466a",
+  "audio_sha256": "c3ce06510fcb8d2963dd419200190a2ec0168167e562d350c72c66c6b37d5c02",
+  "result_bundle": "mac-core1.xcresult",
+  "source_test": "RhythmTemplateTests/testPortableRhythmPackageContainsPlayableMusicAndAuthoredTargets()",
+  "result": "Passed",
+  "version": "1.4",
+  "date": "2026-11-19",
+  "description": "An editable Orbit Pulse rhythm scene with 32 targets, an original 16-second 120 BPM song, a two-second lead-in and a built-in panorama. Unzip and open the .musimotion package in a matching development build.",
+  "camera_preview": {
+    "file": "Orbit-Pulse-Rhythm-Stage.mp4",
+    "bytes": 1853830,
+    "sha256": "6adea2f4559c7f537dcc03db145f5f6cda684271d217bdf1ec01a50b66299db7",
+    "source_test": "RhythmTemplateTests/testExportedOrbitPulseMovieShowsMovingTargetsAndAudibleDownbeats()",
+    "result_bundle": "mac-guide.xcresult",
+    "duration_seconds": 18,
+    "width": 1280,
+    "height": 720,
+    "video_frames": 432,
+    "video_codec": "H.264",
+    "audio_codec": "AAC",
+    "audio_channels": 1,
+    "description": "Original Orbit Pulse camera-view movie export. The soundtrack starts at the two-second cue."
+  }
+}

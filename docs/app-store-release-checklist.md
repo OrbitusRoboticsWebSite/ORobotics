@@ -107,3 +107,21 @@ The November 19 development guide adds the birthday scene, balloon collisions,
 confetti, fireworks, Reduce Motion and the difference between live viewer contact
 and camera playback. The product page and catalog label this as development work.
 This documentation update leaves the approved Mac binary and release status unchanged.
+
+### Rhythm Studio development preview, guide 1.4
+
+The product page and guided walkthrough describe the editable rhythm template,
+local song analysis, hand-tracked play and panorama. Reference Mac and simulator
+captures identify the build and host in the image provenance. The physical
+headset protocol covers tracking recovery, beat timing and comfort. The App
+Store release record is unchanged by this documentation publication.
+
+The guide includes nine new Mac and simulator captures, the editable Orbit Pulse
+project (585,553 bytes), and a user-initiated 18-second camera movie with music
+(1,853,830 bytes). The downloadable manifest records the SHA-256 for both media
+artifacts. The product preview and illustrated guide were visually inspected in
+Chrome on desktop and at a 390 × 844 mobile viewport.
+
+Validation passed 127 website tests, the eight-product catalog check, the gallery
+and white-paper checks, and subpath validation. The local build validated 43
+linked guide and product resources.

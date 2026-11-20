@@ -1,6 +1,6 @@
 {
   "date": "2026-11-19",
-  "guide_version": "1.3",
+  "guide_version": "1.4",
   "captures": [
     {
       "file": "original-artwork.webp",
@@ -286,6 +286,162 @@
       "transformation": "scale=1600:-2; WebP quality 90",
       "sha256": "772fb237f52775cd8bdf71bc0d2e1105eddf0d8e25495657543dbde0d03921fb",
       "content": "Synthetic birthday demonstration in the actual development UI."
+    },
+    {
+      "file": "rhythm-vision-add.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "vision-rhythm1.xcresult",
+      "test": "SpatialAuthoringUITests/testCreateRhythmStageAndPreviewInFullImmersion()",
+      "activity": "30 Add a rhythm scene",
+      "recording_sha256": "94c70c7de95f72c93b1976dcb76b5d800b4cb50256f5dec55201d5fe1e746b5b",
+      "recording_offset_seconds": 14.847,
+      "transformation": "crop=1780:1300:1030:520,scale=1424:-2; WebP quality 90",
+      "sha256": "f11001083f0b5bff821103c891855dc190d35c87492982fce2cf5b7930b9bb7b",
+      "content": "Actual simulator UI with the bundled Orbit Pulse rhythm scene.",
+      "dimensions": [
+        1424,
+        1040
+      ]
+    },
+    {
+      "file": "mac-rhythm-06.webp",
+      "platform": "macOS native Mac mini",
+      "source_result": "mac-ui-2.xcresult",
+      "test": "VolumetricCompatibilityUITests/testImportPersonalSongAndPanoramaThroughFilePickers()",
+      "attachment": "Rhythm 06 - Analyzed imported song_0_8A40D9D8-8C0A-43A9-AF3A-131EEF6E0AB7.png",
+      "source_sha256": "39ba6f6348004ebaff80309ce52648d2eab891402ae06a0eab8f85142a3f9974",
+      "source_dimensions": [
+        1280,
+        900
+      ],
+      "dimensions": [
+        554,
+        663
+      ],
+      "transformation": "Native document-window XCUITest attachment. Cropped to the settings sheet at (363, 120, 917, 783), WebP quality 91.",
+      "sha256": "e0612e28333b8d15fea265545fa2d56939ea6e9f16fb9d8673c6d0b521315091",
+      "content": "Actual development UI with synthetic rhythm demonstration data."
+    },
+    {
+      "file": "mac-rhythm-03.webp",
+      "platform": "macOS native Mac mini",
+      "source_result": "mac-ui-2.xcresult",
+      "test": "VolumetricCompatibilityUITests/testBuildCustomRhythmChartAndPreview()",
+      "attachment": "Rhythm 03 - Custom target_0_04D5D9CF-CFB9-4235-804C-183A31BD971E.png",
+      "source_sha256": "ff2b891821f6c90ad6d0e1cb30d8bd1ab3abfea54615922b3f24c9529593fd5d",
+      "source_dimensions": [
+        1280,
+        900
+      ],
+      "dimensions": [
+        554,
+        663
+      ],
+      "transformation": "Native document-window XCUITest attachment. Cropped to the settings sheet at (363, 120, 917, 783), WebP quality 91.",
+      "sha256": "6b0ee8502839ca2a7f66b54a633a82e5d02b0fcc0a2f5f55138fabec430cda4a",
+      "content": "Actual development UI with synthetic rhythm demonstration data."
+    },
+    {
+      "file": "ipad-rhythm-05.webp",
+      "platform": "iPadOS 26.5 Simulator",
+      "source_result": "ipad-ui-2.xcresult",
+      "test": "VolumetricCompatibilityUITests/testBuildCustomRhythmChartAndPreview()",
+      "attachment": "Rhythm 05 - Authored stage on a beat_0_4689FAFD-92B7-41DE-9313-BC7720D5067A.png",
+      "source_sha256": "5a8bb379a2d9573b0f9f6b7271350c81eb376058c2efcf90fcfee2db1933a375",
+      "source_dimensions": [
+        2752,
+        2064
+      ],
+      "dimensions": [
+        1600,
+        1200
+      ],
+      "transformation": "Simulator screen captured by XCUITest, orientation normalized, resized to fit 1600 by 1200, WebP quality 88",
+      "sha256": "b388cd7e92b3a31c8be3dda687fb453f8fd5dbf19b09ba5a6a39a7c5b2ec488a",
+      "content": "Actual development UI with synthetic rhythm demonstration data."
+    },
+    {
+      "file": "rhythm-vision-panorama.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "vision-rhythm1.xcresult",
+      "test": "SpatialAuthoringUITests/testCreateRhythmStageAndPreviewInFullImmersion()",
+      "activity": "33 Choose a panorama",
+      "recording_sha256": "94c70c7de95f72c93b1976dcb76b5d800b4cb50256f5dec55201d5fe1e746b5b",
+      "recording_offset_seconds": 35.316,
+      "transformation": "crop=1780:1300:1030:520,scale=1424:-2; WebP quality 90",
+      "sha256": "75b97898afe52e01cd1a861ff0009c6dc96652a20baf27e01c490e2346776956",
+      "content": "Actual simulator UI with the bundled Orbit Pulse rhythm scene.",
+      "dimensions": [
+        1424,
+        1040
+      ]
+    },
+    {
+      "file": "mac-rhythm-07.webp",
+      "platform": "macOS native Mac mini",
+      "source_result": "mac-ui-2.xcresult",
+      "test": "VolumetricCompatibilityUITests/testImportPersonalSongAndPanoramaThroughFilePickers()",
+      "attachment": "Rhythm 07 - Panorama import recovery_0_83AC32A0-2CAD-4FAD-B0D0-459EC45D5A85.png",
+      "source_sha256": "afd7b6727408e349d96d2071b2fc1c48e02a434e0928589eace0612fa28b8e48",
+      "source_dimensions": [
+        1280,
+        900
+      ],
+      "dimensions": [
+        554,
+        663
+      ],
+      "transformation": "Native document-window XCUITest attachment. Cropped to the settings sheet at (363, 120, 917, 783), WebP quality 91.",
+      "sha256": "85dadfa239bab2e9dca6ccf19de23e4f52de25090f339ffdc3921699f6913b50",
+      "content": "Actual development UI with synthetic rhythm demonstration data."
+    },
+    {
+      "file": "rhythm-vision-immersion.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "vision-rhythm1.xcresult",
+      "test": "SpatialAuthoringUITests/testCreateRhythmStageAndPreviewInFullImmersion()",
+      "activity": "34 Enter the 360 rhythm panorama",
+      "recording_sha256": "94c70c7de95f72c93b1976dcb76b5d800b4cb50256f5dec55201d5fe1e746b5b",
+      "recording_offset_seconds": 39.678,
+      "transformation": "scale=1600:-2; WebP quality 90",
+      "sha256": "e69f00234cbd345cef545a5c0176f939e016a5675bb5dec296508d7599ea8d7f",
+      "content": "Actual simulator UI with the bundled Orbit Pulse rhythm scene.",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "rhythm-vision-preview.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "vision-rhythm1.xcresult",
+      "test": "SpatialAuthoringUITests/testCreateRhythmStageAndPreviewInFullImmersion()",
+      "activity": "35 Preview approaching targets with music",
+      "recording_sha256": "94c70c7de95f72c93b1976dcb76b5d800b4cb50256f5dec55201d5fe1e746b5b",
+      "recording_offset_seconds": 42.278,
+      "transformation": "scale=1600:-2; WebP quality 90",
+      "sha256": "516d08539439315b2378ac38f366076e3277d45ef4be526262bd86e30fc13fbb",
+      "content": "Actual simulator UI with the bundled Orbit Pulse rhythm scene.",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "rhythm-vision-recovery.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "vision-rhythm1.xcresult",
+      "test": "SpatialAuthoringUITests/testCreateRhythmStageAndPreviewInFullImmersion()",
+      "activity": "36 Hand tracking recovery",
+      "recording_sha256": "94c70c7de95f72c93b1976dcb76b5d800b4cb50256f5dec55201d5fe1e746b5b",
+      "recording_offset_seconds": 45.983,
+      "transformation": "scale=1600:-2; WebP quality 90",
+      "sha256": "3b73d8ce1ae5d1f93dd18a48ad747ee3f6e497e2f1b08f3a191913af0ab847b9",
+      "content": "Actual simulator UI with the bundled Orbit Pulse rhythm scene.",
+      "dimensions": [
+        1600,
+        900
+      ]
     }
   ]
 }

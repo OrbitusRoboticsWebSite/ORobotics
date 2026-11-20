@@ -9,8 +9,10 @@ description: "Internal acceptance checks for Musimotion volumetric input, readab
 
 November 19, 2026 · Device testing required · Status: not run
 
-Use an updated development build and a private copy of
-[the banner exercise]({{< asset-url "downloads/musimotion/visionos/MusimotionVR-Banner-Exercise.musimotion.zip" >}}).
+Use an updated development build and private copies of the
+[banner exercise]({{< asset-url "downloads/musimotion/visionos/MusimotionVR-Banner-Exercise.musimotion.zip" >}}),
+[birthday scene]({{< asset-url "downloads/musimotion/visionos/MusimotionVR-Birthday-Surprise.musimotion.zip" >}}) and
+[Orbit Pulse rhythm scene]({{< asset-url "downloads/musimotion/visionos/MusimotionVR-Orbit-Pulse.musimotion.zip" >}}).
 Record the build, source commit, headset/OS, input method, posture and results in
 [the results template](https://github.com/RudyAramayo/Musimotion/blob/main/docs/visionos-headset-results-template.json). Unexecuted checks
 must stay `not_run`. Only internal testing is assumed.
@@ -66,6 +68,10 @@ must stay `not_run`. Only internal testing is assumed.
     Compare with the fixed reference view on Mac/iPad. On the headset, repeat
     with **Reduce motion** and verify stationary balloons, visible greeting,
     hidden confetti/fireworks and a usable **Exit 3D**.
+
+13. **Hand attachment and recovery.** Open the rhythm presentation, enter Full Immersion and inspect the hand-tracking message. Test once with access declined and once with access allowed. Move each hand slowly within comfortable reach. Confirm that its light follows the correct hand and orientation. Lower one hand out of view, then bring it back. Record what happens to the light, the current target and the score during tracking loss and recovery.
+14. **Music and hits.** Play the included song. Try an early pass, a pass on the beat and a pass outside the target. Compare the audible beat, the target's arrival and the visible result for each hand. Pause, rewind and resume. Record the observed audio/visual offset, any duplicate hits, and the speaker or headphones used. Repeat with an imported song and a different beat map.
+15. **Panorama and comfort.** From a comfortable stationary position, look to each side and behind you, return to the playing lane and use the exit control. Check the panorama seam, horizon, target approach, controls and available reach when seated. Try Reduce Motion and record what changes. Stop if the experience is uncomfortable. Record session duration and any visual or audio cue that was difficult to follow.
 
 The collision check uses the current device position supplied inside an immersive
 space. A sphere around that point approximates the viewer for balloon contact.
