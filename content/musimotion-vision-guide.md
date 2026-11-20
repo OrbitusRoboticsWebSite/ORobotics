@@ -2,12 +2,12 @@
 title: "Musimotion 2D and volumetric presentation guide"
 url: "/products/musimotion/vision-guide/"
 draft: false
-description: "Read 2D projects, animate solid 3D volumes, enter full immersion on Vision Pro, create hand-tracked rhythm scenes with songs and panoramas, and render presentations on Mac and iPad."
+description: "Read 2D projects, animate solid 3D volumes, enter full immersion on Vision Pro, create hand-tracked arcade scenes, and generate a techno soundtrack on Mac, iPad and Vision Pro."
 ---
 
 [Back to Musimotion]({{< relref "musimotion.md" >}}) · [Product support]({{< relref "contact.md" >}})
 
-Version 1.4 · November 19, 2026 · Development preview
+Version 1.5 · November 19, 2026 · Development preview
 
 Read existing **2D presentations**, switch to **3D Volume** for solid objects and
 ink at different depths, and present inside **Full Immersion** on Vision Pro.
@@ -15,7 +15,9 @@ Mac and iPad render the same saved 3D project through a movable camera. The
 illustrated sidebar, timeline and radial menus reuse the original iPad artwork;
 none of those designer assets have been redrawn. To make a party scene, follow
 the [birthday surprise walkthrough](#8-make-a-birthday-surprise). To build a music game,
-follow [Create a rhythm scene](#9-create-a-rhythm-scene).
+follow [Create a rhythm scene](#9-create-a-rhythm-scene). You can also
+[generate a soundtrack](#10-generate-a-soundtrack) for a 2D or spatial scene,
+or [play Droid Arena](#11-play-droid-arena) in Full Immersion.
 
 This guide describes development source, not an App Store release. The Mac
 1.0.0 build 7 approval is a separate release awaiting manual publication at the
@@ -23,9 +25,9 @@ November 19 check. These features require the updated development build on
 each device. Keep a backup before opening a new 3D project in older software:
 older builds do not understand the additional mode, camera and spatial ink data.
 
-Images show actual application UI with synthetic demonstration content. Vision
-Pro pictures are cropped frames from XCTest's simulator recording; companion
-pictures identify their platform. Select an image to inspect it at full resolution. See [capture provenance]({{< asset-url "images/musimotion/visionos/provenance.json" >}}).
+Images show actual application UI with demonstration content. The Vision Pro
+pictures come from simulator recordings. Other captures identify their
+platform. Select any picture to see its full size. [Capture provenance]({{< asset-url "images/musimotion/visionos/provenance.json" >}})
 Simulator evidence does not establish physical headset comfort or hand tracking.
 
 ## 1. Read a 2D presentation
@@ -39,11 +41,11 @@ Simulator evidence does not establish physical headset comfort or hand tracking.
 4. On Vision Pro, **3D Setup** opens the optional spatial controls; **Artwork
    Editor** returns to the original editor. They edit the same project.
 
-[![Original iPad artwork and turquoise timeline inside the Vision Pro editor]({{< asset-url "images/musimotion/visionos/original-artwork.webp" >}})]({{< asset-url "images/musimotion/visionos/original-artwork.webp" >}})
+{{< musimotion-capture "original-artwork.webp" "Original iPad artwork and turquoise timeline inside the Vision Pro editor" >}}
 
 *Start in the familiar editor. Choosing a spatial workspace is optional.*
 
-[![The same saved banner opened in 2D on Mac]({{< asset-url "images/musimotion/visionos/mac-2d.webp" >}})]({{< asset-url "images/musimotion/visionos/mac-2d.webp" >}})
+{{< musimotion-capture "mac-2d.webp" "The same saved banner opened in 2D on Mac" >}}
 
 *On Mac, 2D restores the flat canvas and original selection handles. Changing
 mode preserves the saved depth information for later 3D playback.*
@@ -64,12 +66,12 @@ mode preserves the saved depth information for later 3D playback.*
 | 2 seconds | 0.50 | 0.50 | −0.40 | Centred behind the canvas |
 | 6 seconds | 0.50 | 0.50 | +0.40 | Centred in front of the canvas, closer to you |
 
-[![Banner exercise in the spatial Effects panel]({{< asset-url "images/musimotion/visionos/banner-setup.webp" >}})]({{< asset-url "images/musimotion/visionos/banner-setup.webp" >}})
+{{< musimotion-capture "banner-setup.webp" "Banner exercise in the spatial Effects panel" >}}
 
 *The generated scene is synthetic test content. It is also the input to the
 cross-platform depth, save/reopen and rendered-movie tests.*
 
-[![Edit XYZ form with scene time and separate X, Y and Z fields]({{< asset-url "images/musimotion/visionos/xyz-keyframe.webp" >}})]({{< asset-url "images/musimotion/visionos/xyz-keyframe.webp" >}})
+{{< musimotion-capture "xyz-keyframe.webp" "Edit XYZ form with scene time and separate X, Y and Z fields" >}}
 
 *X/Y 0–1 spans the reference canvas. Z=0 is the canvas plane; negative Z goes
 behind it, positive Z comes out toward the front. Volume depth is −0.8…+0.8
@@ -82,12 +84,12 @@ in document space. A bounded window uniformly scales the entire volume to fit.*
    preserves the 3D coordinates, camera and ink. Choose **3D Volume** again to
    restore the spatial view. Spatial ink is visible in 3D mode.
 
-[![iPad rendering of the shared volumetric presentation from a side viewpoint]({{< asset-url "images/musimotion/visionos/ipad-volume.webp" >}})]({{< asset-url "images/musimotion/visionos/ipad-volume.webp" >}})
+{{< musimotion-capture "ipad-volume.webp" "iPad rendering of the shared volumetric presentation from a side viewpoint" >}}
 
 *Mac and iPad use the same RealityKit scene construction as Vision Pro. Their
 screen shows a camera view of the volume, and their selected viewpoint is saved.*
 
-[![Mac editor rendering the animated 3D banner with the original controls]({{< asset-url "images/musimotion/visionos/mac-volume.webp" >}})]({{< asset-url "images/musimotion/visionos/mac-volume.webp" >}})
+{{< musimotion-capture "mac-volume.webp" "Mac editor rendering the animated 3D banner with the original controls" >}}
 
 *The Mac can open, render, edit XYZ and export the same package without a headset.*
 
@@ -95,7 +97,7 @@ Invalid or out-of-range XYZ values keep the sheet open and explain the accepted
 range. Correct the field or choose **Cancel**. Do not enter a new pose until the
 intended object and scene time are selected.
 
-[![Invalid XYZ value with a readable correction message on iPad]({{< asset-url "images/musimotion/visionos/xyz-recovery.webp" >}})]({{< asset-url "images/musimotion/visionos/xyz-recovery.webp" >}})
+{{< musimotion-capture "xyz-recovery.webp" "Invalid XYZ value with a readable correction message on iPad" >}}
 
 *Recovery: correct the depth to −0.8…+0.8 in 3D Volume, or cancel without saving.*
 
@@ -115,7 +117,7 @@ not an app installer. Its [manifest]({{< asset-url "downloads/musimotion/visiono
 4. Choose **Close Volume** to return to the editor. Closing the volume pauses
    playback and disarms painting.
 
-[![Bounded volume with the banner in front of the canvas and original timeline controls]({{< asset-url "images/musimotion/visionos/native-volume.webp" >}})]({{< asset-url "images/musimotion/visionos/native-volume.webp" >}})
+{{< musimotion-capture "native-volume.webp" "Bounded volume with the banner in front of the canvas and original timeline controls" >}}
 
 *The wire box and canvas rectangle expose the depth relationship. The original
 editor may remain behind the volume; move the system window if they overlap.*
@@ -138,7 +140,7 @@ Use **Edit XYZ** for the automated, verified authoring route meanwhile.
    reopens. If you leave with the system controls instead, reopen Musimotion
    from Home to continue editing.
 
-[![Full immersive presentation with original artwork controls above the 3D content]({{< asset-url "images/musimotion/visionos/full-immersion.webp" >}})]({{< asset-url "images/musimotion/visionos/full-immersion.webp" >}})
+{{< musimotion-capture "full-immersion.webp" "Full immersive presentation with original artwork controls above the 3D content" >}}
 
 *Full immersion removes the room passthrough. It does not turn the presentation
 into a flat video: the banner and other solid objects retain their geometry.*
@@ -157,16 +159,16 @@ personal comfort guarantee after moving/recentring the workspace.
 3. Close the panel and draw. The mode row stays pinned while other brush options
    scroll. On iPad, the 2D tools retain Pencil pressure/tilt behavior.
 
-[![Rice Paper selected in the scene background panel]({{< asset-url "images/musimotion/visionos/paper-setup.webp" >}})]({{< asset-url "images/musimotion/visionos/paper-setup.webp" >}})
+{{< musimotion-capture "paper-setup.webp" "Rice Paper selected in the scene background panel" >}}
 
 *Use a contrasting paper/ink combination. A dark stroke on a dark background
 can be present but difficult to see.*
 
-[![Still Paint and the Sumi preset controls in the original editor]({{< asset-url "images/musimotion/visionos/sumi-tools.webp" >}})]({{< asset-url "images/musimotion/visionos/sumi-tools.webp" >}})
+{{< musimotion-capture "sumi-tools.webp" "Still Paint and the Sumi preset controls in the original editor" >}}
 
 *Choose the paint mode before the preset. The existing controls and artwork are shared.*
 
-[![A committed Sumi mark on Rice Paper in the Vision Pro editor]({{< asset-url "images/musimotion/visionos/sumi-painted.webp" >}})]({{< asset-url "images/musimotion/visionos/sumi-painted.webp" >}})
+{{< musimotion-capture "sumi-painted.webp" "A committed Sumi mark on Rice Paper in the Vision Pro editor" >}}
 
 *Release to commit the mark. Check the selected paint target and playhead when
 troubleshooting missing ink; use undo for an unwanted mark.*
@@ -177,7 +179,7 @@ troubleshooting missing ink; use undo for an unwanted mark.*
 5. The optional **3D Setup → Brushes** easel also offers **Record Live Ink** and
    **Recording speed**. Its saved stroke count confirms recorded data.
 
-[![The spatial easel after recording a timed Sumi stroke]({{< asset-url "images/musimotion/visionos/live-sumi.webp" >}})]({{< asset-url "images/musimotion/visionos/live-sumi.webp" >}})
+{{< musimotion-capture "live-sumi.webp" "The spatial easel after recording a timed Sumi stroke" >}}
 
 *Paper ink, saved raster assets and timed reveal use the shared Sumi engine
 across Mac, iPad and Vision Pro. Entering a volume also renders these at Z=0.*
@@ -192,7 +194,7 @@ across Mac, iPad and Vision Pro. Entering a volume also renders these at Z=0.*
    restores the gesture. **Clear 3D Ink** clears spatial strokes with undo.
    Saved spatial strokes retain XYZ and timing when reopened on another platform.
 
-[![iPad camera preview with a saved stroke at a chosen depth]({{< asset-url "images/musimotion/visionos/ipad-depth-ink.webp" >}})]({{< asset-url "images/musimotion/visionos/ipad-depth-ink.webp" >}})
+{{< musimotion-capture "ipad-depth-ink.webp" "iPad camera preview with a saved stroke at a chosen depth" >}}
 
 *3D ink is solid geometry. Paper absorption, Pencil dynamics and particle
 recording belong to the 2D tools; they are not simulated as volumetric fluids.
@@ -211,7 +213,7 @@ Flow and translucency affect the spatial stroke opacity.*
    the original flat rendering path for a 2D project. A movie is a 2D view of
    the presentation; use the package for interactive spatial playback.
 
-[![Saved Presentations library with the synthetic example project]({{< asset-url "images/musimotion/visionos/saved-library.webp" >}})]({{< asset-url "images/musimotion/visionos/saved-library.webp" >}})
+{{< musimotion-capture "saved-library.webp" "Saved Presentations library with the synthetic example project" >}}
 
 *Local save is not cloud publication. Export may require the corresponding Pro
 entitlement. A cancelled picker does not mean the file was saved; a save error
@@ -254,7 +256,7 @@ Select any picture below to enlarge the controls.
    **Happy Birthday!** greeting moves forward as balloons and confetti begin to
    fall. Fireworks start two seconds after the effects cue.
 
-   [![Mac Celebration Effects sheet with Add Birthday Surprise, Add Balloon Drop and Add Fireworks]({{< asset-url "images/musimotion/visionos/birthday-01.webp" >}})]({{< asset-url "images/musimotion/visionos/birthday-01.webp" >}})
+   {{< musimotion-capture "birthday-01.webp" "Mac Celebration Effects sheet with Add Birthday Surprise, Add Balloon Drop and Add Fireworks" >}}
 
    *Mac. Add a complete scene or apply one effect to the selected scene.*
 
@@ -264,7 +266,7 @@ Select any picture below to enlarge the controls.
    **Remove Effects** clears these decorations. The countdown and greeting are
    editable text layers and can be selected or removed separately.
 
-   [![The Celebration Effects settings on Vision Pro Simulator]({{< asset-url "images/musimotion/visionos/birthday-vision-controls.webp" >}})]({{< asset-url "images/musimotion/visionos/birthday-vision-controls.webp" >}})
+   {{< musimotion-capture "birthday-vision-controls.webp" "The Celebration Effects settings on Vision Pro Simulator" >}}
 
    *Vision Pro Simulator. The same scene settings are available in the artwork editor.*
 
@@ -274,7 +276,7 @@ Select any picture below to enlarge the controls.
    beginning of the scene. Set it before the end of the scene so there is time
    to see the effects. Changing this cue leaves your text layer timing intact.
 
-   [![Mac birthday settings with balloon, firework and confetti controls]({{< asset-url "images/musimotion/visionos/birthday-02.webp" >}})]({{< asset-url "images/musimotion/visionos/birthday-02.webp" >}})
+   {{< musimotion-capture "birthday-02.webp" "Mac birthday settings with balloon, firework and confetti controls" >}}
 
    *Mac. The switches control the decorations separately. Timing and physics belong to this scene.*
 
@@ -289,17 +291,17 @@ Select any picture below to enlarge the controls.
    **Export Video** renders a movie from the saved camera using a stationary
    reference viewer for balloon contact.
 
-   [![The birthday scene in the Mac 3D camera preview]({{< asset-url "images/musimotion/visionos/birthday-03.webp" >}})]({{< asset-url "images/musimotion/visionos/birthday-03.webp" >}})
+   {{< musimotion-capture "birthday-03.webp" "The birthday scene in the Mac 3D camera preview" >}}
 
    *Mac. The saved camera frames the celebration for playback and movie export.*
 
 
-   [![iPad Simulator 3D camera preview of the birthday greeting, balloons and fireworks above the turquoise controls]({{< asset-url "images/musimotion/visionos/ipad-birthday-03.webp" >}})]({{< asset-url "images/musimotion/visionos/ipad-birthday-03.webp" >}})
+   {{< musimotion-capture "ipad-birthday-03.webp" "iPad Simulator 3D camera preview of the birthday greeting, balloons and fireworks above the turquoise controls" >}}
 
    *iPad Simulator. The same scene can be played and scrubbed from the original iPad transport.*
 
 
-   [![Vision Pro Simulator showing the birthday scene in a bounded volume with the original transport]({{< asset-url "images/musimotion/visionos/birthday-vision-volume.webp" >}})]({{< asset-url "images/musimotion/visionos/birthday-vision-volume.webp" >}})
+   {{< musimotion-capture "birthday-vision-volume.webp" "Vision Pro Simulator showing the birthday scene in a bounded volume with the original transport" >}}
 
    *Vision Pro Simulator. Open Volume presents the party in miniature.*
 
@@ -312,7 +314,7 @@ Select any picture below to enlarge the controls.
    location. Balloons crossing your line of sight to the birthday greeting
    turn translucent while it is visible. Balloon contact is visual.
 
-   [![Birthday greeting, balloon drop and firework burst in Vision Pro Simulator full immersion]({{< asset-url "images/musimotion/visionos/birthday-vision-immersion.webp" >}})]({{< asset-url "images/musimotion/visionos/birthday-vision-immersion.webp" >}})
+   {{< musimotion-capture "birthday-vision-immersion.webp" "Birthday greeting, balloon drop and firework burst in Vision Pro Simulator full immersion" >}}
 
    *Vision Pro Simulator. In Full Immersion, a balloon in front of the gold greeting turns translucent while the rest of the drop remains visible.*
 
@@ -335,7 +337,7 @@ checksum and source test.
    two-second lead-in gives the first shape time to approach. The song then
    plays for 16 seconds, with 32 targets on the default chart.
 
-   [![Rhythm Studio on Vision Pro Simulator with Add Rhythm Scene over the original illustrated editor]({{< asset-url "images/musimotion/visionos/rhythm-vision-add.webp" >}})]({{< asset-url "images/musimotion/visionos/rhythm-vision-add.webp" >}})
+   {{< musimotion-capture "rhythm-vision-add.webp" "Rhythm Studio on Vision Pro Simulator with Add Rhythm Scene over the original illustrated editor" >}}
 
    *Vision Pro Simulator. Choose Add Rhythm Scene to place Orbit Pulse on the timeline.*
 
@@ -353,7 +355,7 @@ checksum and source test.
    when available. Replacing the song or changing the underlying beat grid
    clears per-target edits, so settle the timing before designing the chart.
 
-   [![Mac Rhythm Studio Song tab showing the title and analyzed target count for Studio rhythm demo]({{< asset-url "images/musimotion/visionos/mac-rhythm-06.webp" >}})]({{< asset-url "images/musimotion/visionos/mac-rhythm-06.webp" >}})
+   {{< musimotion-capture "mac-rhythm-06.webp" "Mac Rhythm Studio Song tab showing the title and analyzed target count for Studio rhythm demo" >}}
 
    *Mac. The synthetic recording has finished importing. The title and target count identify the new chart.*
 
@@ -364,7 +366,7 @@ checksum and source test.
    **Shape** (cube, orb or diamond). Use **Reset This Target** to restore
    its generated settings.
 
-   [![Mac Chart tab showing Target 2, its arrival time and the controls for hand, lane and shape]({{< asset-url "images/musimotion/visionos/mac-rhythm-03.webp" >}})]({{< asset-url "images/musimotion/visionos/mac-rhythm-03.webp" >}})
+   {{< musimotion-capture "mac-rhythm-03.webp" "Mac Chart tab showing Target 2, its arrival time and the controls for hand, lane and shape" >}}
 
    *Mac. Use Previous or Next to choose which target to edit.*
 
@@ -372,7 +374,7 @@ checksum and source test.
    target's arrival. **Play Song** plays from the start of the scene.
    On Mac or iPad, use the original transport to pause or seek.
 
-   [![iPad Simulator with colored targets in the 3D camera preview above the original turquoise transport]({{< asset-url "images/musimotion/visionos/ipad-rhythm-05.webp" >}})]({{< asset-url "images/musimotion/visionos/ipad-rhythm-05.webp" >}})
+   {{< musimotion-capture "ipad-rhythm-05.webp" "iPad Simulator with colored targets in the 3D camera preview above the original turquoise transport" >}}
 
    *iPad Simulator. Preview Beat pauses the chart at the arrival time of the selected target.*
 
@@ -383,11 +385,11 @@ checksum and source test.
    volume frames the approach from the front. Mac and iPad place the camera
    inside the panorama. In Full Immersion the panorama wraps behind you as well.
 
-   [![Vision Pro Simulator showing the three panorama themes and the Import Panorama button]({{< asset-url "images/musimotion/visionos/rhythm-vision-panorama.webp" >}})]({{< asset-url "images/musimotion/visionos/rhythm-vision-panorama.webp" >}})
+   {{< musimotion-capture "rhythm-vision-panorama.webp" "Vision Pro Simulator showing the three panorama themes and the Import Panorama button" >}}
 
    *Vision Pro Simulator. Select a theme or import a 2:1 image to surround the lane.*
 
-   [![Mac Rhythm Studio displaying the recovery message after importing a square panorama]({{< asset-url "images/musimotion/visionos/mac-rhythm-07.webp" >}})]({{< asset-url "images/musimotion/visionos/mac-rhythm-07.webp" >}})
+   {{< musimotion-capture "mac-rhythm-07.webp" "Mac Rhythm Studio displaying the recovery message after importing a square panorama" >}}
 
    *Mac. A square image triggers the aspect-ratio message. Use Import Panorama again to choose an equirectangular image.*
 
@@ -397,7 +399,7 @@ checksum and source test.
    target as it arrives. Use the coral right saber for double-striped coral
    targets. A successful cut splits the shape and adds one to **Hits**. Keep your feet in place as you follow the incoming shapes.
 
-   [![Cyan and coral targets in front of a starry mountain panorama with Play with Hands and Preview Music above the lane]({{< asset-url "images/musimotion/visionos/rhythm-vision-immersion.webp" >}})]({{< asset-url "images/musimotion/visionos/rhythm-vision-immersion.webp" >}})
+   {{< musimotion-capture "rhythm-vision-immersion.webp" "Cyan and coral targets in front of a starry mountain panorama with Play with Hands and Preview Music above the lane" >}}
 
    *Vision Pro Simulator. A single stripe marks left targets. Two stripes mark right targets. The controls offer hand play and music preview.*
 
@@ -408,11 +410,11 @@ checksum and source test.
    resets the playhead and score. **Exit 3D** returns to the editor. Tracked
    poses are used during play and are kept in memory.
 
-   [![Vision Pro Simulator music preview showing three targets in the lane, with a coral diamond in front of two distant targets]({{< asset-url "images/musimotion/visionos/rhythm-vision-preview.webp" >}})]({{< asset-url "images/musimotion/visionos/rhythm-vision-preview.webp" >}})
+   {{< musimotion-capture "rhythm-vision-preview.webp" "Vision Pro Simulator music preview showing three targets in the lane, with a coral diamond in front of two distant targets" >}}
 
    *Vision Pro Simulator. Preview Music plays the song and target sequence. Hits stays at zero during preview.*
 
-   [![A message above the immersive stage says hand tracking is unavailable here and offers Preview Music]({{< asset-url "images/musimotion/visionos/rhythm-vision-recovery.webp" >}})]({{< asset-url "images/musimotion/visionos/rhythm-vision-recovery.webp" >}})
+   {{< musimotion-capture "rhythm-vision-recovery.webp" "A message above the immersive stage says hand tracking is unavailable here and offers Preview Music" >}}
 
    *Vision Pro Simulator. The fallback gives you a way to play the song when the headset cannot supply hand tracking.*
 
@@ -432,6 +434,149 @@ embedded song.
 (1.85 MB). This camera-view export starts with a still mountain horizon.
 The first cyan cube reaches the lane marker as the music begins at two
 seconds. Cyan and coral shapes alternate with the beat for the rest of the song.
+
+## 10. Generate a soundtrack
+
+1. Select the scene that needs music and move its playhead to the point where
+   the track should start. Choose **Music Studio** above the canvas in the
+   artwork editor. In the Vision Pro spatial workspace, choose **Add Media →
+   Music Studio**. You can score a still title card, an animation or a volumetric scene.
+
+2. Choose **Techno**, **House**, **Breakbeat** or **Ambient**. Set the tempo (60–180 BPM)
+   and the length (2, 4, 8 or 16 bars). For a short techno cue, try 132 BPM, four bars and
+   the description “driving kick, bright hats and a pulsing bass.” Four bars
+   of four beats at that tempo last about 7.27 seconds.
+
+   {{< musimotion-capture "ipad-music-01.webp" "Music Studio on iPad with Techno selected, 132 BPM, four bars and the Local Pattern Model composer" >}}
+
+   *iPad simulator. Choose a style, tempo and length before selecting Generate Music. The composer menu also lets you select the Local Pattern Model directly.*
+
+3. Choose **Generate Music**. With **Automatic**, Music Studio asks Apple's
+   on-device Foundation Models framework to plan the arrangement when the
+   system model is available. The **Local Pattern Model** samples note transitions
+   learned from original musical phrases and works on devices without Apple
+   Intelligence. Musimotion synthesizes the instruments on your device. Check the composer
+   name under the generated title. If Apple’s model is unavailable or cannot
+   finish, the take identifies the **Local Pattern Model**. The description
+   stays on the device.
+
+   {{< musimotion-capture "mac-music-04.webp" "Mac Music Studio result with Apple Foundation Models credited below Variation 39077, at 132 BPM and 7.3 seconds" >}}
+
+   *Mac. This take credits Apple Foundation Models in the result area. Preview auditions the take before you add it.*
+
+4. Listen with **Preview**. Choose **New Variation** to try another take with
+   your settings. Select **Add to Scene** when you like the result. The audio
+   starts at the current playhead. A take that extends past the scene's end
+   lengthens the scene so you can hear the ending.
+
+   Changing a setting clears the current preview. Add a take you want to keep
+   before trying another setting.
+
+   {{< musimotion-capture "droid-vision-generated-music.webp" "Music Studio in the Vision Pro artwork editor with a generated two-bar techno take and the Preview, Add to Scene and Score Presentation controls" >}}
+
+   *Vision Pro simulator. Midnight Orbit credits the Local Pattern Model. Preview, Add to Scene and Score Presentation sit below the result.*
+
+5. For one continuous soundtrack, choose **Score Presentation**. Musimotion
+   repeats the take across scene boundaries and preserves the duration of
+   each scene. On a Rhythm Studio scene, **Use as Rhythm Song** replaces
+   the song and sets the chart to the new tempo. Review the chart afterward
+   to make any individual target edits for the new music.
+
+   {{< musimotion-capture "mac-music-05.webp" "Mac timeline showing two adjoining orange audio layers, covering the whole ten-second scene" >}}
+
+   *Mac. Score Presentation repeats a short take to reach the end of a ten-second scene. The second audio layer starts where the first one ends.*
+
+6. Play the presentation from before the insert point. The generated music is
+   a regular audio layer that you can move, trim or mute. Save the project to
+   carry its audio to another device with the updated build. **Export Video**
+   includes the music in the presentation's sound mix. The App Clip plays
+   shared presentations. Music Studio lives in the full presentation editors.
+
+   {{< musimotion-capture "ipad-music-03.webp" "iPad 2D timeline with the new Midnight Drift audio layer beneath the welcome title and orb" >}}
+
+   *iPad simulator. The generated music is selected in the ordinary 2D timeline. Its bar shows where the take begins and ends.*
+
+<audio controls preload="none" aria-label="Warehouse Techno, a four-bar 132 BPM generated soundtrack" src='{{< asset-url "downloads/musimotion/visionos/Musimotion-Techno-Session.wav" >}}'></audio>
+
+[Download Warehouse Techno]({{< asset-url "downloads/musimotion/visionos/Musimotion-Techno-Session.wav" >}}) (7.27 s,
+931 KB). Apple Foundation Models composed this particular four-bar take at
+132 BPM on the test Mac. Musimotion rendered its drums, bass and lead into
+the stereo WAV. The direction was “Driving warehouse techno with deep bass,
+bright open hats and a melodic metallic hook.”
+
+## 11. Play Droid Arena
+
+1. On Vision Pro, open the **Project** menu and choose **Add Droid Arena**. This adds a
+   new 42-second scene. Select **Full Immersion** to stand inside the arena.
+   Each of its three waves lasts 14 seconds. Look for an energized droid as
+   it prepares to release a glowing pulse.
+
+   {{< musimotion-capture "droid-vision-arena-menu.webp" "Vision Pro simulator Project menu with Add Droid Arena above Save on Device" >}}
+
+   *Vision Pro simulator. Add Droid Arena is the first item in Project. The Full Immersion control is visible behind the menu.*
+
+2. Start with **Preview Waves** to see the formations and the incoming pulses
+   before playing. The first wave has three droids, the second has four
+   and the third has five. They follow circular patrols, sweep sideways
+   or hover. Learn the single pulse in wave one. In wave two, a scout
+   sends two pulses in quick succession and darts sideways. A guard's
+   violet shield spins around its eye and opens briefly as it fires.
+   Time your pulse to reach the exposed eye. In wave three, a heavy
+   droid can send five pulses at once in a widening fan.
+
+   {{< musimotion-capture "droid-vision-orbital-dock.webp" "Three floating droids over a gridded dock beside a ringed planet, with Play with Hands and Preview Waves controls" >}}
+
+   *Vision Pro simulator. The first wave opens with three droids and three energy points. Select Preview Waves to watch the formation.*
+
+   {{< musimotion-capture "droid-vision-guard-wave.webp" "Four hovering droids in wave two, with a violet shield covering the eye of the guard in the middle" >}}
+
+   *Vision Pro simulator. The guard in the middle has its violet shield closed. The wave-two prompt explains when to watch for the opening.*
+
+3. Choose **Play with Hands** and allow hand tracking when prompted. Keep both
+   hands comfortably in view. A pulse tool follows your right hand. Point it
+   at a droid and pinch once, then release your fingers before the next
+   pulse. Watch the hit count when a droid disappears.
+
+4. To draw the shield, bring your left hand beside and slightly behind your
+   left shoulder, then bring it forward. The shield follows that hand. Move
+   it into an approaching pulse's path to register a block. A pulse follows
+   the course it had when it left the droid. Repeat the
+   shoulder action to stow it. Use **Raise Shield** or **Stow Shield** to
+   change the equipped tool within sight if the headset loses sight of
+   your hand near the shoulder.
+
+   {{< musimotion-capture "droid-vision-shield-preview.webp" "Translucent cyan shield raised over the dock in Preview Waves, with Stow Shield visible" >}}
+
+   *Vision Pro simulator. Raise Shield displays the shield in a reference position during preview. Live play attaches it to your tracked left hand.*
+
+5. Watch the wave, hits, blocks and remaining energy. Use **Pause** to take a
+   break. If the right hand leaves view, tracking pauses. Bring it back and
+   choose **Play with Hands** to resume. If the left hand leaves view, bring
+   it back to place the shield. **Preview Waves** remains available if tracked
+   play cannot start. **Restart** starts another round. **Exit 3D** returns
+   to the editor.
+
+   {{< musimotion-capture "droid-vision-tracking-recovery.webp" "Tracking unavailable message above the arcade dock with Preview Waves available" >}}
+
+   *Vision Pro simulator. If hand tracking is unavailable, Preview Waves plays the sequence with scoring off.*
+
+6. For a quieter scene, enable **Reduce motion** in **3D Setup** or **Reduce Motion**
+   in system accessibility settings. Droids then hold their positions.
+   A guard's shield stops spinning and still opens at its firing cue.
+   Incoming pulses and the game controls remain active.
+
+7. Save the presentation to preserve the arena. Mac and iPad show the authored
+   wave sequence in the camera preview and movie export. Hand poses and the
+   round's hits, blocks and energy stay with the live session.
+
+[Open the editable Techno Droid Arena project]({{< asset-url "downloads/musimotion/visionos/MusimotionVR-Techno-Droid-Arena.musimotion.zip" >}}).
+Unzip it and use **Open** in an updated Musimotion editor. Its score spans
+all three waves. On Vision Pro, use **Full Immersion** to play.
+
+[Watch the full 42-second camera preview with music]({{< asset-url "downloads/musimotion/visionos/Techno-Droid-Arena.mp4" >}}).
+The preview shows the authored droid formations and incoming pulses. The
+[native sample manifest]({{< asset-url "downloads/musimotion/visionos/droid-beats-manifest.json" >}}) records the
+project, movie and music checksums and the composer credited for each take.
 
 ## AI, sharing and support
 

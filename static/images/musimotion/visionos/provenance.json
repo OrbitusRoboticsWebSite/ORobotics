@@ -1,6 +1,6 @@
 {
   "date": "2026-11-19",
-  "guide_version": "1.4",
+  "guide_version": "1.5",
   "captures": [
     {
       "file": "original-artwork.webp",
@@ -438,6 +438,178 @@
       "transformation": "scale=1600:-2; WebP quality 90",
       "sha256": "3b73d8ce1ae5d1f93dd18a48ad747ee3f6e497e2f1b08f3a191913af0ab847b9",
       "content": "Actual simulator UI with the bundled Orbit Pulse rhythm scene.",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "droid-vision-arena-menu.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "vision-arcade-final.xcresult",
+      "test": "SpatialAuthoringUITests/testCreateDroidArenaAndPreviewWaves()",
+      "activity": "40 Add Droid Arena",
+      "recording_sha256": "43dac1f77d65997dcfa42ed9d53bdb1fcb832141eafbec8aa9c7ca67817b0781",
+      "recording_offset_seconds": 9.748,
+      "transformation": "crop=1880:1400:990:460,scale=1504:-2; WebP quality 91",
+      "sha256": "351929d3609c92d8283cbf23efd7ba5418e0823b0b53a1cc2beb9979c97ee5a6",
+      "content": "Actual Vision simulator workflow using a new presentation.",
+      "dimensions": [
+        1504,
+        1120
+      ]
+    },
+    {
+      "file": "droid-vision-orbital-dock.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "vision-arcade-final.xcresult",
+      "test": "SpatialAuthoringUITests/testCreateDroidArenaAndPreviewWaves()",
+      "activity": "41 Orbital dock and original droids",
+      "recording_sha256": "43dac1f77d65997dcfa42ed9d53bdb1fcb832141eafbec8aa9c7ca67817b0781",
+      "recording_offset_seconds": 14.168,
+      "transformation": "scale=1600:-2; WebP quality 91",
+      "sha256": "f41c55ab13d10f184d37385283c962a1a75ef00a3552ff692cb029fde636560f",
+      "content": "Actual Vision simulator workflow using a new presentation.",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "droid-vision-shield-preview.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "vision-arcade-final.xcresult",
+      "test": "SpatialAuthoringUITests/testCreateDroidArenaAndPreviewWaves()",
+      "activity": "43 Preview waves with the reference shield",
+      "recording_sha256": "43dac1f77d65997dcfa42ed9d53bdb1fcb832141eafbec8aa9c7ca67817b0781",
+      "recording_offset_seconds": 18.979,
+      "transformation": "scale=1600:-2; WebP quality 91",
+      "sha256": "9e1e4ea15369942197976a35bcb84b7173d21fa845c7b3257b70d08fe3ff8c3e",
+      "content": "Actual Vision simulator workflow using a new presentation.",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "droid-vision-tracking-recovery.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "vision-arcade-final.xcresult",
+      "test": "SpatialAuthoringUITests/testCreateDroidArenaAndPreviewWaves()",
+      "activity": "42 Hand tracking unavailable",
+      "recording_sha256": "43dac1f77d65997dcfa42ed9d53bdb1fcb832141eafbec8aa9c7ca67817b0781",
+      "recording_offset_seconds": 16.842,
+      "transformation": "scale=1600:-2; WebP quality 91",
+      "sha256": "a715e0c91891af51a5abeece4324e0392f099ef67779f01f09469fdff20561a3",
+      "content": "Actual Vision simulator workflow using a new presentation.",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "ipad-music-03.webp",
+      "platform": "iPadOS 26.5 Simulator",
+      "source_result": "ipad-editor-final.xcresult",
+      "test": "VolumetricCompatibilityUITests/testGenerateTechnoInAnOrdinaryPresentation()",
+      "attachment": "Music 03 - Generated audio on the timeline_0_F5E2EB59-C02A-4E27-8CCF-6EF3C58951BC.png",
+      "source_sha256": "d70807429df43a428eca380922794acb7e6e9facca10821a05f15ace0e61df14",
+      "source_dimensions": [
+        2752,
+        2064
+      ],
+      "dimensions": [
+        1600,
+        1200
+      ],
+      "transformation": "Simulator screen captured by XCUITest, orientation normalized, resized to fit 1600 by 1200, WebP quality 88",
+      "sha256": "6a6bf18beab089dd5dc91811c2e1dd686cf9e1b3858556de79073c691eece727",
+      "content": "Actual development UI using a demonstration presentation."
+    },
+    {
+      "file": "ipad-music-01.webp",
+      "platform": "iPadOS 26.5 Simulator",
+      "source_result": "ipad-check1.xcresult",
+      "test": "VolumetricCompatibilityUITests/testGenerateTechnoInAnOrdinaryPresentation()",
+      "attachment": "Music 01 - Choose a techno score_0_49D414F2-6849-44C6-831C-4E94345876A6.png",
+      "source_sha256": "15c827750518634eac154a1d07faa2a43274263a05a5c9c670e1c13c40cbab06",
+      "source_dimensions": [
+        2752,
+        2064
+      ],
+      "dimensions": [
+        1200,
+        1320
+      ],
+      "transformation": "Orientation normalized; cropped original UI capture to (749, 330, 2003, 1709) in 2752×2064 display coordinates; fit within 1280×1320, WebP quality 92.",
+      "sha256": "27f007c73e444ae6690229be6dd49d187bc4f8ce1f797ed6a31a981a2673cde4",
+      "content": "Actual development UI using a demonstration presentation."
+    },
+    {
+      "file": "droid-vision-generated-music.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "vision-music-footer.xcresult",
+      "test": "SpatialAuthoringUITests/testGenerateTechnoMusicInFlatVisionPresentation()",
+      "activity": "44 Generated techno in a flat Vision presentation",
+      "recording_sha256": "8da4254d217a1e14abb306e79ec6dc8430a23e6d58ce5a12cc16cc02eec159dd",
+      "recording_offset_seconds": 19.951,
+      "transformation": "crop=1600:1350:1130:470,scale=1440:-2; WebP quality 91",
+      "sha256": "9e0953ffec5239e94018c2e82d8f9119e1500dc4099b0844a3b9acb90edb2fe1",
+      "content": "Actual Vision simulator workflow using a new presentation.",
+      "dimensions": [
+        1440,
+        1216
+      ]
+    },
+    {
+      "file": "mac-music-05.webp",
+      "platform": "macOS native Mac mini",
+      "source_result": "mac-credit-final.xcresult",
+      "test": "VolumetricCompatibilityUITests/testScorePresentationWithGeneratedMusic()",
+      "attachment": "Music 05 - Score filling the presentation_0_A1281E28-2E41-4D19-A211-F6C9A8CA5796.png",
+      "source_sha256": "9b3ce35b32054a6c358691f92576c496cfcfd99faf111478e9f6a11c7092bf4a",
+      "source_dimensions": [
+        1280,
+        900
+      ],
+      "dimensions": [
+        1280,
+        900
+      ],
+      "transformation": "Document window captured by XCUITest, orientation normalized, resized to fit 1600 by 1200, WebP quality 88",
+      "sha256": "3a477d7d2dbf6072fd7ffa4a66dbb08c8e7dd66f6150fa6bcd3462817993f489",
+      "content": "Actual development UI using a demonstration presentation."
+    },
+    {
+      "file": "mac-music-04.webp",
+      "platform": "macOS native Mac mini",
+      "source_result": "mac-credit-final.xcresult",
+      "test": "VolumetricCompatibilityUITests/testScorePresentationWithGeneratedMusic()",
+      "attachment": "Music 04 - Generated techno score and composer_0_E8330FC1-C138-473A-AB20-587571E90929.png",
+      "source_sha256": "ac773c3731bc760c38f275bb75e82ea0cefecd94c118dc3eac0628296bbf84bb",
+      "source_dimensions": [
+        1280,
+        900
+      ],
+      "dimensions": [
+        486,
+        537
+      ],
+      "transformation": "Orientation normalized; cropped original UI capture to (397, 183, 883, 720) in 1280×900 display coordinates; fit within 1280×1320, WebP quality 92.",
+      "sha256": "4433e4a6233bb1715dfbce84cc6ee313a7daeab2f1ba651a54d12a6d5f54eb6c",
+      "content": "Actual development UI using a demonstration presentation."
+    },
+    {
+      "file": "droid-vision-guard-wave.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "vision-advanced.xcresult",
+      "test": "SpatialAuthoringUITests/testCreateDroidArenaAndPreviewWaves()",
+      "activity": "45 Second droid wave",
+      "recording_sha256": "74ea4dbde31d67ac919f0595695aae632e3c212e4765c889e397f6cee6b3c69c",
+      "recording_offset_seconds": 32.323,
+      "transformation": "scale=1600:-2; WebP quality 91",
+      "sha256": "cb354cd6c75e1b9c04bfd4f64ca5902ec3a2023061869eee2f757b7b5f81fa7b",
+      "content": "Actual second wave in Preview Waves with a shielded guard and the wave hint.",
       "dimensions": [
         1600,
         900

@@ -1,0 +1,3 @@
+{{- $path := printf "images/musimotion/visionos/%s" (.Get 0) -}}
+{{- $image := images.Config (printf "static/%s" $path) -}}
+<a href="{{ $path | relURL }}"><img src="{{ $path | relURL }}" alt="{{ .Get 1 }}" width="{{ $image.Width }}" height="{{ $image.Height }}" loading="lazy" decoding="async"></a>

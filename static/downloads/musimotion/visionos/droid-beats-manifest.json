@@ -1,0 +1,60 @@
+{
+  "file": "MusimotionVR-Techno-Droid-Arena.musimotion.zip",
+  "bytes": 1746021,
+  "sha256": "91d10c51286d579ff1034a49c14087d9073341175305bb388390c09890e3b2ce",
+  "title": "Droid Arena · Techno Dock",
+  "scene": "Droid Arena",
+  "arena": {
+    "waves": 3,
+    "duration_seconds": 42
+  },
+  "soundtrack": {
+    "title": "Orbital Pulse",
+    "composer": "Apple Foundation Models",
+    "style": "Techno",
+    "tempo": 132,
+    "bars": 8,
+    "sha256": "53253e73a24267f5ffd18768e1b63ccbeb05ffe346ee87c7067eed47a5e5b33a",
+    "clip_start_seconds": [
+      0,
+      14.54546875,
+      29.0909375
+    ]
+  },
+  "source_test": "ScoredArenaTests/testScoreAllThreeDroidWavesAndReopenThePackage()",
+  "result_bundle": "mac-arena-final2.xcresult",
+  "presentation_json_sha256": "4087b16f84cfe043ba3c645729267266bbe7af8df9c2e535487c003de6678c77",
+  "camera_preview": {
+    "file": "Techno-Droid-Arena.mp4",
+    "bytes": 7111333,
+    "sha256": "553a429fd511c354cc71f9f97806d56ff98de572532af52f78c5aeb2cb857b75",
+    "duration_seconds": 42.0,
+    "video_codec": "H.264",
+    "audio_codec": "AAC",
+    "dimensions": [
+      1280,
+      720
+    ],
+    "video_frames": 1008,
+    "description": "Authored Droid Arena wave preview and generated soundtrack.",
+    "nominal_frame_rate": "24/1",
+    "audio_channels": 2,
+    "decoded_audio_checks": 46,
+    "minimum_source_correlation": 0.998346
+  },
+  "music_example": {
+    "file": "Musimotion-Techno-Session.wav",
+    "bytes": 930952,
+    "sha256": "9020492915cbe03027527593a6c050c45cefd413c1e894b2384b9454c9a5b4c7",
+    "title": "Warehouse Techno",
+    "composer": "Apple Foundation Models",
+    "tempo": 132,
+    "bars": 4,
+    "duration_seconds": 7.27271875,
+    "channels": 2,
+    "sample_rate_hz": 32000,
+    "bit_depth": 16,
+    "source_test": "MusicStudioTests/testTechnoRendersStereoAudioAndReopensAsANativeProject()",
+    "result_bundle": "music-mac-core1.xcresult"
+  }
+}

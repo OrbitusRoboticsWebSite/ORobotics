@@ -125,3 +125,35 @@ Chrome on desktop and at a 390 × 844 mobile viewport.
 Validation passed 127 website tests, the eight-product catalog check, the gallery
 and white-paper checks, and subpath validation. The local build validated 43
 linked guide and product resources.
+
+### Droid Arena and Music Studio, guide 1.5
+
+The November 19 development guide adds ten Mac, iPad simulator and Vision Pro
+simulator captures. The guide shows how to create an arena, follow the droid
+waves, draw or raise the shield, and recover when hands leave view. Music
+Studio instructions cover on-device model selection, auditioning a variation,
+adding a clip and scoring a whole presentation. The device protocol includes
+seated reach, hand occlusion, guard opening cues and perceived audio timing.
+Physical headset acceptance remains open.
+
+The sample project contains Orbital Pulse, an eight-bar, 132 BPM techno cue
+composed by Apple Foundation Models. The 42-second camera movie has one stereo
+soundtrack spanning all three waves. Warehouse Techno is a separate four-bar
+WAV that readers can audition on the page. The edition's downloadable manifest
+identifies the two takes and records all three file sizes and checksums.
+The product preview and guide anchors were visually checked in Chrome on
+desktop and at 390 × 844. Each guide image reserves its measured dimensions
+so the selected step stays in view as the screenshots load.
+
+The catalog identifies both features as development work. The Mac 1.0.0
+build 7 approval and its separate manual release are recorded above.
+
+Source and test record are on Musimotion main at
+`3cc7731a111c8cd2fd463931473362ca7581b038`. The three sample files total
+9,788,306 bytes. The full site measures 448.2 MiB with a 450 MiB aggregate
+budget. Individual media limits continue to apply.
+
+The 127 site tests passed, along with the eight-product catalog, gallery and
+white-paper checks and subpath rendering of 91 HTML files. Local publication
+checks verified the four public routes and their 53 linked resources,
+including the natural dimensions and checksums of all 41 guide screenshots.

@@ -23,3 +23,7 @@ Existing book/store release workflows apply when those editions are changed.
 2026-11-19: the site budget is 440 MiB (observed build 430.2 MiB), retaining
 the prior manual and production companion downloads alongside the 51-page
 feature manual and 14 native UI screenshots. Individual media checks remain.
+
+Musimotion guide 1.5 on November 19 adds a 7,111,333-byte camera movie, a
+1,746,021-byte editable arena and a 930,952-byte standalone techno WAV. The
+448.2 MiB build fits the revised 450 MiB site budget.
