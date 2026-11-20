@@ -726,6 +726,8 @@ project, movie and music checksums and the composer credited for each take.
 
 ## AI, sharing and support
 
+For a walkthrough of **Use Answer**, **Import AI Draft…** and **Import AI Score…**, see [Create scenes and soundtracks with AI]({{< relref "musimotion-ai-authoring.md" >}}). A desktop model can author the scene or musical notes. Transfer its JSON file to Files on Vision Pro, review the draft in **AI Creation Studio**, or listen to the score in **Music Studio** before adding it.
+
 **AI Create** uses Apple's on-device Foundation Models framework when available,
 with an editable deterministic fallback. Availability depends on device, OS,
 language and region; it does not establish China distribution compliance. Image

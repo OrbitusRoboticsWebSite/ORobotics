@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "presentationTitle": "Lantern Festival",
+  "headline": "Lanterns at Dusk",
+  "duration": 8,
+  "backgroundHex": "10172B",
+  "accentHex": "FFB553",
+  "cues": [
+    {
+      "name": "Lantern star",
+      "kind": "shape",
+      "content": "star",
+      "start": 0.25,
+      "end": 0.75,
+      "x": 0.5,
+      "y": 0.45,
+      "motion": "riseAndSettle"
+    }
+  ]
+}

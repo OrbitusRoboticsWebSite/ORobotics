@@ -1,0 +1,95 @@
+{
+  "date": "2026-11-20",
+  "distribution": "Development preview",
+  "guide": "https://www.orbitusrobotics.com/products/musimotion/ai-authoring/",
+  "companion": {
+    "filename": "musimotion-mcp-1.0.0.zip",
+    "bytes": 13684,
+    "sha256": "890ce2da15cb6ae3ced467ffdd6da2c4ad0ce290daf8cf70fe081eebc92240b9"
+  },
+  "protocols": [
+    "2026-07-28",
+    "2025-11-25"
+  ],
+  "tools": [
+    "create_music_score",
+    "create_scene_plan",
+    "prepare_scene_brief"
+  ],
+  "examples": [
+    {
+      "file": "lantern-festival.musiplan.json",
+      "sha256": "cf530803d7a0ba4d2cee7c006661102196bb3332d3b5a322c9b94b3333b3263c",
+      "bytes": 379
+    },
+    {
+      "file": "lantern-pulse.musiscore.json",
+      "sha256": "56729d7da88e6173924f003fe50cd529542ad8beb04530de1235594c09a04d98",
+      "bytes": 332
+    }
+  ],
+  "connection_checks": "Clean production install from the companion ZIP. Official MCP client connected over stdio and regenerated both examples byte for byte. Six integration checks passed, covering modern and legacy discovery, input validation, follow-up questions and independent concurrent writes.",
+  "scope": "The assistant authors transferable scene data or musical notes. Musimotion reviews scenes and renders instrumental takes locally. App Store distribution is separate from this preview.",
+  "app_verification": {
+    "native_core": [
+      {
+        "platform": "mac",
+        "passed": 42,
+        "failed": 0,
+        "skipped": 0,
+        "summarySHA256": "6cee9606c49005f87585893c045b094481430accab774aed0d56dbbd760190da"
+      },
+      {
+        "platform": "ipad",
+        "passed": 28,
+        "failed": 0,
+        "skipped": 0,
+        "summarySHA256": "5cc80ce621e3175b33d2f623dad939f3c63f948cd81cf17bd3ba620bc6005ab5"
+      },
+      {
+        "platform": "vision",
+        "passed": 28,
+        "failed": 0,
+        "skipped": 0,
+        "summarySHA256": "0b2fb63b120835551f0be80b9fc435e5acf1ad8426121db96463e059778dcb6b"
+      }
+    ],
+    "ui": [
+      {
+        "platform": "macOS",
+        "case": "TemplateGalleryUITests/testAIPlannerAsksOneQuestionAndReviewsTheAnswer()",
+        "result": "Passed"
+      },
+      {
+        "platform": "macOS",
+        "case": "TemplateGalleryUITests/testImportExternalAIFileReviewApplyAndUndo()",
+        "result": "Passed"
+      },
+      {
+        "platform": "macOS",
+        "case": "TemplateGalleryUITests/testImportExternalAIScorePreviewAddAndUndo()",
+        "result": "Passed"
+      },
+      {
+        "platform": "iOS Simulator",
+        "case": "TemplateGalleryUITests/testAIPlannerAsksOneQuestionAndReviewsTheAnswer()",
+        "result": "Passed"
+      },
+      {
+        "platform": "iOS Simulator",
+        "case": "TemplateGalleryUITests/testMusicStudioOffersAnOptionalRoleForAVagueBrief()",
+        "result": "Passed"
+      },
+      {
+        "platform": "visionOS Simulator",
+        "case": "SpatialAuthoringUITests/testReviewSpatialAIPlanBeforeApplying()",
+        "result": "Passed"
+      }
+    ],
+    "apple_on_device": "The Apple Foundation Models framework on a Mac generated two scene plans and a four-bar instrumental score. UI screenshots illustrating the local fallback use a deterministic synthetic fixture.",
+    "scope": "The 42 Mac, 28 iPad Simulator and 28 Vision Pro Simulator core checks and six additional UI cases passed. These checks exclude physical-headset interaction.",
+    "installed_mac": "The development-signed Mac preview reopened an existing project and preserved its project JSON and saved audio byte for byte. The scene and score import controls were present."
+  },
+  "external_model_verification": "Three fresh Codex host calls used the installed local companion. The host created a synthetic scene and a synthetic instrumental. A separate vague brief produced a question about the subject and title before any draft was written.",
+  "screenshot_provenance": "https://www.orbitusrobotics.com/images/musimotion/visionos/ai-authoring/provenance.json"
+}

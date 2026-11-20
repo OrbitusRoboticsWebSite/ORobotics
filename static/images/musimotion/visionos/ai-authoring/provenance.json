@@ -1,0 +1,276 @@
+{
+  "date": "2026-11-20",
+  "scope": "Native Musimotion development UI. The examples are synthetic. Each WebP is a crop of a genuine XCTest screenshot. Captions identify the platform and source workflow.",
+  "images": [
+    {
+      "file": "score-start.webp",
+      "alt": "Music Studio on Mac with Import AI Score and Done above the music brief",
+      "caption": "In this Mac development build, Import AI Score… sits at the top of Music Studio. It opens the system file picker.",
+      "bytes": 2962,
+      "pixels": [
+        479,
+        127
+      ],
+      "sha256": "301a8b8114bc0bcdbd7088b03d61dc92a1199234322f049b8824c29c00ff32f5",
+      "source_attachment": "Template Gallery AI music - 01 Find Import AI Score",
+      "source_platform": "My Mac",
+      "source_bundle": "mac-integrated-ui.xcresult",
+      "source_test": "TemplateGalleryUITests/testImportExternalAIScorePreviewAddAndUndo()",
+      "source_pixels": [
+        980,
+        712
+      ],
+      "source_sha256": "77797f93b2821937792676819c2aa03c12380410942182e7b3244a46ac7274c7",
+      "source_orientation": 1,
+      "crop_pixels_after_orientation": [
+        250,
+        77,
+        729,
+        204
+      ]
+    },
+    {
+      "file": "score.webp",
+      "alt": "Mac Music Studio playing the eight-second external Lantern Pulse score at 120 BPM, with Stop Preview and Add to Scene available",
+      "caption": "The Mac preview is playing a synthetic Codex-authored score. The source reads External AI score. Lantern Pulse runs for 8.0 seconds at 120 BPM.",
+      "bytes": 14604,
+      "pixels": [
+        479,
+        563
+      ],
+      "sha256": "31a3f24184aa62a985ebfd20f0d692bcba464e1759951b5a2d2b4fda291af2a8",
+      "source_attachment": "Template Gallery AI music - 02 Audition the external score",
+      "source_platform": "My Mac",
+      "source_bundle": "mac-integrated-ui.xcresult",
+      "source_test": "TemplateGalleryUITests/testImportExternalAIScorePreviewAddAndUndo()",
+      "source_pixels": [
+        980,
+        712
+      ],
+      "source_sha256": "e243c6c6ac8267ce017c0833c8abc7bc2dd443f81504d4aff5af906ac766c96d",
+      "source_orientation": 1,
+      "crop_pixels_after_orientation": [
+        250,
+        76,
+        729,
+        639
+      ]
+    },
+    {
+      "file": "score-added.webp",
+      "alt": "Objects list on Mac with Lantern Pulse selected below the Welcome and Orb layers",
+      "caption": "After Add to Scene, the Mac Objects list shows Lantern Pulse as a selected audio layer.",
+      "bytes": 2072,
+      "pixels": [
+        299,
+        132
+      ],
+      "sha256": "cf8c02daf0b8dda64e8132de8bec4ab8e97daa73d5c8202db801e7011e32c164",
+      "source_attachment": "Template Gallery AI music - 03 External score in the presentation",
+      "source_platform": "My Mac",
+      "source_bundle": "mac-integrated-ui.xcresult",
+      "source_test": "TemplateGalleryUITests/testImportExternalAIScorePreviewAddAndUndo()",
+      "source_pixels": [
+        980,
+        712
+      ],
+      "source_sha256": "f61331264e10e7c78fc45426f667991ccc5a0fa25b105a33e2a928c81490622c",
+      "source_orientation": 1,
+      "crop_pixels_after_orientation": [
+        66,
+        210,
+        365,
+        342
+      ]
+    },
+    {
+      "file": "clarify.webp",
+      "alt": "AI Creation Studio on iPad asking what subject or words should appear, with Your direction, Use Answer and Use My Brief",
+      "caption": "The iPad simulator asks one question after “Make something.” Enter a direction to enable Use Answer, or continue with Use My Brief.",
+      "bytes": 15892,
+      "pixels": [
+        850,
+        500
+      ],
+      "sha256": "cbb7564be91bfdab0cb294bcd1b2bd48c0fccda29683b6d08c9e908a5ff439c9",
+      "source_attachment": "Template Gallery AI creation - 01 Clarify the brief",
+      "source_platform": "iPad Pro 13-inch (M5)",
+      "source_bundle": "ipad-reachable.xcresult",
+      "source_test": "TemplateGalleryUITests/testAIPlannerAsksOneQuestionAndReviewsTheAnswer()",
+      "source_pixels": [
+        2064,
+        2752
+      ],
+      "source_sha256": "c70171c0f9dc70227ba0425397878c7707009934bd9f115bcce767891d58aa6b",
+      "source_orientation": 8,
+      "crop_pixels_after_orientation": [
+        140,
+        283,
+        1180,
+        895
+      ]
+    },
+    {
+      "file": "local.webp",
+      "alt": "iPad editable steering plan for Lantern Festival showing Lower Third, Push In and a ten-second star cue",
+      "caption": "The iPad simulator’s local template planner used the answer to build Lantern Festival with a star layer. This capture shows the template fallback.",
+      "bytes": 14962,
+      "pixels": [
+        780,
+        505
+      ],
+      "sha256": "4f6230352187d6f02206f4c689c85889d3a1c99fa7a32bc61da9095aa9107a3e",
+      "source_attachment": "Template Gallery AI creation - 02 Review the local plan",
+      "source_platform": "iPad Pro 13-inch (M5)",
+      "source_bundle": "ipad-reachable.xcresult",
+      "source_test": "TemplateGalleryUITests/testAIPlannerAsksOneQuestionAndReviewsTheAnswer()",
+      "source_pixels": [
+        2064,
+        2752
+      ],
+      "source_sha256": "f9d6b826df42e4f90c220093afa1cbfd3382d6aec83c7e78d464fafef522e220",
+      "source_orientation": 8,
+      "crop_pixels_after_orientation": [
+        140,
+        293,
+        1170,
+        960
+      ]
+    },
+    {
+      "file": "role.webp",
+      "alt": "Music Studio on iPad showing the question about the role of the music and Build to a reveal selected",
+      "caption": "For “make some music,” the iPad simulator shows the optional role picker. Build to a reveal gives the planner a musical direction.",
+      "bytes": 8976,
+      "pixels": [
+        780,
+        301
+      ],
+      "sha256": "00afbca1fdb7f8035fa5a6d1f732884126c0e3871a81169a7f687b722e25373e",
+      "source_attachment": "Template Gallery AI music - 04 Choose a role for the scene",
+      "source_platform": "iPad Pro 13-inch (M5)",
+      "source_bundle": "ipad-reachable.xcresult",
+      "source_test": "TemplateGalleryUITests/testMusicStudioOffersAnOptionalRoleForAVagueBrief()",
+      "source_pixels": [
+        2064,
+        2752
+      ],
+      "source_sha256": "54cb0cbc5781deb470c9f35b4bc4abfe50ac7f8016f294f46ac5831962fff193",
+      "source_orientation": 8,
+      "crop_pixels_after_orientation": [
+        790,
+        84,
+        1965,
+        538
+      ]
+    },
+    {
+      "file": "import.webp",
+      "alt": "AI Creation Studio header on Mac showing the Import AI Draft button",
+      "caption": "In the Mac editor, Import AI Draft… is in the header of AI Creation Studio. The import sheet also links to the companion setup guide.",
+      "bytes": 3266,
+      "pixels": [
+        538,
+        67
+      ],
+      "sha256": "c577db375f64332dd788dae55267047e98640159adaf5ad371e8c33831e62bd1",
+      "source_attachment": "Template Gallery AI creation - 03 Open the draft importer",
+      "source_platform": "My Mac",
+      "source_bundle": "mac-pinned.xcresult",
+      "source_test": "TemplateGalleryUITests/testImportExternalAIFileReviewApplyAndUndo()",
+      "source_pixels": [
+        980,
+        712
+      ],
+      "source_sha256": "1f4e676c3e7bcf72c8388ffdb65ceb952c1f5718758f2881c246089d453606cf",
+      "source_orientation": 1,
+      "crop_pixels_after_orientation": [
+        65,
+        124,
+        603,
+        191
+      ]
+    },
+    {
+      "file": "invalid.webp",
+      "alt": "Mac Import AI Draft sheet with invalid JSON, an inline correction, Choose JSON File and Review Draft",
+      "caption": "This synthetic Mac example contains only the word “invalid.” The message asks for a UTF-8 JSON scene plan containing one object. Replace the input or choose a file.",
+      "bytes": 10682,
+      "pixels": [
+        480,
+        373
+      ],
+      "sha256": "f706a1a1aefbff69b8de97e64cfb1c70504fdf9620e19f6ecdf44a08c6e6144a",
+      "source_attachment": "Template Gallery AI creation - 04 Correct an invalid draft",
+      "source_platform": "My Mac",
+      "source_bundle": "mac-pinned.xcresult",
+      "source_test": "TemplateGalleryUITests/testImportExternalAIFileReviewApplyAndUndo()",
+      "source_pixels": [
+        980,
+        712
+      ],
+      "source_sha256": "377e90a28296e6864e833ee8c9fa6d5db50e34ba63ae56ae6d0dc52cbdbdc903",
+      "source_orientation": 1,
+      "crop_pixels_after_orientation": [
+        249,
+        169,
+        729,
+        542
+      ]
+    },
+    {
+      "file": "review.webp",
+      "alt": "Mac External AI draft for Lantern Festival showing the timed Lantern star and Closing wish cues, a local reading notice and Add Scene",
+      "caption": "In this synthetic Codex-authored variation, Lantern star rises from 2 to 6 seconds, then Closing wish shows “Make a wish.” The editor identifies the external assistant as the author. The downloadable starter demonstrates the star cue.",
+      "bytes": 17924,
+      "pixels": [
+        538,
+        582
+      ],
+      "sha256": "797b29ac1e482783a383dcd3eeafcc2fae8817fff84e6c71e775d1409caf44a4",
+      "source_attachment": "Template Gallery AI creation - 05 Review the external timed cue",
+      "source_platform": "My Mac",
+      "source_bundle": "mac-attribution.xcresult",
+      "source_test": "TemplateGalleryUITests/testImportExternalAIFileReviewApplyAndUndo()",
+      "source_pixels": [
+        980,
+        712
+      ],
+      "source_sha256": "6c4b3bf4fe9ff4e711490160205020d54f367edd96c6f305f256e2f6f7ca0552",
+      "source_orientation": 1,
+      "crop_pixels_after_orientation": [
+        63,
+        127,
+        601,
+        709
+      ]
+    },
+    {
+      "file": "object.webp",
+      "alt": "Lantern star selected in the Mac Objects list with blue handles on the stage and Star shape, color, scale and rotation in the inspector",
+      "caption": "The new Lantern Festival scene begins after Scene 1. Lantern star has its own editable shape, color and transform controls in the Mac inspector.",
+      "bytes": 17364,
+      "pixels": [
+        840,
+        441
+      ],
+      "sha256": "db219a6f742e5b58ed8ced88c55f8cd51a5d3df260d3fbe0ca8a064854bf55ad",
+      "source_attachment": "Template Gallery AI creation - 06 Select the generated object",
+      "source_platform": "My Mac",
+      "source_bundle": "mac-pinned.xcresult",
+      "source_test": "TemplateGalleryUITests/testImportExternalAIFileReviewApplyAndUndo()",
+      "source_pixels": [
+        980,
+        712
+      ],
+      "source_sha256": "cf2f29cb7a5f9db9a2beb08ab66e89545e03a5b0544de8a0b3b12a4585950a1d",
+      "source_orientation": 1,
+      "crop_pixels_after_orientation": [
+        55,
+        107,
+        979,
+        592
+      ]
+    }
+  ]
+}
