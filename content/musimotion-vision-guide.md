@@ -7,13 +7,14 @@ description: "Read 2D projects, animate solid 3D volumes, enter full immersion o
 
 [Back to Musimotion]({{< relref "musimotion.md" >}}) · [Product support]({{< relref "contact.md" >}})
 
-Version 1.2 · November 19, 2026 · Development preview
+Version 1.3 · November 19, 2026 · Development preview
 
 Read existing **2D presentations**, switch to **3D Volume** for solid objects and
 ink at different depths, and present inside **Full Immersion** on Vision Pro.
 Mac and iPad render the same saved 3D project through a movable camera. The
 illustrated sidebar, timeline and radial menus reuse the original iPad artwork;
-none of those designer assets have been redrawn.
+none of those designer assets have been redrawn. To make a party scene, follow
+the [birthday surprise walkthrough](#8-make-a-birthday-surprise).
 
 This guide describes development source, not an App Store release. The Mac
 1.0.0 build 7 approval is a separate release awaiting manual publication at the
@@ -73,8 +74,8 @@ cross-platform depth, save/reopen and rendered-movie tests.*
 behind it, positive Z comes out toward the front. Volume depth is −0.8…+0.8
 in document space. A bounded window uniformly scales the entire volume to fit.*
 
-4. In the window preview, choose **Viewpoint → Right side**, **Left side** or
-   **Above** to inspect actual thickness and separation. **Front** and
+4. In the window preview, choose **Viewpoint → Right side**, **Left side**,
+   **Above** or **Rear** to inspect actual thickness and separation. **Front** and
    **Perspective** restore useful views; **Closer/Farther** adjust camera distance.
 5. Choose **2D** to return to flat editing. Switching modes pauses playback and
    preserves the 3D coordinates, camera and ink. Choose **3D Volume** again to
@@ -227,10 +228,10 @@ Layer start time and source trim differ: a layer starting at 0.7 seconds with a
 0.5-second source trim begins that source segment at scene time 0.7 seconds.
 Seek, pause, rate and mute share a timing policy. Spatial playback suppresses
 window audio to avoid duplicated tracks. The 3D renderer also includes scene
-crossfades and background video surfaces. Native video masks/blur, spatial
-particle emitters and collision-driven physics do not yet match all 2D effects;
-3D physics uses deterministic trajectory evaluation. These are separate from
-the tested Sumi save/replay path. **Reduce motion** suppresses decorative
+crossfades and background video surfaces. Celebration balloons have their own
+collision simulation. Ordinary animated layers use the existing trajectory
+model. Live video masks/blur and general-purpose spatial particle effects
+remain limited. **Reduce motion** suppresses decorative
 particles and physics motion while deliberate timeline animation remains available.
 
 Automated tests exercise saved projects, real RealityKit frames, solid text
@@ -238,8 +239,93 @@ thickness, behind/front poses, camera views, Sumi reveal, masks/blur and movie
 frames. Exported synthetic audio is decoded and checked within 80 ms. This does
 not measure physical speaker latency, headset acoustics, sustained frame rate or
 comfort. The [test report](https://github.com/RudyAramayo/Musimotion/blob/main/docs/INITIAL_TESTING.md) records exact runs and the
-explicit simulator gesture limitation. The [headset checklist]({{< asset-url "products/musimotion/headset-testing/" >}})
+explicit simulator gesture limitation. The [headset checklist]({{< relref "musimotion-headset-testing.md" >}})
 remains the acceptance gate for hands, gaze, repeated grabs and longer sessions.
+
+## 8. Make a birthday surprise
+
+Select any picture below to enlarge the controls.
+
+1. Open the artwork editor and choose **Celebration** above the canvas or from
+   the original **Effects** side tab. Choose
+   **Add Birthday Surprise** to append a 16-second scene. It opens in **3D Volume**.
+   The first three seconds count down from three. At three seconds, the gold
+   **Happy Birthday!** greeting moves forward as balloons and confetti begin to
+   fall. Fireworks start two seconds after the effects cue.
+
+   [![Mac Celebration Effects sheet with Add Birthday Surprise, Add Balloon Drop and Add Fireworks]({{< asset-url "images/musimotion/visionos/birthday-01.webp" >}})]({{< asset-url "images/musimotion/visionos/birthday-01.webp" >}})
+
+   *Mac. Add a complete scene or apply one effect to the selected scene.*
+
+2. To decorate a scene you already have, select that scene first, choose
+   **Celebration**, then **Add Balloon Drop** or **Add Fireworks**. Turn
+   **Balloon Drop**, **Fireworks** and **Confetti** on or off independently.
+   **Remove Effects** clears these decorations. The countdown and greeting are
+   editable text layers and can be selected or removed separately.
+
+   [![The Celebration Effects settings on Vision Pro Simulator]({{< asset-url "images/musimotion/visionos/birthday-vision-controls.webp" >}})]({{< asset-url "images/musimotion/visionos/birthday-vision-controls.webp" >}})
+
+   *Vision Pro Simulator. The same scene settings are available in the artwork editor.*
+
+3. Use **Balloons** to choose 8–64 balloons. **Fall speed** changes how quickly
+   they accelerate, **Wind** changes sideways drift, and **Bounce** controls how
+   much speed they retain on contact. **Effects start** is measured from the
+   beginning of the scene. Set it before the end of the scene so there is time
+   to see the effects. Changing this cue leaves your text layer timing intact.
+
+   [![Mac birthday settings with balloon, firework and confetti controls]({{< asset-url "images/musimotion/visionos/birthday-02.webp" >}})]({{< asset-url "images/musimotion/visionos/birthday-02.webp" >}})
+
+   *Mac. The switches control the decorations separately. Timing and physics belong to this scene.*
+
+4. Choose **Show Burst** to pause on the first firework, just under three
+   seconds after the effects cue. Choose **Preview Surprise** to play from the
+   start of the scene. Both preview buttons return a 2D view to **3D Volume**.
+   If **Show Burst** is dimmed, enable **Fireworks** and place the effects cue
+   at least three seconds before the end of the scene. Pause with the turquoise
+   transport. On Mac or iPad, choose **Viewpoint → Celebration close-up** to
+   frame the party. Choose **Right side** or **Rear** to see the spacing between
+   balloons. Save the project to keep the editable effects.
+   **Export Video** renders a movie from the saved camera using a stationary
+   reference viewer for balloon contact.
+
+   [![The birthday scene in the Mac 3D camera preview]({{< asset-url "images/musimotion/visionos/birthday-03.webp" >}})]({{< asset-url "images/musimotion/visionos/birthday-03.webp" >}})
+
+   *Mac. The saved camera frames the celebration for playback and movie export.*
+
+
+   [![iPad Simulator 3D camera preview of the birthday greeting, balloons and fireworks above the turquoise controls]({{< asset-url "images/musimotion/visionos/ipad-birthday-03.webp" >}})]({{< asset-url "images/musimotion/visionos/ipad-birthday-03.webp" >}})
+
+   *iPad Simulator. The same scene can be played and scrubbed from the original iPad transport.*
+
+
+   [![Vision Pro Simulator showing the birthday scene in a bounded volume with the original transport]({{< asset-url "images/musimotion/visionos/birthday-vision-volume.webp" >}})]({{< asset-url "images/musimotion/visionos/birthday-vision-volume.webp" >}})
+
+   *Vision Pro Simulator. Open Volume presents the party in miniature.*
+
+5. On Vision Pro, pause and rewind the birthday scene, choose **Full Immersion**,
+   then press **Play/Pause**. Look up and around as balloons descend from
+   overhead, collide with one another, glance off a virtual envelope around
+   the viewer and settle at a virtual floor. The display reports **Viewer
+   contact active** when device tracking is available. Musimotion uses the
+   current headset position in memory and keeps the arena at its initial
+   location. Balloons crossing your line of sight to the birthday greeting
+   turn translucent while it is visible. Balloon contact is visual.
+
+   [![Birthday greeting, balloon drop and firework burst in Vision Pro Simulator full immersion]({{< asset-url "images/musimotion/visionos/birthday-vision-immersion.webp" >}})]({{< asset-url "images/musimotion/visionos/birthday-vision-immersion.webp" >}})
+
+   *Vision Pro Simulator. In Full Immersion, a balloon in front of the gold greeting turns translucent while the rest of the drop remains visible.*
+
+6. If live tracking is unavailable, the presentation uses a reference viewer.
+   To check the effect from a fixed position, use the 3D preview or export a
+   movie. For a quieter presentation, enable **Reduce motion** in 3D Setup or
+   the system **Reduce Motion** setting. The balloons form a still arrangement
+   and the greeting plays without fireworks or confetti. **Exit 3D** returns to the editor.
+
+To try the same scene used in the package test, download the
+[birthday presentation]({{< asset-url "downloads/musimotion/visionos/MusimotionVR-Birthday-Surprise.musimotion.zip" >}}),
+unzip it, and open the enclosed project on Mac, iPad or Vision Pro.
+The [sample manifest]({{< asset-url "downloads/musimotion/visionos/birthday-manifest.json" >}}) records its size,
+checksum and source test.
 
 ## AI, sharing and support
 

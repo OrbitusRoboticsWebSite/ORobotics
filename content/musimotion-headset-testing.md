@@ -53,5 +53,26 @@ must stay `not_run`. Only internal testing is assumed.
     choose Front/Right side, inspect depth ink and keyframes, export a movie,
     then reopen the package on Vision Pro. Check that all source data survives.
 
+11. **Surrounding birthday scene.** In the artwork editor choose **Celebration →
+    Add Birthday Surprise**. With the playhead at the start, enter Full Immersion
+    and press Play. From a comfortable seated position, check the countdown,
+    greeting, overhead drop, surrounding balloons and localized fireworks. Pause
+    and resume. Record whether the transport stayed reachable and the scene
+    remained stationary as you turned your head.
+12. **Viewer contact and tracking recovery.** Record whether **Viewer contact
+    active** appears. Observe an overhead balloon and its deflection without
+    moving toward it. Try an ordinary lean, then recenter and observe recovery.
+    Record any clipping, sudden arena movement, or missing tracking status.
+    Compare with the fixed reference view on Mac/iPad. On the headset, repeat
+    with **Reduce motion** and verify stationary balloons, visible greeting,
+    hidden confetti/fireworks and a usable **Exit 3D**.
+
+The collision check uses the current device position supplied inside an immersive
+space. A sphere around that point approximates the viewer for balloon contact.
+The app keeps a separate origin for the arena. When evaluating tracking, record
+what the display reports and how the balloons behave as you move.
+[Apple’s device-transform sample](https://developer.apple.com/documentation/visionos/placing-entities-using-head-and-device-transform)
+describes the underlying tracking API.
+
 Release acceptance requires completed device results and no blocking defects.
 The current implementation and simulator results alone do not satisfy this gate.

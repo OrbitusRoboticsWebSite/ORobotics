@@ -1,6 +1,6 @@
 {
   "date": "2026-11-19",
-  "guide_version": "1.2",
+  "guide_version": "1.3",
   "captures": [
     {
       "file": "original-artwork.webp",
@@ -174,6 +174,118 @@
       "transformation": "Uncropped 1280x900 app window; WebP quality88",
       "sha256": "55e9d5c2f1ef564ff3f183be1a7689a982ba45a80c0afccc91b0de403810876b",
       "content": "Synthetic demonstration project; actual UI, not a mockup."
+    },
+    {
+      "file": "birthday-03.webp",
+      "platform": "macOS 26.6.2, native Mac mini",
+      "source_result": "mac-ui-final.xcresult",
+      "test": "VolumetricCompatibilityUITests/testBirthdaySurpriseAuthorPreviewAndRemove()",
+      "attachment": "Birthday 03 - Balloon drop and fireworks_0_E4FC09F3-6BFC-49DD-8653-8EE45F51E998.png",
+      "source_sha256": "a53fe40ec007a315dfc3f6e04e1a36fa76c63a7abaed8a20646b841f7703aa37",
+      "source_dimensions": [
+        1280,
+        900
+      ],
+      "dimensions": [
+        1280,
+        900
+      ],
+      "transformation": "Document window captured by XCUITest, orientation normalized, fit within 1600 by 1200, WebP quality 88",
+      "sha256": "e095963aed94c855cc15f94eaa464e0397dabcbc25dffe63d374aa97fc379174",
+      "content": "Synthetic birthday demonstration in the actual development UI."
+    },
+    {
+      "file": "birthday-02.webp",
+      "platform": "macOS 26.6.2, native Mac mini",
+      "source_result": "mac-ui-final.xcresult",
+      "test": "VolumetricCompatibilityUITests/testBirthdaySurpriseAuthorPreviewAndRemove()",
+      "attachment": "Birthday 02 - Configure the effects_0_5E5AE761-32E0-40A7-84E7-54E496C6544C.png",
+      "source_sha256": "7c361e5fb3b54fc3a274004a82d3962da117f889b6ba2f87d39e70dae72b9e66",
+      "source_dimensions": [
+        1280,
+        900
+      ],
+      "dimensions": [
+        1280,
+        900
+      ],
+      "transformation": "Document window captured by XCUITest, orientation normalized, fit within 1600 by 1200, WebP quality 88",
+      "sha256": "8b6634ae98f144751891f95712ecf84314cf76dfd4885c57d38794c761211dd4",
+      "content": "Synthetic birthday demonstration in the actual development UI."
+    },
+    {
+      "file": "birthday-01.webp",
+      "platform": "macOS 26.6.2, native Mac mini",
+      "source_result": "mac-ui-final.xcresult",
+      "test": "VolumetricCompatibilityUITests/testBirthdaySurpriseAuthorPreviewAndRemove()",
+      "attachment": "Birthday 01 - Add a celebration_0_6F76FDBF-5D4E-4D8E-8264-0A16ECDCCEB2.png",
+      "source_sha256": "ee876ab835783716ffc9a8573529c0f9426ec32fae3a07ebea5fd2033df20258",
+      "source_dimensions": [
+        1280,
+        900
+      ],
+      "dimensions": [
+        1280,
+        900
+      ],
+      "transformation": "Document window captured by XCUITest, orientation normalized, fit within 1600 by 1200, WebP quality 88",
+      "sha256": "0f8c51db385d4ff9299ad7785c80feecaec22425d78a2ebc08a22761289a1fdb",
+      "content": "Synthetic birthday demonstration in the actual development UI."
+    },
+    {
+      "file": "ipad-birthday-03.webp",
+      "platform": "iPadOS 26.5 Simulator",
+      "source_result": "ipad-ui-final.xcresult",
+      "test": "VolumetricCompatibilityUITests/testBirthdaySurpriseAuthorPreviewAndRemove()",
+      "attachment": "Birthday 03 - Balloon drop and fireworks_0_6A36240B-51B2-43BE-8EF8-31EE3900B6C4.png",
+      "source_sha256": "830adae6d5b0d6010e58eefee3de6d31c8bca1778e6f82f2ba97534990db2eec",
+      "source_dimensions": [
+        2752,
+        2064
+      ],
+      "dimensions": [
+        1600,
+        1200
+      ],
+      "transformation": "Simulator screen captured by XCUITest, orientation normalized, fit within 1600 by 1200, WebP quality 88",
+      "sha256": "b880a038f3fe3ebc2dd7cf6710547fb5eb55740e49463f1799cd2f7e5e964655",
+      "content": "Synthetic birthday demonstration in the actual development UI."
+    },
+    {
+      "file": "birthday-vision-controls.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "vision-greeting.xcresult",
+      "test": "SpatialAuthoringUITests/testBirthdaySurpriseInVolumeAndFullImmersion()",
+      "activity": "20 Configure birthday surprise",
+      "recording_sha256": "b200be3ddfb22e550f01cc98c9238a6d1b5e3e1039b79cb66182766db4bd8c2e",
+      "recording_offset_seconds": 16.336,
+      "transformation": "crop=1640:1116:1100:640,scale=1440:-2; WebP quality 90",
+      "sha256": "43bebfc3fa02c3f25fb3a4206f61c664610c1f48db1026d57cf734e61b212a00",
+      "content": "Synthetic birthday demonstration in the actual development UI."
+    },
+    {
+      "file": "birthday-vision-volume.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "vision-greeting.xcresult",
+      "test": "SpatialAuthoringUITests/testBirthdaySurpriseInVolumeAndFullImmersion()",
+      "activity": "21 Birthday miniature volume",
+      "recording_sha256": "b200be3ddfb22e550f01cc98c9238a6d1b5e3e1039b79cb66182766db4bd8c2e",
+      "recording_offset_seconds": 27.903,
+      "transformation": "scale=1600:-2; WebP quality 90",
+      "sha256": "16d44bdb648d02e1abe2f3a3a760004aa7a11fe126b442e46fc9688c26242ae6",
+      "content": "Synthetic birthday demonstration in the actual development UI."
+    },
+    {
+      "file": "birthday-vision-immersion.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "vision-greeting.xcresult",
+      "test": "SpatialAuthoringUITests/testBirthdaySurpriseInVolumeAndFullImmersion()",
+      "activity": "22 Birthday fireworks and balloon drop in full immersion",
+      "recording_sha256": "b200be3ddfb22e550f01cc98c9238a6d1b5e3e1039b79cb66182766db4bd8c2e",
+      "recording_offset_seconds": 54.213,
+      "transformation": "scale=1600:-2; WebP quality 90",
+      "sha256": "772fb237f52775cd8bdf71bc0d2e1105eddf0d8e25495657543dbde0d03921fb",
+      "content": "Synthetic birthday demonstration in the actual development UI."
     }
   ]
 }

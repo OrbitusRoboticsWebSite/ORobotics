@@ -1,0 +1,11 @@
+{
+  "file": "MusimotionVR-Birthday-Surprise.musimotion.zip",
+  "bytes": 1487,
+  "sha256": "85f8224ff1ca1281b8b7534ade5eb50e22e6f6209fd227cd372f5ab25acf7cf4",
+  "manifest_sha256": "b33c2f5eb168ac1d28a4bc61cda1b521643bcf34525fef95836437746cb33ca1",
+  "source_test": "VolumetricPresentationTests/testBirthdayProjectReopensWithEditableGreetingAndSettings()",
+  "result_bundle": "mac-final-core.xcresult",
+  "version": "1.3",
+  "date": "2026-11-19",
+  "description": "Synthetic editable 16-second birthday scene with a saved close-up camera. Recovered from a passing package save and reopen test on macOS. Unzip and open the .musimotion package in a matching development build."
+}

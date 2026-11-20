@@ -100,3 +100,10 @@ Application implementation and guide source: `690e345dc8d2945e0c6973b2f010d4bfe0
 `RudyAramayo/Musimotion` main). Fifteen screenshot hashes and the 1,088-byte
 banner archive are verified against their manifests. Banner archive SHA-256:
 `7e3bf40e2a740559a5e4298950b869bc3d4ea0e18e77d5e2ff2a7e27cc2d2cbb`.
+
+### Birthday effects preview, guide 1.3
+
+The November 19 development guide adds the birthday scene, balloon collisions,
+confetti, fireworks, Reduce Motion and the difference between live viewer contact
+and camera playback. The product page and catalog label this as development work.
+This documentation update leaves the approved Mac binary and release status unchanged.

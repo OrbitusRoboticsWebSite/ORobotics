@@ -78,7 +78,7 @@
       "source_project": "git.musimotion",
       "status": "approved",
       "platforms": "Mac approved · Release pending",
-      "description": "An animation and painting studio. Mac 1.0.0 is approved and awaiting manual release. New development builds preserve the original artwork, read 2D projects, animate 3D volumes and Sumi ink, and share a renderer across Mac, iPad and Vision Pro, with full immersion on Vision Pro.",
+      "description": "An animation and painting studio. Mac 1.0.0 is approved and awaiting manual release. The development preview reads 2D projects, animates 3D objects and Sumi ink, and adds birthday greetings, falling balloons, confetti and fireworks on Mac, iPad and Vision Pro. Full Immersion surrounds the Vision Pro viewer.",
       "page": "products/musimotion/",
       "icon": "images/products/musimotion/app-icon.webp",
       "verified_at": "2026-11-19"
