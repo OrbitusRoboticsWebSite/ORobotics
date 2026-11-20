@@ -1,6 +1,6 @@
 {
   "date": "2026-11-20",
-  "source": "Mac development preview and actual Chrome on macOS. Public gallery and single-creation examples replay the published record envelope in the release candidate and fetch its real CloudKit media. Missing-record photo uses a controlled empty result.",
+  "source": "Mac development preview, visionOS 26.5 Simulator and actual Chrome on macOS. Public gallery and single-creation examples replay the published record envelope in the release candidate and fetch its real CloudKit media. Missing-record photo uses a controlled empty result.",
   "record": "F0FBD0F3-D8FD-4EF3-AD5B-3B5F67124379",
   "movieSHA256": "96255ccbb5dd290d4d09cd04502a1583f90c8d71aa5e135f2856d42c9180fe7b",
   "fixture": "Lantern Relay QA, consented public validation sample, native export, 3 seconds H.264/AAC",
@@ -12,8 +12,8 @@
     },
     {
       "file": "live.webp",
-      "sha256": "3c14e6818c2df2ee82f429e2c8d679fcb5c4145cb0012cfcdad901af2667813a",
-      "scene": "Mac Share Experience panel on Live Together before starting a call"
+      "sha256": "a75411d58eeb94e49f3031a6fc80f56f113fca4ffa2d8633fca9ed08bdb1711b",
+      "scene": "Final visionOS 26.5 Simulator host after Apple GroupSession joined with zero remote Musimotion peers; cropped to the shared-session controls."
     },
     {
       "file": "studio.webp",

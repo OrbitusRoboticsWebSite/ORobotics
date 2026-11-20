@@ -27,7 +27,7 @@ November 20, 2026 · Mac development preview 1.0.0 (7). The website plays a rend
 
 {{< musimotion-capture "community-sharing/published.webp" "Musimotion Community tab showing the published Lantern Relay QA creation" >}}
 
-*The Mac preview confirmed publication to production. An independent browser fetched the three-second movie, and a Musimotion client downloaded the post as an editable remix.*
+*The Mac preview confirmed publication to production. Anonymous Chrome at desktop and phone widths and a fresh macOS WebKit player both played, paused and sought within the production movie. A Musimotion client downloaded the post as an editable remix.*
 
 4. Publishing requires Musimotion Studio. If you see the subscription screen, you can dismiss it. The preview offers **Restore Purchases** for an existing purchase. Opening the subscription screen alone does not publish the presentation.
 
@@ -59,16 +59,16 @@ November 20, 2026 · Mac development preview 1.0.0 (7). The website plays a rend
 
 ## Share with specific people
 
-1. In **Share Experience**, choose **Invite People** to prepare a private CloudKit invitation. Development validation created an iCloud invitation and verified that the owner could update and reopen the shared data. Production invitations are pending deployment of the CloudKit sharing schema. Guest acceptance has not been verified.
+1. In **Share Experience**, choose **Invite People** to prepare a private CloudKit invitation. On November 20, 2026, the development environment created an iCloud invitation and the owner updated and reopened its shared data. The production check found that the private sharing schema was missing. Guest acceptance has not been verified.
 {{< musimotion-capture "community-sharing/invite-error.webp" "Mac Invite People panel with Create Invitation and the status CloudKit did not return an invitation URL" >}}
 
 *The production invitation test returned no invitation URL. A public post is visible to everyone and has different access.*
 
-2. For synchronized live playback and edits, choose **Live Together** and **Start SharePlay**. A FaceTime session with a second participant is required to verify playback synchronization between two devices. This release check did not establish a two-person FaceTime session. Large presentations can use **Invite People** when they exceed the SharePlay attachment limit shown in the app.
+2. For synchronized live playback and edits, choose **Live Together** and **Start SharePlay**. Musimotion displays **Joining SharePlay…** while Apple connects the session. Once the host has joined, **Waiting for another participant** means no other Musimotion participant has joined yet. The host sends the initial creation when another participant arrives. If the presentation exceeds the attachment limit shown in the app, use **Invite People** once private invitations are available in your environment.
 
-{{< musimotion-capture "community-sharing/live.webp" "Mac Share Experience window with Live Together selected, Start SharePlay and the large-media note below" >}}
+{{< musimotion-capture "community-sharing/live.webp" "Vision Pro simulator in Live Together with Waiting for another participant, You control playback, Send Current Creation and Leave Session" >}}
 
-*The Mac development preview before hosting. This capture shows the starting control. It does not show a connected second participant.*
+*The visionOS 26.5 simulator shows the host after joining Apple’s SharePlay framework during a simulated FaceTime call. Its simulated persona did not run a second Musimotion app. Two independent local Musimotion processes separately verified that edits traveled in both directions. A live two-device FaceTime session remains unverified.*
 
 3. For a rendered movie to send directly, choose **Send Clip**, then **Create Playback**. If the App Clip is unavailable in your storefront, choose **Send Movie** and select the destination in the system share sheet.
 
