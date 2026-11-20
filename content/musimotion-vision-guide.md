@@ -7,7 +7,7 @@ description: "Read 2D projects, select and edit objects in 3D, open or import sc
 
 [Back to Musimotion]({{< relref "musimotion.md" >}}) · [Product support]({{< relref "contact.md" >}})
 
-Version 1.7 · November 19, 2026 · Development preview
+Version 1.8 · November 19, 2026 · Development preview
 
 Read existing **2D presentations**, switch to **3D Volume** for solid objects and
 ink at different depths, and present inside **Full Immersion** on Vision Pro.
@@ -17,7 +17,7 @@ none of those designer assets have been redrawn. To make a party scene, follow
 the [birthday surprise walkthrough](#8-make-a-birthday-surprise). To build a music game,
 follow [Create a rhythm scene](#9-create-a-rhythm-scene). You can also
 [generate a soundtrack](#10-generate-a-soundtrack) for a 2D or spatial scene,
-or [play Droid Arena](#11-play-droid-arena) in Full Immersion. For a project
+or [play Droid Arena](#11-play-droid-arena) in Full Immersion. For brush technique, see [Paint, save and replay Sumi ink](#5-paint-save-and-replay-sumi-ink). For a project
 you are editing, see [Select, edit and copy objects](#12-select-edit-and-copy-objects).
 
 This guide describes development source, not an App Store release. The Mac
@@ -166,30 +166,34 @@ personal comfort guarantee after moving/recentring the workspace.
 
 ## 5. Paint, save and replay Sumi ink
 
-1. In **2D**, choose **File → Choose selected scene background → Rice Paper**.
-   Close the background panel, then choose the original **Brushes** control.
-2. Choose **Still Paint**, then **Sumi Round**, **Sumi Flat**, **Dry Sumi** or
-   **Ink Wash**. Set the paint target, **Brush Size**, **Flow** and **Translucency**.
-3. Close the panel and draw. The mode row stays pinned while other brush options
-   scroll. On iPad, the 2D tools retain Pencil pressure/tilt behavior.
+1. In **2D**, open **Brushes** and choose **Still Paint** for a permanent mark or **Live Paint** to record how it was drawn. Choose a Sumi nib. In the brush panel, open **Background** and select **Rice Paper**. Close the background panel to return to the scene.
 
 {{< musimotion-capture "paper-setup.webp" "Rice Paper selected in the scene background panel" >}}
 
-*Use a contrasting paper/ink combination. A dark stroke on a dark background
-can be present but difficult to see.*
+*The paper and ink need enough contrast to see a pale wash. Use a light sheet and a dark ink color for this exercise.*
 
-{{< musimotion-capture "sumi-tools.webp" "Still Paint and the Sumi preset controls in the original editor" >}}
+2. Start with **Ink Wash**. Leave **Water** near its wet end and **Ink Load** around one third. Make a broad stroke for the distant stalk. Cross it with a second stroke to see the gray deepen where the marks overlap.
 
-*Choose the paint mode before the preset. The existing controls and artwork are shared.*
+{{< musimotion-capture "sumi-mixture.webp" "Mac brush panel showing Ink Wash, Water and Ink Load" >}}
 
-{{< musimotion-capture "sumi-painted.webp" "A committed Sumi mark on Rice Paper in the Vision Pro editor" >}}
+*Water changes the reach of the feathered edge. Ink Load changes the amount of pigment. Translucency controls how much of the sheet or an earlier stroke shows through.*
 
-*Release to commit the mark. Check the selected paint target and playhead when
-troubleshooting missing ink; use undo for an unwanted mark.*
+3. Switch to **Sumi Round** for a leaf. Start lightly, press through the middle and lift toward the tip. With a Mac pointer or a finger, slow down for a fuller mark and flick to lift. Try **Sumi Flat** for the stalk joints, then use **Dry Sumi** with low Water on **Rough Fiber** to leave streaks of bare paper. Each nib remembers its mix while you switch between them.
 
-4. Choose **Live Paint** to record point timing. Draw, release, seek backward
-   and press **Play** to reveal the stroke again. Recording stops at a scene
-   boundary and retains the last sample. Slower capture uses **Paint Speed**.
+{{< musimotion-capture "sumi-bamboo.webp" "Bamboo painted on Rice Paper with a pale stalk behind darker, tapered leaves" >}}
+
+*This synthetic study uses 65 timed strokes. [Download the editable bamboo study]({{< asset-url "downloads/musimotion/visionos/Musimotion-Bamboo-Study.musimotion.zip" >}}), unzip it, and open the .musimotion document in the development editor. Choose **Go to End** for the finished painting, or **Go to Start** and **Play** to watch the strokes appear. [Watch the four-second movie exported from this study]({{< asset-url "downloads/musimotion/visionos/Bamboo-on-Rice-Paper.mp4" >}}).*
+
+{{< musimotion-capture "sumi-brush-comparison.webp" "Matched brush strokes from the earlier and updated renderer. Four rows show a round mark, flat mark, dry bristles and diluted wash." >}}
+
+*Identical recorded gestures in each column. From top to bottom, compare Sumi Round, Sumi Flat, Dry Sumi and Ink Wash. Look for the feathered edge of the wash and the slivers of paper in the dry stroke.*
+
+4. In **Live Paint**, draw, release and scrub backward. Press **Play** to reveal your marks again. Use **Objects** to edit a recorded stroke’s Water or Ink Load. Choose **Still Paint** when you want ink baked into the selected paint layer. Change the paper before painting the still layer. Previously baked pixels keep their original appearance. Earlier Live Paint strokes replay with the updated nib and its default Water setting. The feathered edge appears as you paint and stays in place after you lift the brush.
+
+{{< musimotion-capture "sumi-editor.webp" "Completed bamboo project open in the Mac editor with its timeline" >}}
+
+*If the opened study looks blank, use **Go to End**. A Live Paint stroke first appears at its recorded time. For a new mark, also check the selected paint target and ink color. Undo removes an unwanted stroke.*
+
 5. The optional **3D Setup → Brushes** easel also offers **Record Live Ink** and
    **Recording speed**. Its saved stroke count confirms recorded data.
 

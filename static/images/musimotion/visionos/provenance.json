@@ -1,6 +1,6 @@
 {
   "date": "2026-11-19",
-  "guide_version": "1.7",
+  "guide_version": "1.8",
   "captures": [
     {
       "file": "original-artwork.webp",
@@ -887,6 +887,53 @@
       "transformation": "Crop 488×605 at (247, 52) of the 980×712 native editor window, WebP",
       "sha256": "b7de6ea49f610c08ce943259b83923978a2def5a750b6d7a0f9d4bcdd91f3f7d",
       "content": "Synthetic Rhythm Stage test project captured by native UI test."
+    },
+    {
+      "file": "sumi-bamboo.webp",
+      "platform": "Native Core Graphics painting engine, macOS",
+      "source": "Synthetic painting study. The same input points, pressures, timing, sizes and ink loads were passed to the baseline and updated shared renderers.",
+      "source_files": {
+        "after/bamboo.png": "ccdf604263aa9966a81f404b054c9e8ccc45823fbe2531f9465446717cdd357d",
+        "source/bamboo.json": "e481f57b80c2323d59d45a29def90dea787dc31ca9068689453407a7ea29c477"
+      },
+      "transformation": "960 × 540 RGB WebP quality 86, no crop",
+      "sha256": "adfc37e4ec7a00838bf1905d86a4867f40658e56067c98d0a8220006aabd3384",
+      "content": "Finished Rice Paper bamboo study, 65 timed strokes."
+    },
+    {
+      "file": "sumi-brush-comparison.webp",
+      "platform": "Native Core Graphics painting engine, macOS",
+      "source": "Synthetic painting study. The same input points, pressures, timing, sizes and ink loads were passed to the baseline and updated shared renderers.",
+      "source_files": {
+        "baseline/swatches.png": "5b815a5dedf1502b1f49ee39c811456977e9d9080baa0a2f6843a3a88596a348",
+        "after/swatches.png": "be86b5b511b3030b76f13c73835547b5dc561fbd18b349d29901caa80527d187",
+        "source/swatches.json": "e92303e3a4b26a8ff4ca4bf27ee3546eef83c6795f7b869c904a9201f5393dff"
+      },
+      "transformation": "Matching first-column crops of both 960 × 540 renderings, proportionally preserved below labels on a 790 × 580 sheet, WebP quality 86",
+      "sha256": "180972413c23ce71d9d8770d84941205845d1f945ddae50c94fac03724769a67",
+      "content": "Controlled four-nib swatch comparison at identical settings."
+    },
+    {
+      "file": "sumi-mixture.webp",
+      "platform": "macOS development editor",
+      "source_result": "mac-sumi-5.xcresult",
+      "test": "VolumetricCompatibilityUITests/testPaintWetInkOnPaperAndReopenTheTimedStudy()",
+      "activity": "Sumi 02 - Adjust Water and Ink Load",
+      "original_sha256": "7d756aae60f7e87041785eb5bdd4e87616610da38c90c143397207709a5d0680",
+      "transformation": "Actual window crop (70, 143, 572, 712) at native scale, RGB WebP quality 84.",
+      "sha256": "9d7ec168a4bae072e3eebeafbc51ae1afb218f28ec83e0e07505e27818144458",
+      "content": "Native Ink Wash controls on the synthetic Rice Paper study."
+    },
+    {
+      "file": "sumi-editor.webp",
+      "platform": "macOS development editor",
+      "source_result": "mac-sumi-5.xcresult",
+      "test": "VolumetricCompatibilityUITests/testPaintWetInkOnPaperAndReopenTheTimedStudy()",
+      "activity": "Sumi 04 - Reopened paper and timed marks",
+      "original_sha256": "687ced60fe03ddd6f0a824777a2a23cc1f1b3bba4380da8c0a521ed8c2232c3e",
+      "transformation": "Whole native 980 × 712 editor window reduced to 880 pixels wide, RGB WebP quality 84.",
+      "sha256": "ae797e4df38b9980e8e613e3c0f4d3c3e380ec8352ed9ab6ccace2b9ef89ae2d",
+      "content": "Reopened 65-stroke synthetic bamboo project in the Mac editor at the end of its timeline."
     }
   ]
 }

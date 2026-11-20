@@ -190,3 +190,7 @@ HTML pages under a project subpath, and 76 linked guide, download and product
 resources. The site measured 449.96 MiB. The catalog presents these features
 as a development preview. The original Orbit Pulse sample remains available
 for earlier projects.
+
+## November 19, 2026 · Sumi ink development preview
+
+Guide 1.8 shows Water and Ink Load, the four Sumi nibs and a native Mac canvas. The product page features an original 65-stroke bamboo study rendered by Musimotion. The [painting lesson](https://www.orbitusrobotics.com/products/musimotion/vision-guide/#5-paint-save-and-replay-sumi-ink) includes the editable study and its four-second H.264 export. These assets document the development editor. The Mac App Store submission retains its separate release state.
