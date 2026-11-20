@@ -3884,6 +3884,7 @@ body.rob-game-open{overflow:hidden;overscroll-behavior:none}.rob-sim__shell.is-f
     .musimotion-nav > div {
         width: 100%;
         overflow-x: auto;
+        white-space: nowrap;
     }
 
     .musimotion-hero__statement {

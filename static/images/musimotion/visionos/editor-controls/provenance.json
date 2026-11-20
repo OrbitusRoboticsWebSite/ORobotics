@@ -1,0 +1,312 @@
+{
+  "date": "2026-11-20",
+  "status": "Development preview",
+  "demonstration": "Synthetic new presentation or synthetic third-scene arrow over banner. Each image is an actual app or simulator screenshot.",
+  "images": [
+    {
+      "file": "move.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Drag 01 - Selected object before moving",
+          "capture": "controls-4.xcresult · VolumetricCompatibilityUITests/testDragSelectedObjectBodyTwiceAndUndo()",
+          "source_sha256": "47aed6a0e1bf132127f0263796fb460fefab1284757c78484c090c03f3bb347a",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            155,
+            216,
+            638,
+            548
+          ]
+        },
+        {
+          "attachment": "Drag 02 - Object moved on stage",
+          "capture": "controls-4.xcresult · VolumetricCompatibilityUITests/testDragSelectedObjectBodyTwiceAndUndo()",
+          "source_sha256": "d51a982fcf0d4ad2ea3494562a287be938e794d421909627db3be3c9d1d78937",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            155,
+            216,
+            638,
+            548
+          ]
+        }
+      ],
+      "output_pixels": [
+        974,
+        332
+      ],
+      "sha256": "08a2332cbcb30fe7d6029fd13120c848f759a54e5a396f01809d8c419956c1c1"
+    },
+    {
+      "file": "volume.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Volume drag 01 - Arrow selected above banner at scene end",
+          "capture": "controls-4.xcresult · VolumetricCompatibilityUITests/testDragSelectedArrowAtDepthAtTheEndOfSceneThree()",
+          "source_sha256": "2bd0e761ed6652f63aba823d6e2d6f4906295f718ee168cf0f92e3dfb490fc92",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            174,
+            244,
+            605,
+            547
+          ]
+        },
+        {
+          "attachment": "Volume drag 02 - Arrow moved on its depth plane",
+          "capture": "controls-4.xcresult · VolumetricCompatibilityUITests/testDragSelectedArrowAtDepthAtTheEndOfSceneThree()",
+          "source_sha256": "630f692e751110482c56df3502cb003817785dd13f753207e096a2aa16b47e3b",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            174,
+            244,
+            605,
+            547
+          ]
+        }
+      ],
+      "output_pixels": [
+        870,
+        303
+      ],
+      "sha256": "c4c14b52bb68c69ef3fe2a32d0eeeb0cb8109aaf359cf8663fe9692dfda7dbea"
+    },
+    {
+      "file": "wheel-start.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Wheel 01 - Long press on an object",
+          "capture": "controls-4.xcresult · VolumetricCompatibilityUITests/testSpinObjectWheelAndChooseRotatedEdit()",
+          "source_sha256": "54d39f7529d61efe48f87d03398703c829678123cc1b6aee6adede03b2399c45",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            355,
+            220,
+            690,
+            533
+          ]
+        },
+        {
+          "attachment": "Volume wheel - Held arrow at depth",
+          "capture": "controls-4.xcresult · VolumetricCompatibilityUITests/testDragSelectedArrowAtDepthAtTheEndOfSceneThree()",
+          "source_sha256": "d2418c19c8eee545fb8a43b481037ba666ea90cf4f572e603cc27945e83686f3",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            210,
+            210,
+            545,
+            523
+          ]
+        }
+      ],
+      "output_pixels": [
+        678,
+        313
+      ],
+      "sha256": "630c9b3775b0a09e1c28a95a9d953a671bc4dcd73e63d3e336363e959a1fb67d"
+    },
+    {
+      "file": "wheel-edit.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Wheel 03 - Edit actions at the rotated position",
+          "capture": "controls-4.xcresult · VolumetricCompatibilityUITests/testSpinObjectWheelAndChooseRotatedEdit()",
+          "source_sha256": "14c46ab51588bf36b12b1498b86eeaed5af74c60e89ffa8d52c3006e8d2f1035",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            332,
+            179,
+            687,
+            541
+          ]
+        }
+      ],
+      "output_pixels": [
+        355,
+        362
+      ],
+      "sha256": "306f7f6cc6305f8c668903bda0d4e526a048ebb5d2a71e3dd6f55de3274634fd"
+    },
+    {
+      "file": "object-effects.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Effects 01 - Object effects",
+          "capture": "controls-5.xcresult · VolumetricCompatibilityUITests/testObjectAndCelebrationEffectsUseFlatTabs()",
+          "source_sha256": "222a5fece276de06138a39fb27e5d40641e742e1c06980fb0feb704a103d3e44",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            18,
+            135,
+            495,
+            508
+          ]
+        }
+      ],
+      "output_pixels": [
+        477,
+        373
+      ],
+      "sha256": "be6b21629b1b8009bf0bb8aaff64294b2773e498cea3e1ee151d817256f502f0"
+    },
+    {
+      "file": "celebration-start.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Effects 02 - Add a Celebration effect",
+          "capture": "controls-5.xcresult · VolumetricCompatibilityUITests/testObjectAndCelebrationEffectsUseFlatTabs()",
+          "source_sha256": "a96b989fb58bbacd7de83eb85cf3b7521db4f761d48d0453b0771f4ae7215154",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            57,
+            141,
+            489,
+            344
+          ]
+        }
+      ],
+      "output_pixels": [
+        432,
+        203
+      ],
+      "sha256": "a74959b1d560ca9a1f215fd4650b743fe218031e4ceb10216fafb823248b601f"
+    },
+    {
+      "file": "celebration.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Effects 03 - Celebration tab and fireworks",
+          "capture": "controls-5.xcresult · VolumetricCompatibilityUITests/testObjectAndCelebrationEffectsUseFlatTabs()",
+          "source_sha256": "b733a439060f8f9fdadd1671c4c0d5b730abdbc89c9ea2ab817b2474f1dc63dd",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            57,
+            143,
+            489,
+            607
+          ]
+        }
+      ],
+      "output_pixels": [
+        432,
+        464
+      ],
+      "sha256": "38c85f0916ad5ef3f6b3ce372e2cfe4e9836b55d8ef1a73c17a2a046c9a0abdb"
+    },
+    {
+      "file": "celebration-disabled.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Effects 04 - Show Burst disabled when Fireworks is off",
+          "capture": "controls-5.xcresult · VolumetricCompatibilityUITests/testObjectAndCelebrationEffectsUseFlatTabs()",
+          "source_sha256": "76a4ff1b0adf19b3a0ce52b83e5fd61d1ba305a15400b29e0100a7bd13b8d9c6",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            76,
+            539,
+            470,
+            599
+          ]
+        }
+      ],
+      "output_pixels": [
+        394,
+        60
+      ],
+      "sha256": "4f7a94134726b70425a0094e691b2b67c57ca31e663fced37a7659249486e4d9"
+    },
+    {
+      "file": "timeline-toggle.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Timeline - Separate scrubber and Show Timeline",
+          "capture": "controls-4.xcresult · VolumetricCompatibilityUITests/testTimelineControlsLeaveTheEntireScrubberReachable()",
+          "source_sha256": "914b714279456a2a59e920623be9728daeb567ad2e305964dfcc082fd3fe84d6",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            655,
+            639,
+            980,
+            712
+          ]
+        }
+      ],
+      "output_pixels": [
+        325,
+        73
+      ],
+      "sha256": "2206a482e13c106b01a634ed39b74cfa025d898de8fc403d6fbac7c238684f8d"
+    },
+    {
+      "file": "timeline-tracks.webp",
+      "platform": "iPadOS Simulator",
+      "sources": [
+        {
+          "attachment": "Editor guide - iPad expanded transport",
+          "capture": "ipad-controls-final.xcresult · WorkspaceUITests/testLandscapeTimelineToggleSwitchesWorkspace()",
+          "source_sha256": "1ff60fb08d8a7027d4d5f77b90ad9ee8bc28874ce133762416ef2a7f35aae978",
+          "original_oriented_pixels": [
+            2752,
+            2064
+          ],
+          "crop": [
+            0,
+            1040,
+            2752,
+            2040
+          ]
+        }
+      ],
+      "output_pixels": [
+        1380,
+        501
+      ],
+      "sha256": "0240d73b83d7a02afab979320121fadc825a954f6a4577920236e993889a9a6f"
+    }
+  ]
+}

@@ -194,3 +194,7 @@ for earlier projects.
 ## November 19, 2026 · Sumi ink development preview
 
 Guide 1.8 shows Water and Ink Load, the four Sumi nibs and a native Mac canvas. The product page features an original 65-stroke bamboo study rendered by Musimotion. The [painting lesson](https://www.orbitusrobotics.com/products/musimotion/vision-guide/#5-paint-save-and-replay-sumi-ink) includes the editable study and its four-second H.264 export. These assets document the development editor. The Mac App Store submission retains its separate release state.
+
+## November 20, 2026 · Musimotion editor controls development preview
+
+The [editor controls walkthrough](../content/musimotion-editor-controls.md) covers selecting and moving an object, turning the original four-piece menu, switching between object and celebration effects, and opening the tracks from the far-right transport icon. The guide identifies the development build and records [screenshot provenance](../static/images/musimotion/visionos/editor-controls/provenance.json) for its demonstration scenes.

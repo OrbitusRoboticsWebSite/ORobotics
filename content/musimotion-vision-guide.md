@@ -42,13 +42,9 @@ Simulator evidence does not establish physical headset comfort or hand tracking.
 4. On Vision Pro, **3D Setup** opens the optional spatial controls; **Artwork
    Editor** returns to the original editor. They edit the same project.
 
-{{< musimotion-capture "editor-ipad-timeline-collapsed.webp" "iPad transport with Timeline in the control row and a separate scrubber beneath it" >}}
+{{< musimotion-capture "editor-controls/timeline-tracks.webp" "Open layer tracks above the transport and full-width scrubber" >}}
 
-*iPad, landscape. The layer tracks are hidden. Timeline sits above the full-width scrubber, whose thumb is near the nine-second mark.*
-
-{{< musimotion-capture "editor-ipad-timeline-expanded.webp" "iPad layer tracks above the Hide control and the separate playhead slider" >}}
-
-*iPad, landscape. The layer tracks are visible. Hide collapses the tracks while the same scrubber remains available below.*
+*The icon at the far right of the transport row opens or closes the tracks. See the [illustrated editor controls guide]({{< relref "musimotion-editor-controls.md" >}}) for moving objects, using the wheel and applying effects.*
 
 {{< musimotion-capture "original-artwork.webp" "Original iPad artwork and turquoise timeline inside the Vision Pro editor" >}}
 
@@ -277,7 +273,7 @@ Select any picture below to enlarge the controls.
    *Earlier Mac development capture of the effects controls. The current editor opens the complete birthday scene from Templates.*
 
 2. To decorate a scene you already have, select that scene first, choose
-   **Objects → Add Celebration Effects…**, then **Add Balloon Drop** or **Add Fireworks**. Turn
+   **Effects → Celebration**, then **Add Balloon Drop** or **Add Fireworks**. Turn
    **Balloon Drop**, **Fireworks** and **Confetti** on or off independently.
    **Remove Effects** clears these decorations. The countdown and greeting are
    editable text layers and can be selected or removed separately.
@@ -702,17 +698,11 @@ project, movie and music checksums and the composer credited for each take.
 
    *Mac. The checkmark identifies the pasted arrow. Both the original arrow and the Welcome Banner remain in the scene.*
 
-6. Use **Timeline** to show the layer tracks and **Hide** to collapse them.
-   Drag the scrubber below the transport controls to find the frame you
-   want. The toggle and the scrubber have separate hit areas in both states.
+6. Select the small split-rectangle icon at the far right of the transport row to show or hide the layer tracks. Its accessibility label switches between **Show Timeline** and **Hide Timeline**. Drag the scrubber on the separate row underneath to find a frame.
 
-   {{< musimotion-capture "editor-mac-timeline-collapsed.webp" "Mac transport with the Timeline button on its own row above the playhead" >}}
+   {{< musimotion-capture "editor-controls/timeline-toggle.webp" "Timeline toggle to the right of Record Keyframe, on the row above the scrubber" >}}
 
-   *Mac. Timeline opens the tracks. The playhead is at nine seconds.*
-
-   {{< musimotion-capture "editor-mac-timeline-expanded.webp" "Mac transport with the Hide button above the playhead while the layer tracks are visible" >}}
-
-   *Mac. The tracks are open. Hide sits above the scrubber, including when the thumb moves beneath it.*
+   *The [editor controls walkthrough]({{< relref "musimotion-editor-controls.md" >}}) shows both timeline states.*
 
 7. To start from existing artwork, choose **Templates**. Select **Welcome
    Banner**, **Birthday Surprise**, **Rhythm Stage** or **Droid Arena**.
