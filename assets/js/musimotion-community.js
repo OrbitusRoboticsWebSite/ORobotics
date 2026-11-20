@@ -4,16 +4,43 @@
   const fallback = document.querySelector("[data-musimotion-community-fallback]");
   const status = document.querySelector("[data-musimotion-community-status]");
 
-  if (!configElement || !grid || !fallback || !status) return;
+  if (!grid || !fallback || !status) return;
+
+  const galleryURL = new URL(window.location.pathname, window.location.origin);
+  galleryURL.hash = "community";
+  const recordNames = new URL(window.location.href).searchParams.getAll("creation");
+  const isPermalink = recordNames.length > 0;
+  const selectedRecord = recordNames[0];
+  const validRecordName = (name) => typeof name === "string" && /^[A-Za-z0-9._-]{1,255}$/.test(name);
+
+  if (isPermalink) {
+    const heading = document.getElementById("musimotion-community-title");
+    const intro = document.querySelector("[data-musimotion-community-intro]");
+    if (heading) heading.textContent = "Shared public creation";
+    if (intro) intro.textContent = "Anyone with this page can view the published preview.";
+    fallback.hidden = true;
+    const back = document.createElement("a");
+    back.className = "musimotion-button";
+    back.href = galleryURL.href;
+    back.textContent = "Browse public creations";
+    grid.after(back);
+    if (recordNames.length !== 1 || !validRecordName(selectedRecord)) {
+      status.textContent = "This public creation link is invalid.";
+      return;
+    }
+  }
 
   let config;
   try {
-    config = JSON.parse(configElement.textContent || "{}");
+    config = JSON.parse(configElement?.textContent || "{}");
   } catch {
+    config = {};
+  }
+  if (!config?.apiToken || !config.container) {
+    fallback.hidden = true;
+    status.textContent = "The community gallery is temporarily unavailable. Please try again later.";
     return;
   }
-
-  if (!config.apiToken || !config.container) return;
 
   const environment = config.environment === "development" ? "development" : "production";
   const endpoint = new URL(
@@ -36,21 +63,26 @@
     "websiteVisible",
   ];
 
-  const request = {
-    resultsLimit: 60,
-    desiredKeys,
-    query: {
-      recordType: "CommunityExperience",
-      filterBy: [],
-      sortBy: [{ fieldName: "modifiedAt", ascending: false }],
-    },
-  };
+  // A record-type-scoped query cannot retrieve a private invitation or an unlisted App Clip.
+  const query = { recordType: "CommunityExperience", filterBy: [] };
+  if (isPermalink) {
+    query.filterBy.push({
+      systemFieldName: "recordName",
+      comparator: "EQUALS",
+      fieldValue: { type: "REFERENCE", value: { recordName: selectedRecord } },
+    });
+  } else {
+    query.sortBy = [{ fieldName: "modifiedAt", ascending: false }];
+  }
+  const request = { resultsLimit: isPermalink ? 1 : 60, desiredKeys, query };
 
-  status.textContent = "Loading the latest public creations…";
+  status.textContent = isPermalink ? "Loading this public creation…" : "Loading the latest public creations…";
 
   fetch(endpoint, {
     method: "POST",
     headers: { "Content-Type": "text/plain" },
+    credentials: "omit",
+    referrerPolicy: "origin",
     body: JSON.stringify(request),
   })
     .then((response) => {
@@ -58,26 +90,35 @@
       return response.json();
     })
     .then((response) => {
-      if (response.serverErrorCode) throw new Error("CloudKit returned an error");
+      if (!Array.isArray(response?.records) || response.serverErrorCode) throw new Error("Invalid CloudKit response");
+      const records = response.records.filter((record) =>
+        record?.recordType === query.recordType && validRecordName(record.recordName) &&
+        !record.serverErrorCode && !record.deleted && isVisible(record)
+      );
+      const visible = isPermalink
+        ? records.filter((record) => record.recordName === selectedRecord).slice(0, 1)
+        : records.sort((left, right) => dateValue(right, "modifiedAt") - dateValue(left, "modifiedAt")).slice(0, 9);
 
-      const records = (Array.isArray(response.records) ? response.records : [])
-        .filter((record) => !record.serverErrorCode && isVisible(record))
-        .sort((left, right) => dateValue(right, "modifiedAt") - dateValue(left, "modifiedAt"))
-        .slice(0, 9);
-
-      if (records.length === 0) {
-        status.textContent = "The public gallery is ready for its first creator-published preview.";
+      if (visible.length === 0) {
+        status.textContent = isPermalink
+          ? "This creation is unavailable. It may have been removed or hidden."
+          : "The public gallery is ready for its first creator-published preview.";
         return;
       }
 
-      const fragment = document.createDocumentFragment();
-      records.forEach((record) => fragment.append(createCard(record)));
-      grid.replaceChildren(fragment);
+      grid.replaceChildren(...visible.map(createCard));
       grid.hidden = false;
       fallback.hidden = true;
-      status.textContent = `${records.length} latest public ${records.length === 1 ? "creation" : "creations"}.`;
+      if (isPermalink) {
+        grid.classList.add("musimotion-community__grid--single");
+        status.textContent = "You’re viewing a shared public creation.";
+        document.title = `${textValue(visible[0], "title", "Public creation")} · Musimotion`;
+      } else {
+        status.textContent = `${visible.length} latest public ${visible.length === 1 ? "creation" : "creations"}.`;
+      }
     })
     .catch(() => {
+      fallback.hidden = true;
       status.textContent = "The community gallery is temporarily unavailable. Please try again later.";
     });
 
@@ -166,6 +207,16 @@
     if (sceneCount > 0) meta.append(createMeta(`${sceneCount} ${sceneCount === 1 ? "scene" : "scenes"}`));
     body.append(meta);
 
+    if (!isPermalink) {
+      const link = document.createElement("a");
+      const permalink = new URL(galleryURL);
+      permalink.searchParams.set("creation", record.recordName);
+      link.href = permalink.href;
+      link.textContent = "Open public page";
+      link.setAttribute("aria-label", `Open public page for ${title.textContent}`);
+      body.append(link);
+    }
+
     const shareURL = safeHTTPSURL(textValue(record, "shareURL"));
     if (shareURL) {
       const link = document.createElement("a");
@@ -198,6 +249,13 @@
       source.src = preview;
       source.type = "video/mp4";
       video.append(source);
+      const showMediaError = () => {
+        const notice = document.createElement("p");
+        notice.textContent = "The preview could not load. Reload the page to request a fresh copy.";
+        media.replaceChildren(notice);
+      };
+      source.addEventListener("error", showMediaError);
+      video.addEventListener("error", showMediaError);
       media.append(video);
       return media;
     }
@@ -222,6 +280,7 @@
 
   function previewLabel(record) {
     const raw = field(record, "previewWatermarked");
+    if (!assetURL(record, "preview")) return "Movie preview unavailable";
     if (raw == null) return "Public preview";
     return booleanValue(record, "previewWatermarked") ? "Watermarked preview" : "Studio export";
   }

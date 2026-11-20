@@ -66,8 +66,7 @@ In the `OrbitusRoboticsWebSite/ORobotics` GitHub repository:
 4. Run **Build and deploy Orbitus Robotics** or push to `main`.
 
 The deployment workflow passes the token only to Hugo. Hugo writes the public
-token into the Musimotion page at build time. When no token is configured, the
-page retains its creator-ready empty state.
+token into the Musimotion page at build time. If the token is missing, the page reports that the community gallery is temporarily unavailable.
 
 For a local production-style test:
 
@@ -88,10 +87,15 @@ uses only these desired keys:
 `title`, `summary`, `author`, `duration`, `sceneCount`, `modifiedAt`, `preview`,
 `poster`, `previewWatermarked`, `shareURL`, `aiAssisted`, and `websiteVisible`.
 
-The newest nine visible records appear on the page. Video is never autoplayed,
-and all creator text is inserted as text rather than HTML. A CloudKit error
-falls back to the static gallery message without exposing request details or
-the token in an error message.
+The gallery displays up to nine visible records from the response. **Open public page** produces an HTTPS URL of the form
+`/products/musimotion/?creation=<record-name>#community`. A direct visit sends a separate query limited to one `CommunityExperience`
+whose system `recordName` equals the selected reference. This works for posts outside the latest nine. Both views use the same
+public fields and visibility check. The website visibility flag controls these views only. CloudKit record permissions govern access to the underlying public data. Unlisted App Clips and private collaborations use independent share flows.
+
+The browser starts a movie only when the visitor presses Play. Older records without a movie are labeled **Movie preview unavailable**.
+A hidden or missing creation has a return link to the gallery. An unreachable CloudKit service has a distinct retry message.
+Run `node --test tests/musimotion-community.test.mjs` for the record-selection, privacy, rendering and recovery cases. The
+[illustrated public sharing guide](https://www.orbitusrobotics.com/products/musimotion/community-sharing/) shows the visitor workflow.
 
 Apple references:
 

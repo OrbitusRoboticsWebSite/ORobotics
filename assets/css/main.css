@@ -2686,6 +2686,15 @@ body.rob-game-open{overflow:hidden;overscroll-behavior:none}.rob-sim__shell.is-f
     margin-top: 2rem;
 }
 
+.musimotion-community__grid.musimotion-community__grid--single {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 60rem;
+}
+
+.musimotion-community__grid + .musimotion-button {
+    margin-top: 1.25rem;
+}
+
 .musimotion-community__grid[hidden],
 .musimotion-community__empty[hidden] {
     display: none !important;

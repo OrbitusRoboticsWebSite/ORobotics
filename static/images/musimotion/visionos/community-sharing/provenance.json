@@ -1,0 +1,59 @@
+{
+  "date": "2026-11-20",
+  "source": "Mac development preview and actual Chrome on macOS. Public gallery and single-creation examples replay the published record envelope in the release candidate and fetch its real CloudKit media. Missing-record photo uses a controlled empty result.",
+  "record": "F0FBD0F3-D8FD-4EF3-AD5B-3B5F67124379",
+  "movieSHA256": "96255ccbb5dd290d4d09cd04502a1583f90c8d71aa5e135f2856d42c9180fe7b",
+  "fixture": "Lantern Relay QA, consented public validation sample, native export, 3 seconds H.264/AAC",
+  "assets": [
+    {
+      "file": "editor.webp",
+      "sha256": "584caad6043b38532c8e4cbc049aeb56991acea40f50c2d133da01e885c694d3",
+      "scene": "Mac preview with synthetic Lantern Relay QA in the editor"
+    },
+    {
+      "file": "live.webp",
+      "sha256": "3c14e6818c2df2ee82f429e2c8d679fcb5c4145cb0012cfcdad901af2667813a",
+      "scene": "Mac Share Experience panel on Live Together before starting a call"
+    },
+    {
+      "file": "studio.webp",
+      "sha256": "9758646d8c702c476c44ce267c753cd29d0a20052d76ee3b560c5173c0664717",
+      "scene": "Mac Studio purchase screen in the preview without Studio entitlement"
+    },
+    {
+      "file": "publish-form.webp",
+      "sha256": "a7638ff5c9bb935168156f0dc2c58b28f26653f26f6cb2bc9eb135f61eccac77",
+      "scene": "Community publication form for the test presentation"
+    },
+    {
+      "file": "published.webp",
+      "sha256": "fa7cd04052b8a96ac031fe6151c8fe2b220e6c145958464fbba7bbf4c8b61b18",
+      "scene": "Musimotion after confirmed production publication of Lantern Relay QA"
+    },
+    {
+      "file": "gallery.webp",
+      "sha256": "e1b349bc5705d537f28873086699f9f8d075d50f93d5b8166489bfaf280574bf",
+      "scene": "Release-candidate gallery rendering the real public record and native movie received from production, with Open public page; cropped to the gallery card for legibility."
+    },
+    {
+      "file": "player.webp",
+      "sha256": "f2e73105fefceb432f9bc0d51c34eb365eb9c01d3bad2918fa7dc77053ebdb3a",
+      "scene": "Release-candidate single-creation page playing the native production movie at 1.75 s"
+    },
+    {
+      "file": "missing.webp",
+      "sha256": "7e3fbc84cc3d3cfbe0cf9d977a6730f505a3d6dfa23c36db3bebf38a4d303fad",
+      "scene": "Mobile-sized browser on a controlled missing-record response"
+    },
+    {
+      "file": "invite-error.webp",
+      "sha256": "66f2707cea1fa8f8002514eaf05f81e0265a1e4f1f8b50631ac7afe49e8ebdc5",
+      "scene": "Mac Invite People error after production invitation request"
+    },
+    {
+      "file": "send-movie.webp",
+      "sha256": "d6f0b66eabe7c56c1b6804793672e5bc02a36aee93575f24a1a04de2c1cdab21",
+      "scene": "Mac Send Clip showing Send Movie fallback after storefront check"
+    }
+  ]
+}
