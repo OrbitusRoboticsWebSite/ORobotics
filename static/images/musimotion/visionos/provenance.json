@@ -1,0 +1,179 @@
+{
+  "date": "2026-11-19",
+  "guide_version": "1.2",
+  "captures": [
+    {
+      "file": "original-artwork.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "volume-vision-2.xcresult",
+      "test": "SpatialAuthoringUITests/testZOriginalArtworkWorkspaceIsTheDefaultAndBrushesRemainEditable()",
+      "activity": "08 Original iPad artwork on Vision Pro",
+      "recording_sha256": "a37f849e5b6e4af2b606a0a574c96deb03a64ec723b40c61ec7bbb88ae2785c1",
+      "recording_offset_seconds": 10.748,
+      "transformation": "crop 1640x1116 at 1100,640; resize 1440x980; WebP quality85",
+      "sha256": "c478f6411e8c1cf1e83c712e66877b1924f198d39e8bcd0f0c597c1f0241479d",
+      "content": "Synthetic demonstration project; actual UI, not a mockup."
+    },
+    {
+      "file": "paper-setup.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "volume-vision-2.xcresult",
+      "test": "SpatialAuthoringUITests/testZOriginalArtworkWorkspaceIsTheDefaultAndBrushesRemainEditable()",
+      "activity": "11 Choose Rice Paper",
+      "recording_sha256": "a37f849e5b6e4af2b606a0a574c96deb03a64ec723b40c61ec7bbb88ae2785c1",
+      "recording_offset_seconds": 18.174,
+      "transformation": "crop 1640x1116 at 1100,640; resize 1440x980; WebP quality85",
+      "sha256": "3018fe8016ce54ff7da991cfdd7d1b915c08e45914fb7523e12879203786a59e",
+      "content": "Synthetic demonstration project; actual UI, not a mockup."
+    },
+    {
+      "file": "sumi-tools.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "volume-vision-focus.xcresult",
+      "test": "SpatialAuthoringUITests/testZOriginalArtworkWorkspaceIsTheDefaultAndBrushesRemainEditable()",
+      "activity": "Scrolling the original brush panel to reveal all four Sumi presets; this workflow passed in both repetitions",
+      "recording_sha256": "dea9219f975a8d515d270c01e052be3aafb002b4ae336c0a3a451d30d0eecad8",
+      "recording_offset_seconds": 21.1,
+      "transformation": "crop 1640x1116 at 1100,640; resize 1440x980; WebP quality85",
+      "sha256": "e4ad69c13dd940943f4ddb43dd0b4a510e175b41f306596f1ebcf4a7b0fba5b2",
+      "content": "Synthetic demonstration project; actual UI, not a mockup."
+    },
+    {
+      "file": "sumi-painted.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "volume-vision-2.xcresult",
+      "test": "SpatialAuthoringUITests/testZOriginalArtworkWorkspaceIsTheDefaultAndBrushesRemainEditable()",
+      "activity": "10 Sumi ink in the original editor",
+      "recording_sha256": "a37f849e5b6e4af2b606a0a574c96deb03a64ec723b40c61ec7bbb88ae2785c1",
+      "recording_offset_seconds": 35.446,
+      "transformation": "crop 1640x1116 at 1100,640; resize 1440x980; WebP quality85",
+      "sha256": "88c48a75611ca5983f15de9af11466d81fab9d57fce88959b23b17bea0a0d8ab",
+      "content": "Synthetic demonstration project; actual UI, not a mockup."
+    },
+    {
+      "file": "banner-setup.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "volume-vision-2.xcresult",
+      "test": "SpatialAuthoringUITests/testGenerateBannerAuthorXYZSaveReopenAndEnter3D()",
+      "activity": "01 Add Banner Exercise",
+      "recording_sha256": "d11d05b3bf0d2e204e483d2309224b5f022cfb1cefd03ac84dc9c7ead839f747",
+      "recording_offset_seconds": 11.556,
+      "transformation": "crop 1640x1116 at 1100,640; resize 1440x980; WebP quality85",
+      "sha256": "fbdbafcfa589dbadc0af542996e0d1e6a07197da6fb562768d77140284e91aed",
+      "content": "Synthetic demonstration project; actual UI, not a mockup."
+    },
+    {
+      "file": "xyz-keyframe.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "volume-vision-2.xcresult",
+      "test": "SpatialAuthoringUITests/testGenerateBannerAuthorXYZSaveReopenAndEnter3D()",
+      "activity": "02 XYZ keyframe authoring",
+      "recording_sha256": "d11d05b3bf0d2e204e483d2309224b5f022cfb1cefd03ac84dc9c7ead839f747",
+      "recording_offset_seconds": 48.475,
+      "transformation": "crop 1640x1116 at 1100,640; resize 1440x980; WebP quality85",
+      "sha256": "7582e2ab93220785693eb2d8436c8f29479905fb40898cd77fb010b9c682fe0f",
+      "content": "Synthetic demonstration project; actual UI, not a mockup."
+    },
+    {
+      "file": "saved-library.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "volume-vision-2.xcresult",
+      "test": "SpatialAuthoringUITests/testGenerateBannerAuthorXYZSaveReopenAndEnter3D()",
+      "activity": "03 Saved presentation library",
+      "recording_sha256": "d11d05b3bf0d2e204e483d2309224b5f022cfb1cefd03ac84dc9c7ead839f747",
+      "recording_offset_seconds": 57.546,
+      "transformation": "crop 1640x1116 at 1100,640; resize 1440x980; WebP quality85",
+      "sha256": "a55723735de582b8917f03a4410814462820c948389ae1948f010d35ac046eae",
+      "content": "Synthetic demonstration project; actual UI, not a mockup."
+    },
+    {
+      "file": "live-sumi.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "volume-vision-2.xcresult",
+      "test": "SpatialAuthoringUITests/testRecordLiveSumiSaveAndReplayThroughUI()",
+      "activity": "05 Recorded live Sumi ink",
+      "recording_sha256": "1a3e675dc5d2b41e4df78ad53f14755ac14023be9a3ca8651ee14e2d130e914e",
+      "recording_offset_seconds": 29.151,
+      "transformation": "crop 1640x1116 at 1100,640; resize 1440x980; WebP quality85",
+      "sha256": "6eda867579f2cd01701a14e6b0a832da850371d61ff1278ca2179ecef166d2c0",
+      "content": "Synthetic demonstration project; actual UI, not a mockup."
+    },
+    {
+      "file": "native-volume.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "volume-lifecycle-fixed.xcresult",
+      "test": "SpatialAuthoringUITests/testVolumeWindowFullImmersionAndReturnTo2D()",
+      "activity": "13 Native bounded 3D volume",
+      "recording_sha256": "97fee8050202d6c15a30e7426e5070b2f203179a5d47e974d283af70e1838362",
+      "recording_offset_seconds": 14.691,
+      "transformation": "Full recorded view resized to 1440 pixels wide; WebP quality85",
+      "sha256": "73593e506670cb7d12d2d0200228279080fa1bdcacfe151af49f3183f3a02b78",
+      "content": "Synthetic demonstration project; actual UI, not a mockup."
+    },
+    {
+      "file": "full-immersion.webp",
+      "platform": "visionOS 26.5 Simulator",
+      "source_result": "volume-lifecycle-fixed.xcresult",
+      "test": "SpatialAuthoringUITests/testVolumeWindowFullImmersionAndReturnTo2D()",
+      "activity": "14 Fully immersive presentation",
+      "recording_sha256": "97fee8050202d6c15a30e7426e5070b2f203179a5d47e974d283af70e1838362",
+      "recording_offset_seconds": 19.894,
+      "transformation": "Full recorded view resized to 1440 pixels wide; WebP quality85",
+      "sha256": "717f5515fbd4df757042abd4945f30b23d024072c52bed8ad9d51069266f3b7e",
+      "content": "Synthetic demonstration project; actual UI, not a mockup."
+    },
+    {
+      "file": "ipad-volume.webp",
+      "platform": "iPadOS 26.5 Simulator, iPad Pro 13-inch (M5)",
+      "source_result": "volume-ipad-recovery.xcresult",
+      "test": "VolumetricCompatibilityUITests/testVolumetricPresentationCameraInkAnd2DCompatibility()",
+      "activity": "Portable 3D volume side viewpoint",
+      "source_sha256": "ce0ba2932fbc29b4603157f1230515a34fdbff01687b9dec241725e4be10f083",
+      "transformation": "Full XCUIScreen screenshot with EXIF orientation applied; resized to 1440x1080; WebP quality88",
+      "sha256": "cc65d68ca030e40a2b7d16130738a6e3ab621f2abe857e44ab122057f3ac56f0",
+      "content": "Synthetic demonstration project; actual UI, not a mockup."
+    },
+    {
+      "file": "xyz-recovery.webp",
+      "platform": "iPadOS 26.5 Simulator, iPad Pro 13-inch (M5)",
+      "source_result": "volume-ipad-recovery.xcresult",
+      "test": "VolumetricCompatibilityUITests/testVolumetricPresentationCameraInkAnd2DCompatibility()",
+      "activity": "Invalid XYZ recovery",
+      "source_sha256": "a27bb0431c17f8d0bafdc7a14606505da65552cd36bbb782bf2ed2a94ca12d7c",
+      "transformation": "Full XCUIScreen screenshot with EXIF orientation applied; resized to 1440x1080; WebP quality88",
+      "sha256": "92e501aac4623cb6cd71b3fb0b0ba6da57789d23509a4156a541c6d5c9d22238",
+      "content": "Synthetic demonstration project; actual UI, not a mockup."
+    },
+    {
+      "file": "ipad-depth-ink.webp",
+      "platform": "iPadOS 26.5 Simulator, iPad Pro 13-inch (M5)",
+      "source_result": "volume-ipad-recovery.xcresult",
+      "test": "VolumetricCompatibilityUITests/testVolumetricPresentationCameraInkAnd2DCompatibility()",
+      "activity": "Portable saved depth ink",
+      "source_sha256": "c7ea54a16589f1da24a5cf2605d2aa910416e4daeeeb48121ba142fceecf31a2",
+      "transformation": "Full XCUIScreen screenshot with EXIF orientation applied; resized to 1440x1080; WebP quality88",
+      "sha256": "254aed3b1f80128274de8ab30f8dc32a4e9034c45c37107d74400acfd355e862",
+      "content": "Synthetic demonstration project; actual UI, not a mockup."
+    },
+    {
+      "file": "mac-volume.webp",
+      "platform": "macOS 26.6.2, Mac mini",
+      "source_build": "volume-mac-acceptance development build",
+      "workflow": "Native Computer Use: reopened synthetic saved banner and 3D ink; switched 3D Volume to 2D and back",
+      "source_sha256": "92a116883a19d0447a58124d8e4e9eb360e8db0a6dced608919c933ecc3cdff9",
+      "transformation": "Uncropped 1280x900 app window; WebP quality88",
+      "sha256": "3cccb22ca2ea660868bb64cfb88e1dbd27ec8688684c94e5d93903d50b190f3a",
+      "content": "Synthetic demonstration project; actual UI, not a mockup."
+    },
+    {
+      "file": "mac-2d.webp",
+      "platform": "macOS 26.6.2, Mac mini",
+      "source_build": "volume-mac-acceptance development build",
+      "workflow": "Native Computer Use: reopened synthetic saved banner and 3D ink; switched 3D Volume to 2D and back",
+      "source_sha256": "9c578bdfbfe77ca7320b01bfb6cdd0abff91c40d769657ea1b105fd521f20ddf",
+      "transformation": "Uncropped 1280x900 app window; WebP quality88",
+      "sha256": "55e9d5c2f1ef564ff3f183be1a7689a982ba45a80c0afccc91b0de403810876b",
+      "content": "Synthetic demonstration project; actual UI, not a mockup."
+    }
+  ]
+}

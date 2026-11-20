@@ -64,6 +64,39 @@ The site-size budget is 425 MiB for this release, accommodating the three matchi
 
 ## Musimotion spatial preview documentation — November 19, 2026
 
-Mac 1.0.0 build 7 and all four related purchase/subscription review items are approved. The manual release action has not been performed, and the US Mac storefront lookup had no public result. China compliance remains pending. The spatial behavior changes are a development preview, not the approved binary or a new App Store submission. The product page, pending catalog entry, and visionOS guide identify that distinction. The source regression receipt records 99 Mac tests and 11 visionOS simulator tests passing; physical headset acceptance remains open.
+Mac 1.0.0 build 7 and all four related purchase/subscription review items were approved at the November 19 check. The manual release action has not been performed, and the US Mac storefront lookup had no public result. China compliance remains pending. The changes described here are a development preview, not the approved binary or a new App Store submission.
 
-The text guide at `/products/musimotion/vision-guide/` matches the application repository's `docs/VISIONOS_USER_GUIDE.md` and documents baseline `8dc75b6`. It explicitly identifies its missing illustrated walkthrough. Fresh Simulator captures and remaining desktop/mobile visual inspection are blocked by the Computer Use connection failure after the user enabled AnyApp; no substitute captures are presented as current evidence. The guide's desktop layout was inspected before that failure. Build, product catalog, gallery, white-paper integrity, and subpath validation accompany publication; the private release receipt records the resulting deployment and public response hashes. This documentation publication does not complete headset acceptance or release the app.
+Guide edition 1.2 at `/products/musimotion/vision-guide/` matches the app's
+`docs/VISIONOS_USER_GUIDE.md`. It covers legacy 2D reading, solid 3D volume
+creation, XYZ keyframes, camera views on Mac/iPad, bounded Vision Pro windows,
+full immersion, original artwork controls, Sumi paper and solid depth ink,
+saving/reopening and camera movie export. Fifteen actual UI captures show safe
+synthetic data, with source tests, recording offsets and hashes in the public
+provenance file. Images open at full resolution. The generated banner package
+and SHA-256 manifest are downloadable; it is a project fixture, not an installer.
+A separate physical-headset acceptance checklist records all device cases as
+not run.
+
+Mac core regression: 118 passed; the optional Mac UI runner was blocked by
+local macOS automation authentication. Manual Computer Use verified the latest
+Mac build's saved project and 2D/3D switching. iPad: 23 passed, with a separate
+passing capture/recovery rerun. The full visionOS run passed 36, skipped one
+direct gesture that the simulator cannot synthesize, and hit one keyboard-focus
+failure. The field-label focus fix then passed both complete banner authoring
+repetitions, including save/reopen and 3D entry; the other 36 passing checks
+remain the preceding full-run evidence. Exact runs are in the app's test report. No physical comfort, hand tracking, sustained performance or live
+sharing claim is made. Native video effects, spatial emitters and collision
+physics retain documented gaps.
+
+The catalog, product page, guide and support/discovery links use the same
+preview status. Desktop and 390 × 844 mobile inspection confirmed readable
+instructions, the depth table, product layout and full-size screenshot links.
+`npm test` passed the existing suites, production build, gallery budget, eight
+product records, white-paper hashes and 91 subpath HTML files. Deployment and
+public-byte verification are retained in the private release receipt.
+Documentation publication does not release or submit the app.
+
+Application implementation and guide source: `690e345dc8d2945e0c6973b2f010d4bfe0886719` (pushed to
+`RudyAramayo/Musimotion` main). Fifteen screenshot hashes and the 1,088-byte
+banner archive are verified against their manifests. Banner archive SHA-256:
+`7e3bf40e2a740559a5e4298950b869bc3d4ea0e18e77d5e2ff2a7e27cc2d2cbb`.

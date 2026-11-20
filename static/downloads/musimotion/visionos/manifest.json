@@ -1,0 +1,10 @@
+{
+  "version": "1.2",
+  "date": "2026-11-19",
+  "description": "Synthetic volumetric banner exercise recovered from passing tests. Unzip and open the .musimotion package in an updated development build.",
+  "file": "MusimotionVR-Banner-Exercise.musimotion.zip",
+  "bytes": 1088,
+  "sha256": "7e3bf40e2a740559a5e4298950b869bc3d4ea0e18e77d5e2ff2a7e27cc2d2cbb",
+  "source_test": "PresentationParityTests/testGeneratedBannerEntersScreenThenApproachesWithoutCrossingViewer()",
+  "result_bundle": "volume-mac-final-3.xcresult"
+}

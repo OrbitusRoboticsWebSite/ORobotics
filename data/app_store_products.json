@@ -78,7 +78,7 @@
       "source_project": "git.musimotion",
       "status": "approved",
       "platforms": "Mac approved · Release pending",
-      "description": "An expressive studio for animation, painting, physics, and performance. Mac 1.0.0 is approved and awaiting manual release. The visionOS development preview has a guided spatial workflow; iPhone and iPad are not yet available.",
+      "description": "An animation and painting studio. Mac 1.0.0 is approved and awaiting manual release. New development builds preserve the original artwork, read 2D projects, animate 3D volumes and Sumi ink, and share a renderer across Mac, iPad and Vision Pro, with full immersion on Vision Pro.",
       "page": "products/musimotion/",
       "icon": "images/products/musimotion/app-icon.webp",
       "verified_at": "2026-11-19"
