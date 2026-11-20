@@ -1,0 +1,92 @@
+{
+  "edition": "1.7",
+  "recorded_from": "Musimotion native Mac development engine, deterministic local composition",
+  "examples": [
+    {
+      "file": "Musimotion-house-studio-band.flac",
+      "title": "Neon Crossing",
+      "style": "House",
+      "ensemble": "Studio Band",
+      "source": "Local Pattern Model",
+      "seed": 42,
+      "bars": 4,
+      "bpm": 120,
+      "duration_seconds": 8.0,
+      "instruments": [
+        "Kick",
+        "Handclaps",
+        "Shaker",
+        "Congas",
+        "Electric bass",
+        "Drawbar organ",
+        "Vibraphone"
+      ],
+      "channels": 2,
+      "sample_rate": 32000,
+      "bytes": 528326,
+      "sha256": "6068784dd378e2cbdd6ad3f6cb750b1480a657a0a9374a36163ecbaad44de258",
+      "source_wav": {
+        "file": "Musimotion-house-studio-band.wav",
+        "bytes": 1024044,
+        "sha256": "1e1e7dca7733aafe04546b3dd8ec00fe00950dd8b7b1e311065d2790422c804e"
+      },
+      "pcm_sha256": "444f00b964c0a07fe7dcccf0e458214df58da9bedd6ceebbbe5d60ac5390b09d"
+    },
+    {
+      "file": "Musimotion-ambient-chamber.flac",
+      "title": "Circuit Echo",
+      "style": "Ambient",
+      "ensemble": "Chamber",
+      "source": "Local Pattern Model",
+      "seed": 73,
+      "bars": 4,
+      "bpm": 120,
+      "duration_seconds": 8.0,
+      "instruments": [
+        "Kick",
+        "Shaker",
+        "Frame drum",
+        "Upright bass",
+        "Vibraphone",
+        "Bowed strings"
+      ],
+      "channels": 2,
+      "sample_rate": 32000,
+      "bytes": 433590,
+      "sha256": "011e903436046019c91a0cbe670d5b6603e10225d941fa1d245f60fd9da5243c",
+      "source_wav": {
+        "file": "Musimotion-ambient-chamber.wav",
+        "bytes": 1024044,
+        "sha256": "e2c856b8ab0de1ba69a21d0730b1193748466b73cdf73a5b35f35bcfc7ccb857"
+      },
+      "pcm_sha256": "e9dcde8b9798cd99e18e7436f1c710d8380ff694b54bf8d7c3b1d0db135d27eb"
+    },
+    {
+      "file": "Musimotion-retro-8bit.flac",
+      "title": "Neon Crossing",
+      "style": "Retro 8-bit",
+      "ensemble": "Auto",
+      "source": "Local Pattern Model",
+      "seed": 42,
+      "bars": 4,
+      "bpm": 120,
+      "duration_seconds": 8.0,
+      "instruments": [
+        "Chip pulse",
+        "Chip triangle",
+        "Chip noise"
+      ],
+      "channels": 2,
+      "sample_rate": 32000,
+      "bytes": 448955,
+      "sha256": "70e224c3edecb747c8e24d944140c5d16e596a09d522eace1920c82bc00380b6",
+      "source_wav": {
+        "file": "Musimotion-retro-8bit.wav",
+        "bytes": 1024044,
+        "sha256": "8ce4217f7b7da2adb8e41caa5fe94f7b4a363edaf110c5b7e3b233210413b1fc"
+      },
+      "pcm_sha256": "ad8981a7df32a0c6daa1d432b679f51ff7b769dd2bd7d4a4109acf8c5a74f4bb"
+    }
+  ],
+  "encoding": "Lossless FLAC from the native 16-bit stereo WAV, verified by comparing every decoded PCM sample."
+}

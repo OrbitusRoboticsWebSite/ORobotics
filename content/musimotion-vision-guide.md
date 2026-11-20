@@ -7,7 +7,7 @@ description: "Read 2D projects, select and edit objects in 3D, open or import sc
 
 [Back to Musimotion]({{< relref "musimotion.md" >}}) · [Product support]({{< relref "contact.md" >}})
 
-Version 1.6 · November 19, 2026 · Development preview
+Version 1.7 · November 19, 2026 · Development preview
 
 Read existing **2D presentations**, switch to **3D Volume** for solid objects and
 ink at different depths, and present inside **Full Immersion** on Vision Pro.
@@ -345,7 +345,7 @@ checksum and source test.
 ## 9. Create a rhythm scene
 
 1. Open the artwork editor and choose **Templates → Rhythm Stage → Import into Presentation**.
-   The new scene starts with *Orbit Pulse*, an original 120 BPM song. The
+   The new scene starts with *Orbit Pulse*, an eight-bar House arrangement at 120 BPM. The
    two-second lead-in gives the first shape time to approach. The song then
    plays for 16 seconds, with 32 targets on the default chart.
 
@@ -353,7 +353,13 @@ checksum and source test.
 
    *Earlier Vision Pro Simulator capture of the rhythm starter. In the current editor, import Rhythm Stage from Templates.*
 
-2. To use your own music, choose **Objects → Rhythm Settings… → Song → Choose Song…**.
+2. For a different soundtrack, choose **Objects → Rhythm Settings… → Song → Generate Music…**. Choose a style and ensemble, generate a take, and listen with **Preview**. **Use as Rhythm Song** puts that performance in the scene and builds a chart from its musical accents. Undo restores the previous song and chart. For instrument choices and audio examples, see [Generate a soundtrack](#10-generate-a-soundtrack).
+
+   {{< musimotion-capture "music-rhythm-song.webp" "Rhythm Studio Song tab shows Orbit Pulse, Generate Music and its seven instruments" >}}
+
+   *Mac development editor. The starter has 32 practice targets. Electric piano, guitar, bass and percussion play around that steady practice beat.*
+
+   To import a recording instead, choose **Choose Song…** on the **Song** tab.
    Pick a local audio file between half a second and 30 minutes long, up to
    128 MB. Musimotion measures rhythmic accents on the device and embeds the
    audio in the project. If you hear an accent where a target should arrive,
@@ -436,8 +442,8 @@ checksum and source test.
    and music from the saved viewpoint. Live hand poses and hit scores belong
    to the current round.
 
-Download the [Orbit Pulse sample]({{< asset-url "downloads/musimotion/visionos/MusimotionVR-Orbit-Pulse.musimotion.zip" >}})
-to try the chart used in the package test. Unzip the download and open the
+Download the [original Orbit Pulse sample]({{< asset-url "downloads/musimotion/visionos/MusimotionVR-Orbit-Pulse.musimotion.zip" >}})
+to try the earlier chart with its original embedded recording. Import a fresh Rhythm Stage in the updated editor to hear the new arrangement. Unzip the download and open the
 enclosed `.musimotion` project. The [sample manifest]({{< asset-url "downloads/musimotion/visionos/rhythm-manifest.json" >}})
 lists the download size and the checksums for the archive, presentation and
 embedded song.
@@ -454,14 +460,14 @@ seconds. Cyan and coral shapes alternate with the beat for the rest of the song.
    artwork editor. In the Vision Pro spatial workspace, choose **Add Media →
    Music Studio**. You can score a still title card, an animation or a volumetric scene.
 
-2. Choose **Techno**, **House**, **Breakbeat** or **Ambient**. Set the tempo (60–180 BPM)
+2. Choose **Techno**, **House**, **Breakbeat**, **Ambient** or **Retro 8-bit**. For the first four styles, open **Ensemble**. **Auto** lets the composer pick a lineup for the take. Choose **Electronic**, **Studio Band** or **Chamber** to set the instrument family yourself. **Retro 8-bit** uses its own chip instruments. Set the tempo (60–180 BPM)
    and the length (2, 4, 8 or 16 bars). For a short techno cue, try 132 BPM, four bars and
    the description “driving kick, bright hats and a pulsing bass.” Four bars
    of four beats at that tempo last about 7.27 seconds.
 
    {{< musimotion-capture "ipad-music-01.webp" "Music Studio on iPad with Techno selected, 132 BPM, four bars and the Local Pattern Model composer" >}}
 
-   *iPad simulator. Choose a style, tempo and length before selecting Generate Music. The composer menu also lets you select the Local Pattern Model directly.*
+   *Earlier iPad simulator capture of the style, tempo and length controls. Choose Local Pattern Model in the Composer menu to generate offline.*
 
 3. Choose **Generate Music**. With **Automatic**, Music Studio asks Apple's
    on-device Foundation Models framework to plan the arrangement when the
@@ -481,6 +487,10 @@ seconds. Cyan and coral shapes alternate with the beat for the rest of the song.
    starts at the current playhead. A take that extends past the scene's end
    lengthens the scene so you can hear the ending.
 
+   {{< musimotion-capture "music-ensemble-preview.webp" "Music Studio showing the House style, Studio Band ensemble and the instrument lineup for a generated take" >}}
+
+   *Mac development editor. The instrument list describes this take. Preview plays it, and New Variation composes another performance with the current settings.*
+
    Changing a setting clears the current preview. Add a take you want to keep
    before trying another setting.
 
@@ -491,8 +501,12 @@ seconds. Cyan and coral shapes alternate with the beat for the rest of the song.
 5. For one continuous soundtrack, choose **Score Presentation**. Musimotion
    repeats the take across scene boundaries and preserves the duration of
    each scene. On a Rhythm Studio scene, **Use as Rhythm Song** replaces
-   the song and sets the chart to the new tempo. Review the chart afterward
+   the song and places targets on accents from the new arrangement. Review the chart afterward
    to make any individual target edits for the new music.
+
+   {{< musimotion-capture "music-ensemble-retro.webp" "Rhythm Studio after applying a Retro 8-bit song, with chip pulse, chip triangle and chip noise listed above Song beats" >}}
+
+   *Mac development editor. After Use as Rhythm Song, the Song tab shows the new instruments and the editable target count. Leaving the generator with Done keeps the song you already have.*
 
    {{< musimotion-capture "mac-music-05.webp" "Mac timeline showing two adjoining orange audio layers, covering the whole ten-second scene" >}}
 
@@ -508,9 +522,34 @@ seconds. Cyan and coral shapes alternate with the beat for the rest of the song.
 
    *iPad simulator. The generated music is selected in the ordinary 2D timeline. Its bar shows where the take begins and ends.*
 
+### Compare the ensembles
+
+These three on-device recordings each last eight seconds at 120 BPM. The House and Retro examples use the same variation seed so you can hear how the style changes the sound.
+
+**House · Studio Band** pairs drawbar organ, electric bass and vibraphone with handclaps, shaker and congas.
+
+<audio controls preload="none" style="width:100%;max-width:32rem" aria-label="House · Studio Band, eight seconds at 120 BPM" src='{{< asset-url "downloads/musimotion/visionos/Musimotion-house-studio-band.flac" >}}'></audio>
+
+[Download House · Studio Band FLAC]({{< asset-url "downloads/musimotion/visionos/Musimotion-house-studio-band.flac" >}})
+
+**Ambient · Chamber** pairs bowed strings, vibraphone and upright bass with frame drum and shaker.
+
+<audio controls preload="none" style="width:100%;max-width:32rem" aria-label="Ambient · Chamber, eight seconds at 120 BPM" src='{{< asset-url "downloads/musimotion/visionos/Musimotion-ambient-chamber.flac" >}}'></audio>
+
+[Download Ambient · Chamber FLAC]({{< asset-url "downloads/musimotion/visionos/Musimotion-ambient-chamber.flac" >}})
+
+**Retro 8-bit** uses chip pulse, triangle and noise voices for the arcade sound.
+
+<audio controls preload="none" style="width:100%;max-width:32rem" aria-label="Retro 8-bit, eight seconds at 120 BPM" src='{{< asset-url "downloads/musimotion/visionos/Musimotion-retro-8bit.flac" >}}'></audio>
+
+[Download Retro 8-bit FLAC]({{< asset-url "downloads/musimotion/visionos/Musimotion-retro-8bit.flac" >}})
+
+
+The [audio example manifest]({{< asset-url "downloads/musimotion/visionos/music-ensemble-examples.json" >}}) lists the instruments, variation seed and checksums for the lossless FLAC and original WAV for each performance.
+
 <audio controls preload="none" aria-label="Warehouse Techno, a four-bar 132 BPM generated soundtrack" src='{{< asset-url "downloads/musimotion/visionos/Musimotion-Techno-Session.wav" >}}'></audio>
 
-[Download Warehouse Techno]({{< asset-url "downloads/musimotion/visionos/Musimotion-Techno-Session.wav" >}}) (7.27 s,
+[Download the earlier Warehouse Techno example]({{< asset-url "downloads/musimotion/visionos/Musimotion-Techno-Session.wav" >}}) (7.27 s,
 931 KB). Apple Foundation Models composed this particular four-bar take at
 132 BPM on the test Mac. Musimotion rendered its drums, bass and lead into
 the stereo WAV. The direction was “Driving warehouse techno with deep bass,

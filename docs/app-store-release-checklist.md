@@ -174,3 +174,19 @@ Website validation covered 127 tests, the eight-product catalog, and 69 guide,
 image and sample resources. The production build measured 448.5 MiB.
 See the [illustrated guide](../content/musimotion-vision-guide.md) and its
 [capture provenance](../static/images/musimotion/visionos/provenance.json).
+
+## November 19, 2026 · Rhythm and Music Studio ensembles
+
+Guide 1.7 adds three native Mac captures of Rhythm Studio and Music Studio.
+The listening comparison provides House with Studio Band, Ambient with
+Chamber and Retro 8-bit. Each eight-second, 120 BPM recording has a labeled
+player and download. The three lossless FLACs total 1,410,871 bytes.
+Every decoded sample matches the original, two-channel, 32 kHz WAV from the
+Mac development engine. The [recording manifest](../static/downloads/musimotion/visionos/music-ensemble-examples.json)
+includes the players, seed, tempo and checksums for each recording.
+
+The 127 website tests passed. The build validated eight catalog products, 91
+HTML pages under a project subpath, and 76 linked guide, download and product
+resources. The site measured 449.96 MiB. The catalog presents these features
+as a development preview. The original Orbit Pulse sample remains available
+for earlier projects.

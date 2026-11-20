@@ -1,6 +1,6 @@
 {
   "date": "2026-11-19",
-  "guide_version": "1.6",
+  "guide_version": "1.7",
   "captures": [
     {
       "file": "original-artwork.webp",
@@ -854,6 +854,39 @@
       "transformation": "Native window capture, orientation normalized. Crop (67, 224, 366, 347). Fit within 1420 x 1550. WebP quality 93.",
       "sha256": "c04776eba980f30722f3cc41d6a75e8ad5c0011e102d81e5f3c14042f346b04c",
       "content": "The object list shows Welcome Banner, the original arrow and a separate selected arrow with Copy in its name."
+    },
+    {
+      "file": "music-ensemble-retro.webp",
+      "platform": "macOS · native Apple silicon development editor",
+      "source_result": "mac-ensembles-visible.xcresult",
+      "test": "VolumetricCompatibilityUITests/testAuditionInstrumentEnsemblesFromRhythmStudioBeforeReplacingSong()",
+      "activity": "Ensembles 03 - Applied Retro rhythm song and chart",
+      "original_sha256": "ca7246702bfedab795f169a96a663558a4b2bf85af58072049b232e57aaa97db",
+      "transformation": "Crop 488×605 at (247, 52) of the 980×712 native editor window, WebP",
+      "sha256": "519ea6dc3cc87005a63c063ca33530d8663833ebb4b3d8a77305670606431685",
+      "content": "Synthetic Rhythm Stage test project captured by native UI test."
+    },
+    {
+      "file": "music-ensemble-preview.webp",
+      "platform": "macOS · native Apple silicon development editor",
+      "source_result": "mac-ensembles-visible.xcresult",
+      "test": "VolumetricCompatibilityUITests/testAuditionInstrumentEnsemblesFromRhythmStudioBeforeReplacingSong()",
+      "activity": "Ensembles 02 - Studio Band instruments in Music Studio",
+      "original_sha256": "90da69c46c9bc6edac2e2e22ae490dc21d45e543d3b97fe90f788c53e8839c13",
+      "transformation": "Crop 488×605 at (247, 52) of the 980×712 native editor window, WebP",
+      "sha256": "2623dab930d6e183d5f5332c84abf3e2e173fa3f3231fc3e0f2a0f36fc10148b",
+      "content": "Synthetic Rhythm Stage test project captured by native UI test."
+    },
+    {
+      "file": "music-rhythm-song.webp",
+      "platform": "macOS · native Apple silicon development editor",
+      "source_result": "mac-ensembles-visible.xcresult",
+      "test": "VolumetricCompatibilityUITests/testAuditionInstrumentEnsemblesFromRhythmStudioBeforeReplacingSong()",
+      "activity": "Ensembles 01 - Rhythm Studio song and instruments",
+      "original_sha256": "55609c6817a637a115268fb6d74a8833c2d1a289616e9db37979dc7700986d7d",
+      "transformation": "Crop 488×605 at (247, 52) of the 980×712 native editor window, WebP",
+      "sha256": "b7de6ea49f610c08ce943259b83923978a2def5a750b6d7a0f9d4bcdd91f3f7d",
+      "content": "Synthetic Rhythm Stage test project captured by native UI test."
     }
   ]
 }
