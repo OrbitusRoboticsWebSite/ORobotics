@@ -502,7 +502,9 @@ seconds. Cyan and coral shapes alternate with the beat for the rest of the song.
 
    *Vision Pro simulator. Midnight Orbit credits the Local Pattern Model. Preview, Add to Scene and Score Presentation sit below the result.*
 
-5. For one continuous soundtrack, choose **Score Presentation**. Musimotion
+To keep an audio track that is already in your project playing after the opening, choose **Scene Timing… → Continue soundtrack**. You can also extend the opening by entering its new **Duration (seconds)**. Follow the [illustrated scene timing exercise]({{< relref "musimotion-video-templates.md" >}}#extend-a-scene-and-its-soundtrack).
+
+5. For one continuous soundtrack from a freshly generated take, choose **Score Presentation**. Musimotion
    repeats the take across scene boundaries and preserves the duration of
    each scene. On a Rhythm Studio scene, **Use as Rhythm Song** replaces
    the song and places targets on accents from the new arrangement. Review the chart afterward

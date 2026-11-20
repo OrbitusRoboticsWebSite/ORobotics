@@ -1,0 +1,76 @@
+{
+  "date": "2026-11-20",
+  "distribution": "Development preview",
+  "guide": "https://www.orbitusrobotics.com/products/musimotion/video-templates/#extend-a-scene-and-its-soundtrack",
+  "scene_duration": "Enter the total scene length in seconds. Existing animation keyframes and painted gestures retain their timing.",
+  "soundtrack": "Continue soundtrack repeats the chosen audio clip to the end of the presentation. It respects the clip's start and trims and carries its musical position across scene changes.",
+  "default": "A previously saved presentation keeps its authored audio timing until continuation is enabled.",
+  "example": {
+    "scene": "The Ink Gate",
+    "source_tempo_bpm": 64,
+    "source_length_seconds": 15,
+    "extended_scene_length_seconds": 22.5,
+    "music_position_at_next_scene_seconds": 7.5
+  },
+  "captures": "https://www.orbitusrobotics.com/images/musimotion/visionos/black-dragons/timing-provenance.json",
+  "verification": {
+    "scope": "Selected native playback, AAC movie export, project persistence, rendered painting and UI checks on Mac and iPadOS and visionOS simulators.",
+    "movie": "A synthetic audio file changes pitch each second. The test decodes the exported AAC soundtrack and measures pitch before and after the original end and across a scene cut, with continuation enabled and disabled.",
+    "painting": "An image rendered at 22.4 seconds in the extended scene has the same pixel values as the original painting at 14.9 seconds and differs visibly from the opening frame.",
+    "passing_executions": 50,
+    "failed": 0,
+    "skipped": 0,
+    "runs": [
+      {
+        "result_bundle": "mac-verified-core.xcresult",
+        "platform": "Mac",
+        "passing_executions": 15,
+        "summary_sha256": "c386d62d18214d7c20be20c7815cca0c9ed2af17466b9e52315f32cd17432b38"
+      },
+      {
+        "result_bundle": "ipad-verified-core.xcresult",
+        "platform": "iPadOS simulator",
+        "passing_executions": 15,
+        "summary_sha256": "56d9d9ed9615a20b4dc235c9dc6152557f1beb0928ec8928bae5b29e50f7a0e8"
+      },
+      {
+        "result_bundle": "vision-verified-core.xcresult",
+        "platform": "visionOS simulator",
+        "passing_executions": 15,
+        "summary_sha256": "ddf7a1c4227c6d5e4a54d4159ea17d614495d9acf0eabbb59a698a3ef6de02e5"
+      },
+      {
+        "result_bundle": "ipad-hold.xcresult",
+        "platform": "iPadOS simulator",
+        "passing_executions": 1,
+        "summary_sha256": "e784b7e0324401351c103be0e9354fe289bc529f08d1da80fdb15a18fa1c27a5"
+      },
+      {
+        "result_bundle": "vision-hold.xcresult",
+        "platform": "visionOS simulator",
+        "passing_executions": 1,
+        "summary_sha256": "77f74741a40390894db821b9695c991261f506254103c24a164bfe491051c5e0"
+      },
+      {
+        "result_bundle": "mac-ui-foreground.xcresult",
+        "platform": "Mac",
+        "passing_executions": 1,
+        "summary_sha256": "f641cd087266f1c5a6098029dfccf366e638b81eca0e2b1689ef27063427d2f5"
+      },
+      {
+        "result_bundle": "ipad-ui-final.xcresult",
+        "platform": "iPadOS simulator",
+        "passing_executions": 1,
+        "summary_sha256": "ef56720684f4d68a4c4da0e5ffaa6c0db93c8509faa0ba72e645dd53616c103a"
+      },
+      {
+        "result_bundle": "vision-ui-final.xcresult",
+        "platform": "visionOS simulator",
+        "passing_executions": 1,
+        "summary_sha256": "d37bcd46dffff5b1e3365903b6b383981524f2148c62c6981421730ebf464f38"
+      }
+    ],
+    "physical_devices": "Hardware acceptance on a physical iPad or headset was outside these checks."
+  },
+  "mac_preview": "Installed development-signed Mac preview. The running editor displayed the original scene duration, soundtrack switch, track name and Apply control."
+}

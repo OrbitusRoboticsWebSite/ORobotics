@@ -1,0 +1,104 @@
+{
+  "captured": "2026-11-20",
+  "platform": "iPadOS 26.5 Simulator, iPad Pro 13-inch (M5)",
+  "fixture": "The Ink Gate template in an isolated development library with synthetic demonstration data.",
+  "source": "Native XCTest UI screenshots. Images were reoriented, cropped, resized and compressed to WebP.",
+  "figures": [
+    {
+      "file": "timing-open.webp",
+      "bytes": 11048,
+      "sha256": "096f8dce988c9db7d16b00a10ddfe489d2f9cbc3643d0442bef6c05cd1ac7673",
+      "pixels": [
+        640,
+        433
+      ],
+      "source_pixels": [
+        2064,
+        2752
+      ],
+      "source_exif_orientation": 8,
+      "source_sha256": "eac9e69d7b94619c03cfe06376a3c9695290143668ea3d622d651d8883858646",
+      "attachment": "Template Gallery Timing - 01 Open scene timing",
+      "crop": [
+        126,
+        172,
+        766,
+        605
+      ],
+      "source_bundle": "ipad-ui.xcresult",
+      "test": "TemplateGalleryUITests/testExtendSceneAndContinueOpeningSoundtrack()"
+    },
+    {
+      "file": "timing-duration.webp",
+      "bytes": 21138,
+      "sha256": "6471ec54f54b3547423c13440fb7960d21e15951722a22ed5255f53751da9522",
+      "pixels": [
+        740,
+        630
+      ],
+      "source_pixels": [
+        2064,
+        2752
+      ],
+      "source_exif_orientation": 8,
+      "source_sha256": "1324ea9d03f1e6480cdf509a4722e6dcf8a12dffaa76db3e614200a3462a31e0",
+      "attachment": "Template Gallery Timing - 02 Original duration",
+      "crop": [
+        781,
+        677,
+        1970,
+        1690
+      ],
+      "source_bundle": "ipad-ui-final.xcresult",
+      "test": "TemplateGalleryUITests/testExtendSceneAndContinueOpeningSoundtrack()"
+    },
+    {
+      "file": "timing-soundtrack.webp",
+      "bytes": 21520,
+      "sha256": "390f4fe8c6f3872dcf89dbd4057e18d12c0e7efb9c15f21f2dc22470dcbe1dea",
+      "pixels": [
+        740,
+        630
+      ],
+      "source_pixels": [
+        2064,
+        2752
+      ],
+      "source_exif_orientation": 8,
+      "source_sha256": "6bac01c304036fec3060206adeb2b339fb090cae9919123139bdc02677082125",
+      "attachment": "Template Gallery Timing - 03 Continue the shamisen",
+      "crop": [
+        781,
+        677,
+        1970,
+        1690
+      ],
+      "source_bundle": "ipad-ui-final.xcresult",
+      "test": "TemplateGalleryUITests/testExtendSceneAndContinueOpeningSoundtrack()"
+    },
+    {
+      "file": "timing-held.webp",
+      "bytes": 19822,
+      "sha256": "f3654b69a72fe27b81cdce79a7ba58c2a851dc005e8245d1904b8b11e624c3f4",
+      "pixels": [
+        960,
+        621
+      ],
+      "source_pixels": [
+        2064,
+        2752
+      ],
+      "source_exif_orientation": 8,
+      "source_sha256": "2fdece2913fdfce84262fb3daaec04584ab156d9ee71c9523e1852fa15e82e9f",
+      "attachment": "Template Gallery Timing - 04 Extended painting",
+      "crop": [
+        0,
+        285,
+        2752,
+        2064
+      ],
+      "source_bundle": "ipad-ui.xcresult",
+      "test": "TemplateGalleryUITests/testExtendSceneAndContinueOpeningSoundtrack()"
+    }
+  ]
+}

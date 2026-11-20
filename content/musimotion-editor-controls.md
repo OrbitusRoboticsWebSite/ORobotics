@@ -82,4 +82,6 @@ If **Show Burst** is dimmed, turn **Fireworks** on and leave about three seconds
 
 *Landscape iPad simulator. The expanded timeline shows the Welcome and Orb tracks above the transport and scrubber.*
 
+To adjust when the next scene starts, select the current scene under **Objects → Scenes**, open **Scene Timing…** and enter **Duration (seconds)**. Turn on **Continue soundtrack** to carry the opening music through the next cut. [Extend a scene and its soundtrack]({{< relref "musimotion-video-templates.md" >}}#extend-a-scene-and-its-soundtrack).
+
 [Capture details]({{< asset-url "images/musimotion/visionos/editor-controls/provenance.json" >}})

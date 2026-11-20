@@ -9,7 +9,7 @@ draft: false
 
 November 20, 2026 · Development preview for Mac, iPad and Vision Pro
 
-Choose from fifty authored templates and four familiar spatial scenes. Make a title sequence, add a location stamp, paint a Sumi title to music or roll credits toward a vanishing point. The ten [black dragon paintings](#paint-a-black-dragon) honor the HeiLongWuShu school. Each has its own shamisen score and tempo. The template supplies editable text, shapes and keyframes. Use the updated development preview on each device for the painted strokes and perspective lettering. The screenshots show the running app with synthetic demonstration content. The poster sheets use frames rendered from the editable projects. Select a picture to see the controls at full size.
+Choose from fifty authored templates and four familiar spatial scenes. Make a title sequence, add a location stamp, paint a Sumi title to music or roll credits toward a vanishing point. The ten [black dragon paintings](#paint-a-black-dragon) honor the HeiLongWuShu school. Each has its own shamisen score and tempo. You can [extend an opening and keep the same music playing into the next scene](#extend-a-scene-and-its-soundtrack). The template supplies editable text, shapes and keyframes. Use the updated development preview on each device for the painted strokes and perspective lettering. The screenshots show the running app with synthetic demonstration content. The poster sheets use frames rendered from the editable projects. Select a picture to see the controls at full size.
 
 ## Start with a title
 
@@ -216,5 +216,39 @@ To compose a different accompaniment, choose **Go to Start → Music Studio**. S
 *The completed dragon at 14 seconds. [View the full-size movie frame]({{< asset-url "downloads/musimotion/black-dragons/dragon-study-frame.webp" >}}).*
 
 Watch the painting complete in 15 seconds. To edit the same dragon, unzip the project and open `The Ink Gate.musimotion` in the development preview. [Watch the scored movie (230 KB)]({{< asset-url "downloads/musimotion/black-dragons/dragon-study.mp4" >}}) · [Download the editable project (210 KB)]({{< asset-url "downloads/musimotion/black-dragons/dragon-study.zip" >}}) · [Sample details and checksums]({{< asset-url "downloads/musimotion/black-dragons/provenance.json" >}}) · [Capture details]({{< asset-url "images/musimotion/visionos/black-dragons/provenance.json" >}}) · [Black dragon release notes]({{< asset-url "downloads/musimotion/black-dragons/development-notes.json" >}})
+
+## Extend a scene and its soundtrack
+
+The Ink Gate paints its dragon over a four-bar shamisen phrase. At 64 BPM, that phrase lasts 15 seconds. Give the dedication another 7.5 seconds on screen and choose whether the music continues under it.
+
+1. Open **The Ink Gate**, choose **Objects**, then select the opening scene under **Scenes**. Choose **Scene Timing…**. In the Vision Pro spatial workspace, select the scene and choose **Project → Scene Timing…**.
+
+{{< musimotion-capture "black-dragons/timing-open.webp" "The Ink Gate selected in Objects, with Scene Timing beneath the scene name and the original 15-second range" >}}
+
+*The Scenes list shows the opening ends at 15 seconds. Choose the timer just below its name.*
+
+2. Enter **22.5** in **Duration (seconds)**. Choose **Apply** to change just the scene length. The finished painting now holds until 22.5 seconds. Its brushstrokes and title keyframes still run at their original pace. With **Continue soundtrack** off, the shamisen finishes at 15 seconds.
+
+{{< musimotion-capture "black-dragons/timing-duration.webp" "Scene Timing showing the duration field for The Ink Gate" >}}
+
+*The iPad simulator shows the opening at its original 15 seconds, with the soundtrack set to play once. Replace 15 with 22.5 to hold the dedication for another two bars.*
+
+3. To fill that extra time, open **Scene Timing…** again. Turn on **Continue soundtrack**, check the track name **The Ink Gate · Shamisen**, then choose **Apply**. If the project has several audio tracks, choose one from **Track**. The phrase repeats from its beginning at 15 seconds. If you used a trimmed audio clip, its selected portion repeats.
+
+{{< musimotion-capture "black-dragons/timing-soundtrack.webp" "Scene Timing with Continue soundtrack enabled for The Ink Gate’s shamisen score" >}}
+
+*The iPad simulator shows 22.5 seconds and the switch on. Choose Apply to keep the named track playing after the original four bars.*
+
+4. Choose **Templates → Lower Thirds → Location Stamp → Import into Presentation** to add a scene. Start playback shortly before the cut at 22.5 seconds. You will hear the phrase carry on halfway through its second pass as the location appears. Adding another scene or changing its duration moves the end of the music automatically. Save the project to keep this choice. The movie export uses the same timing. Share the exported movie with viewers using an earlier version of Musimotion so they hear the continued score. Earlier editors play the original clip once.
+
+{{< musimotion-capture "black-dragons/timing-held.webp" "The finished ink dragon and dedication remain on screen 19 seconds into the extended opening" >}}
+
+*On the iPad simulator, the transport has passed 19 seconds. The dragon and dedication remain in view beyond their original 15-second opening.*
+
+To return to a single play, turn off **Continue soundtrack** and choose **Apply**. The original audio keeps its authored start and end. If **Apply** is dimmed after a time edit, enter a number of at least 0.1 seconds. Shortening the scene skips anything beyond the new end. Extend it again to reveal those later events.
+
+If the switch is dimmed because the project has no audio track, add a score with **Music Studio → Generate Music → Add to Scene**, then reopen **Scene Timing…**. If a later template brings its own music, both tracks can sound together. Use **Mute Audio Track** on the later score to hear only the continuing one.
+
+[Scene timing development notes]({{< asset-url "downloads/musimotion/scene-timing/development-notes.json" >}}) · [Timing screenshot details]({{< asset-url "images/musimotion/visionos/black-dragons/timing-provenance.json" >}})
 
 [Development release notes]({{< asset-url "downloads/musimotion/video-templates/development-notes.json" >}}) · [Capture details]({{< asset-url "images/musimotion/visionos/video-templates/provenance.json" >}}) · [2D and volumetric guide]({{< relref "musimotion-vision-guide.md" >}})
