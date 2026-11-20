@@ -1,0 +1,48 @@
+{
+  "date": "2026-11-20",
+  "status": "Development preview",
+  "source": "expanded-mac-core.xcresult · SumiTitleTemplateTests/testScoredCircleMovieAndEditablePackage()",
+  "platform": "macOS",
+  "project": "Circle of Breath.musimotion",
+  "title": "Circle of Breath",
+  "source_exchange_sha256": "ac1794f8463d6f0d3541230bf8e04567e939bde562ec419f8d26e573fc6083ff",
+  "manifest_sha256": "0fef040a165cf938164d11e8d7eb17379385669a9c621de44b02cf8fb9286d13",
+  "embedded_score": {
+    "file": "Open Circle.m4a",
+    "sha256": "0a6d3ec68d1b35710ed1c79d68d9f0325100a0fca86f471c4148b5224711fb5b",
+    "codec": "AAC",
+    "channels": 2,
+    "duration_seconds": 10.656
+  },
+  "native_export": {
+    "attachment": "Circle of Breath timed ink and score H264",
+    "file_bytes": 304633,
+    "sha256": "26837655dd3c1aaa29bcbc75326d09f229601cc49f331461d691215dd70097e5"
+  },
+  "web_encoding": {
+    "description": "Exact native H.264/AAC export from the reopened project. The downloaded movie is byte-identical to the test attachment.",
+    "aac_adts_sha256": "8ef90d5a93673a0aec5290e01047f4f632912e8fe9efff92bb5f65b4f0d7402d"
+  },
+  "movie": {
+    "duration_seconds": 10.666667,
+    "width": 640,
+    "height": 360,
+    "frames": 128,
+    "frames_per_second": "12/1",
+    "video_codec": "H.264",
+    "audio_codec": "AAC",
+    "audio_channels": 2
+  },
+  "files": [
+    {
+      "file": "circle-of-breath.zip",
+      "bytes": 137616,
+      "sha256": "bb594fc1de5a48c3599bb6d2150e2a3ed5b44f730657f9b5dbbe95ad270675ce"
+    },
+    {
+      "file": "circle-of-breath.mp4",
+      "bytes": 304633,
+      "sha256": "26837655dd3c1aaa29bcbc75326d09f229601cc49f331461d691215dd70097e5"
+    }
+  ]
+}

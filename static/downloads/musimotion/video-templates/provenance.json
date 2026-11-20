@@ -1,0 +1,28 @@
+{
+  "date": "2026-11-20",
+  "status": "Development preview",
+  "source": "expanded-mac-core.xcresult · VideoTemplateTests/testCinematicH264MatchesPosterAndContainsRisingMoon()",
+  "description": "One synthetic Afterlight presentation containing seven native text and shape layers. The editable .musimotion project in the ZIP and the 960×540, 12 fps silent H.264 export use the same eight-second timeline.",
+  "originalManifestSHA256": "eaee31e38df7dd3ed9271b0e73ca2378a0273aa2f1434e3a3a7fd7b56c5b6721",
+  "files": [
+    {
+      "file": "cinematic-title.zip",
+      "bytes": 1968,
+      "sha256": "dde7da861055bde4b184dcc743b37ba5e0bfa48f6d50807c545a5b0a9ca8a2e2"
+    },
+    {
+      "file": "cinematic-title.mp4",
+      "bytes": 180425,
+      "sha256": "2cf7ea9b53b142af0a574a1e550f740b85e94f73afa78f41a4b2a72613a57fb3"
+    }
+  ],
+  "movie": {
+    "duration_seconds": 8.0,
+    "width": 960,
+    "height": 540,
+    "frames": 96,
+    "frames_per_second": 12,
+    "video_codec": "H.264",
+    "audio_tracks": 0
+  }
+}

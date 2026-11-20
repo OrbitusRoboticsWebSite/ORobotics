@@ -262,25 +262,25 @@
       "sources": [
         {
           "attachment": "Timeline - Separate scrubber and Show Timeline",
-          "capture": "controls-4.xcresult · VolumetricCompatibilityUITests/testTimelineControlsLeaveTheEntireScrubberReachable()",
-          "source_sha256": "914b714279456a2a59e920623be9728daeb567ad2e305964dfcc082fd3fe84d6",
+          "capture": "expanded-mac-ui.xcresult · VolumetricCompatibilityUITests/testTimelineControlsLeaveTheEntireScrubberReachable()",
+          "source_sha256": "bcb3ed4fd1ad0dc50f961d60206719f6c4dc92d7f38e57080f5ebbcbfa8fd269",
           "original_oriented_pixels": [
             980,
             712
           ],
           "crop": [
-            655,
-            639,
+            0,
+            614,
             980,
             712
           ]
         }
       ],
       "output_pixels": [
-        325,
-        73
+        980,
+        98
       ],
-      "sha256": "2206a482e13c106b01a634ed39b74cfa025d898de8fc403d6fbac7c238684f8d"
+      "sha256": "ecdbf6be6994e4b2105b1514f43e8003bfa89b7fd41dd5b83844150e2cfe3707"
     },
     {
       "file": "timeline-tracks.webp",
@@ -288,25 +288,25 @@
       "sources": [
         {
           "attachment": "Editor guide - iPad expanded transport",
-          "capture": "ipad-controls-final.xcresult · WorkspaceUITests/testLandscapeTimelineToggleSwitchesWorkspace()",
-          "source_sha256": "1ff60fb08d8a7027d4d5f77b90ad9ee8bc28874ce133762416ef2a7f35aae978",
+          "capture": "expanded-ipad.xcresult · WorkspaceUITests/testLandscapeTimelineToggleSwitchesWorkspace()",
+          "source_sha256": "db09ba77433b78d5b84bd4a249bd46e0f27b282ed92e3d9ff468a661d976ca0a",
           "original_oriented_pixels": [
             2752,
             2064
           ],
           "crop": [
             0,
-            1040,
+            1042,
             2752,
-            2040
+            2064
           ]
         }
       ],
       "output_pixels": [
         1380,
-        501
+        512
       ],
-      "sha256": "0240d73b83d7a02afab979320121fadc825a954f6a4577920236e993889a9a6f"
+      "sha256": "685b956f28537dce03f1d7a8328df4d85e4f0c12efc5be8a21948df1c29a353a"
     }
   ]
 }

@@ -7,7 +7,7 @@ description: "Read 2D projects, select and edit objects in 3D, open or import sc
 
 [Back to Musimotion]({{< relref "musimotion.md" >}}) · [Product support]({{< relref "contact.md" >}})
 
-Version 1.8 · November 19, 2026 · Development preview
+Guide 1.9 · November 20, 2026 · Development preview
 
 Read existing **2D presentations**, switch to **3D Volume** for solid objects and
 ink at different depths, and present inside **Full Immersion** on Vision Pro.
@@ -704,8 +704,7 @@ project, movie and music checksums and the composer credited for each take.
 
    *The [editor controls walkthrough]({{< relref "musimotion-editor-controls.md" >}}) shows both timeline states.*
 
-7. To start from existing artwork, choose **Templates**. Select **Welcome
-   Banner**, **Birthday Surprise**, **Rhythm Stage** or **Droid Arena**.
+7. From the library, choose **Create** to browse [presentation templates and motion presets]({{< relref "musimotion-video-templates.md" >}}). Inside an existing presentation, choose **Templates**. Choose **Spatial** for **Depth Gallery**, **Welcome Banner**, **Birthday Surprise**, **Rhythm Stage** or **Droid Arena**.
    **Import into Presentation** adds a scene to the project you are editing.
    Undo removes that import. **Open as New Presentation** saves your
    current work in the library and opens a separate editable project.
@@ -715,7 +714,7 @@ project, movie and music checksums and the composer credited for each take.
 
    {{< musimotion-capture "editor-vision-templates.webp" "Vision Pro simulator Templates browser with four scene choices and buttons to open or import the selected Droid Arena" >}}
 
-   *Vision Pro simulator. Droid Arena is selected. Choose Open as New Presentation or Import into Presentation at the bottom of the sheet.*
+   *Earlier Vision Pro simulator capture with Droid Arena selected. The current gallery groups these choices under Spatial.*
 
 ## AI, sharing and support
 

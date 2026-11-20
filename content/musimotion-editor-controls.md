@@ -42,6 +42,8 @@ In the **3D Volume** camera preview, scrub to a time when the object is visible,
 
 ## Apply an effect
 
+To animate a layer with a ready-made entrance, accent or exit, open **Effects → Motion**. Follow the walkthrough for [presentation templates and motion presets]({{< relref "musimotion-video-templates.md" >}}). The Object and Celebration screenshots below show the earlier two-tab panel.
+
 5. Select an object, open **Effects** in the illustrated toolbar, then choose **Object**. Use **Blur** for soft focus or **Clear Blur** to restore sharpness. For a timed change, position the playhead and choose **Fade In**, **Fade Out**, **Blur In** or **Blur Out**. If the panel says **Select an object**, close it, select a visible layer and reopen **Effects**.
 
 {{< musimotion-capture "editor-controls/object-effects.webp" "Effects panel with Object selected and controls for blur and fade" >}}
@@ -72,9 +74,9 @@ If **Show Burst** is dimmed, turn **Fireworks** on and leave about three seconds
 
 {{< musimotion-capture "editor-controls/timeline-toggle.webp" "Turquoise transport controls with the compact timeline icon to the right of Record Keyframe and the scrubber below" >}}
 
-*The compact toggle sits at the right end of the button row. The playhead slider runs underneath it.*
+*The compact toggle sits at the right end of the button row. The space above the painted Play triangle matches the space below it down to the scrubber track.*
 
-8. Drag the scrubber toward the right edge to move later in the scene. Use the same icon again to give the artwork more room. Playback and scrubbing remain available in both views.
+8. Drag the scrubber toward the right edge to move later in the scene. Use the same icon again to give the artwork more room. Playback and scrubbing remain available in both views. The transport leaves a twelve-point inset below the slider, including its thumb, so you can reach the ends without brushing the window edge.
 
 {{< musimotion-capture "editor-controls/timeline-tracks.webp" "Expanded timeline with Welcome and Orb tracks and the separate scrubber" >}}
 

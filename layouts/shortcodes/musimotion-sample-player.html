@@ -1,0 +1,9 @@
+{{- $name := .Get 0 -}}
+{{- $poster := printf "images/musimotion/visionos/video-templates/%s-frame.webp" $name -}}
+{{- $movie := printf "downloads/musimotion/video-templates/%s.mp4" $name -}}
+{{- $image := images.Config (printf "static/%s" $poster) -}}
+<video controls playsinline preload="none" poster="{{ $poster | relURL }}"
+       width="{{ $image.Width }}" height="{{ $image.Height }}" aria-label="{{ .Get 1 }}">
+  <source src="{{ $movie | relURL }}" type="video/mp4">
+  <a href="{{ $movie | relURL }}">Download the scored movie</a>.
+</video>

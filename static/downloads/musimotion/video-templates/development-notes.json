@@ -1,0 +1,356 @@
+{
+  "date": "2026-11-20",
+  "distribution": "Development preview",
+  "guide": "https://www.orbitusrobotics.com/products/musimotion/video-templates/",
+  "captures": "https://www.orbitusrobotics.com/images/musimotion/visionos/video-templates/provenance.json",
+  "new_templates": {
+    "Titles": [
+      "Cinematic Title",
+      "Kinetic Type",
+      "Festival Poster",
+      "Midnight Marquee",
+      "Travel Postcard",
+      "Interview Quote"
+    ],
+    "Lower Thirds": [
+      "Speaker Lower Third",
+      "Location Stamp",
+      "On Air",
+      "Match Score",
+      "News Ticker"
+    ],
+    "Sequences": [
+      "Chapter Divider",
+      "Rolling Credits",
+      "Color Wipe",
+      "Film Countdown",
+      "Split Reveal",
+      "End Slate",
+      "Milestone Timeline"
+    ],
+    "Showcases": [
+      "Product Spotlight",
+      "Data Story",
+      "Festival Lineup",
+      "Track List",
+      "Route Map",
+      "Weather Brief",
+      "Color Study",
+      "Recipe Card",
+      "Property Feature"
+    ],
+    "Science Fiction": [
+      "Starfield Crawl",
+      "Orbital Credits",
+      "First Contact",
+      "Mission Debrief",
+      "Jump to Orbit",
+      "Signal Lost"
+    ],
+    "Sumi Ink": [
+      "Circle of Breath",
+      "Bamboo in Rain",
+      "Tide Ledger",
+      "Plum Blossom",
+      "Blue Mountain",
+      "Reeds at Dusk"
+    ],
+    "Spatial": [
+      "Depth Gallery"
+    ]
+  },
+  "new_layer_motion_presets": {
+    "Entrance": [
+      "Rise & Settle",
+      "Elastic Reveal",
+      "Focus Pull"
+    ],
+    "Accent": [
+      "Heartbeat",
+      "Pendulum",
+      "Orbit"
+    ],
+    "Exit": [
+      "Sweep Away",
+      "Fold Down",
+      "Tumble Out"
+    ]
+  },
+  "changes": [
+    "New Presentation offers forty editable authored scenes, including six paper-ink titles and six science-fiction titles/credits, plus the four familiar spatial scenes, Original Canvas and an empty scene. The editor can open a separate project or import an independent scene.",
+    "Circle of Breath and the other Sumi Ink starters store timed brush paths, text and a local score in the document. Starfield Crawl combines separate editable prologue and credit lines with perspective foreshortening and an original chamber score.",
+    "Effects → Motion adds editable animation to the selected visual layer at the current scene time. Preset duration is limited to the visible layer interval.",
+    "The timeline transport reserves twelve points below the entire slider while keeping the playback controls balanced above the track."
+  ],
+  "transport": {
+    "height_pt": 80,
+    "scrubber_bottom_inset_pt": 12,
+    "clearance_verification": {
+      "unit": "points",
+      "macOS": 12,
+      "iPadOS Simulator": 12,
+      "measurement": "The running UI reports the distance from the lower edge of the slider accessibility frame to the lower edge of the transport."
+    },
+    "optical_spacing": {
+      "measurement": "Clear pixels above and below the painted Play triangle, measured from the lower edge of the transport bevel and the top of the scrubber track and converted to screen points.",
+      "Mac": {
+        "window_screenshot_px": [
+          980,
+          712
+        ],
+        "scale": 1,
+        "bevel_ends_above_row": 642,
+        "play_top": 651,
+        "play_bottom": 673,
+        "track_top": 683,
+        "above_play_pt": 9.0,
+        "below_play_pt": 9.0,
+        "clearance_below_slider_pt": 12.0
+      },
+      "iPad Simulator": {
+        "window_screenshot_px": [
+          2752,
+          2064
+        ],
+        "scale": 2,
+        "bevel_ends_above_row": 1884,
+        "play_top": 1901,
+        "play_bottom": 1946,
+        "track_top": 1966,
+        "above_play_pt": 8.5,
+        "below_play_pt": 9.5,
+        "clearance_below_slider_pt": 12.0
+      }
+    }
+  },
+  "test_runs": [
+    {
+      "result": "vision-templates.xcresult",
+      "phase": "Initial ten-template development",
+      "platform": "visionOS Simulator",
+      "os_version": "26.5",
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0,
+      "summary_sha256": "b0f33d6272238281c628272253ccb6120494301c7f7bcb0fbfc1ef356c647f2b"
+    },
+    {
+      "result": "mac-templates.xcresult",
+      "phase": "Initial ten-template development",
+      "platform": "macOS",
+      "os_version": "26.6.2",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "summary_sha256": "5209eeae89a922924c7329942cb92ec89362d9f6b86efbad41074a95492651ef"
+    },
+    {
+      "result": "ipad-templates.xcresult",
+      "phase": "Initial ten-template development",
+      "platform": "iOS Simulator",
+      "os_version": "26.5",
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0,
+      "summary_sha256": "f02f4c28bf47f3c9ef234790b07bcd676acf5b0d4173f8468a51a1831f95ab90"
+    },
+    {
+      "result": "vision-spatial-motion.xcresult",
+      "phase": "Initial ten-template development",
+      "platform": "visionOS Simulator",
+      "os_version": "26.5",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "summary_sha256": "2e28f972c5f5cb0f000266b5ea545d1ac879d6378d5c35980331089f1dd1a246"
+    },
+    {
+      "result": "mac-edit.xcresult",
+      "phase": "Initial ten-template development",
+      "platform": "macOS",
+      "os_version": "26.6.2",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "summary_sha256": "d731558d344de770575fddaad4d86ce2c046e33ba8e8149da23f3fa5a2ebb58c"
+    },
+    {
+      "result": "ipad-edit.xcresult",
+      "phase": "Initial ten-template development",
+      "platform": "iOS Simulator",
+      "os_version": "26.5",
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "summary_sha256": "a0afb2b889aee8bf7f8f31aae0b5351f9a5cb593fe89ff1dcd290b1af88811e8"
+    },
+    {
+      "result": "vision-final.xcresult",
+      "phase": "Initial ten-template development",
+      "platform": "visionOS Simulator",
+      "os_version": "26.5",
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0,
+      "summary_sha256": "6a33b64fef9350541df80a213414dbdbb4d093e8f0a73c61669226501d30769a"
+    },
+    {
+      "result": "ipad-final.xcresult",
+      "phase": "Initial ten-template development",
+      "platform": "iOS Simulator",
+      "os_version": "26.5",
+      "passed": 8,
+      "failed": 3,
+      "skipped": 0,
+      "summary_sha256": "d86d5b36d52f5ee592915dd57a38f054f4883c2f5479e7a9534b99f0ed9f0e6f"
+    },
+    {
+      "result": "mac-final.xcresult",
+      "phase": "Initial ten-template development",
+      "platform": "macOS",
+      "os_version": "26.6.2",
+      "passed": 13,
+      "failed": 1,
+      "skipped": 0,
+      "summary_sha256": "27503dddc283acbde227dc86da100e8ea8679744036676ecf28620b2bbc1b8ab"
+    },
+    {
+      "result": "mac-crawl.xcresult",
+      "phase": "Forty-template development",
+      "platform": "macOS",
+      "os_version": "26.6.2",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "summary_sha256": "45a9af54b64b9d61461249afe3adc12ad2e075fb5e37833d5931ba91255c4a9a"
+    },
+    {
+      "result": "expanded-mac-core.xcresult",
+      "phase": "Forty-template development",
+      "platform": "macOS",
+      "os_version": "26.6.2",
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "summary_sha256": "56dba208b9b7772d21dd7aad4c5a47afcc6b4d858b5c39f9ca54016ccdeb1eeb"
+    },
+    {
+      "result": "expanded-mac-paint.xcresult",
+      "phase": "Forty-template development",
+      "platform": "macOS",
+      "os_version": "26.6.2",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "summary_sha256": "ed532e80ef46b653ea85ec09fddedee97a109b96b2cc4169ee8d264df8ca62ed"
+    },
+    {
+      "result": "expanded-vision.xcresult",
+      "phase": "Forty-template development",
+      "platform": "visionOS Simulator",
+      "os_version": "26.5",
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0,
+      "summary_sha256": "2e11bc404fbc3bc131a9af6d877b9e1ba52e1c5f5d83752c60b8d88c70acb647"
+    },
+    {
+      "result": "expanded-ipad.xcresult",
+      "phase": "Forty-template development",
+      "platform": "iOS Simulator",
+      "os_version": "26.5",
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "summary_sha256": "0ad32cf7d18273430594f6283c9fd2403d0ce7b53c53ff76010b5f7f4c82e490"
+    },
+    {
+      "result": "expanded-mac-ui.xcresult",
+      "phase": "Forty-template development",
+      "platform": "macOS",
+      "os_version": "26.6.2",
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "summary_sha256": "cc7ee86504f5b8c20a6447221f6d9e876fec8ef357a268e28bc95425152c0cde"
+    }
+  ],
+  "test_scope": "Selected development runs on Mac, iPad simulator and Vision Pro simulator. Counts refer to executions and include reruns.",
+  "additional_ipad_regressions": {
+    "result": "ipad-edit.xcresult",
+    "tests": [
+      "WorkspaceUITests/testPlacedObjectScalesBetweenRecordedKeyframes",
+      "WorkspaceUITests/testPortraitTimelineStartsVisibleAndCanBeToggled"
+    ],
+    "outcome": "Both passed. These executions are included in the iPad edit run."
+  },
+  "physical_headset_testing": "The native spatial Effects panel and advancing preview playhead were exercised on the Vision Pro simulator. No physical headset session was recorded for this update.",
+  "transport_captures": "https://www.orbitusrobotics.com/images/musimotion/visionos/editor-controls/provenance.json",
+  "intermediate_findings": [
+    {
+      "runs": [
+        "mac-final.xcresult",
+        "ipad-final.xcresult"
+      ],
+      "finding": "An intermediate transport background caused the running accessibility container to measure 102 points on Mac and iPad."
+    },
+    {
+      "runs": [
+        "ipad-final.xcresult"
+      ],
+      "finding": "The iPad automation appended replacement text when its text-selection gesture did not select the original title. The revised interaction verifies that the original text was cleared before typing the replacement."
+    }
+  ],
+  "scored_sample_verification": {
+    "method": "Decoded the project audio and the distribution movie audio to 4 kHz mono PCM. Compared the active timeline duration and checked relative delay by cross-correlation.",
+    "samples": [
+      {
+        "file": "circle-of-breath.mp4",
+        "movie_sha256": "26837655dd3c1aaa29bcbc75326d09f229601cc49f331461d691215dd70097e5",
+        "project_sha256": "bb594fc1de5a48c3599bb6d2150e2a3ed5b44f730657f9b5dbbe95ad270675ce",
+        "score_label": "Open Circle",
+        "score_seconds_compared": 10.587,
+        "score_correlation": 0.9999,
+        "score_offset_ms": 0.0
+      },
+      {
+        "file": "starfield-crawl.mp4",
+        "movie_sha256": "b4c599d11ab9d46e35cab5f6e06a9c1e0ea341b6a072ae803cdf549202f0c5d7",
+        "project_sha256": "d0027c1aa571a600334bc3e5382c5e3df0a695b17abe66294648d19f48b6f0c7",
+        "score_label": "Beyond the Meridian",
+        "score_seconds_compared": 22.0,
+        "score_correlation": 0.9998,
+        "score_offset_ms": 0.0
+      }
+    ]
+  },
+  "template_layout_check": {
+    "sample": "Cinematic Title, rising moon, measured in rendered editor pixels",
+    "Mac": {
+      "measured_width_px": 167,
+      "expected_width_px": 167.4
+    },
+    "iPad Simulator": {
+      "measured_width_px": 480,
+      "expected_width_px": 481.0
+    }
+  },
+  "acceptance_runs": {
+    "scope": "Expanded catalog, editor, effects, rendering, scores and timeline on the final development build. Counts refer to executions.",
+    "results": [
+      "expanded-mac-core.xcresult",
+      "expanded-mac-paint.xcresult",
+      "expanded-mac-ui.xcresult",
+      "expanded-ipad.xcresult",
+      "expanded-vision.xcresult"
+    ],
+    "passed": 48,
+    "failed": 0,
+    "skipped": 0
+  },
+  "sample_provenance": [
+    "https://www.orbitusrobotics.com/downloads/musimotion/video-templates/provenance.json",
+    "https://www.orbitusrobotics.com/downloads/musimotion/video-templates/circle-of-breath-provenance.json",
+    "https://www.orbitusrobotics.com/downloads/musimotion/video-templates/starfield-crawl-provenance.json"
+  ]
+}

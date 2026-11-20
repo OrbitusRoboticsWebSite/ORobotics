@@ -1,0 +1,51 @@
+{
+  "date": "2026-11-20",
+  "status": "Development preview",
+  "source": "expanded-mac-core.xcresult · ScienceFictionTemplateTests/testCrawlProjectExportsWithOriginalScore()",
+  "platform": "macOS",
+  "project": "Starfield Crawl.musimotion",
+  "title": "Starfield Crawl",
+  "source_exchange_sha256": "572853eb7d52ce9003a09fef60cc8aa44e3b84670f494c576cf598d0465ad659",
+  "manifest_sha256": "c08c0fccb3a56aef71612b8eaa4fe4ac94e2afa9297627657dda4b8366597b3f",
+  "embedded_score": {
+    "file": "Beyond the Meridian.m4a",
+    "sha256": "72bacf8d428a753fad526dd50a288afada2a4f2246d2823c658fbc631ba3452a",
+    "codec": "AAC",
+    "channels": 2,
+    "duration_seconds": 24.096
+  },
+  "native_export": {
+    "attachment": "Starfield Crawl scored H264",
+    "file_bytes": 2133138,
+    "sha256": "81c88ef10b79b524db44f3f054bf4dffebf2ad041c47ff421def4f1e2b65cfb9"
+  },
+  "web_encoding": {
+    "description": "The native H.264 video was encoded again for web delivery. Its AAC elementary stream was copied unchanged.",
+    "encoder": "libx264 slow, animation, CRF 21",
+    "decoded_video_ssim": 0.998685,
+    "matched_frame_timestamps": 264,
+    "aac_adts_sha256": "3f97ac426953e9392100d81545ba0bd9e827bd35c1290a51b52c0a554ef15777"
+  },
+  "movie": {
+    "duration_seconds": 22.0,
+    "width": 640,
+    "height": 360,
+    "frames": 264,
+    "frames_per_second": "12/1",
+    "video_codec": "H.264",
+    "audio_codec": "AAC",
+    "audio_channels": 2
+  },
+  "files": [
+    {
+      "file": "starfield-crawl.zip",
+      "bytes": 303924,
+      "sha256": "d0027c1aa571a600334bc3e5382c5e3df0a695b17abe66294648d19f48b6f0c7"
+    },
+    {
+      "file": "starfield-crawl.mp4",
+      "bytes": 877732,
+      "sha256": "b4c599d11ab9d46e35cab5f6e06a9c1e0ea341b6a072ae803cdf549202f0c5d7"
+    }
+  ]
+}

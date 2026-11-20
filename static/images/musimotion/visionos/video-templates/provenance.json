@@ -1,0 +1,1342 @@
+{
+  "date": "2026-11-20",
+  "status": "Development preview",
+  "demonstration": "Actual app-window captures from isolated test libraries, native exporter poster frames and decoded sample movies. Built-in names, places and credits are demonstration data.",
+  "images": [
+    {
+      "file": "starfield-crawl-frame.webp",
+      "platform": "macOS",
+      "description": "Frame decoded from the scored native H.264 sample.",
+      "sources": [
+        {
+          "attachment": "Starfield Crawl movie at 8s",
+          "capture": "expanded-mac-core.xcresult · ScienceFictionTemplateTests/testCrawlProjectExportsWithOriginalScore()",
+          "source_sha256": "0595d1679ec10b6679e8dd98923f14e1958aa930f03898e79b35f6936d13020d",
+          "original_oriented_pixels": [
+            640,
+            360
+          ],
+          "crop": [
+            0,
+            0,
+            640,
+            360
+          ],
+          "frame_time_seconds": 8
+        }
+      ],
+      "output_pixels": [
+        640,
+        360
+      ],
+      "sha256": "c50a0861ad92812e4ee0baabea1d810cdf304d040d3c6d7296372d8b370d7a0f"
+    },
+    {
+      "file": "circle-of-breath-frame.webp",
+      "platform": "macOS",
+      "description": "Frame decoded from the scored native H.264 sample.",
+      "sources": [
+        {
+          "attachment": "Circle of Breath scored poster",
+          "capture": "expanded-mac-core.xcresult · SumiTitleTemplateTests/testScoredCircleMovieAndEditablePackage()",
+          "source_sha256": "ca54f996c475a9a25b54ad1186ca23fc8db11a1bea0d32e9b95c49c165feb751",
+          "original_oriented_pixels": [
+            640,
+            360
+          ],
+          "crop": [
+            0,
+            0,
+            640,
+            360
+          ],
+          "requested_frame_time_seconds": 5.2,
+          "allowed_time_after_request_seconds": 0.08333333333333333
+        }
+      ],
+      "output_pixels": [
+        640,
+        360
+      ],
+      "sha256": "d6bc153dd480432bfe713dce83f97e3b922bb2dcc2fbecdeb275fbfe73c4e886"
+    },
+    {
+      "file": "template-catalog.webp",
+      "platform": "macOS",
+      "description": "Full frames from the native exporter at the indicated scene times. Frames are scaled and labeled with their template names.",
+      "sources": [
+        {
+          "attachment": "Template Cinematic Title poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "14144f6cf6d2cc2b6db296d097606e58cbc133ef767d8f13ea61391260b01ca1",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            12,
+            12,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Kinetic Type poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "19f01ca5824519d58861505f3312586f7c38ea4fe1beb1cba89459cfc21b4f41",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            524,
+            12,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Speaker Lower Third poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "48900d0411e3c9961f905a91d95e201cbf6c90b8d98c49689f5cf3ef11154a85",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            12,
+            343,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Location Stamp poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "36396e258d4f509c0452b820f33fda7f811529b0841db25e298f75a6cb498539",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            524,
+            343,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Chapter Divider poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "c757ee7c499226773b14e00de4aaeddc2e7a982b886aaa6b9059b0017f51e1ea",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            12,
+            674,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Rolling Credits poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "8c1cadf88fe1d55fdf75c3baf983bfcee197c75ebd6f23b417a310b562962f2d",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 3.8,
+          "placement": [
+            524,
+            674,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Color Wipe poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "12cf5100077ecb141ca2646854e337ad9c860cd6b7512fb9ef999b1873fc4574",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 1.7,
+          "placement": [
+            12,
+            1005,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Product Spotlight poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "4395993b9f89e681ae2dda82588414aed19f948607382687fbcee6f77f583812",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            524,
+            1005,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Data Story poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "6ac35ce8793ce91cbb6733a17989ae0ec87831a3b3ac6f83f34bcd88da85db24",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            12,
+            1336,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Depth Gallery poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "33b3f242fb18e0e6e411bb0b259bdc616b163ac7071aea6faf9af8d74aafa4a5",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            524,
+            1336,
+            500,
+            281
+          ]
+        }
+      ],
+      "output_pixels": [
+        1036,
+        1667
+      ],
+      "sha256": "ef1161cb96d6ac4860e244faa1e11712db31e27630670e5d5940577ea57b461f"
+    },
+    {
+      "file": "editorial-titles.webp",
+      "platform": "macOS",
+      "description": "Full frames from the native exporter at the indicated scene times. Frames are scaled and labeled with their template names.",
+      "sources": [
+        {
+          "attachment": "Template Festival Poster poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "438c81eb8c2cdbcc594cc69900e772497d30566e39d484454582ca79c294adfc",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            12,
+            12,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Midnight Marquee poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "aa631ccb67a01895d611b18d68ede933627637b30f2a287deeebac1200d98940",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            524,
+            12,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Travel Postcard poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "c26e040e56528d9ff3bd93864b219b4cd40622df4850ad22b0baefde9010770a",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            12,
+            343,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Interview Quote poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "b3f3ad7eb8400affbd967dd9c84f441aef1552eee3fe4e3ff624515aa0216972",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            524,
+            343,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template On Air poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "b3a670b70c24a144db777982c05079628b83f73cfb1f5f2eb54010ff4ea2f85a",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            12,
+            674,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Match Score poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "f5fb873dd7210da060e21265f91415518213c658a96226b7424614a88d96ed23",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 3.4,
+          "placement": [
+            524,
+            674,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template News Ticker poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "c81a7d68dee2902e97c0e61e29f4723fc84ff7d7544674c7656cd07441aabf44",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 3.6,
+          "placement": [
+            12,
+            1005,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Film Countdown poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "66c9c082bccf5cda6c32ac5049fdadfd076c822d251929df5e7c60990955afa6",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.27,
+          "placement": [
+            524,
+            1005,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Split Reveal poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "6213ae821c3990e12f10df596e007b1c5ce93d962b032ed0da22527220eca3e3",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.9,
+          "placement": [
+            12,
+            1336,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template End Slate poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "8a44a7292a5284bdc89bb85700dd74a8f458ac8a082fc4537b348a6e5216402c",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            524,
+            1336,
+            500,
+            281
+          ]
+        }
+      ],
+      "output_pixels": [
+        1036,
+        1667
+      ],
+      "sha256": "f1132d56703213870345467318452402ccca6595780c96adb18536c922f9ad72"
+    },
+    {
+      "file": "editorial-showcases.webp",
+      "platform": "macOS",
+      "description": "Full frames from the native exporter at the indicated scene times. Frames are scaled and labeled with their template names.",
+      "sources": [
+        {
+          "attachment": "Template Festival Lineup poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "e4834ed5bc8a8adfd95c39d35af3a2315180b6249af3222501e767894e53e022",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            12,
+            12,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Track List poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "f2d68241a28510b161656fb9b8bc3499c31919edc61e28f2f2e5a7f99a7d3379",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            524,
+            12,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Route Map poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "8980a97a6b1dc7d395e880c2865e6a5fbaab7ac3df4233cae27484e4391f4021",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 1.75,
+          "placement": [
+            12,
+            343,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Weather Brief poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "93c8b29f8d8e1b99aa849bbfad8dc03834c3f3b955ed4cabc940065b2852a2d4",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            524,
+            343,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Color Study poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "97101e117d0cf0a813cd8eab7477d01ebf4be471af6674bc76f31b201415d456",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            12,
+            674,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Milestone Timeline poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "a3d1d3257f6f57cdfc8d7fbc82d491171c29100a31dbb04556b043f79034e6f8",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            524,
+            674,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Recipe Card poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "41e0878248797482a20aa004e5dba71ec54d9ddeec8db7270fdbf02a5384c1a4",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            12,
+            1005,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Property Feature poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "a8d728ef85a200e2e70bb3c0a7d6f975e78665fc04fd15f95181b02fc864aef7",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.5,
+          "placement": [
+            524,
+            1005,
+            500,
+            281
+          ]
+        }
+      ],
+      "output_pixels": [
+        1036,
+        1336
+      ],
+      "sha256": "f5c3cb120670fa9fa5c84165a858aa3d4803f543f9a7de1927aabbd7eef56769"
+    },
+    {
+      "file": "science-fiction-catalog.webp",
+      "platform": "macOS",
+      "description": "Full frames from the native exporter at the indicated scene times. Frames are scaled and labeled with their template names.",
+      "sources": [
+        {
+          "attachment": "Template Starfield Crawl poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "655e0196e4a611f232101b5460eb6384f399bc73164251390aa433adfd411fad",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 12.0,
+          "placement": [
+            12,
+            12,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Orbital Credits poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "172a3886adf7c15c45f4b2baa519573259f0a58839f3cafff18e1ff708a02488",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 3.0,
+          "placement": [
+            524,
+            12,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template First Contact poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "f4c89c52066645957289eb96eae8295ecc4d8d4dea11089f247f1d4f3555a2c2",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 3.0,
+          "placement": [
+            12,
+            343,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Mission Debrief poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "0c869862b915061a7cd59cbd8027c246bf401fd1609cb54526e1c3bdd5b24b7e",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 3.0,
+          "placement": [
+            524,
+            343,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Jump to Orbit poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "cb6ca790e54381b6ce22c8ab359f1a098605d9e68e71fc524b3debc4202189c5",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.0,
+          "placement": [
+            12,
+            674,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Signal Lost poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "cbdb9b7711f1e1260e53334da79350d3f0d7af1bdeefa0b3462351a6663e08a8",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 2.0,
+          "placement": [
+            524,
+            674,
+            500,
+            281
+          ]
+        }
+      ],
+      "output_pixels": [
+        1036,
+        1005
+      ],
+      "sha256": "faf304491bc41d4e9b934003678a6bbc5f9e59e4b83b2c2247f79536c08be29f"
+    },
+    {
+      "file": "sumi-catalog.webp",
+      "platform": "macOS",
+      "description": "Full frames from the native exporter at the indicated scene times. Frames are scaled and labeled with their template names.",
+      "sources": [
+        {
+          "attachment": "Template Circle of Breath poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "6a107f2d5e0080240ad420ab2ae6d59e2aebcc8847b6e1279ba0ebcfb8e6b8dc",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 5.2,
+          "placement": [
+            12,
+            12,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Bamboo in Rain poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "5a97e0df658dc948ee4166cde4fa2ec443c3b56642240b45d5d5ca70e01d6970",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 6.2,
+          "placement": [
+            524,
+            12,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Tide Ledger poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "08627c2be81cdf2c758ad0d2e2dd6750fe4ab6acf37c951480490828c007bf71",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 5.4,
+          "placement": [
+            12,
+            343,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Plum Blossom poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "89e8e1d87c0b20f8db5a8c15f69f8039122d793810f20548cb1b70f0812bc049",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 5.8,
+          "placement": [
+            524,
+            343,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Blue Mountain poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "a6d583d50dc87b68ecd10179f04e30d4a0f80b841848e1ede9ac9c4b7902addf",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 6.1,
+          "placement": [
+            12,
+            674,
+            500,
+            281
+          ]
+        },
+        {
+          "attachment": "Template Reeds at Dusk poster",
+          "capture": "expanded-mac-paint.xcresult · VideoTemplateTests/testAllPostersRenderThroughTheExporterAndKeepTheirProportions()",
+          "source_sha256": "ddce9c41459b4b4eff4d3e1ffb4d5cc2cb9ba7d2227257eca2fa4d180d334678",
+          "original_oriented_pixels": [
+            1920,
+            1080
+          ],
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "frame_time_seconds": 5.4,
+          "placement": [
+            524,
+            674,
+            500,
+            281
+          ]
+        }
+      ],
+      "output_pixels": [
+        1036,
+        1005
+      ],
+      "sha256": "e953f582bb92649635c2bc042fa1b496ecc9d5e7831c8d67e759a9dbd0bdaf86"
+    },
+    {
+      "file": "library-create.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Template Gallery 00 - Library Create",
+          "capture": "expanded-mac-ui.xcresult · TemplateGalleryUITests/testCreateScrubAndImportEditableTemplate()",
+          "source_sha256": "348089d52c2b8b7f5bb54f39e80290403bf5237108f9f35050bae89d30049ea0",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            288,
+            550,
+            694,
+            707
+          ]
+        }
+      ],
+      "output_pixels": [
+        406,
+        157
+      ],
+      "sha256": "45ae3d17baab9e4a32593df5add41ac3c97ef3763bd74c249bd17f866c4cba78"
+    },
+    {
+      "file": "template-gallery.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Template Gallery 01 - Choose a presentation",
+          "capture": "expanded-mac-ui.xcresult · TemplateGalleryUITests/testCreateScrubAndImportEditableTemplate()",
+          "source_sha256": "e346c6cbca298281d54e415b7de52df540564e932f81fc28bda0fc84e21b7607",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            141,
+            52,
+            839,
+            660
+          ]
+        }
+      ],
+      "output_pixels": [
+        698,
+        608
+      ],
+      "sha256": "41d8a771637ffb06db61acc5908afa130a7866431b8646384b9ac36d08d7b33d"
+    },
+    {
+      "file": "cinematic-title-selected.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Template Gallery 02 - Select Cinematic Title",
+          "capture": "expanded-mac-ui.xcresult · TemplateGalleryUITests/testCreateScrubAndImportEditableTemplate()",
+          "source_sha256": "1a2c0d67390e65d85228116e49c3c8c6250f0577b1bc32eb83c9350c7905ba4e",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            141,
+            52,
+            839,
+            660
+          ]
+        }
+      ],
+      "output_pixels": [
+        698,
+        608
+      ],
+      "sha256": "c1066e3ea18c303ad0f3ec9aebae07279942a6c579e33bd97df782d44d94672c"
+    },
+    {
+      "file": "cinematic-title-editor.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Template Gallery 03 - Scrub the title scene",
+          "capture": "expanded-mac-ui.xcresult · TemplateGalleryUITests/testCreateScrubAndImportEditableTemplate()",
+          "source_sha256": "8db25ada4bf5c0ab2d716cd3510c9472411f24b34e5d263a57c7aad4b1c865a8",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            0,
+            34,
+            980,
+            712
+          ]
+        }
+      ],
+      "output_pixels": [
+        980,
+        678
+      ],
+      "sha256": "c2cc656587fc54e3b173c28c30ba056dbbb7468fa32017c724357c3630744400"
+    },
+    {
+      "file": "lower-third-selected.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Template Gallery 04 - Choose a lower third to import",
+          "capture": "expanded-mac-ui.xcresult · TemplateGalleryUITests/testCreateScrubAndImportEditableTemplate()",
+          "source_sha256": "9618d87ef6ffbfaa52b68dcc505cce938f54df9b3dbf2acc6baa4c46293def1e",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            141,
+            52,
+            839,
+            660
+          ]
+        }
+      ],
+      "output_pixels": [
+        698,
+        608
+      ],
+      "sha256": "93f671cf13760a28e92db831d024a7485bf7a3446800b680ea0e3bd221dbeaa2"
+    },
+    {
+      "file": "imported-scene.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Template Gallery 05 - Imported editable scenes",
+          "capture": "expanded-mac-ui.xcresult · TemplateGalleryUITests/testCreateScrubAndImportEditableTemplate()",
+          "source_sha256": "468e5d99eabb7a926a1b41a1624ad597ee3dd191e67a071183296596ea380d0d",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            66,
+            106,
+            974,
+            605
+          ]
+        }
+      ],
+      "output_pixels": [
+        908,
+        499
+      ],
+      "sha256": "661fd20addfc1d8faedd9e29a8cdb72e6770cdc203d8358baf5e4b215cafeb9e"
+    },
+    {
+      "file": "edited-title-reopened.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Template Gallery 06 - Reopened edited title",
+          "capture": "expanded-mac-ui.xcresult · TemplateGalleryUITests/testEditedTemplateTitleSurvivesStartingAnotherPresentation()",
+          "source_sha256": "25526024d38a2b7a054c0755ca1b0b443192cd545544fefa6b701d6bb9645420",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            684,
+            112,
+            973,
+            368
+          ]
+        }
+      ],
+      "output_pixels": [
+        289,
+        256
+      ],
+      "sha256": "dfc96cbc15ca500d730d461994fe995cb3e2abb7f74d836bf0c04353dfe96481"
+    },
+    {
+      "file": "sumi-category.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Template Gallery 07 - Choose a Sumi ink title",
+          "capture": "expanded-mac-ui.xcresult · TemplateGalleryUITests/testSearchAndCreateScoredInkAndCrawlTemplates()",
+          "source_sha256": "4e5fb7effd3de7606ba6618cb212c9e6fba1e35edcb77850345e01db8f1e84bd",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            141,
+            52,
+            839,
+            660
+          ]
+        }
+      ],
+      "output_pixels": [
+        698,
+        608
+      ],
+      "sha256": "21c8bb7ed192500da16edab683267e34e2e5507cb83cc2724327722e2e8aaf5d"
+    },
+    {
+      "file": "science-fiction-category.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Template Gallery 08 - Choose a science fiction crawl",
+          "capture": "expanded-mac-ui.xcresult · TemplateGalleryUITests/testSearchAndCreateScoredInkAndCrawlTemplates()",
+          "source_sha256": "ecaadb3b40a75cde3e7fa10e22b2f59e21bd22c30509d0733da636968e89a85f",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            141,
+            52,
+            839,
+            660
+          ]
+        }
+      ],
+      "output_pixels": [
+        698,
+        608
+      ],
+      "sha256": "88c9a6a05dee1aba4032849c7dd82398126eb0f0cf58f98b815ff73bb01998d3"
+    },
+    {
+      "file": "sumi-objects.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Template Gallery 09 - Editable Sumi strokes and score",
+          "capture": "expanded-mac-ui.xcresult · TemplateGalleryUITests/testSearchAndCreateScoredInkAndCrawlTemplates()",
+          "source_sha256": "4fc7039bc618511142ebdcdd34f1d34f98ad0a17ba9b2239db3447d56c78d5eb",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            0,
+            75,
+            980,
+            712
+          ]
+        }
+      ],
+      "output_pixels": [
+        980,
+        637
+      ],
+      "sha256": "ff4a9931be9615ef397d01b954f690ca0a40df61b658b818c73c2a2dc148aeb7"
+    },
+    {
+      "file": "motion-entrance.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Motion presets 01 - Choose an entrance and duration",
+          "capture": "expanded-mac-ui.xcresult · VolumetricCompatibilityUITests/testApplyMotionPresetAndReplay()",
+          "source_sha256": "cca6ece6c880c4b6f657cd841369276005819b84ec39f4f7a27a8f853efb93b0",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            0,
+            135,
+            494,
+            450
+          ]
+        }
+      ],
+      "output_pixels": [
+        494,
+        315
+      ],
+      "sha256": "fd987e649c66d388cadfbf5416170d59a11ad1e8f007a83920a36f638054da64"
+    },
+    {
+      "file": "motion-applied.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Motion presets 02 - Rise and Settle added",
+          "capture": "expanded-mac-ui.xcresult · VolumetricCompatibilityUITests/testApplyMotionPresetAndReplay()",
+          "source_sha256": "90622bd64bdca2663ad82556f88f512319bac14012d0dd959a75120e709e4499",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            65,
+            136,
+            486,
+            447
+          ]
+        }
+      ],
+      "output_pixels": [
+        421,
+        311
+      ],
+      "sha256": "39fe8f63700101f76e9c7e37b88fdea35f3f4a6c96a23f5d7e49d8a8b1a40338"
+    },
+    {
+      "file": "motion-unavailable.webp",
+      "platform": "macOS",
+      "sources": [
+        {
+          "attachment": "Motion presets 03 - Leave time for the animation",
+          "capture": "expanded-mac-ui.xcresult · VolumetricCompatibilityUITests/testApplyMotionPresetAndReplay()",
+          "source_sha256": "47f697887102f46943377d9f5d633c51697ce175ea61fa90736ee6fa7645c462",
+          "original_oriented_pixels": [
+            980,
+            712
+          ],
+          "crop": [
+            65,
+            136,
+            486,
+            447
+          ]
+        }
+      ],
+      "output_pixels": [
+        421,
+        311
+      ],
+      "sha256": "6c0954a08990c5dedeac2916a7b7c0a1aec09e543270a4fc2e844689886dbeed"
+    }
+  ]
+}
