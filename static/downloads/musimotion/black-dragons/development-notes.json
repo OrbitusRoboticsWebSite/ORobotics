@@ -1,0 +1,184 @@
+{
+  "date": "2026-11-20",
+  "distribution": "Development preview",
+  "guide": "https://www.orbitusrobotics.com/products/musimotion/video-templates/#paint-a-black-dragon",
+  "collection": {
+    "name": "Black Dragons",
+    "dedication": "HeiLongWuShu",
+    "authored_templates_in_catalog": 50,
+    "existing_spatial_starters": 4,
+    "title_layers": [
+      "Title",
+      "Second line",
+      "Credit line",
+      "Dedication"
+    ],
+    "music": "Four bars of locally synthesized shamisen music for each painting. The score is stored as an audio asset in the editable presentation package.",
+    "templates": [
+      {
+        "template": "The Ink Gate",
+        "tempo_bpm": 64
+      },
+      {
+        "template": "Waterfall Descent",
+        "tempo_bpm": 112
+      },
+      {
+        "template": "Cloud Thread",
+        "tempo_bpm": 76
+      },
+      {
+        "template": "The Elusive Pearl",
+        "tempo_bpm": 124
+      },
+      {
+        "template": "Bamboo Passage",
+        "tempo_bpm": 88
+      },
+      {
+        "template": "Turning Tide",
+        "tempo_bpm": 100
+      },
+      {
+        "template": "Above the Ridge",
+        "tempo_bpm": 72
+      },
+      {
+        "template": "Lotus Stillness",
+        "tempo_bpm": 60
+      },
+      {
+        "template": "Moonlit Coil",
+        "tempo_bpm": 84
+      },
+      {
+        "template": "Dawn Homecoming",
+        "tempo_bpm": 136
+      }
+    ]
+  },
+  "captures": "https://www.orbitusrobotics.com/images/musimotion/visionos/black-dragons/provenance.json",
+  "sample": "https://www.orbitusrobotics.com/downloads/musimotion/black-dragons/provenance.json",
+  "music_studio": "The Shamisen style generates a fresh track with adjustable tempo and bar count in Music Studio.",
+  "sample_checks": {
+    "frames_in_downloaded_movie": 180,
+    "native_editable_strokes_in_project": 57,
+    "score_timing": {
+      "method": "Compared decoded mono PCM at 4 kHz from the project and movie using cross-correlation.",
+      "seconds_compared": 15.0,
+      "correlation": 0.99999,
+      "delay_ms": 0.0
+    },
+    "tempo_comparison": {
+      "duration_seconds": 11.92941,
+      "pieces": [
+        {
+          "template": "Lotus Stillness",
+          "tempo_bpm": 60
+        },
+        {
+          "template": "Dawn Homecoming",
+          "tempo_bpm": 136
+        }
+      ]
+    }
+  },
+  "score_verification": {
+    "method": "Measured the pulse from recurring open-string attacks in the ten rendered stereo WAVs. Compared each melody relative to its first open string on a shared beat grid.",
+    "measured_tempo_range_bpm": [
+      60,
+      136
+    ],
+    "maximum_absolute_tempo_error_bpm": 0.0002,
+    "distinct_tempo_normalized_pitch_profiles": 10,
+    "clipped_samples": 0,
+    "measured_tempos": [
+      {
+        "template": "The Ink Gate",
+        "bpm": 64.0
+      },
+      {
+        "template": "Waterfall Descent",
+        "bpm": 112.0
+      },
+      {
+        "template": "Cloud Thread",
+        "bpm": 76.0
+      },
+      {
+        "template": "The Elusive Pearl",
+        "bpm": 124.0002
+      },
+      {
+        "template": "Bamboo Passage",
+        "bpm": 88.0001
+      },
+      {
+        "template": "Turning Tide",
+        "bpm": 100.0
+      },
+      {
+        "template": "Above the Ridge",
+        "bpm": 72.0
+      },
+      {
+        "template": "Lotus Stillness",
+        "bpm": 60.0
+      },
+      {
+        "template": "Moonlit Coil",
+        "bpm": 84.0
+      },
+      {
+        "template": "Dawn Homecoming",
+        "bpm": 136.0
+      }
+    ]
+  },
+  "acceptance": {
+    "scope": "Selected catalog, package, composition, rendering, audio and editor/UI executions on Mac and iPad and Vision Pro simulators.",
+    "passed": 21,
+    "failed": 0,
+    "skipped": 0,
+    "runs": [
+      {
+        "result_bundle": "mac-art.xcresult",
+        "platform": "macOS",
+        "passed": 2,
+        "summary_sha256": "a86bb82cdf1a75c08e639114724b25c8998367a11f516e53902556f6885b9e84"
+      },
+      {
+        "result_bundle": "mac-regress.xcresult",
+        "platform": "macOS",
+        "passed": 9,
+        "summary_sha256": "42b23f2912d6ac0716646a7d54327cc55215e5819b529a074d3fa58c91c0483b"
+      },
+      {
+        "result_bundle": "mac-final-qa.xcresult",
+        "platform": "macOS",
+        "passed": 2,
+        "summary_sha256": "c971b97cb610be15428d72960ab8cdeb57ad31c5f46440951b1aeb26dcf74266"
+      },
+      {
+        "result_bundle": "ipad.xcresult",
+        "platform": "iPadOS simulator",
+        "passed": 3,
+        "summary_sha256": "07e230dfd391b2953e711814526eb65de3de55d5a3e0aed42b19848320ccdc92"
+      },
+      {
+        "result_bundle": "ipad-ui-final.xcresult",
+        "platform": "iPadOS simulator",
+        "passed": 2,
+        "summary_sha256": "680b75ce138732aa4c9341e45783e237e77323d73d35ea6897e1a776f51f3cd2"
+      },
+      {
+        "result_bundle": "vision.xcresult",
+        "platform": "visionOS simulator",
+        "passed": 3,
+        "summary_sha256": "c73b4a06c6b34826c4b04edd275a772995c5bca5fad8bcaf8c31795592a94c5b"
+      }
+    ],
+    "hardware_scope": "Physical iPad and Vision Pro acceptance was not part of these runs.",
+    "earlier_attempts": "Earlier UI attempts were interrupted by exhausted disk space and an unrelated macOS system notification. The passing Mac automation positions its isolated QA window clear of that notification."
+  }
+}

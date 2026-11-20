@@ -1,7 +1,7 @@
 ---
 title: "Create a presentation from a template"
 url: "/products/musimotion/video-templates/"
-description: "Build an editable title sequence, import a location stamp and apply timed motion to a layer in the Musimotion development preview."
+description: "Explore 50 editable Musimotion templates, including ten black dragon Sumi paintings with original shamisen music honoring the HeiLongWuShu school."
 draft: false
 ---
 
@@ -9,7 +9,7 @@ draft: false
 
 November 20, 2026 · Development preview for Mac, iPad and Vision Pro
 
-Start with one of forty authored templates or four familiar spatial scenes. Make a title sequence, add a location stamp, paint a Sumi title to music or roll credits toward a vanishing point. The template supplies editable text, shapes and keyframes. Use the updated development preview on each device for the painted strokes and perspective lettering. The screenshots show the running app with synthetic demonstration content. The poster sheets use frames rendered from the editable projects. Select a picture to see the controls at full size.
+Choose from fifty authored templates and four familiar spatial scenes. Make a title sequence, add a location stamp, paint a Sumi title to music or roll credits toward a vanishing point. The ten [black dragon paintings](#paint-a-black-dragon) honor the HeiLongWuShu school. Each has its own shamisen score and tempo. The template supplies editable text, shapes and keyframes. Use the updated development preview on each device for the painted strokes and perspective lettering. The screenshots show the running app with synthetic demonstration content. The poster sheets use frames rendered from the editable projects. Select a picture to see the controls at full size.
 
 ## Start with a title
 
@@ -23,7 +23,7 @@ Start with one of forty authored templates or four familiar spatial scenes. Make
 
 {{< musimotion-capture "video-templates/template-gallery.webp" "New Presentation chooser showing categories, template posters and Blank Presentation" >}}
 
-*The category row filters the gallery. Blank Presentation starts an empty scene.*
+*The category row filters the gallery. This earlier capture shows the chooser before the black dragon collection was added. Blank Presentation starts an empty scene.*
 
 {{< musimotion-capture "video-templates/cinematic-title-selected.webp" "Titles category with the Cinematic Title poster selected above Create Presentation" >}}
 
@@ -67,6 +67,7 @@ You can also watch the eight-second title or open the same seven-layer project. 
 | Showcases | Product Spotlight, Data Story, Festival Lineup, Track List, Route Map, Weather Brief, Color Study, Recipe Card, Property Feature | Change the values and bar widths in a chart, an album sleeve and track list, or the details in a recipe or property card. |
 | Science Fiction | Starfield Crawl, Orbital Credits, First Contact, Mission Debrief, Jump to Orbit, Signal Lost | Replace the prologue or credits, change a readout and keep the text moving to the score. |
 | Sumi Ink | Circle of Breath, Bamboo in Rain, Tide Ledger, Plum Blossom, Blue Mountain, Reeds at Dusk | Edit the title, replay painted strokes on paper and time the scene to its original score. |
+| Black Dragons | Ten HeiLongWuShu tribute paintings, from The Ink Gate to Dawn Homecoming | Replay brush gestures, edit the dedication or choose a painting by its shamisen tempo. |
 | Spatial | Depth Gallery, Welcome Banner, Birthday Surprise, Rhythm Stage, Droid Arena | Scrub XYZ motion in Depth Gallery or open one of the four familiar spatial scenes. |
 
 {{< musimotion-capture "video-templates/template-catalog.webp" "Ten rendered posters show Afterlight, Kinetic Type, speaker and location cards, a chapter and credits, Color Wipe, a vinyl record, a chart and three 3D forms" >}}
@@ -162,5 +163,58 @@ Play the native export, or unzip the editable project and open `Circle of Breath
 *Eight seconds into the native movie, the prologue advances from the bottom edge toward the opening title at the horizon. [View the full-size frame]({{< asset-url "images/musimotion/visionos/video-templates/starfield-crawl-frame.webp" >}}).*
 
 Play the web preview of the native export, or unzip the editable project and open `Starfield Crawl.musimotion`. Its audio lane uses AAC to keep the download compact. [Watch the twenty-two-second web preview (878 KB)]({{< asset-url "downloads/musimotion/video-templates/starfield-crawl.mp4" >}}) · [Download the editable project (304 KB)]({{< asset-url "downloads/musimotion/video-templates/starfield-crawl.zip" >}}) · [Sample file details and checksums]({{< asset-url "downloads/musimotion/video-templates/starfield-crawl-provenance.json" >}})
+
+## Paint a black dragon
+
+Ten Sumi ink paintings honor the HeiLongWuShu school. Each unfolds to four bars of original shamisen music. For a quiet opening, **Lotus Stillness** takes 16 seconds at 60 beats per minute (BPM). For a brisk finish, **Dawn Homecoming** covers the same four bars in just over seven seconds at 136 BPM.
+
+16. Choose **Create → Black Dragons → The Ink Gate → Create Presentation**. If you already have a project open, choose **Templates → Black Dragons → The Ink Gate → Import into Presentation** to add the painting as a scene. To find the collection from **All**, enter “HeiLongWuShu” or “shamizan” in **Search templates**.
+
+{{< musimotion-capture "black-dragons/dragon-chooser.webp" "Black Dragons selected in the template chooser with The Ink Gate ready to create" >}}
+
+*The Black Dragons chooser on the iPad simulator. Choose a poster to preview the painting before creating or importing its scene.*
+
+17. Choose **Go to Start**, then **Play**. Hear the shamisen pulse at 64 BPM while the painting appears. Drag the timeline forward to see the finished dragon. To compare tempos, open **Templates** and try another painting from the table.
+
+{{< musimotion-capture "black-dragons/dragon-paintings.webp" "Five rows of two paintings, each with a black ink dragon on the left and its title and HeiLongWuShu dedication on the right" >}}
+
+*Read each row from left to right in the order listed below. The Ink Gate coils over a timber gate, Waterfall Descent follows the falling wash, and Moonlit Coil curves around a pale crescent. Select the sheet for a close look at the horns, whiskers and claws.*
+
+| Painting | Ink motif | Shamisen tempo |
+| --- | --- | ---: |
+| The Ink Gate | A timber gate | 64 BPM |
+| Waterfall Descent | Long waterfall washes | 112 BPM |
+| Cloud Thread | Three curls of cloud | 76 BPM |
+| The Elusive Pearl | An outlined pearl | 124 BPM |
+| Bamboo Passage | Segmented bamboo and brush leaves | 88 BPM |
+| Turning Tide | Three wave crests | 100 BPM |
+| Above the Ridge | Two mountain ridges | 72 BPM |
+| Lotus Stillness | A lotus above still water | 60 BPM |
+| Moonlit Coil | A pale crescent moon | 84 BPM |
+| Dawn Homecoming | A distant pavilion | 136 BPM |
+
+Hear the first two bars of **Lotus Stillness** at 60 BPM. After a short pause, **Dawn Homecoming** plays two bars at 136 BPM. The second excerpt starts about eight and a half seconds in.
+
+<audio controls preload="none" style="width:100%;max-width:32rem" aria-label="Two-bar shamisen excerpts from Lotus Stillness at 60 BPM and Dawn Homecoming at 136 BPM" src='{{< asset-url "downloads/musimotion/black-dragons/shamisen-tempos.m4a" >}}'></audio>
+
+[Listen to the tempo comparison]({{< asset-url "downloads/musimotion/black-dragons/shamisen-tempos.m4a" >}}).
+
+18. Open **Objects**. Select **Dedication** to edit the school name or **Credit line** to edit “In honor of”. **Title** and **Second line** control the two lines of title lettering. Select a **Live Paint** stroke to adjust **Water** or **Ink Load**. Select **The Ink Gate · Shamisen** to find the score. Choose **Go to Start** and **Play** to review your edits, then choose **Save**.
+
+{{< musimotion-capture "black-dragons/dragon-objects.webp" "The Ink Gate open in the Musimotion editor with its black dragon and the Objects list visible" >}}
+
+*The iPad simulator shows the running project with Objects open. Scrub into the scene if the first frame is still blank.*
+
+To compose a different accompaniment, choose **Go to Start → Music Studio**. Select **Shamisen**, set **Tempo** and **4 bars**, then choose **Generate Music**. Preview the take before choosing **Add to Scene**. In the timeline, use **Mute Audio Track** on the original score to hear the new track by itself.
+
+{{< musimotion-capture "black-dragons/music-studio.webp" "Music Studio showing a generated Shamisen take at 92 BPM, with Preview, New Variation and Add to Scene" >}}
+
+*The iPad simulator shows a generated take ready to Preview at 92 BPM. Choose New Variation to hear a different phrase at the same tempo.*
+
+<video controls playsinline preload="none" width="640" height="360" aria-label="The Ink Gate, a black dragon tribute painting with its 64 BPM shamisen soundtrack" poster='{{< asset-url "downloads/musimotion/black-dragons/dragon-study-frame.webp" >}}'><source src='{{< asset-url "downloads/musimotion/black-dragons/dragon-study.mp4" >}}' type="video/mp4"></video>
+
+*The completed dragon at 14 seconds. [View the full-size movie frame]({{< asset-url "downloads/musimotion/black-dragons/dragon-study-frame.webp" >}}).*
+
+Watch the painting complete in 15 seconds. To edit the same dragon, unzip the project and open `The Ink Gate.musimotion` in the development preview. [Watch the scored movie (230 KB)]({{< asset-url "downloads/musimotion/black-dragons/dragon-study.mp4" >}}) · [Download the editable project (210 KB)]({{< asset-url "downloads/musimotion/black-dragons/dragon-study.zip" >}}) · [Sample details and checksums]({{< asset-url "downloads/musimotion/black-dragons/provenance.json" >}}) · [Capture details]({{< asset-url "images/musimotion/visionos/black-dragons/provenance.json" >}}) · [Black dragon release notes]({{< asset-url "downloads/musimotion/black-dragons/development-notes.json" >}})
 
 [Development release notes]({{< asset-url "downloads/musimotion/video-templates/development-notes.json" >}}) · [Capture details]({{< asset-url "images/musimotion/visionos/video-templates/provenance.json" >}}) · [2D and volumetric guide]({{< relref "musimotion-vision-guide.md" >}})

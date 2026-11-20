@@ -1,0 +1,104 @@
+{
+  "date": "2026-11-20",
+  "distribution": "Development preview",
+  "platform": "macOS",
+  "source": "mac-art.xcresult · SumiTitleTemplateTests/testScoredBlackDragonMovieAndEditablePackage()",
+  "title": "The Ink Gate",
+  "project": "The Ink Gate.musimotion",
+  "project_packaging": "Native project score and presentation manifest preserved byte-for-byte.",
+  "source_exchange_sha256": "641e460af3d43b51058a6fd7519e78d0b42af436dedc9b7787eaa682cf6e47bd",
+  "source_manifest_sha256": "fe9a18a35d64c01ca60b82563553db8cb85e0b715d36a28cd12bfa6e5b5e6075",
+  "published_manifest_sha256": "fe9a18a35d64c01ca60b82563553db8cb85e0b715d36a28cd12bfa6e5b5e6075",
+  "movie_poster": {
+    "file": "dragon-study-frame.webp",
+    "source": "Native H.264 movie at 14.0 seconds",
+    "time_seconds": 14.0,
+    "sha256": "3f55bc44460a11e67e0ebef322986372a3277654a83465787936006b30dbf360"
+  },
+  "native_layer_count": 5,
+  "native_editable_strokes": 57,
+  "embedded_score": {
+    "title": "The Ink Gate · Shamisen",
+    "tempo_bpm": 64,
+    "bars": 4,
+    "instruments": [
+      "Shamisen"
+    ],
+    "codec": "aac",
+    "channels": 2,
+    "native_sha256": "5eea0b8a07a5f253fd9c0dd86aaa7a9ead38bfaea90bbb44a8215b85cc181a84",
+    "published_sha256": "5eea0b8a07a5f253fd9c0dd86aaa7a9ead38bfaea90bbb44a8215b85cc181a84"
+  },
+  "native_export": {
+    "sha256": "0235df0503288e6b35daf1229f6776e01bfc0321e40a29fe5688b5524fbc9f35",
+    "bytes": 492650
+  },
+  "web_encoding": {
+    "description": "Web encode of the native H.264 export. Preserves the AAC stream and every frame timestamp.",
+    "encoder": "libx264 slow, animation, CRF 20",
+    "decoded_video_ssim": 0.998453
+  },
+  "movie": {
+    "duration_seconds": 15.0,
+    "width": 640,
+    "height": 360,
+    "frames": 180,
+    "frame_rate": "12/1",
+    "audio": "AAC stereo",
+    "aac_stream_sha256": "3f87538e10069e7ff0154407d054fd2372ecc4c8bf68568d8c737e2200956cce"
+  },
+  "score_check": {
+    "method": "Compared decoded mono PCM at 4 kHz from the project and movie using cross-correlation.",
+    "seconds_compared": 15.0,
+    "correlation": 0.99999,
+    "delay_ms": 0.0
+  },
+  "files": [
+    {
+      "file": "dragon-study.zip",
+      "bytes": 210434,
+      "sha256": "ca4548441d68abdddde5178cf37b4fdef49b0fb64b82e36744daa4ac831e4be0"
+    },
+    {
+      "file": "dragon-study.mp4",
+      "bytes": 230345,
+      "sha256": "57b632b6649713b10c8169a99ebd9ac85bff80fd7766736f2430c7ef2fd2667a"
+    },
+    {
+      "file": "dragon-study-frame.webp",
+      "bytes": 11274,
+      "sha256": "3f55bc44460a11e67e0ebef322986372a3277654a83465787936006b30dbf360"
+    },
+    {
+      "file": "shamisen-tempos.m4a",
+      "bytes": 135282,
+      "sha256": "4c42b8208d7abde9679e752c2e7964e1c7c03803871be642a768d2c66444d8fe"
+    }
+  ],
+  "listening_excerpt": {
+    "file": "shamisen-tempos.m4a",
+    "source": "Original locally rendered shamisen scores attached to SumiTitleTemplateTests/testTenBlackDragonPaintingsHaveIndependentInkAndDistinctTimedShamisenScores().",
+    "format": "AAC stereo",
+    "description": "First two bars of each piece in order, with 0.4 seconds of silence and an 8 ms end fade on each excerpt. Both retain their original timing.",
+    "pieces": [
+      {
+        "template": "Lotus Stillness",
+        "tempo_bpm": 60,
+        "start_in_source_seconds": 0,
+        "excerpt_seconds": 8.0,
+        "source_wav_sha256": "5410be6eb1c25a16557b3030fcf2d9afbd662b5a13b5f0903157f59514aa0fb2"
+      },
+      {
+        "template": "Dawn Homecoming",
+        "tempo_bpm": 136,
+        "start_in_source_seconds": 0,
+        "excerpt_seconds": 3.52941,
+        "source_wav_sha256": "afe62b64effac009273a9209955eb7460e8f9e77231773efa3b992274da78780"
+      }
+    ],
+    "seconds": 11.92941,
+    "bytes": 135282,
+    "sha256": "4c42b8208d7abde9679e752c2e7964e1c7c03803871be642a768d2c66444d8fe",
+    "decoded_correlation_with_excised_pcm": 0.99887
+  }
+}

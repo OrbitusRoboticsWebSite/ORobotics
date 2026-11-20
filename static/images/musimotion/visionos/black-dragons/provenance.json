@@ -1,0 +1,215 @@
+{
+  "date": "2026-11-20",
+  "platform": "macOS native poster renders and iPadOS simulator workflow captures",
+  "content": "Native captures from an isolated iPad simulator library and native Mac exporter poster renders. All artwork and demonstration projects are original.",
+  "images": [
+    {
+      "file": "dragon-paintings.webp",
+      "description": "Ten native poster renders from editable projects. Captions identify the original titles and their authored shamisen tempos.",
+      "sources": [
+        {
+          "result": "mac-art.xcresult",
+          "test": "SumiTitleTemplateTests/testTenBlackDragonPaintingsHaveIndependentInkAndDistinctTimedShamisenScores()",
+          "attachment": "Black dragon poster The Ink Gate",
+          "source_sha256": "53221d945a484ba538e062eeaa2d1212b8e5196ed2a910c1fa578b23dd273fff",
+          "source_pixels": [
+            960,
+            540
+          ]
+        },
+        {
+          "result": "mac-art.xcresult",
+          "test": "SumiTitleTemplateTests/testTenBlackDragonPaintingsHaveIndependentInkAndDistinctTimedShamisenScores()",
+          "attachment": "Black dragon poster Waterfall Descent",
+          "source_sha256": "ce483f239b29fd83d0f10dab484fff7289cf0f230a6e719b81618cfc3afb2044",
+          "source_pixels": [
+            960,
+            540
+          ]
+        },
+        {
+          "result": "mac-art.xcresult",
+          "test": "SumiTitleTemplateTests/testTenBlackDragonPaintingsHaveIndependentInkAndDistinctTimedShamisenScores()",
+          "attachment": "Black dragon poster Cloud Thread",
+          "source_sha256": "c80e0c263dd8c06d840a05637e765de5079503d9e3c0941124d0c7b6d3e58ab6",
+          "source_pixels": [
+            960,
+            540
+          ]
+        },
+        {
+          "result": "mac-art.xcresult",
+          "test": "SumiTitleTemplateTests/testTenBlackDragonPaintingsHaveIndependentInkAndDistinctTimedShamisenScores()",
+          "attachment": "Black dragon poster The Elusive Pearl",
+          "source_sha256": "2f92e69ef1d13a93afc8f61d39db3a2820b983ed3555efc4596c2b811facf23d",
+          "source_pixels": [
+            960,
+            540
+          ]
+        },
+        {
+          "result": "mac-art.xcresult",
+          "test": "SumiTitleTemplateTests/testTenBlackDragonPaintingsHaveIndependentInkAndDistinctTimedShamisenScores()",
+          "attachment": "Black dragon poster Bamboo Passage",
+          "source_sha256": "6ec4eaacbd502eb4747b66f6203e126e549a4a4d04524776fd9f6a990d508429",
+          "source_pixels": [
+            960,
+            540
+          ]
+        },
+        {
+          "result": "mac-art.xcresult",
+          "test": "SumiTitleTemplateTests/testTenBlackDragonPaintingsHaveIndependentInkAndDistinctTimedShamisenScores()",
+          "attachment": "Black dragon poster Turning Tide",
+          "source_sha256": "77ef13757ecace6920c812190f16715c6ca30dad6bd2b764d431c39c6a37472b",
+          "source_pixels": [
+            960,
+            540
+          ]
+        },
+        {
+          "result": "mac-art.xcresult",
+          "test": "SumiTitleTemplateTests/testTenBlackDragonPaintingsHaveIndependentInkAndDistinctTimedShamisenScores()",
+          "attachment": "Black dragon poster Above the Ridge",
+          "source_sha256": "857aeb7621c23a64fc5d865b100f61f325f2a5b6ca60aa451414794ab2394279",
+          "source_pixels": [
+            960,
+            540
+          ]
+        },
+        {
+          "result": "mac-art.xcresult",
+          "test": "SumiTitleTemplateTests/testTenBlackDragonPaintingsHaveIndependentInkAndDistinctTimedShamisenScores()",
+          "attachment": "Black dragon poster Lotus Stillness",
+          "source_sha256": "c29734a9e750fbdeea78c695f5df47e4afaa91b6858d93d8acfc1925b19751f0",
+          "source_pixels": [
+            960,
+            540
+          ]
+        },
+        {
+          "result": "mac-art.xcresult",
+          "test": "SumiTitleTemplateTests/testTenBlackDragonPaintingsHaveIndependentInkAndDistinctTimedShamisenScores()",
+          "attachment": "Black dragon poster Moonlit Coil",
+          "source_sha256": "6c4393cdf854a28777cf9b92c400b8b4ce204c9a4992646ef3c8345076b3fe20",
+          "source_pixels": [
+            960,
+            540
+          ]
+        },
+        {
+          "result": "mac-art.xcresult",
+          "test": "SumiTitleTemplateTests/testTenBlackDragonPaintingsHaveIndependentInkAndDistinctTimedShamisenScores()",
+          "attachment": "Black dragon poster Dawn Homecoming",
+          "source_sha256": "a4e4d29c7b61b1b908e1cc3c82a5719c0a94a00b131fbcc7347c92d1c52ad2fe",
+          "source_pixels": [
+            960,
+            540
+          ]
+        }
+      ],
+      "output_pixels": [
+        986,
+        1574
+      ],
+      "bytes": 93556,
+      "sha256": "91fcbd3f5d1ad02b3532c2aba59e5b5212026c44071df12455b77f479d161f5b"
+    },
+    {
+      "file": "dragon-chooser.webp",
+      "description": "The Black Dragons category with The Ink Gate selected in the iPad simulator.",
+      "sources": [
+        {
+          "result": "ipad-ui-final.xcresult",
+          "test": "TemplateGalleryUITests/testFindBlackDragonTributeAndOpenItsScoredPainting()",
+          "attachment": "Template Gallery Black dragons - Choose The Ink Gate",
+          "source_sha256": "c4aefc1231588fd68f2199c13d12330380df9387aa3679a1ccb29997edfe27b6",
+          "source_pixels": [
+            2064,
+            2752
+          ],
+          "oriented_pixels": [
+            2752,
+            2064
+          ],
+          "crop_in_oriented_pixels": [
+            775,
+            346,
+            1975,
+            1698
+          ]
+        }
+      ],
+      "output_pixels": [
+        980,
+        1104
+      ],
+      "bytes": 66748,
+      "sha256": "ab2430fe5f50a65789830e21f0373fa5d62f336a6b0984867df8f6d002d4495a"
+    },
+    {
+      "file": "dragon-objects.webp",
+      "description": "Independently editable ink, title layers and shamisen score in the iPad simulator editor.",
+      "sources": [
+        {
+          "result": "ipad-ui-final.xcresult",
+          "test": "TemplateGalleryUITests/testFindBlackDragonTributeAndOpenItsScoredPainting()",
+          "attachment": "Template Gallery Black dragons - Objects and score",
+          "source_sha256": "a20bfa6dbe6e88fca4618245901f0d98931b89bb285f0702f1afa49224e61845",
+          "source_pixels": [
+            2064,
+            2752
+          ],
+          "oriented_pixels": [
+            2752,
+            2064
+          ],
+          "crop_in_oriented_pixels": [
+            0,
+            74,
+            2752,
+            2024
+          ]
+        }
+      ],
+      "output_pixels": [
+        1376,
+        975
+      ],
+      "bytes": 67582,
+      "sha256": "8df8dd5300457b9486692e7b1458f44fd92cdda42d699c5d8d8139ddb503abaf"
+    },
+    {
+      "file": "music-studio.webp",
+      "description": "Music Studio after generating a four-bar shamisen take at 92 BPM in the iPad simulator.",
+      "sources": [
+        {
+          "result": "ipad-ui-final.xcresult",
+          "test": "VolumetricCompatibilityUITests/testGenerateShamisenVariationInMusicStudio()",
+          "attachment": "Black dragons - Music Studio shamisen",
+          "source_sha256": "30a0bb7b215945ad48ff9d34a21d04b60ba9597f3edec3f335f46b06a832dcdf",
+          "source_pixels": [
+            2064,
+            2752
+          ],
+          "oriented_pixels": [
+            2752,
+            2064
+          ],
+          "crop_in_oriented_pixels": [
+            778,
+            350,
+            1974,
+            1694
+          ]
+        }
+      ],
+      "output_pixels": [
+        980,
+        1101
+      ],
+      "bytes": 40500,
+      "sha256": "d6a02c2c0a136ae39d6fea2e4525796179cca301f8f38db564b8fc1f892753cb"
+    }
+  ]
+}

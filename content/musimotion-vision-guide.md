@@ -460,7 +460,7 @@ seconds. Cyan and coral shapes alternate with the beat for the rest of the song.
    artwork editor. In the Vision Pro spatial workspace, choose **Add Media →
    Music Studio**. You can score a still title card, an animation or a volumetric scene.
 
-2. Choose **Techno**, **House**, **Breakbeat**, **Ambient** or **Retro 8-bit**. For the first four styles, open **Ensemble**. **Auto** lets the composer pick a lineup for the take. Choose **Electronic**, **Studio Band** or **Chamber** to set the instrument family yourself. **Retro 8-bit** uses its own chip instruments. Set the tempo (60–180 BPM)
+2. Choose **Techno**, **House**, **Breakbeat**, **Ambient**, **Retro 8-bit** or **Shamisen**. For the first four styles, open **Ensemble**. **Auto** lets the composer pick a lineup for the take. Choose **Electronic**, **Studio Band** or **Chamber** to set the instrument family yourself. **Retro 8-bit** uses its own chip instruments. **Shamisen** pairs plucked notes with ringing open strings. To match a [black dragon painting]({{< relref "musimotion-video-templates.md" >}}#paint-a-black-dragon), choose **Shamisen**, set **Tempo** to the painting’s BPM and set the length to **4 bars**. Set the tempo (60–180 BPM)
    and the length (2, 4, 8 or 16 bars). For a short techno cue, try 132 BPM, four bars and
    the description “driving kick, bright hats and a pulsing bass.” Four bars
    of four beats at that tempo last about 7.27 seconds.
@@ -468,6 +468,10 @@ seconds. Cyan and coral shapes alternate with the beat for the rest of the song.
    {{< musimotion-capture "ipad-music-01.webp" "Music Studio on iPad with Techno selected, 132 BPM, four bars and the Local Pattern Model composer" >}}
 
    *Earlier iPad simulator capture of the style, tempo and length controls. Choose Local Pattern Model in the Composer menu to generate offline.*
+
+{{< musimotion-capture "black-dragons/music-studio.webp" "Music Studio showing a generated Shamisen take at 92 BPM, with Preview, New Variation and Add to Scene" >}}
+
+*The generated Shamisen take shows its composer and tempo beneath its title. Preview plays this take. New Variation generates another.*
 
 3. Choose **Generate Music**. With **Automatic**, Music Studio asks Apple's
    on-device Foundation Models framework to plan the arrangement when the
@@ -704,7 +708,7 @@ project, movie and music checksums and the composer credited for each take.
 
    *The [editor controls walkthrough]({{< relref "musimotion-editor-controls.md" >}}) shows both timeline states.*
 
-7. From the library, choose **Create** to browse [presentation templates and motion presets]({{< relref "musimotion-video-templates.md" >}}). Inside an existing presentation, choose **Templates**. Choose **Spatial** for **Depth Gallery**, **Welcome Banner**, **Birthday Surprise**, **Rhythm Stage** or **Droid Arena**.
+7. From the library, choose **Create** to browse [presentation templates and motion presets]({{< relref "musimotion-video-templates.md" >}}). Inside an existing presentation, choose **Templates**. Choose **Black Dragons** for [ten HeiLongWuShu ink paintings with shamisen music]({{< relref "musimotion-video-templates.md" >}}#paint-a-black-dragon). Choose **Spatial** for **Depth Gallery**, **Welcome Banner**, **Birthday Surprise**, **Rhythm Stage** or **Droid Arena**.
    **Import into Presentation** adds a scene to the project you are editing.
    Undo removes that import. **Open as New Presentation** saves your
    current work in the library and opens a separate editable project.
