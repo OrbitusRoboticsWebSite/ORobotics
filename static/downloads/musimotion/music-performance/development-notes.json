@@ -1,0 +1,89 @@
+{
+  "date": "2026-11-20",
+  "distribution": "Development preview",
+  "guide": "https://www.orbitusrobotics.com/products/musimotion/music-performance/",
+  "listening_notes": "https://github.com/OrbitusRoboticsWebSite/ORobotics/releases/download/musimotion-performance-2026-11-20/listening-notes.json",
+  "screenshots": "https://www.orbitusrobotics.com/images/musimotion/visionos/music-performance/provenance.json",
+  "mac_preview": "The installed development-signed Mac preview reopened a saved Ink Gate project with its original recording and settings intact. Music Studio displayed Shamisen, 64 BPM, four bars and the existing target. Replace Track becomes available after generating a take.",
+  "workflow": "Generated shamisen and techno takes use the revised native performances. Opening a saved project plays its embedded recording. Preview and Replace Track let the editor choose a new performance for the same layer.",
+  "comparison": "Two original 15-second pairs used the same Local Pattern Model prompts, seeds, styles, ensembles, tempos and bar counts in each native renderer. One constant gain per take matched the playback levels for AAC encoding.",
+  "sample_musical_details": {
+    "shamisen": "The four-bar example at 64 BPM has four distinct bar pitch sequences in the revised take and three in the earlier take. A sliding downstroke is followed by a lower soft pluck in the second bar. The ending returns to the open low D.",
+    "techno": "The revised eight-bar example at 128 BPM has eight distinct bass pitch sequences. The earlier example has five."
+  },
+  "audio": [
+    {
+      "file": "shamisen-before.m4a",
+      "bytes": 303978,
+      "sha256": "594599a59ca7cbad3111bcbafa4e6d64eefd2131fc910b1ed65d908a648cf8ac",
+      "aac_i_lufs": -18.01,
+      "aac_true_peak_dbtp": -4.85
+    },
+    {
+      "file": "shamisen-after.m4a",
+      "bytes": 267630,
+      "sha256": "ad7645a063652c53a8f07a54703c65a9c1606893ad1caef9d7c3b44ec1e8dc72",
+      "aac_i_lufs": -18.04,
+      "aac_true_peak_dbtp": -4.03
+    },
+    {
+      "file": "techno-before.m4a",
+      "bytes": 331061,
+      "sha256": "fefc301fcc4db3dfd07080253a90ba61750d2bf68b8c64dfda545c6a1d4dcad7",
+      "aac_i_lufs": -18.02,
+      "aac_true_peak_dbtp": -5.13
+    },
+    {
+      "file": "techno-after.m4a",
+      "bytes": 328509,
+      "sha256": "b9e2e7107fcfbcaa1b332a9fc586ce6f108a048d29977388028046f03b0d684a",
+      "aac_i_lufs": -18.03,
+      "aac_true_peak_dbtp": -9.13
+    }
+  ],
+  "verification": {
+    "runs": [
+      {
+        "suite": "mac-music-verified.xcresult",
+        "platform": "Mac",
+        "passed": 21,
+        "summary_sha256": "f0fd1cc6d405a9185bb4f31eb02801ff01266329de47c34cd531431bf6008190"
+      },
+      {
+        "suite": "ipad-music-document-undo.xcresult",
+        "platform": "iPadOS Simulator",
+        "passed": 21,
+        "summary_sha256": "13f5c203d4f0f5ddc7afd4878be6626b231b90a5323324347fdeea159f93e9bb"
+      },
+      {
+        "suite": "vision-music-document-undo.xcresult",
+        "platform": "visionOS Simulator",
+        "passed": 21,
+        "summary_sha256": "4ead84656668614e65abaed26ee6774d49d38b96e4b844c6679f5dc602899460"
+      },
+      {
+        "suite": "ipad-music-replacement-ui-final.xcresult",
+        "platform": "iPadOS Simulator",
+        "passed": 2,
+        "summary_sha256": "ede92681257f00688791ab94063294661b12164ca4bb79be449af495227b22ec"
+      },
+      {
+        "suite": "vision-music-techno-ui-final.xcresult",
+        "platform": "visionOS Simulator",
+        "passed": 1,
+        "summary_sha256": "677734608f03d1c51fb0fa563fc670064d1b2ad575597ce759fd8e23a04e56eb"
+      },
+      {
+        "suite": "mac-music-replacement-ui-final.xcresult",
+        "test": "TemplateGalleryUITests/testReplaceTemplateShamisenTakeAndUndo()",
+        "platform": "Mac",
+        "passed": 1,
+        "test_detail_sha256": "10342015a31190b9865c8a0fa7642cac9fa247c4e00d8f2174bb54c633af359c"
+      }
+    ],
+    "passing_executions": 67,
+    "failed": 0,
+    "skipped": 0,
+    "scope": "Selected native synthesis, save/reopen, editing and UI checks. Physical iPad and headset listening were outside this check."
+  }
+}

@@ -528,6 +528,8 @@ To keep an audio track that is already in your project playing after the opening
 
    *iPad simulator. The generated music is selected in the ordinary 2D timeline. Its bar shows where the take begins and ends.*
 
+To hear the revised Shamisen and Techno performances side by side with earlier takes, visit the [listening and soundtrack replacement guide]({{< relref "musimotion-music-performance.md" >}}). It also shows how to audition a new take under an existing opening.
+
 ### Compare the ensembles
 
 These three on-device recordings each last eight seconds at 120 BPM. The House and Retro examples use the same variation seed so you can hear how the style changes the sound.

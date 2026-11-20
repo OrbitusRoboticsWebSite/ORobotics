@@ -193,6 +193,8 @@ Ten Sumi ink paintings honor the HeiLongWuShu school. Each unfolds to four bars 
 | Moonlit Coil | A pale crescent moon | 84 BPM |
 | Dawn Homecoming | A distant pavilion | 136 BPM |
 
+The tempo comparison, 15-second movie and downloadable project below preserve the earlier embedded recordings. A newly created Black Dragons presentation uses the revised shamisen performance. [Hear both versions of The Ink Gate]({{< relref "musimotion-music-performance.md" >}}).
+
 Hear the first two bars of **Lotus Stillness** at 60 BPM. After a short pause, **Dawn Homecoming** plays two bars at 136 BPM. The second excerpt starts about eight and a half seconds in.
 
 <audio controls preload="none" style="width:100%;max-width:32rem" aria-label="Two-bar shamisen excerpts from Lotus Stillness at 60 BPM and Dawn Homecoming at 136 BPM" src='{{< asset-url "downloads/musimotion/black-dragons/shamisen-tempos.m4a" >}}'></audio>
@@ -204,6 +206,8 @@ Hear the first two bars of **Lotus Stillness** at 60 BPM. After a short pause, *
 {{< musimotion-capture "black-dragons/dragon-objects.webp" "The Ink Gate open in the Musimotion editor with its black dragon and the Objects list visible" >}}
 
 *The iPad simulator shows the running project with Objects open. Scrub into the scene if the first frame is still blank.*
+
+To audition a new recording for the existing opening, follow [Hear and replace a Musimotion score]({{< relref "musimotion-music-performance.md" >}}).
 
 To compose a different accompaniment, choose **Go to Start → Music Studio**. Select **Shamisen**, set **Tempo** and **4 bars**, then choose **Generate Music**. Preview the take before choosing **Add to Scene**. In the timeline, use **Mute Audio Track** on the original score to hear the new track by itself.
 

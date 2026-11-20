@@ -1,0 +1,108 @@
+{
+  "date": "2026-11-20",
+  "fixture": "The Ink Gate template in an isolated demonstration library with synthetic data. The generated audition is Signal Pulse.",
+  "platform": "Native iPadOS 26.5 Simulator on iPad Pro 13-inch (M5).",
+  "method": "Native XCTest screenshots, oriented upright, cropped to the relevant controls and compressed to WebP.",
+  "figures": [
+    {
+      "file": "replace-start.webp",
+      "sha256": "ac637cd48e019f28e1574acae88dc684368524ab8c6e0190c30fcd368f821116",
+      "bytes": 20814,
+      "pixels": [
+        660,
+        750
+      ],
+      "source_bundle": "ipad-music-replacement-ui.xcresult",
+      "source_sha256": "a1af08c1234d77285d9b7dd539613daa75367fd0cfbc5ff68848a76159cdf723",
+      "source_pixels": [
+        2064,
+        2752
+      ],
+      "source_exif_orientation": 8,
+      "device": "iPad Pro 13-inch (M5)",
+      "test": "TemplateGalleryUITests/testReplaceTemplateShamisenTakeAndUndo()",
+      "attachment": "Template Gallery Performance - 01 Current shamisen track and tempo",
+      "crop_after_reorientation": [
+        790,
+        360,
+        1960,
+        1690
+      ]
+    },
+    {
+      "file": "replace-preview.webp",
+      "sha256": "ccb85bdda6653a717d82227d7c72f028d913f6b3a93cfdec299f771fa6c043ee",
+      "bytes": 22328,
+      "pixels": [
+        660,
+        750
+      ],
+      "source_bundle": "ipad-music-replacement-ui.xcresult",
+      "source_sha256": "3288d47c02dede11c5fc9c828ce763e4840fe2f78ed4b0ad129959bb92120ac8",
+      "source_pixels": [
+        2064,
+        2752
+      ],
+      "source_exif_orientation": 8,
+      "device": "iPad Pro 13-inch (M5)",
+      "test": "TemplateGalleryUITests/testReplaceTemplateShamisenTakeAndUndo()",
+      "attachment": "Template Gallery Performance - 02 Audition a shamisen replacement",
+      "crop_after_reorientation": [
+        790,
+        360,
+        1960,
+        1690
+      ]
+    },
+    {
+      "file": "replace-applied.webp",
+      "sha256": "e44942723be918a34b2d86846d3aba1ba1b57c23ea53f8a6e325f5c295b88761",
+      "bytes": 7154,
+      "pixels": [
+        460,
+        506
+      ],
+      "source_bundle": "ipad-music-replacement-ui.xcresult",
+      "source_sha256": "07deceafd25373be0000a365121408df39ff6d47b4207e623c425a6690028347",
+      "source_pixels": [
+        2064,
+        2752
+      ],
+      "source_exif_orientation": 8,
+      "device": "iPad Pro 13-inch (M5)",
+      "test": "TemplateGalleryUITests/testReplaceTemplateShamisenTakeAndUndo()",
+      "attachment": "Template Gallery Performance - 03 Replaced template soundtrack",
+      "crop_after_reorientation": [
+        130,
+        590,
+        730,
+        1250
+      ]
+    },
+    {
+      "file": "replace-undone.webp",
+      "sha256": "355f1971ac9971353e9e9114addd311016c7f9a1fcddb6626ad5e605cf9cf982",
+      "bytes": 7838,
+      "pixels": [
+        460,
+        506
+      ],
+      "source_bundle": "ipad-music-replacement-ui.xcresult",
+      "source_sha256": "bd3439b74caf24b1110b13041c388cac9d197612dc247beb95abe7c21785ffd2",
+      "source_pixels": [
+        2064,
+        2752
+      ],
+      "source_exif_orientation": 8,
+      "device": "iPad Pro 13-inch (M5)",
+      "test": "TemplateGalleryUITests/testReplaceTemplateShamisenTakeAndUndo()",
+      "attachment": "Template Gallery Performance - 04 Undo restores the original",
+      "crop_after_reorientation": [
+        130,
+        590,
+        730,
+        1250
+      ]
+    }
+  ]
+}
