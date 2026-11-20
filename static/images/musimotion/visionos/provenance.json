@@ -916,10 +916,10 @@
     {
       "file": "sumi-mixture.webp",
       "platform": "macOS development editor",
-      "source_result": "mac-sumi-5.xcresult",
+      "source_result": "mac-sumi-8.xcresult",
       "test": "VolumetricCompatibilityUITests/testPaintWetInkOnPaperAndReopenTheTimedStudy()",
       "activity": "Sumi 02 - Adjust Water and Ink Load",
-      "original_sha256": "7d756aae60f7e87041785eb5bdd4e87616610da38c90c143397207709a5d0680",
+      "original_sha256": "d326133cebe843e8196405e0eb4ada53a40dfd5fa0292961e9f9f0d230c0e050",
       "transformation": "Actual window crop (70, 143, 572, 712) at native scale, RGB WebP quality 84.",
       "sha256": "9d7ec168a4bae072e3eebeafbc51ae1afb218f28ec83e0e07505e27818144458",
       "content": "Native Ink Wash controls on the synthetic Rice Paper study."
@@ -927,7 +927,7 @@
     {
       "file": "sumi-editor.webp",
       "platform": "macOS development editor",
-      "source_result": "mac-sumi-5.xcresult",
+      "source_result": "mac-sumi-8.xcresult",
       "test": "VolumetricCompatibilityUITests/testPaintWetInkOnPaperAndReopenTheTimedStudy()",
       "activity": "Sumi 04 - Reopened paper and timed marks",
       "original_sha256": "687ced60fe03ddd6f0a824777a2a23cc1f1b3bba4380da8c0a521ed8c2232c3e",
