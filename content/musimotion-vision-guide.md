@@ -7,7 +7,7 @@ description: "Read 2D projects, select and edit objects in 3D, open or import sc
 
 [Back to Musimotion]({{< relref "musimotion.md" >}}) · [Product support]({{< relref "contact.md" >}})
 
-Guide 2.1 · November 20, 2026 · Vision Pro update in preparation
+Guide 2.1 · November 20, 2026 · Vision Pro 1.0.0 build 12 awaiting App Review
 
 Read existing **2D presentations**, switch to **3D Volume** for solid objects and
 ink at different depths, and present inside **Full Immersion** on Vision Pro.
@@ -750,7 +750,7 @@ The screenshots show the running visionOS 26.5 simulator with synthetic template
 
    {{< musimotion-capture "music-videos/railway-volume.webp" "Beat Rail Express tracks and carriages inside a cyan wireframe volume above the illustrated transport" >}}
 
-   *The cyan box marks the extent of the bounded volume. This earlier volume capture shows the geometric train; the updated template uses a photorealistic railcar and valley landscape.*
+   *The cyan box marks the bounded volume. This earlier capture shows the geometric train. The movie below shows the current train and its surroundings from the saved camera.*
 
    {{< musimotion-vr-player file="beat-rail-express" poster="railway-export" title="A diagonal 3D train passes power poles, road traffic and a depot to Beat Rail Express’s original score" >}}
 

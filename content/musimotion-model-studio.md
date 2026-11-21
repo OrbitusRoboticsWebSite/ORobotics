@@ -7,7 +7,7 @@ draft: false
 
 [Musimotion]({{< relref "musimotion.md" >}}) · [Vision Pro guide]({{< relref "musimotion-vision-guide.md" >}})
 
-The three **3D Models** templates pair a real ROB model with editable titles, animation keys and an original electronic soundtrack. The Mac and iPad editions shown here are development previews. Vision Pro build 10 was withdrawn. Apple validated build 11, and Orbitus is preparing a replacement build for App Review.
+The three **3D Models** templates pair a real ROB model with editable titles, animation keys and an original electronic soundtrack. The Mac and iPad editions shown here are development previews. Vision Pro 1.0.0 build 12 is awaiting App Review and is set for automatic release after approval.
 
 ## Start with a robot
 
@@ -46,6 +46,11 @@ The three **3D Models** templates pair a real ROB model with editable titles, an
 
 5. Save the presentation and reopen it. Imported model data travels inside the project, so another matching development build can open it offline.
 
+## Move the whole model through a volume
+
+1. Select your imported model under **Objects** and choose **Edit XYZ**. Set the time to zero, **X** and **Y** to 0.50, and **Z** to −0.30. Choose **Save XYZ Keyframe**.
+2. At four seconds, keep X and Y centred and set **Z** to +0.30. Save the next key and press **Play**. The whole robot moves from behind the canvas toward the viewer. Choose **Viewpoint → Right side** to inspect the change in depth. [See the XYZ controls and example poses]({{< relref "musimotion-vision-guide.md" >}}#2-make-a-banner-cross-the-canvas-in-3d).
+
 ## Frame a detail and record the move
 
 1. Select the model and choose **Animate 3D Model…**. Use **Scene time** to choose the opening. Set **Zoom** to 1×, set **Focus X**, **Focus Y** and **Focus Z** to zero, and choose **Record View Key**.
@@ -55,7 +60,7 @@ The three **3D Models** templates pair a real ROB model with editable titles, an
    *The joint rig shown here uses the same framing controls as the photographed scan. The preview responds to the draft settings before you record a key.*
 
 2. To bring the optics into frame gradually, record **Zoom** 1.42× with **Focus Y** 0.53 at 1.65 seconds, then 2.9× with **Focus Y** 0.72 at 2.45 seconds. Move **Scene time** to 3.4 seconds. For ROB’s camera head, enter **Zoom** 4.6×, **Focus Y** 0.78 and **Focus Z** 0.08. Set **Yaw** to −6° and choose **Record View Key**. Each focus coordinate runs from −1 to +1 across that axis. Positive Y points up the model. Positive Z moves the focus toward the viewer in the neutral view.
-3. At 6.7 seconds, keep the same focus and zoom, set **Yaw** to 9°, and record a third view key. On the way back, record 2.6× with **Focus Y** 0.68 at 7.6 seconds and 1.42× with **Focus Y** 0.44 at 8.35 seconds. At nine seconds, return to roughly 1× zoom with all focus values zero and record again. Choose **Done** and press **Play**. The model turns within the close-up while your text keeps its place.
+3. At 6.7 seconds, keep the same focus and zoom, set **Yaw** to 9°, and choose **Record View Key**. On the way back, record 2.6× with **Focus Y** 0.68 at 7.6 seconds and 1.42× with **Focus Y** 0.44 at 8.35 seconds. At nine seconds, return to roughly 1× zoom with all focus values zero and record again. Choose **Done** and press **Play**. The model turns within the close-up while your text keeps its place.
 
 {{< musimotion-vr-player file="rob-optical-close-up" poster="rob-optical-close-up" title="ROB Optical Close-Up, from a full robot view to the optical head and back again" >}}
 
@@ -103,7 +108,7 @@ The three **3D Models** templates pair a real ROB model with editable titles, an
 
 3. Choose **View Export** to replay the last finished file. After an edit, choose **Export Video** again to create a new movie. To share an editable 3D presentation, use **Export Project…** and send the resulting package.
 
-The textured robot in the first two templates comes from Orbitus’s upright photographic scan. Joint Lab uses 41 colored meshes arranged into 12 links from the public ROB display model. Its example ranges are for presentation animation. [Explore the original Orbitus model](https://www.orbitusrobotics.com/rob-model/).
+The first two templates already contain a textured USDZ made from Orbitus’s upright photographic scan. Joint Lab uses 41 colored meshes arranged into 12 links from the public ROB display model. Its example ranges are for presentation animation. [View the original Orbitus model in your browser](https://www.orbitusrobotics.com/rob-model/).
 
 The downloadable package is 100,998 bytes. Its SHA-256 is `cdb65cc4815829ab4291f198a4c3753783af234c09d092d788114cdb49d3951c`.
 
@@ -111,4 +116,4 @@ The downloadable package is 100,998 bytes. Its SHA-256 is `cdb65cc4815829ab4291f
 
 [Screenshot provenance]({{< asset-url "images/musimotion/visionos/model-studio/provenance.json" >}}). The November 20, 2026 screenshots show the running visionOS 26.5 simulator and the native Mac editor. The Mac joint example uses the downloadable ROB package.
 
-Verification on November 20 included 29 native Mac tests and 15 iPad simulator tests. The Mac run also downloaded, verified and reopened the presentation containing all 19 complete films. The visionOS simulator exercised model authoring, opening a volume, full immersion, exporting an actual movie and reopening its native player. Physical headset comfort and hand tracking still require a headset run.
+Verification on November 20 included 29 native Mac tests and 15 iPad simulator tests. The Mac run downloaded, verified and reopened the presentation containing all 19 complete films. The final import update passed eight additional iPad recovery checks and 15 visionOS simulator tests. On Mac, selecting a complete package in a new location loaded all 41 meshes into the robot. Four more native UI tests passed on final source in the visionOS simulator. They covered Beat Rail in a volume, entering and exiting Maker Faire Full Immersion, editing ROB and a joint, and exporting and reopening a finished movie. Physical headset comfort and hand tracking still require a headset run.

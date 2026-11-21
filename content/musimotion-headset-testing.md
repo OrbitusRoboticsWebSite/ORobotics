@@ -7,7 +7,7 @@ description: "Internal acceptance checks for Musimotion volumetric input, readab
 
 [Return to the illustrated guide]({{< asset-url "products/musimotion/vision-guide/" >}})
 
-November 19, 2026 · Device testing required · Status: not run
+November 20, 2026 · Hands-on acceptance on Apple Vision Pro is pending. The simulator exercised robot authoring, exported movies and immersive film playback.
 
 Use an updated development build and private copies of the
 [banner exercise]({{< asset-url "downloads/musimotion/visionos/MusimotionVR-Banner-Exercise.musimotion.zip" >}}),
