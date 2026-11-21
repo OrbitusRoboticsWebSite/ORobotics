@@ -7,7 +7,7 @@ description: "Read 2D projects, select and edit objects in 3D, open or import sc
 
 [Back to Musimotion]({{< relref "musimotion.md" >}}) · [Product support]({{< relref "contact.md" >}})
 
-Guide 2.0 · November 20, 2026 · Development preview
+Guide 2.0 · November 20, 2026 · Vision Pro 1.0.0 awaiting App Review
 
 Read existing **2D presentations**, switch to **3D Volume** for solid objects and
 ink at different depths, and present inside **Full Immersion** on Vision Pro.
@@ -136,6 +136,10 @@ placeholder entity coordinates and cannot reliably synthesize this interaction.
 Use **Edit XYZ** for the automated, verified authoring route meanwhile.
 
 When **Play** is running, selecting a layer keeps the song playing. Move or scale that layer as the playhead advances to write its pose at the current time. **Pause** and scrub back to review the movement. The spatial position and scale controls also write against the moving playhead. For a precise pose at a fixed time, pause before using **Edit XYZ**.
+
+{{< musimotion-capture "music-videos/mac-live-transform.webp" "Native Mac editor with the pink Orb selected at its enlarged endpoint, blue transform handles and timeline at the end" >}}
+
+*Mac. After moving and scaling the Orb during playback, pause and drag the scrubber between the start and end to compare its two recorded poses.*
 
 ## 4. Present in full immersion
 
@@ -747,9 +751,9 @@ The screenshots show the running visionOS 26.5 simulator with synthetic template
 
    *The cyan box marks the extent of the bounded volume. This earlier volume capture shows the geometric train; the updated template uses a photorealistic railcar and valley landscape.*
 
-   {{< musimotion-capture "music-videos/beat-rail-final.webp" "Seven silver-and-orange Beat Rail Express carriages cross the native immersive valley above a winding river" >}}
+   {{< musimotion-vr-player file="beat-rail-express" poster="beat-rail-final" title="Beat Rail Express in full immersion with carriages crossing the valley to the project's original score" >}}
 
-   *The updated Beat Rail Express plays across a mountain valley, with seven detailed carriages and markers at the track.*
+   *Watch the 18-second simulator recording with its original score. Seven silver-and-orange carriages pass the signal as the viewpoint travels along the mountain railway. [Open the movie]({{< asset-url "downloads/musimotion/visionos/beat-rail-express.mp4" >}}).*
 
    {{< musimotion-capture "music-videos/chroma-immersion.webp" "Chroma Nova in full immersion with a ring of stars and red petals floating in a teal panorama" >}}
 
@@ -770,6 +774,8 @@ The screenshots show the running visionOS 26.5 simulator with synthetic template
    *These three catalog references open in Apple Music. The sample uses synthetic project visuals. Musical recordings from the catalog stay in the Apple Music player.*
 
 Choose **New Presentation → Movie Walls** for a three-panel film presentation. The starter includes three short reels. Select **Use all 19 full Orbitus robot films (97 MB download)** to embed the original movies across seven scenes. Follow [Create a robot movie wall and watch the 19 source films]({{< relref "musimotion-robot-films.md" >}}).
+
+On November 20, 17 iPad simulator tests passed, including downloading all 19 full films, reopening the saved project, playing the three wall designs, editing the 3D train, synchronizing a local song and switching between 2D, 3D and ink. On the visionOS simulator, pointer drags recorded six move and independent X/Y scale keyframes while playback continued, with a second layer unchanged. On Mac, the saved project retained eight keys and scrubbing returned to both recorded poses. Physical hand tracking and headset comfort remain part of the headset acceptance run.
 
 ## AI, sharing and support
 

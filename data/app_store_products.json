@@ -77,7 +77,7 @@
       "bundle_id": "com.orbitusrobotics.MusimotionPro",
       "source_project": "git.musimotion",
       "status": "approved",
-      "platforms": "Mac approved · Vision Pro in preparation",
+      "platforms": "Mac approved · Vision Pro awaiting App Review",
       "description": "Paint and animate on a timeline, then step into a 3D volume or a full immersive stage. Vision Pro adds 32 editable music-video designs, original scores and animation that follows your own audio. Mac 1.0.0 awaits manual release. The iPad version remains under development.",
       "page": "products/musimotion/",
       "icon": "images/products/musimotion/app-icon.webp",

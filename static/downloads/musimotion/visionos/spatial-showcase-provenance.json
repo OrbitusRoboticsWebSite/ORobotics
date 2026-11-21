@@ -22,5 +22,15 @@
       "robot_wall_visual": "538ce3be42293cf4df23f6bbc65a0d30a71cf30a5f7969dd781100fba6bf15e3"
     },
     "description": "Silent 23 seconds from 9.0–32.0 s of the wall recording. Display crop 2688 × 1512 at x576, y300, scaled to 1280 × 720."
+  },
+  {
+    "file": "beat-rail-express.mp4",
+    "bytes": 1817570,
+    "sha256": "ed23f30f4224fbbdb84ea37840a76e681fc05b42af359e001b5c0e1fc45304de",
+    "capture": "Running Musimotion on Apple Vision Pro Simulator, visionOS 26.5, November 20, 2026",
+    "original_sha256": {
+      "full_4k_preview": "633e01d9e3aa8dce1ddfabf07805c3f834c18b12d2b61f9d022b39bd82579373"
+    },
+    "description": "Complete 18-second Beat Rail Express simulator film at 1280 × 720. Web edition uses the full frame and preserves the original stereo score from the 4K App Preview."
   }
 ]

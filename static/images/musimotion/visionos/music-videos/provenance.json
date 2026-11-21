@@ -169,5 +169,24 @@
     "capture": "Apple Vision Pro Simulator, visionOS 26.5, November 20, 2026",
     "fixture": "Synthetic Beat Rail Express project",
     "action": "Beat Rail Express in the final native immersive scene with seven silver-and-orange carriages against the valley panorama"
+  },
+  {
+    "image": "mac-live-transform.webp",
+    "source": "11-mac-live-pointer-replay.png",
+    "source_dimensions": [
+      980,
+      712
+    ],
+    "crop": [
+      0,
+      0,
+      980,
+      712
+    ],
+    "sha256": "1c7a66c9b45bb12d427c4312834c80a97567d500b7c93b341698f67dfa00ac3f",
+    "source_sha256": "949ef45ca84ee9a2f2f3f4c82530298d4025c5b102421553ff78f5cb25ab2a42",
+    "capture": "Native Musimotion Pro on macOS, November 20, 2026",
+    "fixture": "Synthetic untitled presentation containing a pink Orb shape",
+    "action": "Scrubbed to the saved enlarged endpoint after moving and scaling the Orb during playback"
   }
 ]
