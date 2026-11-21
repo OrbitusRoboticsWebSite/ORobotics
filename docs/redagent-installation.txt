@@ -87,3 +87,9 @@ Cloud Fleet 0.4 and persistent execution:
   service and preserves enrollment/evidence. Interrupted jobs never auto-replay.
 - Sleep, disk unlock, shutdown and network loss constrain delivery. Cloud Fleet
   remains an application command channel, not a hosted Apple/Windows MDM server.
+
+2026-11-20 · Wi-Fi access-point picker
+Development source 7aaad23 adds BSSID and channel selection in Capture only
+and saved-capture analysis. The November 11 pilot packages predate the picker.
+Guided screenshots and a synthetic practice survey are at
+https://www.orbitusrobotics.com/r/wifi-guide/

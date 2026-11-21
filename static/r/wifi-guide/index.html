@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Choose a Wi-Fi access point · RedAgent · Orbitus Robotics</title>
+  <meta name="description" content="Fill the BSSID and channel in RedAgent’s Wi-Fi audit from a local network list or a saved SignalAtlas survey.">
+  <style>
+    :root { color-scheme:light; font:100%/1.55 Inter,system-ui,sans-serif; color:#192732; background:#f5f4f0; }
+    * { box-sizing:border-box } body { margin:0 } main { max-width:62rem; margin:auto; padding:2rem clamp(1rem,4vw,2.5rem) 4rem }
+    nav { border-bottom:1px solid #c5c8c5; padding-bottom:1rem } a { color:#8d2232; text-underline-offset:.18em }
+    a:focus-visible { outline:3px solid #a32d40; outline-offset:3px } header { margin:2.3rem 0 }
+    h1 { font-size:clamp(2rem,5vw,3.25rem); line-height:1.08; letter-spacing:-.035em; margin:.45rem 0 .8rem }
+    h2 { font-size:1.4rem; line-height:1.25; margin:0 0 .5rem } p { max-width:77ch; margin:.5rem 0 }
+    .version,figcaption { font-size:.92rem; color:#485760 } section { margin:2rem 0; border-top:1px solid #c5c8c5; padding-top:1.4rem }
+    figure { margin:1rem 0 } img { display:block; max-width:100%; height:auto; border:1px solid #bdc3c6; border-radius:4px }
+    figcaption { margin-top:.4rem } code { overflow-wrap:anywhere } footer { border-top:1px solid #c5c8c5; padding-top:1rem }
+  </style>
+</head>
+<body><main>
+  <nav aria-label="Breadcrumb"><a href="../">RedAgent</a> / Wi-Fi audit guide</nav>
+  <header><p class="version">RedAgent 0.4.0 development preview · November 20, 2026</p>
+    <h1>Choose a Wi-Fi access point</h1>
+    <p>Fill the BSSID and channel for a passive Wi-Fi audit by picking a radio from a list. Two radios can share a network name. The BSSID identifies which one you selected.</p>
+    <p class="version">The picker is in development source <code>7aaad23</code>. The November 11 pilot installer predates this feature.</p>
+  </header>
+  <section><h2>1. Load the access points</h2>
+    <p>Open <b>Wi-Fi audit</b> and leave <b>Test mode</b> on <b>Capture only</b>. Click <b>Refresh list</b> to read the Wi-Fi data available to this computer. On macOS, allow Location access if prompted, then refresh again. Windows uses its Wi-Fi list. Linux uses NetworkManager’s cached list.</p>
+    <p>To use a saved SignalAtlas observations CSV, choose <b>Open survey CSV…</b>. This also works offline. You can follow the screenshots with the <a href="training-survey.csv" download>synthetic practice survey</a>.</p>
+    <figure><a href="start.png"><img src="start.png" width="944" height="226" alt="The selected Wi-Fi audit tab shows the Access point dropdown alongside Refresh list and Open survey CSV."></a><figcaption>The access-point controls are above the audit fields. Select any screenshot to view it at full size.</figcaption></figure>
+  </section>
+  <section><h2>2. Select the radio</h2>
+    <p>Open <b>Access point</b>. Choose the row with the BSSID you want. In the practice survey, both rows are named Training Lab. Choosing the address ending in <code>10:02</code> fills <b>AP BSSID</b> with <code>02:00:00:00:10:02</code> and <b>AP channel</b> with <code>36</code>.</p>
+    <figure><a href="selected.png"><img src="selected.png" width="425" height="225" alt="Training Lab is selected. AP BSSID reads 02:00:00:00:10:02 and AP channel reads 36. The capture adapter is still blank."></a><figcaption>The two fields come from the same observation. A missing channel stays blank.</figcaption></figure>
+    <p>For a passive capture, enter the local <b>Capture adapter</b> separately. For an existing capture, choose <b>Analyze saved Wi-Fi capture…</b> to use the selected BSSID. Selecting a row starts neither operation.</p>
+  </section>
+  <section><h2>3. Recover an empty list or use manual entry</h2>
+    <p>If the local list is empty, check that Wi-Fi is on and the OS permits Wi-Fi identity access, then click <b>Refresh list</b>. If a survey has no usable Wi-Fi BSSIDs, open another file or choose <b>Enter manually</b> and type the BSSID.</p>
+    <figure><a href="empty.png"><img src="empty.png" width="924" height="82" alt="Enter manually is selected. RedAgent reports that the survey had no usable Wi-Fi BSSID and that the previous selection was cleared."></a><figcaption>Loading an empty survey clears the previous radio selection and restores the manual fields.</figcaption></figure>
+    <p><b>Enter manually</b> restores the BSSID and channel you entered before choosing from the list. Reconnect modes also use manual values. The local password-candidate action is available with manual entry.</p>
+  </section>
+  <footer><p class="version">Screenshots show the macOS development interface using a synthetic survey and an empty CSV. The picker reads local metadata. It sends no Wi-Fi list to a model. Cached and saved observations can be older than the current radio configuration.</p></footer>
+</main></body></html>
