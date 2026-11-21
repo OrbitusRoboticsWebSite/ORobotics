@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Choose a Wi-Fi access point · RedAgent · Orbitus Robotics</title>
-  <meta name="description" content="Fill the BSSID and channel in RedAgent’s Wi-Fi audit from a local network list or a saved SignalAtlas survey.">
+  <title>Wi-Fi audit and capture access · RedAgent · Orbitus Robotics</title>
+  <meta name="description" content="Choose a Wi-Fi access point and diagnose packet-capture access in RedAgent on macOS, Linux, and Windows.">
   <style>
     :root { color-scheme:light; font:100%/1.55 Inter,system-ui,sans-serif; color:#192732; background:#f5f4f0; }
     * { box-sizing:border-box } body { margin:0 } main { max-width:62rem; margin:auto; padding:2rem clamp(1rem,4vw,2.5rem) 4rem }
@@ -15,14 +15,17 @@
     .version,figcaption { font-size:.92rem; color:#485760 } section { margin:2rem 0; border-top:1px solid #c5c8c5; padding-top:1.4rem }
     figure { margin:1rem 0 } img { display:block; max-width:100%; height:auto; border:1px solid #bdc3c6; border-radius:4px }
     figcaption { margin-top:.4rem } code { overflow-wrap:anywhere } footer { border-top:1px solid #c5c8c5; padding-top:1rem }
+    .platforms { display:grid; grid-template-columns:repeat(auto-fit,minmax(15rem,1fr)); gap:1rem; margin:1rem 0 }
+    .platforms article { border:1px solid #c5c8c5; border-radius:6px; padding:1rem; background:#fff }
+    .platforms h3 { margin:0 0 .4rem; font-size:1.05rem } .callout { border-left:4px solid #8d2232; padding:.7rem 1rem; background:#fff }
   </style>
 </head>
 <body><main>
-  <nav aria-label="Breadcrumb"><a href="../">RedAgent</a> / Wi-Fi audit guide</nav>
-  <header><p class="version">RedAgent 0.4.0 development preview · November 20, 2026</p>
-    <h1>Choose a Wi-Fi access point</h1>
-    <p>Fill the BSSID and channel for a passive Wi-Fi audit by picking a radio from a list. Two radios can share a network name. The BSSID identifies which one you selected.</p>
-    <p class="version">The picker is in development source <code>7aaad23</code>. The November 11 pilot installer predates this feature.</p>
+  <nav aria-label="Breadcrumb"><a href="../">RedAgent</a> / Wi-Fi audit and capture access</nav>
+  <header><p class="version">RedAgent 0.5.0 development preview · November 20, 2026</p>
+    <h1>Choose a radio and check capture access</h1>
+    <p>Fill the BSSID and channel for a passive Wi-Fi audit, then let RedAgent diagnose whether the account that runs the job can use the selected capture adapter.</p>
+    <p class="version">Implemented in development source <code>792c6d8</code>. The public November 11 pilot installer remains version 0.4.0 and predates these controls.</p>
   </header>
   <section><h2>1. Load the access points</h2>
     <p>Open <b>Wi-Fi audit</b> and leave <b>Test mode</b> on <b>Capture only</b>. Click <b>Refresh list</b> to read the Wi-Fi data available to this computer. On macOS, allow Location access if prompted, then refresh again. Windows uses its Wi-Fi list. Linux uses NetworkManager’s cached list.</p>
@@ -39,5 +42,31 @@
     <figure><a href="empty.png"><img src="empty.png" width="924" height="82" alt="Enter manually is selected. RedAgent reports that the survey had no usable Wi-Fi BSSID and that the previous selection was cleared."></a><figcaption>Loading an empty survey clears the previous radio selection and restores the manual fields.</figcaption></figure>
     <p><b>Enter manually</b> restores the BSSID and channel you entered before choosing from the list. Reconnect modes also use manual values. The local password-candidate action is available with manual entry.</p>
   </section>
-  <footer><p class="version">Screenshots show the macOS development interface using a synthetic survey and an empty CSV. The picker reads local metadata. It sends no Wi-Fi list to a model. Cached and saved observations can be older than the current radio configuration.</p></footer>
+  <section id="capture-access"><h2>4. Check capture access before a test</h2>
+    <p>Enter the local <b>Capture adapter</b>, then click <b>Check capture access</b>. The check runs in the persistent helper—the same account that owns the eventual job. It enumerates interfaces and checks the platform’s native permission mechanism. It does not attach an adapter or record packets.</p>
+    <figure><a href="capture-access-start.jpg"><img src="capture-access-start.jpg" width="1220" height="1072" alt="RedAgent 0.5.0 Wi-Fi audit shows Capture access not checked, Check capture access, and Enable capture permissions above the capture adapter field."></a><figcaption>Actual macOS development UI from source <code>792c6d8</code>. Start here before selecting <b>Start capture test</b>.</figcaption></figure>
+    <p class="callout"><b>Expected result:</b> the line changes to <b>Ready</b> or <b>Action required</b> with a platform-specific explanation. If action is required, starting a capture saves <code>capture-readiness.json</code>, reports <code>permission-required</code>, and does not launch dumpcap or a reconnect operation.</p>
+  </section>
+  <section><h2>5. macOS: hand permission setup to Installer</h2>
+    <p>macOS uses Berkeley Packet Filter devices. RedAgent opens and immediately closes one unbound <code>/dev/bpf*</code> descriptor to verify the helper account; it attaches no interface and captures no traffic.</p>
+    <ol>
+      <li>If the result says <b>Install Wireshark ChmodBPF</b>, click <b>Enable capture permissions…</b>.</li>
+      <li>RedAgent will open Wireshark ChmodBPF 4.6.9 only when the package matches SHA-256 <code>24fa242bffa57754b00afa17ea310989bff2a73efe59995fd0b86498ebd80b64</code>.</li>
+      <li>Complete the administrator prompt in macOS Installer. RedAgent does not receive or store the administrator password.</li>
+      <li>Restart the Mac, reopen RedAgent, and click <b>Check capture access</b> again. An installer receipt alone is not proof that the helper account can open BPF.</li>
+    </ol>
+  </section>
+  <section><h2>6. Linux and Windows use their own mechanisms</h2>
+    <p>The process is not the same on each operating system. RedAgent detects the platform and reports a separate recovery path.</p>
+    <div class="platforms">
+      <article><h3>Ubuntu, Kali, and other Linux desktops</h3><p>Checks that dumpcap is installed, can enumerate interfaces, and that the active account has the distribution-managed <code>wireshark</code> capture group or dumpcap has both <code>cap_net_raw</code> and <code>cap_net_admin</code>. After a group change, sign out and back in before checking again.</p></article>
+      <article><h3>Windows 11</h3><p>Checks that dumpcap is installed, the Npcap service (or legacy NPF service) exists and is running, and the selected adapter appears in dumpcap. Missing dumpcap, missing Npcap, a stopped driver, and a missing adapter have distinct results.</p></article>
+    </div>
+    <p>Use the operating system’s normal Wireshark or package-manager setup to repair these prerequisites. RedAgent does not silently change Linux capabilities, run <code>sudo</code>, download Npcap, or install a Windows kernel driver.</p>
+  </section>
+  <section><h2>7. Read the evidence boundary</h2>
+    <p><b>Ready</b> means the helper account can see the selected interface through the platform permission path at check time. It does not prove that an adapter supports monitor mode, the requested channel, or a successful capture. Review the saved campaign state and artifacts after the bounded test.</p>
+    <p>If readiness passes but capture fails, keep the <code>capture-readiness.json</code> and <code>stderr.bin</code> files. A separate adapter, driver, channel, or monitor-mode limitation may be responsible.</p>
+  </section>
+  <footer><p class="version">Screenshots show the actual macOS development interface; picker examples use a labeled synthetic survey and empty CSV. The picker and readiness check process local metadata and send no Wi-Fi list to a model. Screenshot <code>capture-access-start.jpg</code> SHA-256: <code>cd6b43d32a54789a54dc301c078f32961e1ae5fbe03957b96b96daa8148f7199</code>.</p></footer>
 </main></body></html>
