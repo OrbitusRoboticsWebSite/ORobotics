@@ -1,0 +1,149 @@
+{
+  "date": "2026-11-20",
+  "source": "Screenshots of the native Mac development app and the visionOS 26.5 simulator using a dedicated test presentation and the public ROB rig.",
+  "images": [
+    {
+      "image": "model-gallery.webp",
+      "source_sha256": "d77e2b9fbece571b66f0773094ce62adf513caf8d51be103153f90db47f8fd94",
+      "sha256": "3f40eecb28fff575994050491044effec66c86ae152d6fbbcff4a7cccf00592b",
+      "crop_xyxy": [
+        1080,
+        570,
+        2780,
+        1725
+      ],
+      "dimensions": [
+        1400,
+        951
+      ],
+      "description": "3D Models gallery with ROB Joint Lab selected beside ROB Feature Tour and ROB Optical Close-Up",
+      "platform": "visionOS 26.5 simulator"
+    },
+    {
+      "image": "import-model.webp",
+      "source_sha256": "f408aa9418558c9a3584feb3b00cb70f569c04a0cf6019f0b1375c301d9e1985",
+      "sha256": "fdafc93be75eb7ac49980ababae75e679eaf66f4750916aaa33dc79568956d63",
+      "crop_xyxy": [
+        1220,
+        595,
+        2630,
+        1700
+      ],
+      "dimensions": [
+        1340,
+        1050
+      ],
+      "description": "Import 3D Model sheet with Choose Model File and Choose URDF Package Folder",
+      "platform": "visionOS 26.5 simulator"
+    },
+    {
+      "image": "model-framing.webp",
+      "source_sha256": "1068512204c4f123bd8b69f7cda32c48ab9b9c3f1a5875bcf02fd9aa236a1650",
+      "sha256": "9b12ef026dab78318d36ef63ebeb67a4b773a6cf9c4d60e9e220410b6e8460d6",
+      "crop_xyxy": [
+        1360,
+        600,
+        2510,
+        1790
+      ],
+      "dimensions": [
+        1015,
+        1050
+      ],
+      "description": "Animate 3D Model showing a rig preview and separate scene time, zoom, yaw, pitch and XYZ focus controls",
+      "platform": "visionOS 26.5 simulator"
+    },
+    {
+      "image": "joint-key.webp",
+      "source_sha256": "b6d01466b9b3ee603ef17ef9c9cd743990e93c4694eada36d19fb97a874c3e35",
+      "sha256": "3e2d8dcf119bbbf4d5c861842f11fafb9c746f43b4b92de85c06678bdc28d1f1",
+      "crop_xyxy": [
+        1350,
+        578,
+        2515,
+        1790
+      ],
+      "dimensions": [
+        1009,
+        1050
+      ],
+      "description": "Robot joints in the animation editor with the selected joint, angle and Record Joint Key controls",
+      "platform": "visionOS 26.5 simulator"
+    },
+    {
+      "image": "volume-result.webp",
+      "source_sha256": "9316525f004f97e8c3fec3b116d7bc0e34c8db50407fd38990bd98bc6e5e32da",
+      "sha256": "d2db7c3128cbc3795f45d2425c3e0b38008944d4f3cbadffd580f81ab2b5f6ee",
+      "crop_xyxy": [
+        1020,
+        480,
+        2880,
+        1720
+      ],
+      "dimensions": [
+        1400,
+        933
+      ],
+      "description": "ROB Joint Lab open in the visionOS simulator volume",
+      "platform": "visionOS 26.5 simulator"
+    },
+    {
+      "image": "export-rendering.webp",
+      "source_sha256": "987ecf6a8be3917a27fd17f466f98323a74ebbb7e13322571c7825cc0b1a64c7",
+      "sha256": "4a497b507b66d8df908a409be8ad2eadd7f17ca5a585546a04f7185b8672ce83",
+      "crop_xyxy": [
+        1360,
+        600,
+        2520,
+        1655
+      ],
+      "dimensions": [
+        1155,
+        1050
+      ],
+      "description": "Video Export sheet showing the active render and export progress",
+      "platform": "visionOS 26.5 simulator"
+    },
+    {
+      "image": "finished-export.webp",
+      "source_sha256": "8a013e26bdd94488dce3fb9b91706a24bebdba0f0117b3325d800ac860c067b7",
+      "sha256": "7f3bad801a1ccf43781e2d23fb17f99443c37e2eb7fc8d2091d3bfd86d12d64e",
+      "crop_xyxy": [
+        1350,
+        585,
+        2520,
+        1660
+      ],
+      "dimensions": [
+        1143,
+        1050
+      ],
+      "description": "Video Export sheet with a finished ROB movie, its player and Share Video",
+      "platform": "visionOS 26.5 simulator"
+    },
+    {
+      "image": "mac-joint-keys.webp",
+      "source_sha256": "4134e7b540e3db055cb59e2a33621aac5444cb8de9e3368205e51688a946acfc",
+      "sha256": "1f4d79a0c5676b19148fd6b64369ed32f2b0790f5b4cc4363859dd345b1e8b13",
+      "dimensions": [
+        470,
+        660
+      ],
+      "description": "Native Mac editor showing neck_pan at 25 degrees with editable keys at zero and two seconds",
+      "platform": "Native macOS development app",
+      "action": "Imported the downloadable ROB-Joint-Lab folder, selected neck_pan, and recorded a 25-degree key at two seconds."
+    },
+    {
+      "image": "mac-missing-mesh.webp",
+      "source_sha256": "89da3ec7aa28d95971ae16d2636dbc11686ef2118756bb1b039efa2d6c4eb85c",
+      "sha256": "005db5a3ccbcb4cc458cac596abd87a6033751181fd25ce4c56dd5ad5abc95f1",
+      "dimensions": [
+        470,
+        303
+      ],
+      "description": "Mac importer identifies the missing ROB chassis mesh by relative filename and offers Locate Mesh Package Folder",
+      "platform": "Native macOS development app",
+      "action": "Selected a test copy of ROBJointLab.urdf with its meshes directory intentionally omitted."
+    }
+  ]
+}

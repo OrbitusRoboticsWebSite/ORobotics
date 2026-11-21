@@ -1,0 +1,142 @@
+{
+  "generated": "2026-11-20",
+  "producer": "Musimotion PresentationExporter (macOS)",
+  "capture": "The saved volumetric camera was rendered for every movie frame. Each MP4 is the complete output of the app exporter with its native stereo soundtrack.",
+  "movies": [
+    {
+      "title": "ROB Feature Tour",
+      "template_id": "robFieldTour",
+      "template_revision": "4adc2faf92f5aa510d7b985ae61fa777296d854a",
+      "file": "rob-feature-tour.mp4",
+      "bytes": 9648563,
+      "sha256": "e3a06d2e6b6adf7d82fb034d1fe6f5683bb18839428685be73522094b3e9800c",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "fps": 30.0,
+      "seconds": 15.0,
+      "frames": 450,
+      "distinct_160x90_rgb_frames": 450,
+      "audio": {
+        "title": "Survey Pulse",
+        "codec": "aac",
+        "channels": 2,
+        "sample_rate": "32000"
+      },
+      "poster": {
+        "file": "images/musimotion/visionos/music-videos/rob-feature-tour.webp",
+        "sample_time_seconds": 5.7,
+        "sha256": "fab1ac6cb527efaa88e3bf0708e8744a7200daf5ec75ac2b6bd03e221c4e8a1f"
+      }
+    },
+    {
+      "title": "ROB Optical Close-Up",
+      "template_id": "robOpticsFocus",
+      "template_revision": "73905ab2b7313e751fea445101ebc638130756bd",
+      "file": "rob-optical-close-up.mp4",
+      "bytes": 4038526,
+      "sha256": "b0adfdcf55ded263cde5d4a0d6fae390aebe12f3db47b5cd3df1894c55ab3379",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "fps": 30.0,
+      "seconds": 10.0,
+      "frames": 300,
+      "distinct_160x90_rgb_frames": 300,
+      "audio": {
+        "title": "Optical Drift",
+        "codec": "aac",
+        "channels": 2,
+        "sample_rate": "32000"
+      },
+      "poster": {
+        "file": "images/musimotion/visionos/music-videos/rob-optical-close-up.webp",
+        "sample_time_seconds": 4.5,
+        "sha256": "9d30284c0da4150317672bb64f0dfd8b0ee99b41709d5576f72fe19442b6ba76"
+      }
+    },
+    {
+      "title": "ROB Joint Lab",
+      "template_id": "robJointPerformance",
+      "template_revision": "4adc2faf92f5aa510d7b985ae61fa777296d854a",
+      "file": "rob-joint-lab.mp4",
+      "bytes": 5414321,
+      "sha256": "bf11c4909226c0b34dfa0773772a691b5b3cb9fa89e826fd9a8be695d3ac5a95",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "fps": 30.0,
+      "seconds": 16.0,
+      "frames": 480,
+      "distinct_160x90_rgb_frames": 480,
+      "audio": {
+        "title": "Eleven Axes",
+        "codec": "aac",
+        "channels": 2,
+        "sample_rate": "32000"
+      },
+      "poster": {
+        "file": "images/musimotion/visionos/music-videos/rob-joint-lab.webp",
+        "sample_time_seconds": 7.6,
+        "sha256": "d4e6ddd5bb5d4e280cd82f148dd7f81acc8728cc0afb235db591dd57adb63746"
+      }
+    },
+    {
+      "title": "Robot Panorama Wall",
+      "template_id": "robotPanoramaWall",
+      "template_revision": "df3a2168c3eeb87d213e8fae88f971327e11535b",
+      "file": "robot-panorama-wall.mp4",
+      "bytes": 20024474,
+      "sha256": "9ea966bebd7df3fe27045a1c01f7016747196c5337d9893a9ac143edf29550d2",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "fps": 30.0,
+      "seconds": 28.0,
+      "frames": 840,
+      "distinct_160x90_rgb_frames": 840,
+      "audio": {
+        "title": "Across Mare Island",
+        "codec": "aac",
+        "channels": 2,
+        "sample_rate": "32000"
+      },
+      "poster": {
+        "file": "images/musimotion/visionos/music-videos/maker-faire-flyby.webp",
+        "sample_time_seconds": 4.25,
+        "sha256": "4672c71f0ed967c2fe83f345bc5870f8520c35f39536e3c3a582968be78f0d79"
+      }
+    },
+    {
+      "title": "Beat Rail Express",
+      "template_id": "beatRailExpress",
+      "template_revision": "2d6b7babae36f61395783d41c402ec4f775302e7",
+      "file": "beat-rail-express.mp4",
+      "bytes": 11920749,
+      "sha256": "2af6b85953ad3d2a949514ba291ed7d75d88b55939f255d98650f41e554bf3ad",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "fps": 30.0,
+      "seconds": 15.0,
+      "frames": 450,
+      "distinct_160x90_rgb_frames": 450,
+      "audio": {
+        "title": "Beat Rail Express Groove",
+        "codec": "aac",
+        "channels": 2,
+        "sample_rate": "32000"
+      },
+      "poster": {
+        "file": "images/musimotion/visionos/music-videos/railway-export.webp",
+        "sample_time_seconds": 4.2,
+        "sha256": "0fd8146fa676d0243f8030d0e21fb4bb3a168b100e7af9536702028e5bc502d2"
+      }
+    }
+  ]
+}

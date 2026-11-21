@@ -258,3 +258,7 @@ If the switch is dimmed because the project has no audio track, add a score with
 [Scene timing development notes]({{< asset-url "downloads/musimotion/scene-timing/development-notes.json" >}}) · [Timing screenshot details]({{< asset-url "images/musimotion/visionos/black-dragons/timing-provenance.json" >}})
 
 [Development release notes]({{< asset-url "downloads/musimotion/video-templates/development-notes.json" >}}) · [Capture details]({{< asset-url "images/musimotion/visionos/video-templates/provenance.json" >}}) · [2D and volumetric guide]({{< relref "musimotion-vision-guide.md" >}})
+
+## Build a filmed or articulated robot tour
+
+Choose **Movie Walls** to edit three moving film panels with real 2026 Orbitus footage, or choose **3D Models** to animate a textured scan or an eleven-joint URDF rig. [Follow the 3D model walkthrough]({{< relref "musimotion-model-studio.md" >}}).

@@ -86,3 +86,10 @@ describes the underlying tracking API.
 
 Release acceptance requires completed device results and no blocking defects.
 The current implementation and simulator results alone do not satisfy this gate.
+
+## Model, movie wall and railway checks
+
+1. Open **ROB Optical Close-Up** in **3D Models** and select **Open Volume**. Pause at 4.5 seconds. Inspect the optical head from the front and side. Record whether the model stays inside the volume, which parts share a depth plane with the neon text and whether the letters remain legible.
+2. Open **ROB Joint Lab**. In **Animate 3D Model…**, choose **neck_pan** under **Joint**, change **Angle** and select **Record Joint Key**. Save, reopen and play. Check which link moves, whether its children follow, and whether shoulder and wheel keys are preserved.
+3. Open **Robot Panorama Wall** in **Movie Walls**. Start seated. In the volume and then in **Full Immersion**, follow the outdoor Faire drive, indoor droid display and workshop turn as they approach and pass. Record the apparent distance, clipping or discomfort at each foreground pass and whether pausing the timeline immediately holds all three films.
+4. Open **Beat Rail Express** in **3D Music Videos**. From a stationary viewpoint, look for the pace difference between nearby poles, the angled train and distant traffic. Try **Pause** during the busiest passage. Record any perceived judder and the audio output in use.

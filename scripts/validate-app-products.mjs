@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -61,3 +62,26 @@ for (const film of films) {
   }
 }
 console.log(`Validated ${films.length} Musimotion films, original media links, captions and posters.`);
+
+const publicDirectory = path.join(root, "public");
+const mediaDirectory = path.join(publicDirectory, "downloads/musimotion/visionos");
+const modelGuide = await readFile(path.join(publicDirectory, "products/musimotion/3d-models/index.html"), "utf8");
+const volumeGuide = await readFile(path.join(publicDirectory, "products/musimotion/vision-guide/index.html"), "utf8");
+const manifest = JSON.parse(await readFile(path.join(mediaDirectory, "native-movies.json"), "utf8"));
+assert.equal(new Set(manifest.movies.map(movie => movie.template_id)).size, 5);
+for (const movie of manifest.movies) {
+  const route = movie.template_id === "beatRailExpress" ? volumeGuide
+    : (movie.template_id === "robotPanoramaWall" ? filmPage : modelGuide);
+  assert.ok(route.includes(movie.file), `No player for ${movie.title}`);
+  assert.ok(route.includes(movie.poster.file), `No poster for ${movie.title}`);
+  const movieBytes = await readFile(path.join(mediaDirectory, movie.file));
+  assert.equal(movieBytes.byteLength, movie.bytes);
+  assert.equal(createHash("sha256").update(movieBytes).digest("hex"), movie.sha256);
+  await access(path.join(mediaDirectory, movie.file.replace(/\.mp4$/, ".en.vtt")));
+  assert.equal(movie.frames, Math.round(movie.seconds * movie.fps));
+  assert.equal(movie.audio.channels, 2);
+}
+const robotZip = await readFile(path.join(publicDirectory, "downloads/musimotion/models/ROB-Joint-Lab.zip"));
+const robotHash = createHash("sha256").update(robotZip).digest("hex");
+assert.ok(modelGuide.includes("downloads/musimotion/models/ROB-Joint-Lab.zip") && modelGuide.includes(robotHash));
+console.log("Verified the five full native movies, posters, captions and the downloadable ROB joint model.");

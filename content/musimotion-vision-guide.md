@@ -7,7 +7,7 @@ description: "Read 2D projects, select and edit objects in 3D, open or import sc
 
 [Back to Musimotion]({{< relref "musimotion.md" >}}) · [Product support]({{< relref "contact.md" >}})
 
-Guide 2.0 · November 20, 2026 · Vision Pro 1.0.0 awaiting App Review
+Guide 2.1 · November 20, 2026 · Vision Pro update in preparation
 
 Read existing **2D presentations**, switch to **3D Volume** for solid objects and
 ink at different depths, and present inside **Full Immersion** on Vision Pro.
@@ -18,7 +18,7 @@ the [birthday surprise walkthrough](#8-make-a-birthday-surprise). To build a mus
 follow [Create a rhythm scene](#9-create-a-rhythm-scene). You can also
 [generate a soundtrack](#10-generate-a-soundtrack) for a 2D or spatial scene,
 or [play Droid Arena](#11-play-droid-arena) in Full Immersion. For brush technique, see [Paint, save and replay Sumi ink](#5-paint-save-and-replay-sumi-ink). For a project
-you are editing, see [Select, edit and copy objects](#12-select-edit-and-copy-objects). To animate to music, follow [Make a 3D music video](#13-make-a-3d-music-video).
+you are editing, see [Select, edit and copy objects](#12-select-edit-and-copy-objects). To animate to music, follow [Make a 3D music video](#13-make-a-3d-music-video). To frame a scan or pose a robot, follow [Import and animate a 3D model](#14-import-and-animate-a-3d-model).
 
 These screenshots show the development editor and the Vision Pro release candidate. The approved Mac 1.0.0 build 7 is awaiting manual publication at the November 20 check. Use a matching updated build on each device for these features. [Current platform status]({{< relref "musimotion.md" >}}). Keep a backup before opening a new 3D project in older software:
 older builds do not understand the additional mode, camera and spatial ink data.
@@ -235,6 +235,7 @@ Flow and translucency affect the spatial stroke opacity.*
 4. **Export Video** renders the saved camera view for a 3D project and retains
    the original flat rendering path for a 2D project. A movie is a 2D view of
    the presentation; use the package for interactive spatial playback.
+5. When the export finishes, play the movie in the export sheet and choose **Share Video**. **View Export** reopens the last finished file. Use **Export Video** again after an edit to render the updated presentation.
 
 {{< musimotion-capture "saved-library.webp" "Saved Presentations library with the synthetic example project" >}}
 
@@ -735,7 +736,7 @@ project, movie and music checksums and the composer credited for each take.
 
 ## 13. Make a 3D music video
 
-[Watch Chroma Nova and Robot Panorama Wall in the 4K simulator showcase]({{< relref "musimotion.md" >}}#watch-spatial-showcase).
+[Watch Robot Panorama Wall with its original score]({{< relref "musimotion.md" >}}#watch-spatial-showcase).
 
 The screenshots show the running visionOS 26.5 simulator with synthetic template presentations and the public Orbitus films. Select a capture to see the controls at full size.
 
@@ -745,15 +746,15 @@ The screenshots show the running visionOS 26.5 simulator with synthetic template
 
    *The selected design lists its original score tempo. Create Presentation opens a new editable project.*
 
-2. Press **Play**. In Beat Rail Express each carriage crosses the signal on a beat of its original 128 BPM score. Pause and select a carriage to edit its position and keyframes. Choose **Open Volume** to see the layers at different depths, or start **Full Immersion** to surround yourself with the scene. Try **Chroma Nova** for a lime-and-fuchsia burst at 140 BPM. Five 360° panoramas surround the templates with a railway valley, colored pigment, a prism pavilion, a starry desert or a kelp forest. The fifteen bundled images include those panoramas, background plates and transparent props. The presentation stores its artwork for offline playback. With Reduce Motion on, the beat-driven background tint stays at the scene’s base color.
+2. Press **Play**. In the updated Beat Rail Express, each carriage crosses the signal on a beat of its original 128 BPM score. The train follows an angled track in three dimensions. Nearby overhead poles cross faster than the distant road traffic and depot. Pause and select a carriage to edit its position and keyframes. Choose **Open Volume** to see the layers at different depths, or start **Full Immersion** to surround yourself with the scene. Try **Chroma Nova** for a lime-and-fuchsia burst at 140 BPM. Five 360° panoramas surround the templates with a railway valley, colored pigment, a prism pavilion, a starry desert or a kelp forest. The fifteen bundled images include those panoramas, background plates and transparent props. The presentation stores its artwork for offline playback. With Reduce Motion on, the beat-driven background tint stays at the scene’s base color.
 
    {{< musimotion-capture "music-videos/railway-volume.webp" "Beat Rail Express tracks and carriages inside a cyan wireframe volume above the illustrated transport" >}}
 
    *The cyan box marks the extent of the bounded volume. This earlier volume capture shows the geometric train; the updated template uses a photorealistic railcar and valley landscape.*
 
-   {{< musimotion-vr-player file="beat-rail-express" poster="beat-rail-final" title="Beat Rail Express in full immersion with carriages crossing the valley to the project's original score" >}}
+   {{< musimotion-vr-player file="beat-rail-express" poster="railway-export" title="A diagonal 3D train passes power poles, road traffic and a depot to Beat Rail Express’s original score" >}}
 
-   *Watch the 18-second simulator recording with its original score. Seven silver-and-orange carriages pass the signal as the viewpoint travels along the mountain railway. [Open the movie]({{< asset-url "downloads/musimotion/visionos/beat-rail-express.mp4" >}}).*
+   *Watch the movie exported from the template’s saved camera. The train crosses the signal to the beat while overhead poles, platform lights and distant traffic move at different rates. [Open the scored movie]({{< asset-url "downloads/musimotion/visionos/beat-rail-express.mp4" >}}).*
 
    {{< musimotion-capture "music-videos/chroma-immersion.webp" "Chroma Nova in full immersion with a ring of stars and red petals floating in a teal panorama" >}}
 
@@ -773,9 +774,13 @@ The screenshots show the running visionOS 26.5 simulator with synthetic template
 
    *These three catalog references open in Apple Music. The sample uses synthetic project visuals. Musical recordings from the catalog stay in the Apple Music player.*
 
-Choose **New Presentation → Movie Walls** for a three-panel film presentation. The starter includes three short reels. Select **Use all 19 full Orbitus robot films (97 MB download)** to embed the original movies across seven scenes. Follow [Create a robot movie wall and watch the 19 source films]({{< relref "musimotion-robot-films.md" >}}).
+Choose **New Presentation → Movie Walls** for a three-panel film presentation. The updated development preview includes three complete 2026 scenes: the outdoor Maker Faire drive, the droid hall and the turning chassis in the workshop. Each panel approaches the viewer and sweeps away as the next one takes its place. Select **Use all 19 full Orbitus robot films (97 MB download)** to embed the original movies across seven scenes. Follow [Create a robot movie wall and watch the 19 source films]({{< relref "musimotion-robot-films.md" >}}).
 
 On November 20, 17 iPad simulator tests passed, including downloading all 19 full films, reopening the saved project, playing the three wall designs, editing the 3D train, synchronizing a local song and switching between 2D, 3D and ink. On the visionOS simulator, pointer drags recorded six move and independent X/Y scale keyframes while playback continued, with a second layer unchanged. On Mac, the saved project retained eight keys and scrubbing returned to both recorded poses. Physical hand tracking and headset comfort remain part of the headset acceptance run.
+
+## 14. Import and animate a 3D model
+
+Choose **New Presentation → 3D Models** for a photographed ROB scan or an eleven-joint display rig. [Learn how to import a robot, record a focus pull and animate its joints]({{< relref "musimotion-model-studio.md" >}}).
 
 ## AI, sharing and support
 
