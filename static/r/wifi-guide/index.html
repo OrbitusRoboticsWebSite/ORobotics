@@ -22,10 +22,10 @@
 </head>
 <body><main>
   <nav aria-label="Breadcrumb"><a href="../">RedAgent</a> / Wi-Fi audit and capture access</nav>
-  <header><p class="version">RedAgent 0.5.0 development preview · November 20, 2026</p>
-    <h1>Choose a radio and check capture access</h1>
-    <p>Fill the BSSID and channel for a passive Wi-Fi audit, then let RedAgent diagnose whether the account that runs the job can use the selected capture adapter.</p>
-    <p class="version">Implemented in development source <code>792c6d8</code>. The public November 11 pilot installer remains version 0.4.0 and predates these controls.</p>
+  <header><p class="version">RedAgent 0.5.1 development preview · November 20, 2026</p>
+    <h1>Choose a radio, verify its channel, then capture</h1>
+    <p>Fill the BSSID and channel for a passive Wi-Fi audit. RedAgent first checks capture access, then verifies that the selected radio is actually on the requested channel before it records a packet.</p>
+    <p class="version">Implemented and tested in development source <code>6d0b04e</code>. The public November 11 pilot installer remains version 0.4.0 and predates these controls.</p>
   </header>
   <section><h2>1. Load the access points</h2>
     <p>Open <b>Wi-Fi audit</b> and leave <b>Test mode</b> on <b>Capture only</b>. Click <b>Refresh list</b> to read the Wi-Fi data available to this computer. On macOS, allow Location access if prompted, then refresh again. Windows uses its Wi-Fi list. Linux uses NetworkManager’s cached list.</p>
@@ -44,7 +44,7 @@
   </section>
   <section id="capture-access"><h2>4. Check capture access before a test</h2>
     <p>Enter the local <b>Capture adapter</b>, then click <b>Check capture access</b>. The check runs in the persistent helper—the same account that owns the eventual job. It enumerates interfaces and checks the platform’s native permission mechanism. It does not attach an adapter or record packets.</p>
-    <figure><a href="capture-access-start.webp"><img src="capture-access-start.webp" width="900" height="791" alt="RedAgent 0.5.0 Wi-Fi audit shows Capture access not checked, Check capture access, and Enable capture permissions above the capture adapter field."></a><figcaption>Actual macOS development UI from source <code>792c6d8</code>. Start here before selecting <b>Start capture test</b>.</figcaption></figure>
+    <figure><a href="capture-access-start.webp"><img src="capture-access-start.webp" width="900" height="791" alt="RedAgent Wi-Fi audit shows Capture access not checked, Check capture access, and Enable capture permissions above the capture adapter field."></a><figcaption>Actual macOS development UI from the 0.5 capture-access workflow. Start here before selecting <b>Start capture test</b>; version 0.5.1 adds the channel gate described below.</figcaption></figure>
     <p class="callout"><b>Expected result:</b> the line changes to <b>Ready</b> or <b>Action required</b> with a platform-specific explanation. If action is required, starting a capture saves <code>capture-readiness.json</code>, reports <code>permission-required</code>, and does not launch dumpcap or a reconnect operation.</p>
   </section>
   <section><h2>5. macOS: hand permission setup to Installer</h2>
@@ -64,9 +64,19 @@
     </div>
     <p>Use the operating system’s normal Wireshark or package-manager setup to repair these prerequisites. RedAgent does not silently change Linux capabilities, run <code>sudo</code>, download Npcap, or install a Windows kernel driver.</p>
   </section>
-  <section><h2>7. Read the evidence boundary</h2>
-    <p><b>Ready</b> means the helper account can see the selected interface through the platform permission path at check time. It does not prove that an adapter supports monitor mode, the requested channel, or a successful capture. Review the saved campaign state and artifacts after the bounded test.</p>
-    <p>If readiness passes but capture fails, keep the <code>capture-readiness.json</code> and <code>stderr.bin</code> files. A separate adapter, driver, channel, or monitor-mode limitation may be responsible.</p>
+  <section id="channel-verification"><h2>7. Verify the requested channel</h2>
+    <p>Turn on <b>Request monitor mode and verify the AP channel before capture</b> and provide the AP channel. RedAgent records the current channel, requests the chosen channel, reads the channel back, and only then starts dumpcap. If it changed a dedicated capture radio, it also attempts to restore the original channel after the bounded test.</p>
+    <p class="callout"><b>Channel is not network identity:</b> two access points—including an AT&amp;T gateway and another nearby network—can both use channel 52. Keep the selected BSSID filter; it identifies the specific radio. In the United States, channel 52 is a DFS channel, so hardware and drivers must also follow the applicable regulatory rules.</p>
+    <div class="platforms">
+      <article><h3>macOS</h3><p>RedAgent asks CoreWLAN to tune the selected interface and verifies the reported channel. If macOS rejects the change or reports another channel, the state is <code>channel-required</code> and capture never starts. On the tested Mac mini, <code>en1</code> remained on channel 40 when channel 52 was requested.</p></article>
+      <article><h3>Linux</h3><p>Use a dedicated monitor interface. RedAgent uses <code>iw</code> to request and verify the channel, then restores the original channel when possible. It fails closed if the interface is not in monitor mode or the read-back does not match.</p></article>
+      <article><h3>Windows</h3><p>RedAgent verifies the current channel reported by <code>netsh wlan show interfaces</code>. Portable Npcap does not provide a reliable cross-adapter channel-switch API, so a mismatch stops before capture instead of pretending the switch succeeded.</p></article>
+    </div>
+    <p>The saved <code>channel-preparation.json</code> records the requested, original, and verified channels plus the platform result. A separate <code>channel-restoration.json</code> records restoration when a change was made.</p>
   </section>
-  <footer><p class="version">Screenshots show the actual macOS development interface; picker examples use a labeled synthetic survey and empty CSV. The picker and readiness check process local metadata and send no Wi-Fi list to a model. Screenshot <code>capture-access-start.webp</code> SHA-256: <code>c46e36615a3f7d35d9618930aaa8cc16549dc6510436c2be3495c96a83fb95b7</code>.</p></footer>
+  <section><h2>8. Read the packet evidence boundary</h2>
+    <p><b>Ready</b> only means the helper account can see the selected interface through the platform permission path at check time. <b>Channel verified</b> only means the radio reported the requested channel. Neither proves that relevant frames were received.</p>
+    <p>RedAgent 0.5.1 counts packet records in the saved pcap or pcapng. A structurally valid capture containing zero packets is <code>completed-no-packets</code>, with radio visibility explicitly not established. An invalid capture is <code>capture-invalid</code>. Keep <code>capture-readiness.json</code>, <code>channel-preparation.json</code>, the capture file, and <code>stderr.bin</code> together when diagnosing an adapter or driver limitation.</p>
+  </section>
+  <footer><p class="version">Screenshots show the actual macOS development interface; picker examples use a labeled synthetic survey and empty CSV. The picker, readiness check, channel verification, and packet counting process local metadata and send no Wi-Fi list to a model. Screenshot <code>capture-access-start.webp</code> SHA-256: <code>c46e36615a3f7d35d9618930aaa8cc16549dc6510436c2be3495c96a83fb95b7</code>.</p></footer>
 </main></body></html>
