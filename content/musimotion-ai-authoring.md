@@ -82,6 +82,8 @@ Use **AI Create** to plan on your device, or connect an external assistant throu
 
 ## Import an instrumental score
 
+The v1.1.0 ZIP above supports Techno, House, Breakbeat, Ambient, Retro 8-bit and Shamisen. With the updated development editor and its matching MCP server from source, you can also ask for **Chill House**, **Rock** or **Classical Piano**. The score JSON uses `chill-house`, `rock` or `classical-piano` in its `style` field. [Listen to the styles in the Music Studio guide]({{< relref "musimotion-vision-guide.md" >}}#try-chill-house-rock-and-classical-piano).
+
 1. Ask your assistant to use **create_music_score** to write “four bars of melodic techno at 120 BPM in D, with a deep bass hook and a lead that answers in the last two bars.” The returned `.musiscore.json` contains musical choices including bass and lead scale degrees, rests, tempo and ensemble. The [Lantern Pulse example]({{< asset-url "downloads/musimotion/ai-authoring/lantern-pulse.musiscore.json" >}}) lasts eight seconds.
 2. Open **Music Studio**, choose **Import AI Score…**, then open the JSON file.
 

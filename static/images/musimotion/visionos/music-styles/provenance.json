@@ -1,0 +1,164 @@
+{
+  "guide_version": "2.2",
+  "captured": "2026-11-20",
+  "platform": "iPadOS 26.5 Simulator",
+  "device": "iPad Pro 13-inch (M5)",
+  "source": "Local development build, synthetic Untitled Presentation. Crops show the original interface; only cropping, resizing and WebP encoding were applied. The recordings linked in the listening section are separate takes.",
+  "test": "VolumetricCompatibilityUITests/testGenerateAndAuditionThreeRecoveredStyles()",
+  "captures": [
+    {
+      "file": "open-studio.webp",
+      "capture_label": "Music styles - open studio",
+      "source_size": [
+        2752,
+        2064
+      ],
+      "source_sha256": "93f455c14e56f1578749e4a85343f144f8134124696593f0acf5e591d789473e",
+      "crop_xyxy": [
+        0,
+        80,
+        1120,
+        332
+      ],
+      "published_size": [
+        900,
+        203
+      ],
+      "sha256": "659458124f9b98a9f32118ecc2e9b12104b2bb193bb7d5a87d8be1646e24c835",
+      "alt": "Artwork toolbar showing Music Studio beside Templates",
+      "caption": "Music Studio opens from the artwork toolbar."
+    },
+    {
+      "file": "style-picker.webp",
+      "capture_label": "Music styles - picker",
+      "source_size": [
+        2752,
+        2064
+      ],
+      "source_sha256": "085f8ecaf3734c454be9996f49f2e75ff2f6fad7640b06455465d2179e16a5d5",
+      "crop_xyxy": [
+        812,
+        636,
+        1328,
+        1402
+      ],
+      "published_size": [
+        516,
+        766
+      ],
+      "sha256": "c5b489671e52b28992ef0897f8c97ff450719f4217e3c2e9a4eccf7705f3361e",
+      "alt": "Open style menu listing Chill House, Rock and Classical Piano below Retro 8-bit",
+      "caption": "The menu shows the three styles together. A checkmark identifies the current selection."
+    },
+    {
+      "file": "before-generation.webp",
+      "capture_label": "Music styles - ready to generate",
+      "source_size": [
+        2752,
+        2064
+      ],
+      "source_sha256": "f2a70d70b6da272384a06516491f0415131eb2539cf2c3d67e9b9c85ceea7a44",
+      "crop_xyxy": [
+        784,
+        625,
+        1955,
+        1608
+      ],
+      "published_size": [
+        900,
+        756
+      ],
+      "sha256": "91857341d1e78465fdbf57e45a3235e5e00c49724cbf47257a02b1141c64e4f5",
+      "alt": "Chill House selected at 116 BPM with 4 bars and Local Pattern Model selected, Generate Music available and Preview dimmed",
+      "caption": "With a style selected, Generate Music is available. Preview and Add to Scene become available after generation."
+    },
+    {
+      "file": "chill-house.webp",
+      "capture_label": "Music styles - chill-house",
+      "source_size": [
+        2752,
+        2064
+      ],
+      "source_sha256": "77a7b85a5e5248e44705f69ab4e3a685f66f7f075a90d994c0813672bc9cb2c1",
+      "crop_xyxy": [
+        809,
+        1100,
+        1944,
+        1559
+      ],
+      "published_size": [
+        960,
+        388
+      ],
+      "sha256": "2fe8efb77b3e942f5cee21cefee08dc4376d9975e5d4b8a86f24dd31a06450b2",
+      "alt": "Chill House take Midnight Crossing showing Stop Preview, 116 BPM, 8.3 seconds and six instruments",
+      "caption": "In this iPad take, Midnight Crossing plays at 116 BPM with sub bass, electric piano and a light snare."
+    },
+    {
+      "file": "rock.webp",
+      "capture_label": "Music styles - rock",
+      "source_size": [
+        2752,
+        2064
+      ],
+      "source_sha256": "517599057282a840314129c22cad53581221b0418c6656e779ed5441289edd39",
+      "crop_xyxy": [
+        809,
+        1100,
+        1944,
+        1559
+      ],
+      "published_size": [
+        960,
+        388
+      ],
+      "sha256": "95d4f4135de38e74c554ed7a5a6b7cca3bbeb8861ec7455104f7be6a85bd5826",
+      "alt": "Rock take Velvet Echo showing Stop Preview, 112 BPM, 8.6 seconds and overdriven guitar",
+      "caption": "Velvet Echo plays at 112 BPM. The instrument list includes toms, electric bass and overdriven guitar."
+    },
+    {
+      "file": "classical-piano.webp",
+      "capture_label": "Music styles - classical-piano",
+      "source_size": [
+        2752,
+        2064
+      ],
+      "source_sha256": "7cf8ed728b6fca4527df81117c788e2a01efc602108bec6f1c53fb6184c172e5",
+      "crop_xyxy": [
+        809,
+        1100,
+        1944,
+        1559
+      ],
+      "published_size": [
+        960,
+        388
+      ],
+      "sha256": "8f0be773942f9d20c1679cbba6ceb404b27235ecc8cb1bb56a80c7abff41e86e",
+      "alt": "Classical Piano take Solar Field showing Stop Preview, 76 BPM, 12.6 seconds and acoustic piano",
+      "caption": "Solar Field plays at 76 BPM. Acoustic piano is the only instrument in this take."
+    },
+    {
+      "file": "added-to-scene.webp",
+      "capture_label": "Music styles - added to scene",
+      "source_size": [
+        2752,
+        2064
+      ],
+      "source_sha256": "474ec81c10f0dacef05ecad39918ccc068a9965db1ff81267093a8d3fc1b2d32",
+      "crop_xyxy": [
+        142,
+        1255,
+        2740,
+        1735
+      ],
+      "published_size": [
+        1300,
+        240
+      ],
+      "sha256": "5a9eb3dcd4673490cbb2ce6a682c5f3dd1e9c3a9b788b9be22966f1da57db2d6",
+      "alt": "Scene Details with Solar Field as the third timeline lane below Welcome and Orb, from 0.0 to 12.6 seconds",
+      "caption": "After Add to Scene, Solar Field appears as an audio lane beneath the two artwork layers."
+    }
+  ]
+}

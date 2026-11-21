@@ -1,0 +1,89 @@
+{
+  "captured": "2026-11-19",
+  "source": "Four-bar Local Pattern Model takes originally captured on November 19, 2026. On November 20 the integrated development synthesizer reproduced the three recordings using the listed prompts, seeds and tempos.",
+  "examples": [
+    {
+      "bars": 4,
+      "bpm": 116,
+      "instruments": [
+        "Kick",
+        "Shaker",
+        "Sub bass",
+        "Electric piano",
+        "Warm pad",
+        "Light snare"
+      ],
+      "prompt": "Deep mellow bass and a soft late-night groove",
+      "rhythm_accent_count": 22,
+      "seed": 51,
+      "source": "Local Pattern Model",
+      "style": "Chill House",
+      "title": "Prism Field",
+      "file": "Musimotion-chill-house.flac",
+      "encoding": "FLAC",
+      "duration_seconds": 8.275875,
+      "channels": 2,
+      "sample_rate": 32000,
+      "bits_per_sample": 16,
+      "frames": 264828,
+      "bytes": 404100,
+      "sha256": "1d792fb8508bf8c2e336cc057bf2c859b210d13442d1943558eeabe257e85f23",
+      "pcm_sha256": "0477b6fd2496c06913a0feafcce95be30452c459b485fbd6f7c2f8c5b821afb4",
+      "integrated_wav_sha256": "8e6168692b1afe30cca8fbd43471550575b9d9d5aa0e370333e232e5ed250f4f"
+    },
+    {
+      "bars": 4,
+      "bpm": 112,
+      "instruments": [
+        "Kick",
+        "Snare",
+        "Hi-hat",
+        "Toms",
+        "Electric bass",
+        "Overdriven guitar"
+      ],
+      "prompt": "A driving guitar riff with a strong band backbeat",
+      "rhythm_accent_count": 28,
+      "seed": 73,
+      "source": "Local Pattern Model",
+      "style": "Rock",
+      "title": "Velvet Orbit",
+      "file": "Musimotion-rock.flac",
+      "encoding": "FLAC",
+      "duration_seconds": 8.571438,
+      "channels": 2,
+      "sample_rate": 32000,
+      "bits_per_sample": 16,
+      "frames": 274286,
+      "bytes": 605127,
+      "sha256": "410efdb7099140f23050ded419646fbf82430abe6ef5df25a83dd8e1a64df851",
+      "pcm_sha256": "e5d4fd73b84e67b4e29caf358712b84c2487c219742e919f44c69a1177a4e743",
+      "integrated_wav_sha256": "063649c5fa6512aa34ef66aa702e615e5a1b0a5fb8847eb52e24bb1a6f976f54"
+    },
+    {
+      "bars": 4,
+      "bpm": 76,
+      "instruments": [
+        "Acoustic piano"
+      ],
+      "prompt": "A warm lyrical piano miniature",
+      "rhythm_accent_count": 16,
+      "seed": 84,
+      "source": "Local Pattern Model",
+      "style": "Classical Piano",
+      "title": "Midnight Orbit",
+      "file": "Musimotion-classical-piano.flac",
+      "encoding": "FLAC",
+      "duration_seconds": 12.631594,
+      "channels": 2,
+      "sample_rate": 32000,
+      "bits_per_sample": 16,
+      "frames": 404211,
+      "bytes": 596625,
+      "sha256": "52ed9fa6d3549ccc8b60ed79033d0714d27069bbff537de984ed2e652e82a1f5",
+      "pcm_sha256": "f77042fa0b21cbbebf9569b5bad5ec22c4592740c5e483682f44c0cc5da94bc6",
+      "integrated_wav_sha256": "edbedec2710b0318dcb86aef9f503aa526e992a87c454868d1a2b7521fac8c5d"
+    }
+  ],
+  "verified": "2026-11-20"
+}

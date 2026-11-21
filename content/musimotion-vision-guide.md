@@ -7,7 +7,7 @@ description: "Read 2D projects, select and edit objects in 3D, open or import sc
 
 [Back to Musimotion]({{< relref "musimotion.md" >}}) · [Product support]({{< relref "contact.md" >}})
 
-Guide 2.1 · November 20, 2026 · Vision Pro 1.0.0 build 12 awaiting App Review
+Guide 2.2 · November 20, 2026 · Vision Pro 1.0.0 build 12 awaiting App Review
 
 Read existing **2D presentations**, switch to **3D Volume** for solid objects and
 ink at different depths, and present inside **Full Immersion** on Vision Pro.
@@ -470,7 +470,7 @@ seconds. Cyan and coral shapes alternate with the beat for the rest of the song.
    artwork editor. In the Vision Pro spatial workspace, choose **Add Media →
    Music Studio**. You can score a still title card, an animation or a volumetric scene.
 
-2. Choose **Techno**, **House**, **Breakbeat**, **Ambient**, **Retro 8-bit** or **Shamisen**. For the first four styles, open **Ensemble**. **Auto** lets the composer pick a lineup for the take. Choose **Electronic**, **Studio Band** or **Chamber** to set the instrument family yourself. **Retro 8-bit** uses its own chip instruments. **Shamisen** pairs plucked notes with ringing open strings. To match a [black dragon painting]({{< relref "musimotion-video-templates.md" >}}#paint-a-black-dragon), choose **Shamisen**, set **Tempo** to the painting’s BPM and set the length to **4 bars**. Set the tempo (60–180 BPM)
+2. Open **Style**. For **Techno**, **House**, **Breakbeat** or **Ambient**, open **Ensemble**. **Auto** lets the composer pick a lineup for the take. Choose **Electronic**, **Studio Band** or **Chamber** to set the instrument family yourself. **Retro 8-bit** uses its own chip instruments. **Shamisen** pairs plucked notes with ringing open strings. In the updated development editor, you can also [try Chill House, Rock and Classical Piano](#try-chill-house-rock-and-classical-piano). To match a [black dragon painting]({{< relref "musimotion-video-templates.md" >}}#paint-a-black-dragon), choose **Shamisen**, set **Tempo** to the painting’s BPM and set the length to **4 bars**. Set the tempo (60–180 BPM)
    and the length (2, 4, 8 or 16 bars). For a short techno cue, try 132 BPM, four bars and
    the description “driving kick, bright hats and a pulsing bass.” Four bars
    of four beats at that tempo last about 7.27 seconds.
@@ -539,6 +539,70 @@ To keep an audio track that is already in your project playing after the opening
    *iPad simulator. The generated music is selected in the ordinary 2D timeline. Its bar shows where the take begins and ends.*
 
 To hear the revised Shamisen and Techno performances side by side with earlier takes, visit the [listening and soundtrack replacement guide]({{< relref "musimotion-music-performance.md" >}}). It also shows how to audition a new take under an existing opening.
+
+### Try Chill House, Rock and Classical Piano
+
+The Mac development preview includes **Chill House**, **Rock** and **Classical Piano**. The updated editor also passed simulator checks on iPad and Vision Pro. These screenshots show a synthetic presentation in the iPad simulator on November 20, 2026. Select an image to enlarge it. [Screenshot details and checksums]({{< asset-url "images/musimotion/visionos/music-styles/provenance.json" >}}).
+
+1. Open a presentation in the artwork editor and choose **Music Studio**.
+
+{{< musimotion-capture "music-styles/open-studio.webp" "Artwork toolbar showing Music Studio beside Templates" >}}
+
+*Music Studio opens from the artwork toolbar.*
+
+2. Select the current style name, such as **Techno**, to open the menu. Choose **Chill House**, **Rock** or **Classical Piano**. The tempo changes with the style.
+
+{{< musimotion-capture "music-styles/style-picker.webp" "Open style menu listing Chill House, Rock and Classical Piano below Retro 8-bit" >}}
+
+*The menu shows the three styles together. A checkmark identifies the current selection.*
+
+3. Choose **4 bars** and **Local Pattern Model**, then choose **Generate Music**. If changing styles clears the previous take, choose **Generate Music** again.
+
+{{< musimotion-capture "music-styles/before-generation.webp" "Chill House selected at 116 BPM with 4 bars and Local Pattern Model selected, Generate Music available and Preview dimmed" >}}
+
+*With a style selected, Generate Music is available. Preview and Add to Scene become available after generation.*
+
+4. Choose **Preview** to audition the result or **Stop Preview** to stop. **New Variation** makes another take with the same settings. Choose **Add to Scene** to place the audio at the playhead. In the timeline, press Play to hear it alongside the artwork.
+
+{{< musimotion-capture "music-styles/added-to-scene.webp" "Scene Details with Solar Field as the third timeline lane below Welcome and Orb, from 0.0 to 12.6 seconds" >}}
+
+*After Add to Scene, Solar Field appears as an audio lane beneath the two artwork layers.*
+
+#### Listen to the three arrangements
+
+The integrated development synthesizer reproduced these three four-bar recordings on November 20, 2026. Each lossless FLAC contains the exact audio samples from its generated take. The screenshots show separate iPad takes. New variations can have different melodies and titles.
+
+**Chill House · 116 BPM.** A four-on-the-floor kick anchors the groove. Listen for the moving sub bass below the light snare and soft keys.
+
+{{< musimotion-capture "music-styles/chill-house.webp" "Chill House take Midnight Crossing showing Stop Preview, 116 BPM, 8.3 seconds and six instruments" >}}
+
+*In this iPad take, Midnight Crossing plays at 116 BPM with sub bass, electric piano and a light snare.*
+
+<audio controls preload="none" style="display:block;width:100%;max-width:32rem" aria-label="Chill House example at 116 BPM"><source src='https://github.com/OrbitusRoboticsWebSite/ORobotics/releases/download/musimotion-style-examples-2026-11-20/Musimotion-chill-house.flac' type="audio/flac"></audio>
+
+[Listen to Chill House (8.28 s, FLAC)](https://github.com/OrbitusRoboticsWebSite/ORobotics/releases/download/musimotion-style-examples-2026-11-20/Musimotion-chill-house.flac).
+
+**Rock · 112 BPM.** A kick and snare set the backbeat. Electric bass follows the riff while an overdriven guitar strums staggered power chords.
+
+{{< musimotion-capture "music-styles/rock.webp" "Rock take Velvet Echo showing Stop Preview, 112 BPM, 8.6 seconds and overdriven guitar" >}}
+
+*Velvet Echo plays at 112 BPM. The instrument list includes toms, electric bass and overdriven guitar.*
+
+<audio controls preload="none" style="display:block;width:100%;max-width:32rem" aria-label="Rock example at 112 BPM"><source src='https://github.com/OrbitusRoboticsWebSite/ORobotics/releases/download/musimotion-style-examples-2026-11-20/Musimotion-rock.flac' type="audio/flac"></audio>
+
+[Listen to Rock (8.57 s, FLAC)](https://github.com/OrbitusRoboticsWebSite/ORobotics/releases/download/musimotion-style-examples-2026-11-20/Musimotion-rock.flac).
+
+**Classical Piano · 76 BPM.** A single acoustic piano plays both parts. The low notes outline broken chords while the higher melody moves across the beat.
+
+{{< musimotion-capture "music-styles/classical-piano.webp" "Classical Piano take Solar Field showing Stop Preview, 76 BPM, 12.6 seconds and acoustic piano" >}}
+
+*Solar Field plays at 76 BPM. Acoustic piano is the only instrument in this take.*
+
+<audio controls preload="none" style="display:block;width:100%;max-width:32rem" aria-label="Classical Piano example at 76 BPM"><source src='https://github.com/OrbitusRoboticsWebSite/ORobotics/releases/download/musimotion-style-examples-2026-11-20/Musimotion-classical-piano.flac' type="audio/flac"></audio>
+
+[Listen to Classical Piano (12.63 s, FLAC)](https://github.com/OrbitusRoboticsWebSite/ORobotics/releases/download/musimotion-style-examples-2026-11-20/Musimotion-classical-piano.flac).
+
+[Recording details and SHA-256 checksums]({{< asset-url "downloads/musimotion/music-styles/recordings.json" >}}).
 
 ### Compare the ensembles
 
