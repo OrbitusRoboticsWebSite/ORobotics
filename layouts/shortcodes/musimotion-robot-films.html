@@ -1,0 +1,26 @@
+{{ range site.Data.musimotion_robot_films }}
+<section class="musimotion-film-group" aria-labelledby="films-{{ .title | urlize }}">
+  <h2 id="films-{{ .title | urlize }}">{{ .title }}</h2>
+  <div class="musimotion-film-cards">
+    {{ range .films }}
+    <article>
+      <video controls playsinline preload="none" poster="{{ .poster | relURL }}" aria-label="{{ .title }}">
+        <source src="{{ .src | relURL }}" type="video/mp4">
+        {{ with .captions }}<track kind="captions" srclang="en" label="English" src="{{ . | relURL }}">{{ end }}
+      </video>
+      <h3>{{ .title }} <small>{{ .duration }}</small></h3>
+      <p>{{ .description }}</p>
+      <a href="{{ .src | relURL }}">Open full film<span class="sr-only">: {{ .title }}</span></a>
+    </article>
+    {{ end }}
+  </div>
+</section>
+{{ end }}
+<style>
+.musimotion-film-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr));gap:1.75rem 1.25rem;margin-block:1rem 2.5rem}
+.musimotion-film-cards article{min-width:0}
+.musimotion-film-cards video{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain;background:#101313;border-radius:.4rem}
+.musimotion-film-cards h3{margin:.65rem 0 .25rem;line-height:1.25}
+.musimotion-film-cards small{font-size:.74em;font-weight:400;white-space:nowrap}
+.musimotion-film-cards p{margin:.35rem 0}
+</style>

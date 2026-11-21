@@ -1,0 +1,159 @@
+[
+  {
+    "title": "Home workshop",
+    "films": [
+      {
+        "title": "Raised arms in the workshop",
+        "src": "images/galleries/2019/video/IMG_1098.MOV.mp4",
+        "duration": "0:03",
+        "poster": "images/galleries/2019/thumb/IMG_1098.MOV-640.webp",
+        "description": "R.O.B. stands on its tracked base with both articulated arms raised in a home workshop."
+      },
+      {
+        "title": "Head movement with both arms raised",
+        "src": "images/galleries/2019/video/IMG_1099.MOV.mp4",
+        "duration": "0:14",
+        "poster": "images/galleries/2019/thumb/IMG_1099.MOV-640.webp",
+        "description": "R.O.B. demonstrates head movement while holding both robotic arms raised beside its torso."
+      },
+      {
+        "title": "Camera-head rotation",
+        "src": "images/galleries/2019/video/IMG_1100.MOV.mp4",
+        "duration": "0:09",
+        "poster": "images/galleries/2019/thumb/IMG_1100.MOV-640.webp",
+        "description": "R.O.B. rotates its camera head above a tracked base while its arms remain lifted."
+      },
+      {
+        "title": "Reaching with both arms",
+        "src": "images/galleries/2019/video/IMG_1101.MOV.mp4",
+        "duration": "0:28",
+        "poster": "images/galleries/2019/thumb/IMG_1101.MOV-640.webp",
+        "description": "R.O.B. extends both multi-jointed arms outward and adjusts their position during a movement test."
+      },
+      {
+        "title": "Coordinated arm movement",
+        "src": "images/galleries/2019/video/IMG_1102.MOV.mp4",
+        "duration": "0:39",
+        "poster": "images/galleries/2019/thumb/IMG_1102.MOV-640.webp",
+        "description": "R.O.B. bends both arms inward through a coordinated sequence while facing the camera."
+      },
+      {
+        "title": "Loading the planter",
+        "src": "images/galleries/2019/video/IMG_1103.MOV.mp4",
+        "duration": "0:39",
+        "poster": "images/galleries/2019/thumb/IMG_1103.MOV-640.webp",
+        "description": "A builder places a decorated planter box across R.O.B.'s arms and adjusts it into position."
+      },
+      {
+        "title": "Turning while supporting the planter",
+        "src": "images/galleries/2019/video/IMG_1104.MOV.mp4",
+        "duration": "0:18",
+        "poster": "images/galleries/2019/thumb/IMG_1104.MOV-640.webp",
+        "description": "R.O.B. supports a broad planter filled with green foliage while its camera head turns."
+      },
+      {
+        "title": "Holding the planter steady",
+        "src": "images/galleries/2019/video/IMG_1106.MOV.mp4",
+        "duration": "0:05",
+        "poster": "images/galleries/2019/thumb/IMG_1106.MOV-640.webp",
+        "description": "R.O.B. holds the planter steady before a person passes close in front of the camera."
+      },
+      {
+        "title": "Camera pan above the leaves",
+        "src": "images/galleries/2019/video/IMG_1108.MOV.mp4",
+        "duration": "0:05",
+        "poster": "images/galleries/2019/thumb/IMG_1108.MOV-640.webp",
+        "description": "R.O.B.'s camera head pans above the foliage while the planter remains balanced across its arms."
+      },
+      {
+        "title": "Front view behind the planter",
+        "src": "images/galleries/2019/video/IMG_1109.MOV.mp4",
+        "duration": "0:07",
+        "poster": "images/galleries/2019/thumb/IMG_1109.MOV-640.webp",
+        "description": "R.O.B. faces forward behind a dense planter, with its head assembly visible above the leaves."
+      }
+    ]
+  },
+  {
+    "title": "Recycling and pouring",
+    "films": [
+      {
+        "title": "Can recycling demonstration",
+        "src": "videos/recycling/rob-recycling-demo.mp4",
+        "duration": "0:33",
+        "poster": "images/recycling/demo-poster.webp",
+        "description": "ROB lifts and repositions a can and releases it above the recycling bucket.",
+        "captions": "captions/recycling/rob-recycling-demo.vtt"
+      },
+      {
+        "title": "Can pickup",
+        "src": "videos/recycling/rob-recycling-pickup.mp4",
+        "duration": "0:27",
+        "poster": "images/recycling/pickup-poster.webp",
+        "description": "A close view of the can pickup sequence.",
+        "captions": "captions/recycling/rob-recycling-pickup.vtt"
+      },
+      {
+        "title": "Vertical recycling reel",
+        "src": "videos/recycling/rob-recycling-reel.mp4",
+        "duration": "0:22",
+        "poster": "images/recycling/reel-poster.webp",
+        "description": "The shorter vertical edit of the can-handling demonstration.",
+        "captions": "captions/recycling/rob-recycling-reel.vtt"
+      },
+      {
+        "title": "Torso turn with a can",
+        "src": "videos/recycling/rob-recycling-torso.mp4",
+        "duration": "0:18",
+        "poster": "images/recycling/torso-poster.webp",
+        "description": "The torso turns while ROB holds the can.",
+        "captions": "captions/recycling/rob-recycling-torso.vtt"
+      },
+      {
+        "title": "Coke pouring demonstration",
+        "src": "videos/workshop/rob-coke-pour-reel.mp4",
+        "duration": "0:31",
+        "poster": "images/workshop/coke-pour-poster.webp",
+        "description": "A supervised workshop demonstration of pouring from a can.",
+        "captions": "captions/workshop/rob-coke-pour.vtt"
+      },
+      {
+        "title": "Pouring practice",
+        "src": "videos/workshop/rob-pouring-practice-reel.mp4",
+        "duration": "0:17",
+        "poster": "images/workshop/pouring-practice-poster.webp",
+        "description": "Workshop footage of the pouring practice sequence.",
+        "captions": "captions/workshop/rob-pouring-practice.vtt"
+      },
+      {
+        "title": "Holding through the turn",
+        "src": "images/galleries/2026_CokeCan/video/05-can-torso-turn.MOV.mp4",
+        "duration": "0:28",
+        "poster": "images/galleries/2026_CokeCan/thumb/05-can-torso-turn.MOV-640.webp",
+        "description": "ROB turns its torso while holding a red Coke can, with its tracked base and open opposite gripper in view.",
+        "captions": "captions/galleries/2026_CokeCan/05-can-torso-turn.MOV.vtt"
+      }
+    ]
+  },
+  {
+    "title": "Maker Faire",
+    "films": [
+      {
+        "title": "A lightsaber at Maker Faire",
+        "src": "images/galleries/2026_MakerFaire_Exploring/video/IMG_2991.MOV.mp4",
+        "duration": "0:21",
+        "poster": "images/galleries/2026_MakerFaire_Exploring/thumb/IMG_2991.MOV-640.webp",
+        "description": "ROB holds a blue lightsaber upright near visitors and astromech droids inside the exhibition hall.",
+        "captions": "captions/galleries/2026_MakerFaire_Exploring/IMG_2991.MOV.vtt"
+      },
+      {
+        "title": "From the booth to the exhibition hall",
+        "src": "images/galleries/2026_MakerFaire_Exploring/video/IMG_2994.MOV.mp4",
+        "duration": "0:12",
+        "poster": "images/galleries/2026_MakerFaire_Exploring/thumb/IMG_2994.MOV-640.webp",
+        "description": "ROB rolls along the outdoor aisle beside the Orbitus canopy toward the exhibition-hall doorway, accompanied by an operator.",
+        "captions": "captions/galleries/2026_MakerFaire_Exploring/IMG_2994.MOV.vtt"
+      }
+    ]
+  }
+]

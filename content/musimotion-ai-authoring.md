@@ -29,7 +29,7 @@ Use **AI Create** to plan on your device, or connect an external assistant throu
 
 ## Connect an external assistant
 
-[Download the Musimotion MCP companion · v1.0.0 ZIP]({{< asset-url "downloads/musimotion/ai-authoring/musimotion-mcp-1.0.0.zip" >}}). The ZIP contains the local server, dependency lockfile, two example drafts and connection tests. Install it on the computer running a desktop assistant that supports local stdio MCP servers.
+[Download the Musimotion MCP companion · v1.1.0 ZIP]({{< asset-url "downloads/musimotion/ai-authoring/musimotion-mcp-1.1.0.zip" >}}). The ZIP contains the local server, dependency lockfile, three example drafts and connection tests. Install it on the computer running a desktop assistant that supports local stdio MCP servers.
 
 1. Install Node.js 22 or later. Unzip the companion into a permanent folder. In a terminal open that folder and run:
 
@@ -46,7 +46,7 @@ Use **AI Create** to plan on your device, or connect an external assistant throu
 3. Add a local **stdio** server named **musimotion** in the desktop assistant. Use the first path as its executable command and the second as its single argument. For Codex CLI, substitute the printed paths in this command and start a new session:
 
    ```sh
-   codex mcp add musimotion -- "/absolute/path/to/node" "/absolute/path/to/musimotion-mcp-1.0.0/server.mjs"
+   codex mcp add musimotion -- "/absolute/path/to/node" "/absolute/path/to/musimotion-mcp-1.1.0/server.mjs"
    ```
 
 4. Reconnect the host and check for **prepare_scene_brief**, **create_scene_plan** and **create_music_score**. The first tool can return a question for the assistant to ask in chat. In a Codex test, “make me a cool intro” prompted a question about what to introduce and which title to show. The other two return complete JSON and save new files in **Downloads → Musimotion AI** on the host computer. To choose a different folder, add `--output-dir` and its absolute path as two more server arguments.
@@ -115,4 +115,12 @@ A completed recording from another service follows the audio import workflow. Fo
 
 The external model runs in the assistant you choose. Its conversation and data settings apply to the brief and follow-ups. The companion exchanges the generated draft and its local export path with that assistant. It reads no existing project files or photo library and requires no API key. The import screen lets you review the external scene before adding it to your project. Music Studio renders imported notes on the device. Cloud sharing and publication remain separate editor actions.
 
-ZIP size **13,684 bytes**, SHA-256 `890ce2da15cb6ae3ced467ffdd6da2c4ad0ce290daf8cf70fe081eebc92240b9`. [Preview verification]({{< asset-url "downloads/musimotion/ai-authoring/development-notes.json" >}}) · [Screenshot sources]({{< asset-url "images/musimotion/visionos/ai-authoring/provenance.json" >}}).
+ZIP size **14,839 bytes**, SHA-256 `cb7954094c40244a923ef4b3c70f9c4040731fcda9958e36843ae5d8f862f1c6`. [Preview verification]({{< asset-url "downloads/musimotion/ai-authoring/development-notes.json" >}}) · [Screenshot sources]({{< asset-url "images/musimotion/visionos/ai-authoring/provenance.json" >}}).
+
+## Perform a spatial music video
+
+Ask your assistant for “Beat Rail Express at 128 BPM,” or open the [Evening Express scene draft]({{< asset-url "downloads/musimotion/ai-authoring/beat-rail.musiplan.json" >}}). In **AI Creation Studio**, import the draft, review its directions and add it to the presentation. Press **Play**. On Vision Pro, choose **Full Immersion** to see the train cross the signal on each beat. [Spatial presentation guide]({{< asset-url "products/musimotion/vision-guide/" >}})
+
+## When Apple’s model is unavailable
+
+Musimotion checks the system model before creating a plan or score. When it is unavailable, the on-device template planner and composer still create editable scenes and music. Image Playground has a separate availability check. Apple currently restricts Apple Intelligence on devices purchased in China mainland, and on devices purchased elsewhere when both the user’s location and Apple Account region are China mainland. App Store distribution has additional filing and assessment requirements. Musimotion’s mainland filing status remains unverified. [Apple Intelligence availability](https://support.apple.com/en-us/121115) · [App Store Connect compliance information](https://developer.apple.com/help/app-store-connect/reference/app-information/app-and-compliance-information/).

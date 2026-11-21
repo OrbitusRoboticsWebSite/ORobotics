@@ -77,11 +77,11 @@
       "bundle_id": "com.orbitusrobotics.MusimotionPro",
       "source_project": "git.musimotion",
       "status": "approved",
-      "platforms": "Mac approved · Release pending",
-      "description": "An animation and painting studio. Mac 1.0.0 is approved and awaiting manual release. The development preview reads 2D projects, animates 3D objects, paints and replays Japanese Sumi with adjustable water and ink load, and adds birthday greetings, falling balloons, confetti and fireworks on Mac, iPad and Vision Pro. Play hand-tracked rhythm and droid arcade scenes on Vision Pro. Generate a soundtrack with Electronic, Studio Band or Chamber instruments, or choose Retro 8-bit. Use the development editor to select and copy 3D objects or import an editable scene template.",
+      "platforms": "Mac approved · Vision Pro in preparation",
+      "description": "Paint and animate on a timeline, then step into a 3D volume or a full immersive stage. Vision Pro adds 32 editable music-video designs, original scores and animation that follows your own audio. Mac 1.0.0 awaits manual release. The iPad version remains under development.",
       "page": "products/musimotion/",
       "icon": "images/products/musimotion/app-icon.webp",
-      "verified_at": "2026-11-19"
+      "verified_at": "2026-11-20"
     },
     {
       "slug": "rob-training-vision",

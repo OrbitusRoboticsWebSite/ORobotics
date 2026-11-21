@@ -1,0 +1,173 @@
+[
+  {
+    "image": "choose-beat-rail.webp",
+    "source": "01-choose-beat-rail.jpg",
+    "source_dimensions": [
+      3840,
+      2160
+    ],
+    "crop": [
+      1100,
+      630,
+      2800,
+      1680
+    ],
+    "sha256": "4dbfe84a1474c1c90c4a0eecbf99e55bfc24a39538be36388e9a81d4fcd2153f",
+    "source_sha256": "35ff66410a7fef91f92180983fe5683a6c2bd14b1bf7acdf1e94e452161963c8",
+    "capture": "Apple Vision Pro Simulator, visionOS 26.5, November 20, 2026",
+    "fixture": "Synthetic Beat Rail Express project",
+    "action": "3D Music Videos selected with Beat Rail Express and Create Presentation"
+  },
+  {
+    "image": "choose-local-audio.webp",
+    "source": "02-sync-local-song.jpg",
+    "source_dimensions": [
+      3840,
+      2160
+    ],
+    "crop": [
+      1140,
+      615,
+      2770,
+      1720
+    ],
+    "sha256": "1308835320461a0d24a4db5825674d9ee98d4113f9c114f28b3b4abe82e0e896",
+    "source_sha256": "f7357fa0a3f116d8c0a15c6a4af9c89e4d3275bd7244b7b344075b6e80bc9249",
+    "capture": "Apple Vision Pro Simulator, visionOS 26.5, November 20, 2026",
+    "fixture": "Synthetic Beat Rail Express project",
+    "action": "Sync Scene to Song with the original groove selected for replacement and Choose Audio File visible"
+  },
+  {
+    "image": "railway-volume.webp",
+    "source": "03-railway-in-volume.jpg",
+    "source_dimensions": [
+      3840,
+      2160
+    ],
+    "crop": [
+      965,
+      420,
+      3470,
+      2050
+    ],
+    "sha256": "bc8a846cbcc678a0f75933655fb577da8bbf615e9aa1f44b31a4515415244dfb",
+    "source_sha256": "a1991f8bcbaecb52f9a862b4f69ecf01158e946af0edad22d768e6e0cc3fa519",
+    "capture": "Apple Vision Pro Simulator, visionOS 26.5, November 20, 2026",
+    "fixture": "Synthetic Beat Rail Express project",
+    "action": "The editable railway inside the outlined bounded spatial volume"
+  },
+  {
+    "image": "apple-music.webp",
+    "source": "05-apple-music-listening.jpg",
+    "source_dimensions": [
+      3840,
+      2160
+    ],
+    "crop": [
+      1100,
+      630,
+      2800,
+      1680
+    ],
+    "sha256": "dfd722f5149b50aff3c84c3d025f67a0e87cec95642796f6f7a9893444904ca4",
+    "source_sha256": "450f0bf0075aa7a41aca0ea68c9df982c7819bb3e878feb8e870cd9282ce5ea9",
+    "capture": "Apple Vision Pro Simulator, visionOS 26.5, November 20, 2026",
+    "fixture": "Synthetic untitled project",
+    "action": "Apple Music search and the three featured catalog selections"
+  },
+  {
+    "image": "effects-wheel.webp",
+    "source": "06-volumetric-effects-wheel.jpg",
+    "source_dimensions": [
+      3840,
+      2160
+    ],
+    "crop": [
+      1390,
+      780,
+      3040,
+      1550
+    ],
+    "sha256": "64aaeb482bd75cb02a2ca82abfc83eb5b152423cf07f59bc9997405748c8c7a7",
+    "source_sha256": "0973728430377f00233f3fabaa0e2cc527e9bda7d4805089f56719563e0b18e9",
+    "capture": "Apple Vision Pro Simulator, visionOS 26.5, November 20, 2026",
+    "fixture": "Synthetic Welcome Banner project",
+    "action": "Selected welcome banner and the Effects Wheel after selecting the illustrated effects transport control"
+  },
+  {
+    "image": "robot-film-download.webp",
+    "source": "robot-gallery-originals.jpg",
+    "source_dimensions": [
+      3840,
+      2160
+    ],
+    "crop": [
+      1330,
+      700,
+      2505,
+      1630
+    ],
+    "sha256": "9c2e1e6416b404368c7602b0550a6952612ed22bc91dcafc4d2fb7829bd5f0b9",
+    "source_sha256": "d6654c44f1bb761adbf41a642c92469ab46aa72c145b1f130c56bf37cd283e7f",
+    "capture": "Apple Vision Pro Simulator, visionOS 26.5, November 20, 2026",
+    "fixture": "Public Orbitus robot films on Robot Panorama Wall",
+    "action": "Robot Panorama Wall selected in Movie Walls, full Orbitus films enabled and film 13 of 19 downloading"
+  },
+  {
+    "image": "robot-three-films.webp",
+    "source": "07-robot-three-films.jpg",
+    "source_dimensions": [
+      3840,
+      2160
+    ],
+    "crop": [
+      740,
+      350,
+      3050,
+      1650
+    ],
+    "sha256": "f62f37dbf3d632b741bd0b4c9d5fab346d445c3df0ca84294f91b555eb2216e1",
+    "source_sha256": "83dc50f7619da27aae517e9435c169321ab289988662e793806fde14be3c88e0",
+    "capture": "Apple Vision Pro Simulator, visionOS 26.5, November 20, 2026",
+    "fixture": "Public Orbitus robot films on Robot Panorama Wall",
+    "action": "Robot Panorama Wall scene two playing in full immersion, three workshop films and floating transport"
+  },
+  {
+    "image": "chroma-immersion.webp",
+    "source": "08-immersive-chroma-panorama.jpg",
+    "source_dimensions": [
+      3840,
+      2160
+    ],
+    "crop": [
+      0,
+      0,
+      3840,
+      2160
+    ],
+    "sha256": "f95b76c8612a5d873f432d56eb7d775cbfdd8cde38d5738ff4ff477a5487ff1f",
+    "source_sha256": "aa57038e5f82dbdccfb254b754e2fe86f3bc3b358b06d35ead7cf9be43d69b0f",
+    "capture": "Apple Vision Pro Simulator, visionOS 26.5, November 20, 2026",
+    "fixture": "Synthetic Chroma Nova project",
+    "action": "Chroma Nova in full immersion with distributed petals, a ring of stars and its painted spherical background"
+  },
+  {
+    "image": "beat-rail-final.webp",
+    "source": "10-final-beat-rail.jpg",
+    "source_dimensions": [
+      3840,
+      2160
+    ],
+    "crop": [
+      0,
+      0,
+      3840,
+      2160
+    ],
+    "sha256": "32a1948029488f749fa73a666ab043c20dad18168db6809199ca9057e8d8f908",
+    "source_sha256": "c46511b027b3ba20f7f9173d10499caeb1ce7a947d3c50c8a069f4e74887ba10",
+    "capture": "Apple Vision Pro Simulator, visionOS 26.5, November 20, 2026",
+    "fixture": "Synthetic Beat Rail Express project",
+    "action": "Beat Rail Express in the final native immersive scene with seven silver-and-orange carriages against the valley panorama"
+  }
+]

@@ -9,7 +9,7 @@ draft: false
 
 November 20, 2026 · Development preview for Mac, iPad and Vision Pro
 
-Choose from fifty authored templates and four familiar spatial scenes. Make a title sequence, add a location stamp, paint a Sumi title to music or roll credits toward a vanishing point. The ten [black dragon paintings](#paint-a-black-dragon) honor the HeiLongWuShu school. Each has its own shamisen score and tempo. You can [extend an opening and keep the same music playing into the next scene](#extend-a-scene-and-its-soundtrack). The template supplies editable text, shapes and keyframes. Use the updated development preview on each device for the painted strokes and perspective lettering. The screenshots show the running app with synthetic demonstration content. The poster sheets use frames rendered from the editable projects. Select a picture to see the controls at full size.
+Choose from fifty title and effects templates, four familiar spatial scenes and [32 editable 3D music videos]({{< relref "musimotion-vision-guide.md" >}}#13-make-a-3d-music-video). Make a title sequence, add a location stamp, paint a Sumi title to music or roll credits toward a vanishing point. The ten [black dragon paintings](#paint-a-black-dragon) honor the HeiLongWuShu school. Each has its own shamisen score and tempo. You can [extend an opening and keep the same music playing into the next scene](#extend-a-scene-and-its-soundtrack). The template supplies editable text, shapes and keyframes. Use the updated development preview on each device for the painted strokes and perspective lettering. The screenshots show the running app with synthetic demonstration content. The poster sheets use frames rendered from the editable projects. Select a picture to see the controls at full size.
 
 ## Start with a title
 
@@ -248,6 +248,8 @@ The Ink Gate paints its dragon over a four-bar shamisen phrase. At 64 BPM, that 
 {{< musimotion-capture "black-dragons/timing-held.webp" "The finished ink dragon and dedication remain on screen 19 seconds into the extended opening" >}}
 
 *On the iPad simulator, the transport has passed 19 seconds. The dragon and dedication remain in view beyond their original 15-second opening.*
+
+In the source scene, the audio row covers the complete continuing range. A later scene shows the continuing track on its own loop row. Select that row to return to the source scene and edit its audio.
 
 To return to a single play, turn off **Continue soundtrack** and choose **Apply**. The original audio keeps its authored start and end. If **Apply** is dimmed after a time edit, enter a number of at least 0.1 seconds. Shortening the scene skips anything beyond the new end. Extend it again to reveal those later events.
 

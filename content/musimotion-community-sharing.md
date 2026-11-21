@@ -59,10 +59,10 @@ November 20, 2026 · Mac development preview 1.0.0 (7). The website plays a rend
 
 ## Share with specific people
 
-1. In **Share Experience**, choose **Invite People** to prepare a private CloudKit invitation. On November 20, 2026, the development environment created an iCloud invitation and the owner updated and reopened its shared data. The production check found that the private sharing schema was missing. Guest acceptance has not been verified.
+1. In **Share Experience**, choose **Invite People** to prepare a private CloudKit invitation. On November 20, 2026, the production service created an iCloud invitation for a synthetic project. The owner saved an edit and fetched the updated project with its original archive intact. The private record stayed out of the anonymous public database. Acceptance and editing with a second iCloud account remain unverified.
 {{< musimotion-capture "community-sharing/invite-error.webp" "Mac Invite People panel with Create Invitation and the status CloudKit did not return an invitation URL" >}}
 
-*The production invitation test returned no invitation URL. A public post is visible to everyone and has different access.*
+*Historical troubleshooting capture from before the November 20 production repair. If no invitation URL appears, check the device’s iCloud sign-in and try Create Invitation again. Send a successful invitation directly to the intended editor.*
 
 2. For synchronized live playback and edits, choose **Live Together** and **Start SharePlay**. Musimotion displays **Joining SharePlay…** while Apple connects the session. Once the host has joined, **Waiting for another participant** means no other Musimotion participant has joined yet. The host sends the initial creation when another participant arrives. If the presentation exceeds the attachment limit shown in the app, use **Invite People** once private invitations are available in your environment.
 

@@ -1,0 +1,11 @@
+{{- $file := .Get "file" -}}
+{{- $movie := printf "downloads/musimotion/visionos/%s.mp4" $file -}}
+{{- $captions := printf "downloads/musimotion/visionos/%s.en.vtt" $file -}}
+{{- $poster := printf "images/musimotion/visionos/music-videos/%s.webp" (.Get "poster") -}}
+<video controls playsinline preload="none" width="1280" height="720"
+       style="width:100%;height:auto;background:#101313" poster="{{ $poster | relURL }}"
+       aria-label="{{ .Get "title" }}">
+  <source src="{{ $movie | relURL }}" type="video/mp4">
+  <track kind="captions" srclang="en" label="English visual descriptions" src="{{ $captions | relURL }}">
+  <a href="{{ $movie | relURL }}">Download the simulator recording</a>.
+</video>

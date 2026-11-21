@@ -44,3 +44,20 @@ for (const app of catalog.products) {
   }
 }
 console.log(`Validated ${catalog.products.length} App Store products, availability labels, product routes, icons, and download links.`);
+
+const filmGroups = JSON.parse(await readFile(path.join(root, "data/musimotion_robot_films.json"), "utf8"));
+const films = filmGroups.flatMap(group => group.films);
+const filmPage = await readFile(path.join(root, "public/products/musimotion/robot-films/index.html"), "utf8");
+assert.equal(new Set(films.map(film => film.src)).size, 19, "Expected 19 distinct source films");
+assert.equal(films.length, 19, "Duplicate source film");
+for (const film of films) {
+  assert.ok(film.title && film.description && film.poster, "Film is missing its label, description or poster");
+  assert.match(film.duration, /^\d+:\d{2}$/);
+  assert.match(film.src, /^(?:images|videos)\/[\w./-]+\.mp4$/i);
+  for (const asset of [film.src, film.poster, film.captions].filter(Boolean)) {
+    assert.ok(!asset.split("/").includes(".."));
+    assert.ok(filmPage.includes(asset), `Film page is missing ${asset}`);
+    await access(path.join(root, "public", asset));
+  }
+}
+console.log(`Validated ${films.length} Musimotion films, original media links, captions and posters.`);

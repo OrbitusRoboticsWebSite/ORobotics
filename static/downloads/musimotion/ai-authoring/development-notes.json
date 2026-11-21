@@ -3,9 +3,9 @@
   "distribution": "Development preview",
   "guide": "https://www.orbitusrobotics.com/products/musimotion/ai-authoring/",
   "companion": {
-    "filename": "musimotion-mcp-1.0.0.zip",
-    "bytes": 13684,
-    "sha256": "890ce2da15cb6ae3ced467ffdd6da2c4ad0ce290daf8cf70fe081eebc92240b9"
+    "filename": "musimotion-mcp-1.1.0.zip",
+    "bytes": 14839,
+    "sha256": "cb7954094c40244a923ef4b3c70f9c4040731fcda9958e36843ae5d8f862f1c6"
   },
   "protocols": [
     "2026-07-28",
@@ -91,5 +91,6 @@
     "installed_mac": "The development-signed Mac preview reopened an existing project and preserved its project JSON and saved audio byte for byte. The scene and score import controls were present."
   },
   "external_model_verification": "Three fresh Codex host calls used the installed local companion. The host created a synthetic scene and a synthetic instrumental. A separate vague brief produced a question about the subject and title before any draft was written.",
-  "screenshot_provenance": "https://www.orbitusrobotics.com/images/musimotion/visionos/ai-authoring/provenance.json"
+  "screenshot_provenance": "https://www.orbitusrobotics.com/images/musimotion/visionos/ai-authoring/provenance.json",
+  "spatial_music_videos": 32
 }

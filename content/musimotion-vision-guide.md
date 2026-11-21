@@ -7,7 +7,7 @@ description: "Read 2D projects, select and edit objects in 3D, open or import sc
 
 [Back to Musimotion]({{< relref "musimotion.md" >}}) · [Product support]({{< relref "contact.md" >}})
 
-Guide 1.9 · November 20, 2026 · Development preview
+Guide 2.0 · November 20, 2026 · Development preview
 
 Read existing **2D presentations**, switch to **3D Volume** for solid objects and
 ink at different depths, and present inside **Full Immersion** on Vision Pro.
@@ -18,12 +18,9 @@ the [birthday surprise walkthrough](#8-make-a-birthday-surprise). To build a mus
 follow [Create a rhythm scene](#9-create-a-rhythm-scene). You can also
 [generate a soundtrack](#10-generate-a-soundtrack) for a 2D or spatial scene,
 or [play Droid Arena](#11-play-droid-arena) in Full Immersion. For brush technique, see [Paint, save and replay Sumi ink](#5-paint-save-and-replay-sumi-ink). For a project
-you are editing, see [Select, edit and copy objects](#12-select-edit-and-copy-objects).
+you are editing, see [Select, edit and copy objects](#12-select-edit-and-copy-objects). To animate to music, follow [Make a 3D music video](#13-make-a-3d-music-video).
 
-This guide describes development source, not an App Store release. The Mac
-1.0.0 build 7 approval is a separate release awaiting manual publication at the
-November 19 check. These features require the updated development build on
-each device. Keep a backup before opening a new 3D project in older software:
+These screenshots show the development editor and the Vision Pro release candidate. The approved Mac 1.0.0 build 7 is awaiting manual publication at the November 20 check. Use a matching updated build on each device for these features. [Current platform status]({{< relref "musimotion.md" >}}). Keep a backup before opening a new 3D project in older software:
 older builds do not understand the additional mode, camera and spatial ink data.
 
 Images show actual application UI with demonstration content. The Vision Pro
@@ -138,6 +135,8 @@ require device acceptance testing.** The visionOS 26.5 simulator exposes
 placeholder entity coordinates and cannot reliably synthesize this interaction.
 Use **Edit XYZ** for the automated, verified authoring route meanwhile.
 
+When **Play** is running, selecting a layer keeps the song playing. Move or scale that layer as the playhead advances to write its pose at the current time. **Pause** and scrub back to review the movement. The spatial position and scale controls also write against the moving playhead. For a precise pose at a fixed time, pause before using **Edit XYZ**.
+
 ## 4. Present in full immersion
 
 1. Pause, select the intended scene/time, and choose **Full Immersion**.
@@ -159,6 +158,12 @@ Start with short sessions and a stationary viewpoint. The app does not animate
 your camera. Position content and controls for relaxed viewing, check the entire
 animation path, and stop if uncomfortable. The sample is a test path, not a
 personal comfort guarantee after moving/recentring the workspace.
+
+To adjust an object’s effects during editing, pause playback, select the object and look above your left hand. Look at the illustrated **Open Effects Wheel** badge and pinch. You can also press and hold the object for about two-thirds of a second. Painting and arcade performance use their own controls. Use the editor’s **Effects** panel if the wrist badge is out of view.
+
+{{< musimotion-capture "music-videos/effects-wheel.webp" "Selected Welcome Banner in a bounded spatial volume with the Effects Wheel visible" >}}
+
+*This Vision Pro simulator capture shows the same wheel opened from the illustrated Effects control in the transport. Testing the above-hand badge requires a tracked hand on the headset.*
 
 ## 5. Paint, save and replay Sumi ink
 
@@ -723,6 +728,48 @@ project, movie and music checksums and the composer credited for each take.
    {{< musimotion-capture "editor-vision-templates.webp" "Vision Pro simulator Templates browser with four scene choices and buttons to open or import the selected Droid Arena" >}}
 
    *Earlier Vision Pro simulator capture with Droid Arena selected. The current gallery groups these choices under Spatial.*
+
+## 13. Make a 3D music video
+
+[Watch Chroma Nova and Robot Panorama Wall in the 4K simulator showcase]({{< relref "musimotion.md" >}}#watch-spatial-showcase).
+
+The screenshots show the running visionOS 26.5 simulator with synthetic template presentations and the public Orbitus films. Select a capture to see the controls at full size.
+
+1. Open **Project → New Presentation…** on Vision Pro. Choose **3D Music Videos**, select **Beat Rail Express**, then choose **Create Presentation**. The 32 designs include trains, expanding flowers, spirals, waves, orbits, gateways, mandalas and particle showers. In an existing project, **Templates → Import into Presentation** adds the selected scene.
+
+   {{< musimotion-capture "music-videos/choose-beat-rail.webp" "New Presentation sheet with the 3D Music Videos category and Beat Rail Express selected" >}}
+
+   *The selected design lists its original score tempo. Create Presentation opens a new editable project.*
+
+2. Press **Play**. In Beat Rail Express each carriage crosses the signal on a beat of its original 128 BPM score. Pause and select a carriage to edit its position and keyframes. Choose **Open Volume** to see the layers at different depths, or start **Full Immersion** to surround yourself with the scene. Try **Chroma Nova** for a lime-and-fuchsia burst at 140 BPM. Five 360° panoramas surround the templates with a railway valley, colored pigment, a prism pavilion, a starry desert or a kelp forest. The fifteen bundled images include those panoramas, background plates and transparent props. The presentation stores its artwork for offline playback. With Reduce Motion on, the beat-driven background tint stays at the scene’s base color.
+
+   {{< musimotion-capture "music-videos/railway-volume.webp" "Beat Rail Express tracks and carriages inside a cyan wireframe volume above the illustrated transport" >}}
+
+   *The cyan box marks the extent of the bounded volume. This earlier volume capture shows the geometric train; the updated template uses a photorealistic railcar and valley landscape.*
+
+   {{< musimotion-capture "music-videos/beat-rail-final.webp" "Seven silver-and-orange Beat Rail Express carriages cross the native immersive valley above a winding river" >}}
+
+   *The updated Beat Rail Express plays across a mountain valley, with seven detailed carriages and markers at the track.*
+
+   {{< musimotion-capture "music-videos/chroma-immersion.webp" "Chroma Nova in full immersion with a ring of stars and red petals floating in a teal panorama" >}}
+
+   *Chroma Nova plays colored stars and petals against a spherical backdrop. This is a frame from the running simulator.*
+
+3. To build a variation on Vision Pro, open **AI Create**, choose **Train on the Beat** or **Psychedelic Bloom**, and edit the brief. Choose **Build Scene Plan**, review the design, then use **Add Scene**. **Replace Scene** applies the plan to the current scene when **Replace current scene** is on.
+
+4. To use your own recording, open **Add Media → Sync Audio File → Choose Audio File**. Select a local MP3, M4A or WAV you have permission to include. Wait for the musical accents to finish processing, then choose **Done** and **Play**. The scene follows the song’s duration and repeats its visual phrase on detected accents. The project embeds the file for playback on other devices. If the file cannot be decoded, choose a playable local copy.
+
+   {{< musimotion-capture "music-videos/choose-local-audio.webp" "Sync Scene to Song displays Beat Rail Express Groove as the soundtrack to replace and offers Choose Audio File" >}}
+
+   *Check the name of the soundtrack before choosing its replacement.*
+
+5. For reference listening, open **Add Media → Apple Music**. Search by artist and title, paste a song link, or select **The Bells**, **Energy Flash** or **Knights of the Jaguar**. Select a song in the results to play it, then use **Pause**, **Play**, **Previous**, **Next** or **Stop**. **Done** returns to the editor while the song continues. Reopen Apple Music to stop or change it. Full-song catalog playback requires Apple Music access, an active subscription and availability in your storefront. The listening window also offers **Open in Apple Music**. Save or export a presentation with its original score or your imported audio file.
+
+   {{< musimotion-capture "music-videos/apple-music.webp" "Apple Music listening window with Search, Paste song link and three techno selections" >}}
+
+   *These three catalog references open in Apple Music. The sample uses synthetic project visuals. Musical recordings from the catalog stay in the Apple Music player.*
+
+Choose **New Presentation → Movie Walls** for a three-panel film presentation. The starter includes three short reels. Select **Use all 19 full Orbitus robot films (97 MB download)** to embed the original movies across seven scenes. Follow [Create a robot movie wall and watch the 19 source films]({{< relref "musimotion-robot-films.md" >}}).
 
 ## AI, sharing and support
 
