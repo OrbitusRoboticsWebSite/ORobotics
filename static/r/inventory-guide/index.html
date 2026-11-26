@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fleet inventory check-ins · RedAgent · Orbitus Robotics</title>
+  <meta name="description" content="Set up RedAgent device inventory check-ins on a managed Mac, Windows PC or Linux system, confirm a CloudKit receipt, and find the device in Fleet.">
+  <style>
+    :root { color-scheme:light; font:100%/1.55 Inter,system-ui,sans-serif; color:#192732; background:#f5f4f0 }
+    * { box-sizing:border-box } body { margin:0 } main { width:min(100%,62rem); margin:auto; padding:1.6rem clamp(1rem,4vw,2.5rem) 4rem }
+    nav { border-bottom:1px solid #b9c1c2; padding-bottom:1rem } a { color:#8d2232; text-underline-offset:.18em } a:focus-visible { outline:3px solid #a32d40; outline-offset:3px }
+    header { margin:2.3rem 0 } h1 { font-size:clamp(2rem,5vw,3rem); line-height:1.12; letter-spacing:-.035em; margin:.45rem 0 .8rem }
+    h2 { font-size:1.45rem; line-height:1.25; margin:0 0 .5rem } h3 { font-size:1.06rem; margin:1.3rem 0 .25rem }
+    p { max-width:76ch; margin:.55rem 0 } .edition,figcaption,footer { font-size:.93rem; color:#475660 }
+    section { margin:2rem 0; border-top:1px solid #b9c1c2; padding-top:1.45rem }
+    figure { margin:1.1rem 0 } img { display:block; max-width:100%; height:auto; border:1px solid #bec5c7; border-radius:4px }
+    figcaption { margin-top:.4rem; max-width:82ch } code { font-size:.94em; overflow-wrap:anywhere }
+    dl { margin:.9rem 0 } dt { font-weight:650; margin-top:.45rem } dd { margin:0 0 .35rem } footer { border-top:1px solid #b9c1c2; padding-top:1rem }
+    @media (max-width:40rem) { figure>a { display:block; overflow-x:auto; padding-bottom:.35rem } figure img { min-width:42rem; max-width:unset; width:100% } }
+  </style>
+</head>
+<body><main>
+  <nav aria-label="Breadcrumb"><a href="../">RedAgent</a> / Fleet inventory check-ins</nav>
+  <header><p class="edition">RedAgent 0.5.2 development guide · November 26, 2026</p>
+    <h1>Fleet inventory check-ins</h1>
+    <p>A managed Mac, Windows PC or Linux system appears in Fleet when Apple accepts its first inventory report. Later reports update the same device’s last-seen time. Each machine runs its own RedAgent helper.</p>
+    <p>This guide covers the private 0.5.2 development build for personal devices. The current Fleet portal uses CloudKit’s development environment. Your administrator must provision the inventory role and key there before a device can report.</p>
+  </header>
+  <section><h2>1. Check the installed helper</h2>
+    <p>Open RedAgent and choose <strong>Cloud Fleet</strong>. Select <strong>Refresh status</strong> and check the helper version. Inventory reporting requires the 0.5.2 helper. The 0.4.0 packages on the public <a href="../">RedAgent download page</a> predate this feature.</p>
+    <p>If the helper is absent, select <strong>Install system helper…</strong> in the 0.5.2 app and complete the operating system’s administrator prompt. Return to <strong>Cloud Fleet</strong> and select <strong>Refresh status</strong>.</p>
+    <figure><a href="waiting.webp"><img src="waiting.webp" alt="RedAgent’s Cloud Fleet tab and Fleet inventory check-ins section with a waiting status." width="958" height="342"></a><figcaption>In this synthetic example the helper is available and still waiting for its inventory profile. Swipe across a desktop screenshot on a small screen, or select it to open at full size.</figcaption></figure>
+  </section>
+  <section><h2>2. Provision each personal device</h2>
+    <p>Your Fleet administrator privately supplies <code>profile.json</code> and <code>inventory-key.pem</code> for the intended CloudKit environment. On each machine you manage, stage the key first and the profile last in the inventory folder.</p>
+    <dl><dt>macOS</dt><dd><code>/Library/Application Support/Orbitus/RedAgent/inventory/</code></dd>
+      <dt>Windows</dt><dd><code>%ProgramData%\Orbitus\RedAgent\inventory\</code></dd>
+      <dt>Linux</dt><dd><code>/var/lib/redagent/inventory/</code></dd></dl>
+    <p>On macOS and Linux, use a private folder with mode <code>0700</code> and files with mode <code>0600</code>, readable by the helper account. On Windows, use the installer-created folder and its inherited permissions for SYSTEM, Administrators and LocalService. Make one of those principals the owner of the files.</p>
+    <p>All participating machines can share one inventory signing credential. Its CloudKit owner must have only the <code>FleetInventoryReporter</code> role for this container. This role can create, read and update device status records across the inventory. Keep the credential in your private device-management channel. Rotating it affects every machine using it.</p>
+  </section>
+  <section><h2>3. Confirm the first check-in</h2>
+    <p>In <strong>Fleet inventory check-ins</strong>, look for <strong>Last accepted by CloudKit</strong>. The first accepted report establishes the device row. The helper uses a local identifier on subsequent reports, including after a restart.</p>
+    <figure><a href="accepted.webp"><img src="accepted.webp" alt="Inventory reporting status and a synthetic server acceptance time in RedAgent." width="914" height="97"></a><figcaption>This fixture shows where to find the reporting interval and the most recent CloudKit acceptance time.</figcaption></figure>
+    <p>Each report sends the computer name, a stable local identifier, OS family, kernel version, architecture, RedAgent version and UTC time to Apple CloudKit. The inventory check-in supplies an unknown health state and leaves app and vulnerability counts unmeasured.</p>
+  </section>
+  <section><h2>4. Find the device in Fleet</h2>
+    <p>Select <strong>Open fleet portal</strong>. Sign in with an account authorized to view your fleet and choose <strong>Refresh reports</strong>. Under <strong>Managed machines</strong>, enter the device label in <strong>Search machines</strong>. For a first lookup, leave <strong>Platform</strong>, <strong>Version / flavor</strong> and <strong>Report status</strong> at their default settings.</p>
+    <figure><a href="sample-list.webp"><img src="sample-list.webp" width="1665" height="488" alt="Managed machines filtered to an invented Linux device called Lab node, with Unknown health and a stale last check-in."></a><figcaption>The portal’s <strong>Explore sample fleet</strong> option displays invented records. The sample Lab node has an older receipt and remains visible with <strong>All statuses</strong> selected.</figcaption></figure>
+    <p>Select <strong>View report</strong> for the matching device. <code>reportedAt</code> is the time supplied by the client. For live records, <code>receivedAt</code> comes from CloudKit’s record modification time. An empty <code>summary</code> means that the client supplied no counts.</p>
+    <figure><a href="sample-report.webp"><img src="sample-report.webp" width="900" height="745" alt="Invented sample report for Lab node showing RedAgent 0.5.2, an empty summary, and the receipt timestamp."></a><figcaption>The built-in sample report demonstrates how the portal represents unmeasured counts. Its timestamps are synthetic.</figcaption></figure>
+  </section>
+  <section><h2>5. Recover a missing check-in</h2>
+    <dl><dt>Waiting for inventory profile</dt><dd>Verify the stage location, filenames and private file permissions for the account running the helper.</dd>
+      <dt>Check-in failed; retry scheduled</dt><dd>Follow the reason shown in the panel. Check that the machine is awake, its clock is accurate and it can reach Apple CloudKit. Ask your administrator to verify the key owner’s inventory role in the environment named by the profile. Retries begin after 30 seconds and back off to five minutes.</dd>
+      <dt>A receipt is visible locally, but the device row is missing</dt><dd>Confirm the administrator account and CloudKit environment, clear the search and filters, and select <strong>Refresh reports</strong>. The <strong>Recent</strong> filter covers the last 15 minutes.</dd></dl>
+    <figure><a href="retry.webp"><img src="retry.webp" alt="RedAgent showing an inventory check-in failure and scheduled retry." width="914" height="97"></a><figcaption>The retry state is shown here with a synthetic failure. A new acceptance time appears only after Apple acknowledges a report.</figcaption></figure>
+    <p>To stop future reports from a device, have its administrator remove the inventory profile. Fleet retains its last accepted timestamp.</p>
+  </section>
+  <footer>Screenshot provenance · November 26, 2026. RedAgent application captures use synthetic helper status. Fleet portal captures use its built-in invented sample data.</footer>
+</main></body></html>

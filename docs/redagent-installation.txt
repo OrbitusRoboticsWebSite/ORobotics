@@ -93,3 +93,13 @@ Development source 7aaad23 adds BSSID and channel selection in Capture only
 and saved-capture analysis. The November 11 pilot packages predate the picker.
 Guided screenshots and a synthetic practice survey are at
 https://www.orbitusrobotics.com/r/wifi-guide/
+
+2026-11-26 · Fleet inventory check-ins in RedAgent 0.5.2 development
+On each managed macOS, Windows or Linux machine, check the helper version
+in Cloud Fleet. Privately stage the inventory profile and signing key for
+the FleetInventoryReporter role. The first accepted status report creates
+the device entry. Later reports update its last-seen time. To confirm a
+receipt, read Last accepted by CloudKit under Fleet inventory check-ins.
+The 0.4.0 pilot downloads predate this workflow. Platform-specific setup,
+five guided screenshots with synthetic data, and recovery steps are at
+https://www.orbitusrobotics.com/r/inventory-guide/

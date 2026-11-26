@@ -23,14 +23,14 @@ export function exampleReport(now = Date.now()) {
 }
 export function sampleMachines(now = Date.now()) {
   return [
-    ['Design Mac', 'macos', 'macOS', '26.0', 'arm64', 'ok', 2, 82, 0, 'design'],
-    ['Build workstation', 'windows', 'Windows 11 Pro', '24H2', 'x86_64', 'attention', 6, 64, 3, 'engineering'],
-    ['Lab node', 'linux', 'Ubuntu', '24.04 LTS', 'x86_64', 'unknown', 93, 108, 0, 'lab'],
-    ['Studio Mac', 'macos', 'macOS', '15.7', 'arm64', 'ok', 11, 51, 0, 'studio'],
-    ['Compute node', 'linux', 'Debian', '13', 'arm64', 'ok', 4, 37, 0, 'engineering'],
-  ].map(([hostLabel, family, flavor, version, architecture, health, minutes, installedApps, potentialVulnerabilities, tag], index) => ({
+    ['Design Mac', 'macos', 'macOS', '26.0', 'arm64', 'ok', 2, { installedApps: 82, potentialVulnerabilities: 0 }, 'design'],
+    ['Build workstation', 'windows', 'Windows 11 Pro', '24H2', 'x86_64', 'attention', 6, { installedApps: 64, potentialVulnerabilities: 3 }, 'engineering'],
+    ['Lab node', 'linux', 'Ubuntu', '24.04 LTS', 'x86_64', 'unknown', 93, {}, 'lab', '0.5.2'],
+    ['Studio Mac', 'macos', 'macOS', '15.7', 'arm64', 'ok', 11, { installedApps: 51, potentialVulnerabilities: 0 }, 'studio'],
+    ['Compute node', 'linux', 'Debian', '13', 'arm64', 'ok', 4, { installedApps: 37, potentialVulnerabilities: 0 }, 'engineering'],
+  ].map(([hostLabel, family, flavor, version, architecture, health, minutes, summary, tag, agentVersion = '0.1.0'], index) => ({
     ...exampleReport(now - minutes * 60000), deviceId: `00000000-0000-4000-8000-${String(index + 1).padStart(12, '0')}`,
-    hostLabel, os: { family, flavor, version, architecture }, health, summary: { installedApps, potentialVulnerabilities },
+    hostLabel, os: { family, flavor, version, architecture }, health, summary, agentVersion,
     tags: ['sample', tag], receivedAt: new Date(now - minutes * 60000).toISOString(), sample: true,
   }));
 }

@@ -27,6 +27,18 @@ test('CloudKit parsing requires usable data and server receipt time', () => {
   assert.throws(() => decodeRecord({ fields: { payloadJSON: { value: JSON.stringify(records[0]) } } }));
   assert.throws(() => decodeRecord({ fields: { payloadJSON: { value: 'x'.repeat(8193) } } }));
 });
+test('inventory check-ins retain unmeasured counts and the CloudKit receipt time', async () => {
+  for (const family of ['macos', 'windows', 'linux']) {
+    const payload = { ...records.find(r => r.os.family === family), health: 'unknown', summary: {} };
+    const record = { fields: { payloadJSON: { value: JSON.stringify(payload) } }, modified: { timestamp: now } };
+    const machines = await queryFleet({ performQuery: async () => ({ records: [record] }) });
+    const [accepted] = filterMachines(machines, { platform: family, status: 'recent' }, now);
+    assert.equal(accepted.deviceId, payload.deviceId);
+    assert.equal(accepted.health, 'unknown');
+    assert.deepEqual(accepted.summary, {});
+    assert.equal(accepted.receivedAt, new Date(now).toISOString());
+  }
+});
 test('query uses CloudKit continuation responses and never returns partial data on denial', async () => {
   const record = r => ({ fields: { payloadJSON: { value: JSON.stringify(r) }, receivedAt: { value: now - 60000 } }, modified: { timestamp: now } });
   const first = { records: [record(records[0])], continuationMarker: 'next' };
