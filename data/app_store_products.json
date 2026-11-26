@@ -76,12 +76,17 @@
       "app_id": "750098892",
       "bundle_id": "com.orbitusrobotics.MusimotionPro",
       "source_project": "git.musimotion",
-      "status": "approved",
-      "platforms": "Mac approved · Vision Pro build 12 awaiting App Review",
-      "description": "Paint and animate on a timeline, then step inside a 3D presentation. Watch original scored films, a train moving to the beat, and a ROB model with editable neon titles and eleven animated joints. Mac 1.0.0 awaits manual release. The iPad edition is in development.",
+      "status": "available",
+      "platforms": "Mac · Apple Vision Pro",
+      "description": "Animate text, drawings and video on a timeline. Play a miniature railway on the table or step into a film on Vision Pro. Version 1.0.0 is available for both platforms. The 1.0.1 updates have been submitted to Apple for review.",
       "page": "products/musimotion/",
       "icon": "images/products/musimotion/app-icon.webp",
-      "verified_at": "2026-11-20"
+      "verified_at": "2026-11-26",
+      "version": "1.0.0",
+      "category": "Photo & Video",
+      "headline": "Paint a scene and set it to music.",
+      "requirement": "Requires visionOS 2.0 or later on Apple Vision Pro, or macOS 15.0 or later on Mac.",
+      "store_url": "https://apps.apple.com/app/id750098892"
     },
     {
       "slug": "rob-training-vision",

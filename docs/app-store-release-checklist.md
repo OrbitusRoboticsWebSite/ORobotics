@@ -221,3 +221,16 @@ The [editor controls walkthrough](../content/musimotion-editor-controls.md) cove
 - At 6:02 p.m. Pacific on November 20, App Store Connect confirmed the withdrawal of visionOS build 10 and showed build 11 as validated and selected. The guide was prepared while a replacement build incorporating relocated URDF mesh recovery was being checked.
 - The illustrated guide and native movies were published in `ffb2e96`. [Pages run 44854728137](https://github.com/OrbitusRoboticsWebSite/ORobotics/actions/runs/44854728137) succeeded. Seven live routes, all 28 changed assets and byte seeking on all 19 complete source films were verified on the canonical site.
 - The App Store Connect receipt for build 12 records 6:29:02 PM Pacific on November 20 and `WAITING_FOR_REVIEW` for review submission `51e05e2a-a3cf-41f5-9374-4b8a7df1b9f7`. Vision Pro 1.0.0 includes the corrected relocated mesh import, seven screenshots and three fully processed 4K App Store previews. Each Store preview opens with 1.2 seconds of actual visionOS UI, followed by the picture and soundtrack from the native presentation export. Automatic release is configured after approval. Mac 1.0.0 build 7 remains approved pending manual release.
+
+## Musimotion Pro public release and 1.0.1 submissions — November 26, 2026
+
+Apple accepted the manual release of Mac 1.0.0 build 7. It is available alongside native visionOS 1.0.0 build 12. The U.S. [Mac listing](https://apps.apple.com/us/app/musimotion-pro/id750098892?mt=12&platform=mac) names macOS 15.0 or later and the [Apple Vision listing](https://apps.apple.com/us/app/musimotion-pro/id750098892?platform=vision) names visionOS 2.0 or later. The U.S. storefront displays the free app, $29.99 permanent Pro Export purchase, and monthly ($5.99) and yearly ($49.99) Studio subscriptions. The yearly plan has a two-week introductory trial for eligible U.S. subscribers. Each active purchase has 175 configured territories. The iOS 1.0.0 build 5 submission remains rejected.
+
+Both 1.0.1 releases were built from app commit `03f13c20986fab4b4603da6c5355500502e0823a`. The Mac update adds editable presentation templates, animated 3D models and scored movie export. The native visionOS update adds Chill House, Rock and Classical Piano arrangements to Music Studio.
+
+| Platform | Build | Submitted (UTC) | Review ID | App Store Connect response |
+| --- | --- | --- | --- | --- |
+| macOS | 8 | 2026-11-26T23:01:14.546Z | `b817f2a6-72af-4400-a288-b2324865747a` | `WAITING_FOR_REVIEW` |
+| visionOS | 13 | 2026-11-26T23:00:30.65Z | `1f35d036-628b-4b5c-becb-941e2b84ea41` | `WAITING_FOR_REVIEW` |
+
+Both updates are set to release automatically after approval. The public product page and catalog distinguish these submissions from version 1.0.0. Both platforms distribute directly through Apple.

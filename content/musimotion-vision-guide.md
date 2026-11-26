@@ -7,7 +7,7 @@ description: "Read 2D projects, select and edit objects in 3D, open or import sc
 
 [Back to Musimotion]({{< relref "musimotion.md" >}}) · [Product support]({{< relref "contact.md" >}})
 
-Guide 2.2 · November 20, 2026 · Vision Pro 1.0.0 build 12 awaiting App Review
+Guide 2.2 · Updated November 26, 2026 · Vision Pro 1.0.0 build 12 is available
 
 Read existing **2D presentations**, switch to **3D Volume** for solid objects and
 ink at different depths, and present inside **Full Immersion** on Vision Pro.
@@ -20,7 +20,7 @@ follow [Create a rhythm scene](#9-create-a-rhythm-scene). You can also
 or [play Droid Arena](#11-play-droid-arena) in Full Immersion. For brush technique, see [Paint, save and replay Sumi ink](#5-paint-save-and-replay-sumi-ink). For a project
 you are editing, see [Select, edit and copy objects](#12-select-edit-and-copy-objects). To animate to music, follow [Make a 3D music video](#13-make-a-3d-music-video). To frame a scan or pose a robot, follow [Import and animate a 3D model](#14-import-and-animate-a-3d-model).
 
-These screenshots show the development editor and the Vision Pro release candidate. The approved Mac 1.0.0 build 7 is awaiting manual publication at the November 20 check. Use a matching updated build on each device for these features. [Current platform status]({{< relref "musimotion.md" >}}). Keep a backup before opening a new 3D project in older software:
+These screenshots show the November 20 development editor and the Vision Pro release candidate. Vision Pro 1.0.0 build 12 includes the spatial editor. Some Mac walkthroughs use features submitted in the 1.0.1 update. The Chill House, Rock and Classical Piano arrangements are also in the Vision Pro 1.0.1 submission. Check the version before following them. [Current platform status]({{< relref "musimotion.md" >}}). Keep a backup before opening a new 3D project in older software:
 older builds do not understand the additional mode, camera and spatial ink data.
 
 Images show actual application UI with demonstration content. The Vision Pro

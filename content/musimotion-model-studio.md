@@ -7,7 +7,7 @@ draft: false
 
 [Musimotion]({{< relref "musimotion.md" >}}) · [Vision Pro guide]({{< relref "musimotion-vision-guide.md" >}})
 
-The three **3D Models** templates pair a real ROB model with editable titles, animation keys and an original electronic soundtrack. The Mac and iPad editions shown here are development previews. Vision Pro 1.0.0 build 12 is awaiting App Review and is set for automatic release after approval.
+The three **3D Models** templates pair a real ROB model with editable titles, animation keys and an original electronic soundtrack. The screenshots show development builds on Mac and iPad. The Mac 1.0.1 submission includes model authoring. The models are included in Vision Pro 1.0.0 build 12. [Get Musimotion on the App Store](https://apps.apple.com/app/id750098892).
 
 ## Start with a robot
 

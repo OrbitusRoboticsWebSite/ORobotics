@@ -1,4 +1,5 @@
 {{ define "main" }}
+{{ $app := index (where hugo.Data.app_store_products.products "slug" "musimotion") 0 }}
 <main id="main" class="musimotion">
   <nav class="musimotion-nav" aria-label="Musimotion page sections">
     <a class="musimotion-nav__brand" href="{{ "products/" | relURL }}">
@@ -26,11 +27,12 @@
       <p class="musimotion-hero__statement">Animate.<br><em>Paint.</em><br>Perform.</p>
       <p class="musimotion-hero__lede">Build a scene from text, shapes, symbols, photos, and video. Give it motion and physics. Then step out of slide mode and perform the whole thing live.</p>
       <div class="musimotion-actions">
-        <a class="musimotion-button musimotion-button--primary" href="#watch">See it in motion <span aria-hidden="true">↓</span></a>
+        <a class="musimotion-button musimotion-button--primary" href="{{ $app.store_url }}">Get Musimotion on the App Store</a>
+        <a class="musimotion-button" href="#watch">Watch Musimotion</a>
         <a class="musimotion-button" href="{{ "products/musimotion/video-templates/" | relURL }}">Browse presentation templates</a>
-        <a class="musimotion-button" href="#plans">Explore launch plans</a>
+        <a class="musimotion-button" href="#plans">Compare plans</a>
       </div>
-      <p class="musimotion-status"><span aria-hidden="true"></span> As of November 20, 2026, Mac 1.0.0 is approved and awaiting manual release. Vision Pro 1.0.0 build 12 is awaiting App Review and is set for automatic release after approval. The iPad edition is in development.</p>
+      <div class="musimotion-status"><span aria-hidden="true"></span><p>November 26, 2026 · Version 1.0.0 is available on Mac (build 7) and Apple Vision Pro (build 12). {{ $app.requirement }} The iPad edition is in development. <a href="#version-1-0-1"><u>See the submitted 1.0.1 updates</u></a>.</p></div>
     </div>
     <div class="musimotion-hero__stage" aria-label="Musimotion running on iPad">
       {{ $editor := resources.Get "images/products/musimotion/01-editor.webp" }}
@@ -183,8 +185,9 @@
 
   <section id="vision-preview" class="musimotion-create" aria-labelledby="musimotion-vision-title">
     <div class="musimotion-section-head musimotion-section-head--wide">
-      <p class="musimotion-kicker"><span>Vision Pro 1.0.0 build 12 awaiting App Review</span> November 20, 2026</p>
+      <p class="musimotion-kicker"><span>Apple Vision Pro</span> Version 1.0.0 · Build 12</p>
       <h2 id="musimotion-vision-title">Your original controls.<br>A volume with real depth.</h2>
+      <p id="version-1-0-1"><strong>Submitted for App Review on November 26.</strong> Mac 1.0.1 build 8 adds editable templates such as Starfield Crawl and The Ink Gate, animated 3D models and scored movie export. Vision Pro 1.0.1 build 13 adds Chill House, Rock and Classical Piano. Audition a new arrangement in Music Studio and add it to the scene timeline.</p>
       <p>Read existing 2D presentations in the familiar illustrated editor. Choose 3D Volume to animate solid text, shapes and ink behind and in front of the canvas. Mac and iPad render the same saved project through a movable camera.</p>
       <p>On Vision Pro, Open Volume creates a bounded spatial window. Full Immersion surrounds you with the presentation and keeps the original turquoise playback controls within reach. Exit 3D pauses playback and returns to the editor.</p>
       <p>Build a 3D music video from 32 editable designs. Beat Rail Express sends a modeled train along angled tracks, with overhead poles and moving traffic on separate depth planes. Each carriage crosses the signal on a beat. Chroma Nova opens into a colored starburst. Five spherical panoramas surround the viewer with an original environment. On Vision Pro, choose your own audio file to repeat the visual phrase for the whole song.</p>
@@ -242,9 +245,9 @@
 
   <section id="plans" class="musimotion-plans" aria-labelledby="musimotion-plans-title">
     <div class="musimotion-section-head musimotion-section-head--wide">
-      <p class="musimotion-kicker"><span>Approved Mac launch plans</span> Release pending</p>
+      <p class="musimotion-kicker"><span>Plans and pricing</span> U.S. App Store</p>
       <h2 id="musimotion-plans-title">Create freely. Pay when your work needs to travel.</h2>
-      <p>The app is configured as a free download. A permanent purchase unlocks professional local export; Studio supports ongoing collaboration services. Apple has approved the Mac app and these purchase items. Manual release is pending, so they are not yet publicly available for purchase.</p>
+      <p>Download Musimotion for free to edit and replay local projects. Pro Export unlocks full-resolution export with a single purchase. Studio includes Pro Export and adds online collaboration and publishing.</p>
     </div>
 
     <div class="musimotion-price-grid">
@@ -257,7 +260,7 @@
           <li>Watermarked 720p preview export</li>
           <li>Join and view shared experiences</li>
         </ul>
-        <a href="{{ "contact/" | relURL }}">Get launch updates</a>
+        <a href="{{ $app.store_url }}">Get the free app</a>
       </article>
       <article class="musimotion-price-card--featured">
         <div><span>PRO EXPORT</span><strong>$29.99</strong><small>One-time purchase</small></div>
@@ -266,9 +269,9 @@
           <li>Everything in Free</li>
           <li>Full-resolution, watermark-free export</li>
           <li>Export editable <code>.musimotion</code> packages</li>
-          <li>Planned permanent unlock across supported platforms</li>
+          <li>Restore the purchase on supported devices</li>
         </ul>
-        <a href="{{ "contact/" | relURL }}">Follow the launch</a>
+        <a href="{{ $app.store_url }}">View Pro Export on the App Store</a>
       </article>
       <article>
         <div><span>STUDIO</span><strong>$5.99</strong><small>Per month</small></div>
@@ -279,14 +282,14 @@
           <li>Publish experiences to the community</li>
           <li>Shared editing and version history</li>
         </ul>
-        <p class="musimotion-price-card__annual"><b>$49.99/year</b> · 14 days free, then $49.99/year unless canceled.</p>
-        <a href="{{ "contact/" | relURL }}">Join the Studio waitlist</a>
+        <p class="musimotion-price-card__annual"><b>$49.99/year</b> · Eligible subscribers get 14 days free, then $49.99/year unless canceled.</p>
+        <a href="{{ $app.store_url }}">View Studio on the App Store</a>
       </article>
     </div>
 
     <div class="musimotion-comparison" tabindex="0" role="region" aria-label="Scrollable Musimotion plan comparison">
       <table>
-        <caption>Mac launch capabilities by plan; visionOS preview limitations are described in the guide</caption>
+        <caption>Musimotion plans on Mac. See the Vision guide for features available on the headset.</caption>
         <thead><tr><th scope="col">Capability</th><th scope="col">Free</th><th scope="col">Pro Export</th><th scope="col">Studio</th></tr></thead>
         <tbody>
           <tr><th scope="row">Create, edit, animate, paint, use physics</th><td><span class="musimotion-check">Yes</span></td><td><span class="musimotion-check">Yes</span></td><td><span class="musimotion-check">Yes</span></td></tr>
@@ -301,7 +304,7 @@
         </tbody>
       </table>
     </div>
-    <p class="musimotion-pricing-note">Configured US launch prices, verified November 19, 2026; prices and availability vary by storefront. Studio includes professional export while subscribed. Other platform releases remain pending. China mainland availability awaits compliance verification.</p>
+    <p class="musimotion-pricing-note">U.S. prices verified November 26, 2026. Prices and availability vary by storefront. Studio includes professional export while subscribed.</p>
   </section>
 
   <section class="musimotion-fairness" aria-labelledby="musimotion-fairness-title">
@@ -312,7 +315,7 @@
     <div class="musimotion-fairness__rules">
       <article><span>01</span><h3>Upgrade prompts stay predictable</h3><p>The paywall appears only for watermark-free or high-resolution export, editable package export, hosting collaboration, or community publishing.</p></article>
       <article><span>02</span><h3>Your projects remain yours</h3><p>If Studio ends, every local project remains editable and playable. Preview export remains available; only new premium exports and online hosting or publishing relock.</p></article>
-      <article><span>03</span><h3>One purchase, every supported Apple screen</h3><p>The launch plan is a universal app purchase so a permanent Pro Export unlock or active Studio subscription follows the creator across iPad, Mac, and Apple Vision Pro.</p></article>
+      <article><span>03</span><h3>One purchase, every supported Apple screen</h3><p>Restore Pro Export or an active Studio subscription when you sign in with the same Apple Account on a supported device.</p></article>
     </div>
     <p class="musimotion-apple-note">The model follows Apple’s guidance for <a href="https://developer.apple.com/help/app-store-connect/configure-in-app-purchase-settings/overview-for-configuring-in-app-purchases" target="_blank" rel="noopener noreferrer">permanent non-consumable purchases</a>, <a href="https://developer.apple.com/app-store/subscriptions/" target="_blank" rel="noopener noreferrer">ongoing subscription value</a>, and <a href="https://developer.apple.com/help/app-store-connect/create-an-app-record/add-platforms" target="_blank" rel="noopener noreferrer">universal purchase across Apple platforms</a>.</p>
   </section>
@@ -320,12 +323,13 @@
   <section class="musimotion-closing">
     {{ $closingIcon := resources.Get "images/products/musimotion/app-icon.webp" }}
     <img src="{{ $closingIcon.RelPermalink }}" width="{{ $closingIcon.Width }}" height="{{ $closingIcon.Height }}" alt="Musimotion app icon" loading="lazy" decoding="async">
-    <p class="musimotion-kicker"><span>Musimotion</span> Coming to Apple platforms</p>
+    <p class="musimotion-kicker"><span>Musimotion</span> Downloads and support</p>
     <h2>Make the presentation<br>only you can perform.</h2>
-    <p>Musimotion Pro for Mac and its paid plans are approved, with manual release pending. Vision Pro 1.0.0 build 12 is awaiting App Review and is set for automatic release after approval. Use the editor controls guide to move an object, spin its menu and apply effects. The visionOS guide covers the spatial workspace and playback.</p>
+    <p>Download Musimotion from the App Store. Use the editor controls guide to move an object, spin its menu and apply effects. The visionOS guide covers the spatial workspace and playback.</p>
     <div class="musimotion-actions">
+      <a class="musimotion-button musimotion-button--primary" href="{{ $app.store_url }}">View on the App Store</a>
       <a class="musimotion-button" href="{{ "products/musimotion/editor-controls/" | relURL }}">Editor controls guide</a>
-      <a class="musimotion-button musimotion-button--primary" href="{{ "contact/" | relURL }}">Contact Orbitus Robotics <span aria-hidden="true">↗</span></a>
+      <a class="musimotion-button" href="{{ "contact/" | relURL }}">Contact Orbitus Robotics <span aria-hidden="true">↗</span></a>
       <a class="musimotion-button" href="{{ "products/" | relURL }}">Explore every product</a>
     </div>
   </section>
