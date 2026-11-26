@@ -12,3 +12,5 @@
 .ra-flipper-table td a+a{margin-top:10px}
 #flipper{scroll-margin-top:95px}
 @media(max-width:700px){.ra-flipper-catalog{padding:20px 16px}.ra-flipper-catalog .ra-section-head{gap:18px}.ra-flipper-catalog .ra-primary{white-space:normal}.ra-flipper-catalog .ra-text-links{gap:12px 20px}.ra-flipper-table{min-width:0}.ra-flipper-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.ra-flipper-table tbody tr{display:block;padding:18px 0;border-bottom:1px solid #d4dad3}.ra-page .ra-flipper-table tbody th{display:block;padding:0 0 10px;border:0}.ra-page .ra-flipper-table td{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px;padding:10px 0;border:0}.ra-flipper-table td::before{content:attr(data-platform-label);flex-basis:100%;font-size:11px;font-weight:600;color:var(--ra-muted)}.ra-flipper-table td a+a{margin-top:0}}
+
+.ra-downloads details code{overflow-wrap:anywhere}

@@ -103,3 +103,13 @@ receipt, read Last accepted by CloudKit under Fleet inventory check-ins.
 The 0.4.0 pilot downloads predate this workflow. Platform-specific setup,
 five guided screenshots with synthetic data, and recovery steps are at
 https://www.orbitusrobotics.com/r/inventory-guide/
+
+Signed-in user inventory preview (Apple silicon, macOS 26+, private distribution)
+Extract RedAgent-Inventory-0.5.2-macOS-arm64.zip in the account that will report,
+open RedAgent Inventory Installer.app and click Install for This User. The
+user LaunchAgent starts at login and stops at logout. Fleet inventory check-ins need a privately provisioned profile
+and signing key in this user's inventory folder. Click Show Status
+to see the local state and Last accepted by Fleet timestamp. Click Uninstall
+to stop and remove the reporter. Its identity and private provisioning remain
+available for reinstallation. Follow the illustrated guide below.
+https://www.orbitusrobotics.com/r/inventory-guide/#per-user-macos

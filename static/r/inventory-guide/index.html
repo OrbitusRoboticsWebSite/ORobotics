@@ -15,6 +15,7 @@
     section { margin:2rem 0; border-top:1px solid #b9c1c2; padding-top:1.45rem }
     figure { margin:1.1rem 0 } img { display:block; max-width:100%; height:auto; border:1px solid #bec5c7; border-radius:4px }
     figcaption { margin-top:.4rem; max-width:82ch } code { font-size:.94em; overflow-wrap:anywhere }
+    pre { max-width:100%; padding:.8rem 1rem; white-space:pre-wrap; overflow-wrap:anywhere; background:#e9ecea; border-radius:4px }
     dl { margin:.9rem 0 } dt { font-weight:650; margin-top:.45rem } dd { margin:0 0 .35rem } footer { border-top:1px solid #b9c1c2; padding-top:1rem }
     @media (max-width:40rem) { figure>a { display:block; overflow-x:auto; padding-bottom:.35rem } figure img { min-width:42rem; max-width:unset; width:100% } }
   </style>
@@ -23,10 +24,31 @@
   <nav aria-label="Breadcrumb"><a href="../">RedAgent</a> / Fleet inventory check-ins</nav>
   <header><p class="edition">RedAgent 0.5.2 development guide · November 26, 2026</p>
     <h1>Fleet inventory check-ins</h1>
-    <p>A managed Mac, Windows PC or Linux system appears in Fleet when Apple accepts its first inventory report. Later reports update the same device’s last-seen time. Each machine runs its own RedAgent helper.</p>
+    <p>A managed Mac, Windows PC or Linux system appears in Fleet when Apple accepts its first inventory report. Later reports update the same reporting identity’s last-seen time.</p>
     <p>This guide covers the private 0.5.2 development build for personal devices. The current Fleet portal uses CloudKit’s development environment. Your administrator must provision the inventory role and key there before a device can report.</p>
+    <p>Choose your installation scope. The <a href="#per-user-macos">signed-in user installer</a> reports inventory from one Apple silicon Mac login session. The <a href="#system-helper">system helper</a> runs as a machine service on a supported managed Mac, Windows PC or Linux system.</p>
   </header>
-  <section><h2>1. Check the installed helper</h2>
+  <section id="per-user-macos" aria-labelledby="per-user-heading">
+    <h2 id="per-user-heading">Install for one Mac user</h2>
+    <p>Authorized recipients can obtain the separate private prerelease <strong>RedAgent-Inventory-0.5.2-macOS-arm64.zip</strong> for Apple silicon Macs running macOS 26 or later. See the <a href="../#private-inventory-installer">package size and checksum</a> before installation. This account-level installation reports while the user is signed in, including after you close the installer. It stops at logout and starts again at the next login. Installation runs with the signed-in user’s privileges.</p>
+    <h3>1. Install from your own account</h3>
+    <p>Extract the ZIP in Finder. Open <strong>RedAgent Inventory Installer.app</strong> and click <strong>Install for This User</strong>. Read the result under <strong>Installer status</strong>. The installer registers a per-user macOS LaunchAgent named <code>com.orbitusrobotics.redagent.inventory</code>.</p>
+    <p>The development app’s ad-hoc signature passed verification. Gatekeeper rejected this unnotarized build in testing. Opening the download depends on your Mac’s installation policy. If macOS blocks it, contact the distributor for an approved build.</p>
+    <h3>2. Obtain private provisioning</h3>
+    <p>Have your administrator provision <code>profile.json</code> and <code>inventory-key.pem</code> for the inventory-only role in <code>~/Library/Application Support/Orbitus/RedAgent Inventory/inventory/</code>. Use credentials issued for this inventory-only purpose and the intended Fleet environment. Both files belong to the reporting user, with owner-only access. The installer supplies no credentials. The reporter waits here until your administrator supplies the registered inventory profile and signing key.</p>
+    <h3>3. Check the result</h3>
+    <p>Click <strong>Show Status</strong>. Read the login item status and the last saved reporting result. A <code>waiting</code> state calls for provisioning. A <code>retrying</code> state means a report failed. The <strong>Last accepted by Fleet</strong> timestamp appears after a receipt is saved. It corresponds to <code>receivedAt</code> in the runtime’s status output. Only an accepted report creates or updates a Fleet row.</p>
+    <p>Each report includes a stable identifier for this installation, computer name, OS family/flavor, kernel version, architecture, RedAgent version and UTC time. Health is reported as unknown. Counts and tags are empty. Other reporting users and a concurrently running system helper have independent IDs and can create additional Fleet rows for the same Mac. Choose one reporter per computer if you need one row per Mac.</p>
+    <figure><a href="user-controls.webp"><img src="user-controls.webp" width="880" height="338" alt="Transcript of the packaged controls showing successful login-item loading, waiting with no cloud receipt, then removal and a final not-installed status."></a><figcaption>Actual packaged control output, displayed in a text viewer. This signed-in test account had no Fleet profile. The null <code>receivedAt</code> shows that the run received no cloud acknowledgment.</figcaption></figure>
+    <details><summary>Read the status output as text</summary>
+      <pre aria-label="Actual status output from an unprovisioned installation"><code>Inventory login item: loaded
+{"state": "waiting", "reason": "", "deviceId": null, "receivedAt": null, "environment": null, "scope": "user", "updatedAt": "2026-11-26T23:53:02Z"}</code></pre>
+    </details>
+    <h3>4. Remove the login item</h3>
+    <p>Click <strong>Uninstall</strong>. It stops the reporter and removes the login item, runtime and installed controls for this account. Reporter identity, state and private provisioning are retained in the user’s Application Support folder for reinstallation. A previously accepted Fleet row retains its last receipt.</p>
+    <p>If you have already removed the downloaded app, use Finder’s <strong>Go → Go to Folder…</strong> to open <code>~/Library/Application Support/Orbitus/RedAgent Inventory/</code>. Open <strong>Inventory Status.command</strong> or <strong>Uninstall Inventory.command</strong> there.</p>
+  </section>
+  <section id="system-helper"><h2>1. Check the installed system helper</h2>
     <p>Open RedAgent and choose <strong>Cloud Fleet</strong>. Select <strong>Refresh status</strong> and check the helper version. Inventory reporting requires the 0.5.2 helper. The 0.4.0 packages on the public <a href="../">RedAgent download page</a> predate this feature.</p>
     <p>If the helper is absent, select <strong>Install system helper…</strong> in the 0.5.2 app and complete the operating system’s administrator prompt. Return to <strong>Cloud Fleet</strong> and select <strong>Refresh status</strong>.</p>
     <figure><a href="waiting.webp"><img src="waiting.webp" alt="RedAgent’s Cloud Fleet tab and Fleet inventory check-ins section with a waiting status." width="958" height="342"></a><figcaption>In this synthetic example the helper is available and still waiting for its inventory profile. Swipe across a desktop screenshot on a small screen, or select it to open at full size.</figcaption></figure>
@@ -57,5 +79,5 @@
     <figure><a href="retry.webp"><img src="retry.webp" alt="RedAgent showing an inventory check-in failure and scheduled retry." width="914" height="97"></a><figcaption>The retry state is shown here with a synthetic failure. A new acceptance time appears only after Apple acknowledges a report.</figcaption></figure>
     <p>To stop future reports from a device, have its administrator remove the inventory profile. Fleet retains its last accepted timestamp.</p>
   </section>
-  <footer>Screenshot provenance · November 26, 2026. RedAgent application captures use synthetic helper status. Fleet portal captures use its built-in invented sample data.</footer>
+  <footer>Screenshot provenance · November 26, 2026. The per-user transcript shows actual packaged controls in an unprovisioned login session. The system-helper application captures use synthetic status. The Fleet portal captures use its built-in sample data.</footer>
 </main></body></html>
