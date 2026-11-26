@@ -43,6 +43,18 @@ Choose from fifty title and effects templates, four familiar spatial scenes and 
 
 You can also watch the eight-second title or open the same seven-layer project. Unzip the download and open `Afterlight.musimotion` in the development preview. The sample movie is silent H.264 at 960 × 540 and 12 frames per second. [Watch Afterlight (180 KB)]({{< asset-url "downloads/musimotion/video-templates/cinematic-title.mp4" >}}) · [Download the editable project (2 KB)]({{< asset-url "downloads/musimotion/video-templates/cinematic-title.zip" >}}) · [Sample file details and checksums]({{< asset-url "downloads/musimotion/video-templates/provenance.json" >}})
 
+## Choose a font on Mac
+
+The Free plan includes every font available to Musimotion on your device. The list depends on the fonts installed on that device.
+
+1. Select a text layer on the canvas, then open **Text** in the left toolbar.
+2. Choose **Font**. Browse the list, or type a name in **Search every installed font**.
+3. Choose a typeface and select **Apply to Selected** to update the layer. To create a new layer with that typeface, choose **Insert Text**.
+
+{{< musimotion-capture "video-templates/free-font-picker-mac.webp" "The Mac Fonts panel with a search field and 773 available font faces above the list" >}}
+
+*The Free editor on a test Mac showed 773 font faces. This cropped screenshot was captured in a synthetic presentation on macOS 26.6.2 on November 26, 2026.*
+
 ## Add a second scene
 
 5. With the title presentation open, choose **Templates → Lower Thirds → Location Stamp**. Choose **Import into Presentation** to append the location scene. For a separate project, choose **Open as New Presentation**, which saves the current work in the library before opening the template.

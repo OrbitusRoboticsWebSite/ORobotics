@@ -1337,6 +1337,33 @@
         311
       ],
       "sha256": "6c0954a08990c5dedeac2916a7b7c0a1aec09e543270a4fc2e844689886dbeed"
+    },
+    {
+      "file": "free-font-picker-mac.webp",
+      "platform": "macOS",
+      "captured": "2026-11-26",
+      "sources": [
+        {
+          "attachment": "02-all-fonts.png",
+          "capture": "Free plan, native Mac development preview. Synthetic Untitled Presentation in an isolated library. The picker listed the same 773 faces as macOS 26.6.2.",
+          "source_sha256": "9014f5665f4e5dbc2a8664f65359775ebb8dffd96a18d2f6b75a31dbdd2994c1",
+          "original_oriented_pixels": [
+            1745,
+            1254
+          ],
+          "crop": [
+            0,
+            125,
+            570,
+            615
+          ]
+        }
+      ],
+      "output_pixels": [
+        570,
+        490
+      ],
+      "sha256": "870e0ffb35e64347a9355d86839aa1c32d1e06f2ab7c3b462e8cd23ba949f1c3"
     }
   ]
 }
