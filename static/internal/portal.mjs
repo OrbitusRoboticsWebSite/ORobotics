@@ -1,14 +1,38 @@
+import { calendarYear, calendarRoute, validateCalendar, loadCalendarEdition, mountCalendar } from './calendar.mjs';
 import { PortalRepository, identityName, validateConfig, validateCatalog, filterItems, formatBytes, safeURL, MAX_FILE_BYTES } from './core.mjs';
 const $ = id => document.getElementById(id);
-const labels = { home: 'Overview', documents: 'Document library', news: 'Company journal', work: 'Work & deliverables', whitepapers: 'White papers', admin: 'Publishing' };
+const labels = { home: 'Overview', documents: 'Document library', news: 'Company journal', work: 'Work & deliverables', whitepapers: 'White papers', admin: 'Publishing', calendar: 'Calendar photo picker' };
 let container, identity = '', repo, catalog, catalogTag, admin = false, generation = 0, activeView = 'home', lastActivity = Date.now(), heartbeatBusy = false, publishing = false;
 const blobURLs = new Set();
+let calendarEpoch = 0, disposeCalendar;
+function clearCalendar() {
+  calendarEpoch++;
+  if (disposeCalendar) disposeCalendar();
+  disposeCalendar = undefined; $('calendar-view').replaceChildren();
+}
+async function openCalendar(year, focus = true) {
+  if (!catalog || !repo) return;
+  showView('calendar', focus);
+  const view = $('calendar-view'), request = calendarEpoch, session = generation;
+  const valid = () => session === generation && request === calendarEpoch && activeView === 'calendar' && Boolean(repo);
+  const scopedRepo = new PortalRepository(repo.db, valid);
+  const status = node('p', 'Checking access and loading the photo picker…'); status.setAttribute('role','status'); view.append(status);
+  try {
+    const data = await loadCalendarEdition(scopedRepo, year, fraction => {
+      status.textContent = 'Loading photo picker ' + Math.round(fraction * 100) + '%…';
+    });
+    if (!valid()) return;
+    if (data) disposeCalendar = mountCalendar(view, data, saveBlob);
+    else status.textContent = 'This calendar is unavailable in the current catalog.';
+  } catch { if (valid()) clearContent('The photo picker or employee access could not be verified. Check access again.'); }
+}
+
 function node(tag, text, className) { const el = document.createElement(tag); if (text !== undefined) el.textContent = text; if (className) el.className = className; return el; }
 function button(text, callback, className = 'text-button') { const b = node('button', text, className); b.type = 'button'; b.addEventListener('click', callback); return b; }
 function sourceLink(source) { const a = node('a', `${source.label} ↗`, 'source-link'); a.href = safeURL(source.url); a.target = '_blank'; a.rel = 'noopener noreferrer'; return a; }
 function dateLabel(date) { const d = new Date(date); return Number.isNaN(d.getTime()) ? date : d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }); }
 function clearContent(message = 'Workspace locked. Check access again or use Apple’s Sign Out button to end your Apple session.') {
-  generation++; repo = undefined; catalog = undefined; catalogTag = undefined; admin = false; publishing = false;
+  clearCalendar(); generation++; repo = undefined; catalog = undefined; catalogTag = undefined; admin = false; publishing = false;
   for (const url of blobURLs) URL.revokeObjectURL(url); blobURLs.clear();
   for (const id of ['featured','metrics','quick-documents','recent-work','documents','news','work','whitepapers','article-content']) $(id).replaceChildren();
   $('article-dialog').close(); $('workspace').hidden = true; $('locked').hidden = false; $('admin-nav').hidden = true;
@@ -18,6 +42,8 @@ function clearContent(message = 'Workspace locked. Check access again or use App
 }
 function showView(view, focus = true) {
   if (!catalog || !(view in labels) || (view === 'admin' && !admin)) return;
+  clearCalendar();
+  if (view !== 'calendar' && calendarRoute(location.hash)) history.replaceState(null, '', location.pathname + location.search);
   activeView = view;
   for (const key of Object.keys(labels)) $(`${key}-view`).hidden = key !== view;
   document.querySelectorAll('[data-view]').forEach(b => { if (b.dataset.view === view) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
@@ -49,6 +75,12 @@ function documentCard(doc) {
   card.append(node('div', doc.filename.split('.').pop().toUpperCase(), 'file-icon'), node('p', doc.category, 'eyebrow'), node('h3', doc.title), node('p', doc.summary));
   const bottom = node('div', undefined, 'card-bottom'); const status = node('p', '', 'download-status'); status.setAttribute('role', 'status');
   const b = button('Download ↓', () => download(doc, b, status), 'download-button');
+  const year = calendarYear(doc);
+  if (year && catalog.documents.find(item => calendarYear(item) === year)?.id === doc.id) {
+    const link = node('a', 'Open photo picker', 'download-button');
+    link.href = '#calendar/' + year;
+    bottom.append(link);
+  }
   bottom.append(node('span', `${doc.version ? `v${doc.version} · ` : ''}${formatBytes(doc.bytes)}`), b); card.append(bottom, status);
   const details = node('details'); details.append(node('summary', 'Edition details'), node('p', `${dateLabel(doc.date)} · ${doc.status || 'Internal document'}`), node('code', `SHA-256 ${doc.sha256}`)); card.append(details); return card;
 }
@@ -95,7 +127,10 @@ async function loadWorkspace() {
     repo = candidate; catalog = result.catalog; catalogTag = result.tag; admin = canAdmin; lastActivity = Date.now();
     $('document-category').replaceChildren(new Option('All collections', ''), ...[...new Set(catalog.documents.map(d => d.category))].sort().map(c => new Option(c, c)));
     $('locked').hidden = true; $('workspace').hidden = false; $('admin-nav').hidden = !admin; $('access-label').textContent = admin ? 'Administrator access' : 'Employee access';
-    $('workspace-notice').hidden = true; render(); showView(activeView === 'admin' && !admin ? 'home' : activeView, false);
+    $('workspace-notice').hidden = true; render();
+    const year = calendarRoute(location.hash);
+    if (year) await openCalendar(year, false);
+    else showView(activeView === 'calendar' || (activeView === 'admin' && !admin) ? 'home' : activeView, false);
   } catch { if (current === generation) clearContent('Access is unavailable. Your Apple account may need employee approval, or the workspace is not ready. No private content is displayed.'); }
   finally { $('retry').disabled = false; }
 }
@@ -118,6 +153,12 @@ document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', 
 $('search').addEventListener('input', render); $('document-category').addEventListener('change', render);
 $('retry').addEventListener('click', loadWorkspace); $('refresh').addEventListener('click', loadWorkspace); $('lock').addEventListener('click', () => clearContent());
 $('close-article').addEventListener('click', () => $('article-dialog').close()); $('article-dialog').addEventListener('close', () => $('article-content').replaceChildren());
+window.addEventListener('hashchange', () => {
+  if (!repo || !catalog) return;
+  const year = calendarRoute(location.hash);
+  if (year) void openCalendar(year);
+  else if (activeView === 'calendar') showView('documents');
+});
 window.addEventListener('pagehide', () => clearContent());
 window.addEventListener('pageshow', event => { if (event.persisted) clearContent('This restored page is locked. Check access again.'); });
 for (const name of ['pointerdown','keydown','touchstart']) document.addEventListener(name, () => { lastActivity = Date.now(); }, { passive: true });
@@ -148,7 +189,14 @@ $('upload-form').addEventListener('submit', async event => {
   const mime = { pdf: 'application/pdf', txt: 'text/plain', json: 'application/json', zip: 'application/zip' }[file.name.split('.').pop().toLowerCase()];
   const current = generation, currentRepo = repo; publishing = true; const submit = $('upload-form').querySelector('button'); submit.disabled = true;
   try {
-    const doc = await currentRepo.upload(new Uint8Array(await file.arrayBuffer()), { title: $('document-title').value.trim(), filename: file.name, mime, summary: $('document-summary').value.trim(), category: $('upload-category').value, version: $('document-version').value.trim(), date: new Date().toISOString().slice(0, 10), status: 'Internal document' }, p => { if (current === generation) $('admin-result').textContent = `Uploading ${Math.round(p * 100)}%…`; });
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    currentRepo.check();
+    const year = calendarYear({filename:file.name, mime});
+    if (year) {
+      try { validateCalendar(JSON.parse(new TextDecoder('utf-8', {fatal:true}).decode(bytes)), year); }
+      catch { bytes.fill(0); $('admin-result').textContent = 'Invalid photo picker. Check the year, twelve proposed months and JPEGs before uploading.'; return; }
+    }
+    const doc = await currentRepo.upload(bytes, { title: $('document-title').value.trim(), filename: file.name, mime, summary: $('document-summary').value.trim(), category: $('upload-category').value, version: $('document-version').value.trim(), date: new Date().toISOString().slice(0, 10), status: 'Internal document' }, p => { if (current === generation) $('admin-result').textContent = `Uploading ${Math.round(p * 100)}%…`; });
     const fresh = await currentRepo.catalog(); fresh.catalog.documents.unshift(doc); fresh.catalog.updatedAt = new Date().toISOString();
     await currentRepo.publish(fresh.catalog, fresh.tag); currentRepo.check(); await loadWorkspace(); showView('admin'); $('admin-result').textContent = 'Document stored, read back, checksum verified and published.';
   } catch { if (current === generation) $('admin-result').textContent = 'Publication was not confirmed. Check access and retry. Incomplete uploads do not appear in the catalog.'; }

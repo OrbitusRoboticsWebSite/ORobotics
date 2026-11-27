@@ -217,6 +217,22 @@ static bytes contain no private data. Local mock tests do not prove live Apple
 permissions or successful sign-in. Record the deployment and import receipts
 privately.
 
+## Annual calendar photo selection
+
+Employees can open the protected **Document library**, choose the edition and select **Open photo picker**. The annual deep link uses `/internal/#calendar/YYYY`. The portal checks the current account before reading the catalog, verifies the edition's chunks and SHA-256, then opens the picker. The [illustrated employee guide](https://www.orbitusrobotics.com/internal/calendar-guide/) covers assigning months, replacing a photo, reviewing, transferring choices and recovering after a lock. Its screenshots use a local synthetic account, generated landscape swatches and a demonstration edition.
+
+To publish an edition, keep the source, output folder, prepared catalog and receipts outside Git. In an existing private directory, run:
+
+```sh
+node scripts/internal/prepare-calendar.mjs YEAR PICKER_HTML_OR_JSON PRIVATE_OUTPUT_DIRECTORY
+```
+
+The source can be an offline HTML picker with one embedded `photoData` JSON block, a JSON photo array, or a JSON object containing `year` and `photos`. The result is `photo-picker-YYYY.json` with numeric `schemaVersion: 1`, numeric `year` and 12–100 photo records. Each record contains a stable `id`, optional alternate IDs in an `aliases` array, `title`, `caption`, `source`, `month`, integer print resolution `ppi` and a `uri` containing a base64 JPEG of the approved crop. Each English month name appears exactly once as a proposal. Alternates use an empty month string. IDs and aliases must be unique across the edition. For a 12-inch-wide reproduction, calculate ppi from the cropped source width divided by twelve. Keep camera metadata and original private paths out of the package. The annual package uses the protected document limit of 20 MiB.
+
+In **Publishing → Add a document**, upload the prepared file with its exact filename, year-specific title, collection, version and summary. Existing installations can also use the private importer described above. Verify authenticated retrieval and an anonymous denial using the actual production records. Reopen the annual link in an approved browser, inspect the record count and sample crops, assign different months, download a text receipt, lock, then restore the list. Keep the read-back hashes and access evidence in the private release record.
+
+Month selections stay in the current page’s memory. The review receipt includes the year, completion count and all twelve month lines, so employees can save partial work and restore it in the same edition. Copying, downloading or opening the system share sheet does not publish a choice to the company catalog. The employee sends the receipt to the calendar editor.
+
 ## References
 
 - [CloudKit role-based access](https://developer.apple.com/icloud/cloudkit/designing/)

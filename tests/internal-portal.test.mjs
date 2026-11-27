@@ -79,8 +79,19 @@ test('private record types have only explicit employee and administrator grants'
 test('public shell contains no private company content, local paths, PDFs or persisted session cache', async () => {
   const directory = new URL('../static/internal/', import.meta.url);
   for (const file of await readdir(directory)) {
-    assert.ok(['index.html','portal.css','portal.mjs','core.mjs','config.json','download'].includes(file), `Unexpected static file ${file}`);
-    if (file === 'download') continue; // Its generic, ciphertext-only shell is tested separately.
+    assert.ok(['index.html','portal.css','portal.mjs','core.mjs','calendar.mjs','config.json','download','calendar-guide'].includes(file), `Unexpected static file ${file}`);
+    if (file === 'download') continue; // Its ciphertext-only shell is tested separately.
+    if (file === 'calendar-guide') {
+      const guide = new URL('calendar-guide/', directory);
+      const media = ['detail.webp','gate.webp','library.webp','locked.webp','mobile.webp','pick.webp','review.webp'];
+      assert.deepEqual((await readdir(guide)).sort(), [...media, 'guide.css', 'index.html'].sort());
+      const html = await readFile(new URL('index.html', guide), 'utf8');
+      assert.match(html, /synthetic account/);
+      assert.match(html, /noindex/);
+      assert.doesNotMatch(html, /data:image|\/Users\/|BEGIN PRIVATE KEY/);
+      for (const image of media) assert.ok(html.includes('src="' + image + '"'));
+      continue;
+    }
     const source = await readFile(new URL(file, directory), 'utf8');
     assert.doesNotMatch(source, /\/Users\/|BEGIN PRIVATE KEY|localStorage|sessionStorage|indexedDB/);
   }
@@ -134,4 +145,58 @@ test('CloudKit signed requests use GET for caller identity and POST for records,
     assert.throws(() => callerIdentity({ httpStatus: 401, serverErrorCode: 'AUTHENTICATION_FAILED', users: [{ userRecordName: 'synthetic-owner' }] }));
   }
   finally { globalThis.fetch = original; }
+});
+
+import { calendarYear, calendarRoute, validateCalendar, loadCalendarEdition, assignPhoto, restoreChoices } from '../static/internal/calendar.mjs';
+const syntheticCrop = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAACAAQDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAT/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAwT/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCgAyF//9k=';
+function calendarFixture(year = 2033) {
+  const months = Array.from({ length: 12 }, (_, i) => new Date(Date.UTC(year, i, 1)).toLocaleString('en-US', {month:'long', timeZone:'UTC'}));
+  return {schemaVersion:1, year, photos:months.map((month, i) => ({
+    id:'F' + i, title:'Synthetic photograph ' + i, caption:'A synthetic color swatch.', source:'Synthetic fixture',
+    month, ppi:240, aliases:[], uri:syntheticCrop,
+  }))};
+}
+test('annual picker is generic, identifies exact catalog editions and validates an inline JPEG for each proposed month', () => {
+  const doc = calendarFixture();
+  assert.equal(validateCalendar(doc, 2033), doc);
+  assert.equal(calendarYear({filename:'photo-picker-2042.json',mime:'application/json'}), 2042);
+  assert.equal(calendarRoute('#calendar/2042'), 2042);
+  assert.equal(calendarRoute('#calendar/2042/extra'), null);
+  assert.equal(calendarYear({filename:'photo-picker-2042.json',mime:'text/plain'}), null);
+  for (const update of [p => {p.uri = 'https://example.org/image.jpg';}, p => {p.uri = 'data:image/jpeg;base64,SGVsbG8=';},
+    p => {p.ppi = -1;}, p => {p.aliases = ['F1'];}, p => {p.month = '';}, p => {p.month = 'April';}]) {
+    const changed = structuredClone(doc); update(changed.photos[0]); assert.throws(() => validateCalendar(changed, 2033));
+  }
+  assert.throws(() => validateCalendar(doc, 2034));
+});
+test('month reassignment replaces the old month and occupant; downloaded partial choices restore with aliases', () => {
+  const doc = calendarFixture(); doc.photos[0].aliases = ['OLD'];
+  let slots = Array(12).fill(''); slots = assignPhoto(slots, 'F0', 'February');
+  slots = assignPhoto(slots, 'F1', 'January'); slots = assignPhoto(slots, 'F0', 'January');
+  assert.equal(slots[0], 'F0'); assert.equal(slots[1], '');
+  const rows = doc.photos.map((p,i) => p.month+' — '+(i === 0 ? 'OLD · Synthetic photograph' : 'Unassigned'));
+  const receipt = '2033 calendar choices (1/12)\n' + rows.join('\n');
+  assert.deepEqual(restoreChoices(receipt,2033,doc.photos), slots);
+  assert.throws(() => restoreChoices(receipt,2034,doc.photos));
+  assert.throws(() => restoreChoices(receipt.replace('OLD ·','unknown ·'),2033,doc.photos));
+  assert.throws(() => restoreChoices(receipt.replace('February — Unassigned','February — OLD · duplicate'),2033,doc.photos));
+});
+test('a photo edition resolves only from the fresh catalog, takes the active edition and releases downloaded bytes', async () => {
+  const fixture = calendarFixture();
+  const bytes = new TextEncoder().encode(JSON.stringify(fixture));
+  const first = {filename:'photo-picker-2033.json', mime:'application/json'};
+  const duplicate = {...first};
+  const repository = {catalog:async () => ({catalog:{documents:[first,duplicate]}}),
+    document: async doc => { assert.equal(doc, first); return bytes; }, check() {}};
+  assert.equal(await loadCalendarEdition(repository, 2034), null);
+  assert.deepEqual(await loadCalendarEdition(repository, 2033), fixture);
+  assert.ok(bytes.every(byte => byte === 0));
+});
+test('changing view or locking while a photo edition is loading discards all retrieved image bytes', async () => {
+  const fixture = calendarFixture();
+  const bytes = new TextEncoder().encode(JSON.stringify(fixture));
+  const repository = {catalog:async () => ({catalog:{documents:[{filename:'photo-picker-2033.json',mime:'application/json'}]}}),
+    document:async () => bytes, check() {throw new AccessError('Session ended');}};
+  await assert.rejects(loadCalendarEdition(repository,2033), AccessError);
+  assert.ok(bytes.every(byte => byte === 0));
 });
