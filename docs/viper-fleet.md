@@ -10,17 +10,16 @@ Never put private machine reports or signing keys in the website repository.
 
 ## Direct reporting
 
-Container: **`iCloud.orbitusrobotics.ViperFleet`**. The managed machine sends
-signed HTTPS JSON directly to Apple; no Cloudflare Worker or intake service is
-used. The browser reads CloudKit through Apple-hosted authentication and the
-custom `FleetAdmin` role. Machine reports use a separate server-to-server key.
+The original direct reporter signs HTTPS JSON and submits it to the public
+database of `iCloud.orbitusrobotics.ViperFleet`. The browser reads CloudKit
+through Apple-hosted authentication and the custom `FleetAdmin` role.
 
-Every holder of that shared server key can read, change and delete data in the
-container's public database scope. A dedicated key enables separate rotation
-and revocation; it is not a write-only or per-device permission. Only distribute
-it privately to trusted managed machines. Device IDs are record conventions,
-not server-enforced ownership boundaries. The dedicated container isolates
-fleet data from other applications and personal iCloud storage.
+Keep the Apple server-to-server private key on an operator-controlled server.
+Apple's registration form warns that the key gives unrestricted access to the
+container's public database. It has no control for restricting a key to a
+device, group or record type. A separate key ID permits separate revocation.
+Never distribute an Apple private key in a recipient app, ZIP or profile.
+[Apple's CloudKit Catalog](https://developer.apple.com/go/?id=cloudkit-catalog)
 
 Reporter source, setup tool, schema, tests and operator instructions remain in
 the ROB Viper codebase:
@@ -58,10 +57,10 @@ reporting keys; use CloudKit Console to stop a compromised key.
 The portal keeps records only in memory and clears them at sign-out/failure.
 Receipt time comes from Apple's `modified.timestamp` system metadata and the
 query sorts by `modifiedTimestamp`; no client can set this receipt field.
-Reported health remains self-reported. FleetAdmin gets read only; FleetReporter grants create/read/write only to the
-verified server-key owner. Server keys inherit owner roles, so registration
-alone does not grant write access. World,
-Authenticated and Creator have no grants on `ViperFleetStatus`.
+Reported health remains self-reported. The `ViperFleetStatus` schema grants
+`FleetAdmin` read access and `FleetReporter` create, read and write access.
+World, Authenticated and Creator have no grants on that record type. These
+schema rules do not establish a per-key limit on an Apple server credential.
 
 ## Developer inventory groups
 
@@ -69,7 +68,7 @@ The optional GitHub Actions repository variable `VIPER_FLEET_INVENTORY_GROUPS` a
 
 In **Managed machines**, an authenticated operator can use **Inventory scope** to read the selected group’s Mac reports. **Default fleet** queries `ViperFleetStatus`. Each group queries its own `InventoryGroup_<code>` record type in the same configured container. CloudKit grants must control access to each record type. Switching scopes clears prior rows, visible details and pending results. The developer group view presents inventory status only.
 
-The [private-package setup guide](https://www.orbitusrobotics.com/r/developer-inventory/) uses screenshots of the actual portal with local synthetic records. Production group activation requires the intended CloudKit schema, a registered group inventory signer, and a permitted server-side report for that group. Keep each personalized package and its signing authorization in the private distribution channel.
+Prepared recipient kits show **Waiting for cloud activation**, disable **Install and Share Status**, and start no reporter. There is no active developer-group download or verified production receipt. The proposed intake service would accept a revocable credential for inventory submissions to one assigned group. The credential could not authenticate directly to Apple. Only the server would hold the Apple signing key and choose the CloudKit destination. The guide shows the packaged pending state and the real portal with synthetic reports. [Developer inventory kit guide](https://www.orbitusrobotics.com/r/developer-inventory/)
 
 ## Verification
 
