@@ -1,0 +1,14 @@
+[
+  {
+    "label": "Recommended · notarized Developer ID",
+    "filename": "RedAgent-Inventory-0.5.2-b3-macOS-arm64-Notarized.zip",
+    "bytes": 46126151,
+    "sha256": "04bfffca480bb50c76cb8e3855f6db9de9036f5b3e14d1febbf1971938b24f8d"
+  },
+  {
+    "label": "Ad hoc · unnotarized",
+    "filename": "RedAgent-Inventory-0.5.2-b3-macOS-arm64-AdHoc.zip",
+    "bytes": 46561520,
+    "sha256": "1a4c91f250bd78f5b396c37967746e449d9e2f1c34902c61e8a7ed3217acdbe2"
+  }
+]

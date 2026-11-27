@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Enroll an approved Mac account in Fleet · RedAgent</title>
+<meta name="description" content="Approve one Mac account for the standalone Fleet inventory reporter, verify its first accepted check-in and withdraw access.">
+<style>
+:root{font:100%/1.55 Inter,system-ui,sans-serif;color:#192732;background:#f5f4f0}*{box-sizing:border-box}body{margin:0}main{max-width:54rem;margin:auto;padding:2rem clamp(1rem,4vw,2.5rem) 4rem}a{color:#8d2232;text-underline-offset:.17em}a:focus-visible{outline:3px solid #8d2232;outline-offset:3px}nav{padding-bottom:1rem;border-bottom:1px solid #bdc4c6}h1{font-size:clamp(2rem,5vw,3rem);line-height:1.12;letter-spacing:-.035em;margin:.3rem 0 1rem}h2{font-size:1.35rem;margin:1.8rem 0 .4rem}p{margin:.5rem 0}code{overflow-wrap:anywhere}figure{margin:1rem 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e6e9e6;padding:.8rem 1rem}figure>a{display:block;overflow:auto}img{display:block;max-width:100%;height:auto}@media(max-width:42rem){figure img{width:42rem;min-width:42rem;max-width:none}}figcaption,.edition{color:#485861;font-size:.93rem}.edition{margin:1.5rem 0 .4rem}dt{font-weight:650;margin-top:.6rem}dd{margin:0}
+</style></head><body><main>
+<nav aria-label="Breadcrumb"><a href="../">RedAgent</a> / Fleet inventory</nav>
+<header><p class="edition">Private Mac preview · 0.5.2 build 3</p><h1>Enroll an approved Mac account in Fleet</h1>
+<p>The private Apple silicon preview requires macOS 26 or later. A Fleet administrator can approve one Mac and one local account through device management (MDM). Once installed, the standalone inventory reporter checks in automatically when the assignment and its matching private signer arrive. A new installation appears in Fleet after its first accepted check-in.</p></header>
+<p>For installation, choose the <strong>notarized Developer ID</strong> archive from the private release. Apple accepted build 3, and Gatekeeper verified its stapled ticket for Orbitus Robotics (team <code>975CAGD5EW</code>). An ad-hoc, unnotarized archive of build 3 is available separately for comparison. Check the <a href="../#managed-enrollment-build-3">file size and SHA-256</a> for your chosen ZIP.</p>
+<h2>1. Assign the Mac and account</h2>
+<p>Have your Fleet administrator register an inventory signer in the intended CloudKit environment and grant its owner the <code>FleetInventoryReporter</code> role. Use a distinct registered signer per approval. This role can create, read and update status records across the Fleet.</p>
+<p>Generate the public assignment with <code>make_enrollment_profile.py</code> from the private release or source checkout. Deploy the generated system-scoped profile to the approved Mac through MDM. It sets a forced <code>InventoryEnrollment</code> dictionary in the domain <code>com.orbitusrobotics.redagent.inventory.enrollment</code>.</p>
+<dl><dt>Fleet configuration</dt><dd><code>version</code> (1), <code>purpose</code> (inventory), <code>container</code> (iCloud.orbitusrobotics.ViperFleet), <code>environment</code> and <code>keyID</code> identify the reporting destination and signer.</dd>
+<dt>Approval</dt><dd><code>platformUUID</code> identifies the approved Mac and <code>accountUUID</code> its local account. <code>publicKeySHA256</code> is the SHA-256 fingerprint of the registered public key’s DER SubjectPublicKeyInfo.</dd></dl>
+<p>Keep one active managed assignment per Mac. Before designating another account, remove or replace the previous assignment in MDM. The installed management app also has one owner.</p>
+<details><summary>Read the account identifiers and generate the public assignment</summary>
+<p>On the approved Mac, sign in to the intended account. In Terminal, from the directory containing the extracted installer app, run the identity lookup.</p>
+<pre><code>"./RedAgent Inventory Installer.app/Contents/Resources/Runtime/InventoryEnrollmentPolicy" --identifiers</code></pre>
+<p>In the private source checkout, supply the two reported UUIDs, the registered key ID and its P-256 public PEM. This example uses the development environment and writes a new file for MDM.</p>
+<pre><code>python3 RedAgent/macos_inventory/make_enrollment_profile.py \
+  --platform-uuid "$PLATFORM_UUID" --account-uuid "$ACCOUNT_UUID" \
+  --environment development --key-id "$REGISTERED_KEY_ID" \
+  --public-key inventory-public.pem --output MacInventory.mobileconfig</code></pre>
+</details>
+<h2>2. Deliver the signer privately</h2>
+<p>Through your private provisioning channel, place <code>inventory-key.pem</code> in <code>~/Library/Application Support/Orbitus/RedAgent Inventory/inventory/</code> for the reporting user. The user owns the folder and key, with permissions 0700 and 0600 respectively. Keep the private key out of the downloadable installer and the public assignment.</p>
+<h2>3. Install and verify the first report</h2>
+<p>From the approved account, open <strong>RedAgent Inventory Installer.app</strong> and click <strong>Install for This User</strong>. A managed assignment can arrive after installation. An existing manual <code>profile.json</code> takes precedence. Ask the administrator to correct it if the reporter rejects it. Click <strong>Show Status</strong> to check whether the reporter is waiting or a report has been accepted. Under <strong>Waiting for inventory provisioning.</strong>, the reporter identifies the missing dedicated key or managed approval.</p>
+<p>Look for the first <strong>Last accepted by Fleet</strong> timestamp, then confirm the matching record in Fleet. After an upgrade, look for a receipt newer than this assignment. If a new receipt is missing, ask the administrator to check the managed assignment, signer, account and CloudKit environment. The <a href="../inventory-guide/#per-user-macos">inventory guide</a> describes the report contents and login lifecycle.</p>
+<figure><a href="waiting.webp"><img src="waiting.webp" width="700" height="107" alt="Two packaged status records. Both report waiting. One needs the dedicated inventory key or a manual profile. The other needs a managed approval for the Mac and user. Both receipt timestamps are null."></a><figcaption>Two status records from the build 3 ad-hoc controls, displayed in a text viewer. The test account first lacked a dedicated signing key and then lacked a matching managed approval. Both checks returned a null receipt. Approval and accepted-report tests used synthetic policy and mocked CloudKit. Live MDM enrollment and Apple acceptance remain unverified for this run.</figcaption></figure>
+<h2>4. Withdraw approval</h2>
+<p>Choose <strong>Uninstall</strong> to stop this user’s reporter. The Fleet administrator can remove the MDM assignment and revoke that signer in CloudKit to withdraw access. Previously accepted reports keep their saved receipt.</p>
+<p><a href="../#managed-enrollment-build-3">Build 3 package details</a> · <a href="../inventory-guide/#management-app-build-2">Build 2 and manual provisioning</a></p>
+</main></body></html>

@@ -77,6 +77,12 @@
       <p class="ra-text-links"><a href="{{ "r/inventory-guide/" | relURL }}#management-app-build-2">Install, upgrade or remove the build 2 management app</a></p>
       {{ range . }}<details><summary>{{ .label }} · package and SHA-256</summary><p><code>{{ .filename }}</code><br>{{ printf "%d" (int .bytes) }} bytes</p><code>{{ .sha256 }}</code></details>{{ end }}
       {{ end }}
+      {{ with site.Data.redagent_inventory_enrollment }}
+      <h3 id="managed-enrollment-build-3">Managed inventory enrollment · build 3</h3>
+      <p>Private 0.5.2 preview for macOS 26 or later on Apple silicon. An organization can approve a Mac and a local account for automatic Fleet inventory reporting.</p>
+      <p class="ra-text-links"><a href="{{ "r/managed-enrollment/" | relURL }}">Approve a Mac account and verify its first report</a></p>
+      {{ range . }}<details><summary>{{ .label }} · package and SHA-256</summary><p><code>{{ .filename }}</code><br>{{ printf "%d" (int .bytes) }} bytes</p><code>{{ .sha256 }}</code></details>{{ end }}
+      {{ end }}
     </section>
     <footer class="ra-page-footer"><span>Keep this link handy.</span><a href="https://www.orbitusrobotics.com/r/">orbitusrobotics.com/r</a><a href="{{ "products/signalatlas/" | relURL }}">Explore SignalAtlas ↗</a></footer>
   </div>
