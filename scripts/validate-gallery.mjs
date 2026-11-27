@@ -937,8 +937,9 @@ async function main() {
     // Includes the gallery archive, recycling videos, and three 2026 clips loaded on demand.
     // Preserve prior releases, including signed bridge aliases and both illustrated Viper manual editions.
     // Includes the 42-second Droid Arena movie, editable presentation and standalone music sample.
-    publicBytes <= 505 * 1024 * 1024,
-    `Published site exceeds 505 MiB: ${(publicBytes / 1024 / 1024).toFixed(1)} MiB`,
+    // The annual picker shell and its illustrated guide add up to 224 KiB. Photo editions stay in CloudKit.
+    publicBytes <= (505 * 1024 + 224) * 1024,
+    `Published site exceeds 505 MiB + 224 KiB: ${(publicBytes / 1024 / 1024).toFixed(1)} MiB`,
   );
 
   const htmlFiles = publicFiles.filter((file) => path.extname(file).toLowerCase() === ".html");
