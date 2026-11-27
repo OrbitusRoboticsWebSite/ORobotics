@@ -49,6 +49,49 @@ test('query uses CloudKit continuation responses and never returns partial data 
   await assert.rejects(queryFleet({ performQuery: async () => first }));
   await assert.rejects(queryFleet({ performQuery: async () => first }, () => false));
 });
+test('an inventory scope queries its own record type and exposes only its Mac statuses', async () => {
+  const mac = records.find(report => report.os.family === 'macos');
+  const linux = records.find(report => report.os.family === 'linux');
+  const makeRecord = (recordType, report) => ({
+    recordType, fields: { payloadJSON: { value: JSON.stringify(report) } }, modified: { timestamp: now },
+  });
+  const source = new Map([
+    ['ViperFleetStatus', [makeRecord('ViperFleetStatus', linux)]],
+    ['InventoryGroup_first', [makeRecord('InventoryGroup_first', { ...mac, hostLabel: 'First Mac' })]],
+    ['InventoryGroup_second', [makeRecord('InventoryGroup_second', { ...mac, hostLabel: 'Second Mac' }), makeRecord('InventoryGroup_second', linux)]],
+  ]);
+  const database = { performQuery: async query => ({ records: source.get(query.recordType) }) };
+  assert.deepEqual((await queryFleet(database)).map(r => r.hostLabel), [linux.hostLabel]);
+  assert.deepEqual((await queryFleet(database, undefined, 'first')).map(r => r.hostLabel), ['First Mac']);
+  assert.deepEqual((await queryFleet(database, undefined, 'second')).map(r => r.hostLabel), ['Second Mac']);
+  await assert.rejects(queryFleet(database, undefined, 'missing'), /Access unavailable/);
+  await assert.rejects(queryFleet({ performQuery: async () => ({ records: source.get('InventoryGroup_first') }) }, undefined, 'second'), /Unexpected record type/);
+  await assert.rejects(queryFleet(database, undefined, 'InventoryGroup_first'), /Invalid inventory group/);
+});
+
+test('a late inventory result is rejected after switching scopes', async () => {
+  let finish, selected = 'first';
+  const oldQuery = queryFleet({ performQuery: () => new Promise(resolve => { finish = resolve; }) }, () => selected === 'first', 'first');
+  selected = 'second';
+  const newQuery = await queryFleet({ performQuery: async query => {
+    assert.equal(query.recordType, 'InventoryGroup_second');
+    return { records: [] };
+  } }, () => selected === 'second', selected);
+  assert.deepEqual(newQuery, []);
+  finish({ records: [] });
+  await assert.rejects(oldQuery, /Load superseded/);
+});
+
+test('deployment accepts only optional, unique operator-provided inventory slugs', () => {
+  const env = { VIPER_FLEET_ENABLED: 'true', VIPER_FLEET_CONTAINER: 'iCloud.example.Fleet', VIPER_FLEET_ENVIRONMENT: 'development', VIPER_FLEET_API_TOKEN: 'sample' };
+  const configured = setting => fleetConfig({ ...env, VIPER_FLEET_INVENTORY_GROUPS: setting });
+  assert.equal(configured('  ').inventoryGroups, undefined);
+  assert.deepEqual(configured('["first","group2"]').inventoryGroups, ['first', 'group2']);
+  for (const setting of ['invalid JSON', 'null', '{}', '"first"', '["First"]', '["group-tag"]', '["first","first"]', JSON.stringify(['a'.repeat(25)])]) {
+    assert.throws(() => configured(setting));
+  }
+});
+
 test('staged portal is unindexed, inactive and contains no password form', async () => {
   const html = await readFile(new URL('../static/viper-fleet/index.html', import.meta.url), 'utf8');
   const config = JSON.parse(await readFile(new URL('../static/viper-fleet/config.json', import.meta.url), 'utf8'));

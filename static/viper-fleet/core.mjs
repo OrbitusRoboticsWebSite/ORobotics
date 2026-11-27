@@ -46,14 +46,31 @@ export function decodeRecord(record) {
   if (r.enrollment && record.recordName !== `device-${r.deviceId}`) throw new Error('Enrollment record identity mismatch');
   return { ...r, receivedAt: new Date(received).toISOString() };
 }
-export async function queryFleet(database, isCurrent = () => true) {
-  let query = { recordType: 'ViperFleetStatus', sortBy: [{ systemFieldName: 'modifiedTimestamp', ascending: false }] };
+const groupSlug = /^[a-z][a-z0-9]{0,23}$/;
+function validGroup(value) { return typeof value === 'string' && groupSlug.test(value); }
+
+export function inventoryGroups(groups = []) {
+  if (!Array.isArray(groups) || !groups.every(validGroup) || new Set(groups).size !== groups.length) {
+    throw new Error('Inventory groups must be an array of unique, lowercase group slugs');
+  }
+  return groups;
+}
+
+export async function queryFleet(database, isCurrent = () => true, group = '') {
+  if (group !== '' && !validGroup(group)) throw new Error('Invalid inventory group');
+  const recordType = group === '' ? 'ViperFleetStatus' : `InventoryGroup_${group}`;
+  let query = { recordType, sortBy: [{ systemFieldName: 'modifiedTimestamp', ascending: false }] };
   const byID = new Map(), seen = new Set();
   for (let page = 0; page < 50; page++) {
     const response = await database.performQuery(query, { resultsLimit: 100, desiredKeys: ['payloadJSON'] });
     if (!isCurrent()) throw new Error('Load superseded');
     if (response.hasErrors || response.errors?.length || !Array.isArray(response.records)) throw new Error('Access unavailable');
-    for (const record of response.records) { const r = decodeRecord(record); if (!byID.has(r.deviceId)) byID.set(r.deviceId, r); }
+    for (const record of response.records) {
+      if (record.recordType !== undefined && record.recordType !== recordType) throw new Error('Unexpected record type');
+      const r = decodeRecord(record);
+      if (group && r.os.family !== 'macos') continue;
+      if (!byID.has(r.deviceId)) byID.set(r.deviceId, r);
+    }
     if (!response.continuationMarker) return [...byID.values()];
     if (seen.has(response.continuationMarker)) throw new Error('Repeated query cursor');
     seen.add(response.continuationMarker);

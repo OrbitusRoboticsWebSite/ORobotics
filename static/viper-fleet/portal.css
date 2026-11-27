@@ -8,3 +8,4 @@
 #queue-preview:empty,#queue-receipt:empty { display:none; }
 #queue-preview,#queue-receipt { max-height:420px; overflow:auto; white-space:pre-wrap; overflow-wrap:anywhere; }
 @media(max-width:700px) { .queue-inputs { grid-template-columns:1fr; } .queue-job { align-items:flex-start; flex-direction:column; } }
+#inventory-scope-control { margin:0 24px 12px; max-width:24rem; }

@@ -83,6 +83,9 @@
       <p class="ra-text-links"><a href="{{ "r/managed-enrollment/" | relURL }}">Approve a Mac account and verify its first report</a></p>
       {{ range . }}<details><summary>{{ .label }} · package and SHA-256</summary><p><code>{{ .filename }}</code><br>{{ printf "%d" (int .bytes) }} bytes</p><code>{{ .sha256 }}</code></details>{{ end }}
       {{ end }}
+      <h3 id="developer-inventory">Developer group inventory · build 4 preview</h3>
+      <p>A developer-specific private package can share a Mac’s inventory status with its assigned group. Production CloudKit activation is pending.</p>
+      <p class="ra-text-links"><a href="{{ "r/developer-inventory/" | relURL }}">Share status and view a developer group</a></p>
     </section>
     <footer class="ra-page-footer"><span>Keep this link handy.</span><a href="https://www.orbitusrobotics.com/r/">orbitusrobotics.com/r</a><a href="{{ "products/signalatlas/" | relURL }}">Explore SignalAtlas ↗</a></footer>
   </div>

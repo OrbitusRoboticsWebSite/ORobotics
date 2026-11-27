@@ -63,6 +63,14 @@ verified server-key owner. Server keys inherit owner roles, so registration
 alone does not grant write access. World,
 Authenticated and Creator have no grants on `ViperFleetStatus`.
 
+## Developer inventory groups
+
+The optional GitHub Actions repository variable `VIPER_FLEET_INVENTORY_GROUPS` accepts a JSON array of unique opaque group codes. For example, `["cobalt","beta"]` uses synthetic codes. Each code starts with a lowercase letter and contains up to 24 lowercase letters or digits in total. Configured codes are public in the generated portal configuration. Leave the variable unset to keep the existing Fleet view.
+
+In **Managed machines**, an authenticated operator can use **Inventory scope** to read the selected group’s Mac reports. **Default fleet** queries `ViperFleetStatus`. Each group queries its own `InventoryGroup_<code>` record type in the same configured container. CloudKit grants must control access to each record type. Switching scopes clears prior rows, visible details and pending results. The developer group view presents inventory status only.
+
+The [private-package setup guide](https://www.orbitusrobotics.com/r/developer-inventory/) uses screenshots of the actual portal with local synthetic records. Production group activation requires the intended CloudKit schema, a registered group inventory signer, and a permitted server-side report for that group. Keep each personalized package and its signing authorization in the private distribution channel.
+
 ## Verification
 
 Run `node --test tests/viper-fleet.test.mjs`, the standard site build and

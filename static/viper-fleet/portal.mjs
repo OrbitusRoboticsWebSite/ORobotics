@@ -1,12 +1,16 @@
-import { platformNames, isRecent, versionLabel, filterMachines, exampleReport, sampleMachines, queryFleet } from './core.mjs';
+import { platformNames, isRecent, versionLabel, filterMachines, exampleReport, sampleMachines, queryFleet, inventoryGroups } from './core.mjs';
 import { attachQueue } from './queue.mjs';
 
 const $ = id => document.getElementById(id);
 let machines = [], mode = 'locked', identity, container, config, generation = 0;
+let group = '';
 const queue = attachQueue({ database: () => container.publicCloudDatabase, configuration: () => config,
-  authorized: () => Boolean(identity) && mode === 'live' && config?.commandsEnabled === true });
+  authorized: () => Boolean(identity) && mode === 'live' && group === '' && config?.commandsEnabled === true });
 function text(id, value) { $(id).textContent = value; }
-function clearRecords() { generation++; machines = []; $('details').close(); text('detail-json', ''); render(); }
+function clearRecords() {
+  generation++; machines = []; $('details').close();
+  text('detail-title', ''); text('detail-note', ''); text('detail-json', ''); render();
+}
 function render() {
   const filters = { search: $('search').value, platform: $('platform').value, flavor: $('flavor').value, status: $('status').value };
   const shown = filterMachines(machines, filters);
@@ -17,6 +21,8 @@ function render() {
   text('count-stale', loaded ? shown.filter(r => !isRecent(r)).length : '—');
   text('source-label', mode === 'demo' ? 'INVENTED SAMPLE DATA' : 'PRIVATE REGISTRY');
   text('results-status', loaded ? `${shown.length} of ${machines.length} ${mode === 'demo' ? 'sample ' : ''}machines · reports received most recently first` : 'Sign in to load your fleet, or explore the sample preview.');
+  $('inventory-scope-control').hidden = !identity || mode === 'demo' || !config?.inventoryGroups?.length;
+  document.querySelector('[data-view="queue"]').hidden = group !== '' && mode !== 'demo';
   $('refresh').disabled = !identity || mode === 'demo';
   $('leave-demo').hidden = mode !== 'demo';
   $('demo').hidden = mode === 'demo';
@@ -86,16 +92,32 @@ $('copy-request').addEventListener('click', async () => {
   try { await navigator.clipboard.writeText($('request-example').textContent); text('copy-status', 'Template copied. Set your private profile path and actual status before use.'); }
   catch { text('copy-status', 'Select and copy the template below.'); }
 });
-$('refresh').addEventListener('click', loadFleet);
+$('refresh').addEventListener('click', () => loadFleet());
+$('inventory-scope').addEventListener('change', () => {
+  if (!identity || mode === 'demo') return;
+  group = $('inventory-scope').value;
+  queue.clear();
+  loadFleet(true);
+});
 
-async function loadFleet() {
+async function loadFleet(scopeChanged = false) {
   if (!identity || !container) return;
   mode = 'locked'; clearRecords(); const current = generation;
+  if (scopeChanged) {
+    for (const id of ['search', 'platform', 'status']) $(id).value = '';
+    $('machines').closest('.table-wrap').scrollLeft = 0;
+    updateFlavors();
+  }
+  const isCurrent = () => current === generation && Boolean(identity);
   $('refresh').disabled = true; text('auth-status', 'Checking fleet access and loading reports…');
   try {
-    machines = await queryFleet(container.publicCloudDatabase, () => current === generation && Boolean(identity));
-    mode = 'live'; updateFlavors(); render();
-    await queue.updateFleet(machines); queue.render();
+    if (group !== '' && !config.inventoryGroups.includes(group)) throw new Error('Unconfigured inventory group');
+    const reports = await queryFleet(container.publicCloudDatabase, isCurrent, group);
+    if (!isCurrent()) return;
+    machines = reports; mode = 'live'; updateFlavors(); render();
+    if (group === '') await queue.updateFleet(machines);
+    if (!isCurrent()) return;
+    queue.render();
     text('auth-status', 'Authorized fleet access. Reports are held only in this page’s memory.');
     notice(`${config.environment === 'development' ? 'Development pilot' : 'Private fleet'} · CloudKit permissions authorize access. Health values are reported by each machine.`, 'Private connection');
   } catch {
@@ -107,7 +129,7 @@ async function loadFleet() {
   }
 }
 async function setIdentity(value) {
-  queue.clear();
+  queue.clear(); group = ''; $('inventory-scope').value = '';
   identity = value?.userRecordName || value?.userIdentity?.userRecordName ? value : undefined;
   mode = 'locked'; clearRecords(); updateFlavors();
   if (identity) await loadFleet();
@@ -125,6 +147,8 @@ async function initialize() {
     if (!result.ok) throw new Error('Configuration unavailable');
     config = await result.json();
     if (config.enabled !== true) return;
+    config.inventoryGroups = inventoryGroups(config.inventoryGroups);
+    for (const slug of config.inventoryGroups) $('inventory-scope').add(new Option(slug, slug));
     if (!/^iCloud\.[A-Za-z0-9.-]+$/.test(config.container) || !config.apiToken || !['production', 'development'].includes(config.environment)) throw new Error('Configuration incomplete');
     text('intake-status', `Direct CloudKit reporting · ${config.environment === 'development' ? 'Development pilot: use synthetic reports while validating access.' : 'Use the profile issued by your administrator.'}`);
     await new Promise((resolve, reject) => {

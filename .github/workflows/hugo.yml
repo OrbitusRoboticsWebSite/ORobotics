@@ -87,6 +87,7 @@ jobs:
         run: node scripts/configure-viper-fleet.mjs
         env:
           VIPER_FLEET_ENABLED: ${{ vars.VIPER_FLEET_ENABLED }}
+          VIPER_FLEET_INVENTORY_GROUPS: ${{ vars.VIPER_FLEET_INVENTORY_GROUPS }}
           VIPER_FLEET_COMMANDS_ENABLED: ${{ vars.VIPER_FLEET_COMMANDS_ENABLED }}
           VIPER_FLEET_CONTAINER: ${{ vars.VIPER_FLEET_CONTAINER }}
           VIPER_FLEET_ENVIRONMENT: ${{ vars.VIPER_FLEET_ENVIRONMENT }}

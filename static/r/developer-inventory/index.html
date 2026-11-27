@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Developer inventory groups · RedAgent and Fleet</title>
+<meta name="description" content="Use a private developer inventory package on Mac and view the group’s status reports in Fleet.">
+<style>
+:root{font:100%/1.55 Inter,system-ui,sans-serif;color:#192732;background:#f5f4f0}*{box-sizing:border-box}body{margin:0}main{max-width:54rem;margin:auto;padding:2rem clamp(1rem,4vw,2.5rem) 4rem}a{color:#8d2232;text-underline-offset:.18em}nav{border-bottom:1px solid #bdc4c6;padding-bottom:1rem}h1{font-size:clamp(2rem,5vw,3rem);line-height:1.14;margin:.3rem 0 1rem}h2{font-size:1.35rem;margin:1.8rem 0 .4rem}p{margin:.5rem 0}code{overflow-wrap:anywhere}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#e6e9e6;padding:.8rem 1rem}figure{margin:1rem 0}figure a{display:block;overflow-x:auto}img{display:block;max-width:100%;height:auto}figcaption,.edition{color:#485861;font-size:.93rem}.edition{margin-top:1.5rem}@media(max-width:42rem){.wide img{min-width:42rem;max-width:none}}
+</style></head><body><main>
+<nav aria-label="Breadcrumb"><a href="../">RedAgent</a> / Fleet inventory</nav>
+<header><p class="edition">Mac development preview · 0.5.2 build 4</p><h1>Share a Mac’s status with a developer group</h1>
+<p>A privately prepared ZIP contains the common installer and a <strong>Developer Inventory</strong> folder for one group. The recipient chooses whether to share inventory from their signed-in Mac account. The tested offline fixture disables Fleet check-ins. The dashboard examples use mock reports. Production developer-group reporting awaits CloudKit schema and signer registration.</p></header>
+<h2>1. Open the private package</h2>
+<p>Extract the complete ZIP in Finder. Keep the app and its sibling <strong>Developer Inventory</strong> folder together. Open <strong>RedAgent Inventory Installer.app</strong> from your own account. If macOS opens it from a temporary location and it cannot find the folder, click <strong>Select Developer Folder…</strong> and choose <strong>Developer Inventory</strong> from that same extracted package, then click <strong>Select Folder</strong>.</p>
+<h2>2. Review the group and share</h2>
+<p><strong>Waiting for cloud activation</strong> means this preparation has public group information only. <strong>Install and Share Status</strong> stays disabled and the reporter does not start. Obtain the activated private folder from the distributor after the group’s CloudKit record type, signer and permissions are ready. An <strong>Offline fixture</strong> is a test package with Fleet check-ins disabled.</p>
+<figure><pre><code>{
+  &quot;group&quot;: &quot;cobalt&quot;,
+  &quot;environment&quot;: &quot;production&quot;,
+  &quot;awaitingRegistration&quot;: true
+}</code></pre><figcaption>Captured command-line preview from the packaged build 4 app, using an invented cobalt group. The selected environment is production. The pending flag means this example has no active reporting authorization.</figcaption></figure>
+<p>For an activated assignment, check the group and CloudKit environment shown in the installer. The reporter sends the Mac name, system and agent versions, architecture, device ID and check-in time. If the destination matches your intended group, click <strong>Install and Share Status</strong>. Keep the activated folder private because it contains the reporting authorization. Request a corrected package from its distributor if the group is wrong.</p>
+<p>Click <strong>Show Status</strong> and look for <strong>Installed developer inventory group</strong> to check the group and environment. A <strong>Last accepted by Fleet</strong> timestamp appears after the service acknowledges a report. The first group installation clears any prior unrelated receipt. Reinstalling the same assignment can keep its saved receipt.</p>
+<h2>3. View the group in Fleet</h2>
+<p>Open the Fleet portal supplied by your administrator and sign in with an authorized operator account. Under <strong>Managed machines</strong>, choose your group in <strong>Inventory scope</strong>. Fleet clears the previous rows before loading Mac status reports for that group. Use <strong>View report</strong> to inspect one Mac. <strong>Default fleet</strong> returns to the ordinary Fleet status view.</p>
+<figure class="wide"><a href="group.webp"><img src="group.webp" width="1000" height="357" alt="Offline Fleet dashboard with Inventory scope set to beta and one macOS row named Synthetic Beta Mac."></a><figcaption>The real Fleet interface shows one Mac in the invented beta group. The browser used local test responses. “Just now” is a synthetic receipt time.</figcaption></figure>
+<p>If the group is missing, ask the operator whether it has been configured. A denied read clears the rows. Check the signed-in account’s CloudKit access, then use <strong>Refresh reports</strong>.</p>
+<figure><a href="denied.webp"><img src="denied.webp" width="550" height="47" alt="Fleet’s access-denied notice says that no fleet records are displayed and suggests checking access or retrying."></a><figcaption>An offline access-denied response produced this notice. Earlier group reports were cleared.</figcaption></figure>
+<h2>4. Stop sharing from this login</h2>
+<p>Click <strong>Uninstall</strong> to remove the login item, runtime and installed management app. Your account retains its private inventory identity, assignment and saved status. To reinstall the same assignment, select the original developer folder and confirm <strong>Install and Share Status</strong> again. A conflicting assignment stops installation and leaves existing credentials in place.</p>
+<h2>Configure the operator view</h2>
+<p>Set the optional deployment variable <code>VIPER_FLEET_INVENTORY_GROUPS</code> to a JSON array of opaque group codes, such as <code>["cobalt","beta"]</code>. Each starts with a lowercase letter, contains only lowercase letters and digits, and has at most 24 characters. These codes appear in public site configuration. Keep developer names and credentials private.</p>
+<p>The selector reads <code>InventoryGroup_&lt;code&gt;</code> in the configured Fleet container. CloudKit permissions on that record type govern access. With no configured groups the portal uses the existing Fleet view. <strong>Explore sample fleet</strong> continues to show invented records.</p>
+</main></body></html>
