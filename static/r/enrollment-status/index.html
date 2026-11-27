@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Read the RedAgent helper, enrollment, receiver and inventory receipt status in the desktop app.">
+  <title>Enrollment status guide · RedAgent</title>
+  <style>
+    :root { font:100%/1.55 Inter,system-ui,sans-serif; color:#192732; background:#f5f4f0 }
+    * { box-sizing:border-box }
+    body { margin:0 }
+    main { max-width:48rem; margin:auto; padding:2rem clamp(1rem,4vw,2.5rem) 4rem }
+    a { color:#8d2232; text-underline-offset:.18em }
+    nav { border-bottom:1px solid #bdc4c6; padding-bottom:1rem }
+    .edition,figcaption { color:#485861; font-size:.93rem }
+    .edition { margin:1.5rem 0 .4rem }
+    h1 { font-size:clamp(2rem,5vw,3rem); line-height:1.15; margin:0 0 1rem }
+    ol { padding-left:1.4rem }
+    li { margin:1.3rem 0; padding-left:.25rem }
+    p { margin:.5rem 0 }
+    dt { font-weight:650; margin:.55rem 0 0 }
+    dd { margin:0 }
+    figure { margin:.8rem 0 }
+    figure img { display:block; max-width:100%; height:auto }
+    figcaption { margin-top:.35rem }
+  </style>
+</head>
+<body><main>
+  <nav aria-label="Breadcrumb"><a href="../#enrollment-status-guide">RedAgent</a> / Cloud Fleet</nav>
+  <p class="edition">RedAgent 0.5.2 desktop development preview · November 27, 2026</p>
+  <h1>Enrollment status guide</h1>
+  <p>Use the guide to read what RedAgent’s local system helper reports. Opening or refreshing it does not generate or import keys, register an Apple key, or change command settings.</p>
+  <ol>
+    <li><strong>Open the guide.</strong> On the <strong>Cloud Fleet</strong> tab, choose <strong>Enrollment status guide…</strong> to open <strong>Machine enrollment status</strong>.
+      <figure><a href="entry.webp"><img src="entry.webp" width="339" height="43" alt="The Refresh status and Enrollment status guide… buttons side by side in Cloud Fleet."></a><figcaption>The two read-only controls, captured from the actual Tk panel in an offline fixture.</figcaption></figure>
+    </li>
+    <li><strong>Refresh the helper snapshot.</strong> After your Fleet administrator confirms setup is complete, choose <strong>Refresh status</strong> on the Cloud Fleet tab. The open guide updates with the tab. <strong>Responding to the local app</strong> means the local helper answered this request. If it is unavailable, its installation and enrollment status are unknown.
+      <figure><a href="unavailable.webp"><img src="unavailable.webp" width="508" height="91" alt="The guide reads “Could not refresh helper status; installation and enrollment are unknown.”"></a><figcaption>A synthetic refresh failure in the actual guide. Return to <strong>Cloud Fleet</strong>, confirm the helper is reachable, and choose <strong>Refresh status</strong> again.</figcaption></figure>
+    </li>
+    <li><strong>Read the three states separately.</strong>
+      <dl>
+        <dt>Machine enrolled</dt><dd>Whether the helper reports a machine enrollment profile.</dd>
+        <dt>Cloud commands enabled</dt><dd>Whether the helper’s command setting is on.</dd>
+        <dt>Receiver running</dt><dd>Whether the receiver was running when the helper answered. An enrolled machine can have a stopped receiver.</dd>
+      </dl>
+      <figure><a href="status.webp"><img src="status.webp" width="362" height="176" alt="The status guide shows an enrolled machine, commands disabled, receiver stopped, a local check-in time and no inventory receipt."></a><figcaption>The actual Tk guide displaying synthetic values. The helper can retain the last receiver check-in while the receiver is stopped.</figcaption></figure>
+    </li>
+    <li><strong>Compare the timestamps.</strong> <strong>Last receiver check-in</strong> is recorded on this computer. <strong>Last inventory receipt</strong> records the configured inventory destination’s accepted timestamp in the displayed environment. Read both in UTC. <strong>None recorded</strong> means there is no saved timestamp. A command outcome requires its own authenticated result. Select <strong>Close</strong> or press Escape when finished.</li>
+  </ol>
+  <p><strong>Legacy full-helper enrollment.</strong> An authorized administrator registers the public key with Apple outside RedAgent. The legacy workflow stores the CloudKit transport private key on the enrolled Mac, so it requires an operator-controlled Mac authorized to hold that key. This enrollment does not create a device-scoped Apple credential.</p>
+</main></body>
+</html>

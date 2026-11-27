@@ -62,6 +62,8 @@ Reported health remains self-reported. The `ViperFleetStatus` schema grants
 World, Authenticated and Creator have no grants on that record type. These
 schema rules do not establish a per-key limit on an Apple server credential.
 
+The desktop development preview exposes the helper’s local check-in time and the last receipt from the configured inventory destination in the read-only **Enrollment status guide…** on the **Cloud Fleet** tab. A command result requires its own authenticated evidence. [Enrollment status guide](https://www.orbitusrobotics.com/r/enrollment-status/)
+
 ## Developer inventory groups
 
 The optional GitHub Actions repository variable `VIPER_FLEET_INVENTORY_GROUPS` accepts a JSON array of unique opaque group codes. For example, `["cobalt","beta"]` uses synthetic codes. Each code starts with a lowercase letter and contains up to 24 lowercase letters or digits in total. Configured codes are public in the generated portal configuration. Leave the variable unset to keep the existing Fleet view.

@@ -88,6 +88,19 @@ Cloud Fleet 0.4 and persistent execution:
 - Sleep, disk unlock, shutdown and network loss constrain delivery. Cloud Fleet
   remains an application command channel, not a hosted Apple/Windows MDM server.
 
+2026-11-27 · Enrollment status guide · desktop development preview
+In Cloud Fleet, open Enrollment status guide… and choose Refresh status on
+the tab. The guide reads the helper's snapshot. Enrollment, the command
+setting and the running receiver are separate states. Last receiver check-in
+is local. Last inventory receipt records acceptance by the configured inventory
+destination in the displayed
+environment. Command results require separate authenticated evidence.
+The guide does not generate or import keys, register an Apple key or change
+command settings. An administrator registers the public key outside RedAgent.
+Legacy full-helper enrollment stores the Apple transport private key on an
+authorized, operator-controlled Mac and does not create a device-scoped key.
+https://www.orbitusrobotics.com/r/enrollment-status/
+
 2026-11-20 · Wi-Fi access-point picker
 Development source 7aaad23 adds BSSID and channel selection in Capture only
 and saved-capture analysis. The November 11 pilot packages predate the picker.
