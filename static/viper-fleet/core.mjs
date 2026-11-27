@@ -47,17 +47,17 @@ export function decodeRecord(record) {
   return { ...r, receivedAt: new Date(received).toISOString() };
 }
 const groupSlug = /^[a-z][a-z0-9]{0,23}$/;
-function validGroup(value) { return typeof value === 'string' && groupSlug.test(value); }
+export function validInventoryGroup(value) { return typeof value === 'string' && groupSlug.test(value); }
 
 export function inventoryGroups(groups = []) {
-  if (!Array.isArray(groups) || !groups.every(validGroup) || new Set(groups).size !== groups.length) {
+  if (!Array.isArray(groups) || !groups.every(validInventoryGroup) || new Set(groups).size !== groups.length) {
     throw new Error('Inventory groups must be an array of unique, lowercase group slugs');
   }
   return groups;
 }
 
 export async function queryFleet(database, isCurrent = () => true, group = '') {
-  if (group !== '' && !validGroup(group)) throw new Error('Invalid inventory group');
+  if (group !== '' && !validInventoryGroup(group)) throw new Error('Invalid inventory group');
   const recordType = group === '' ? 'ViperFleetStatus' : `InventoryGroup_${group}`;
   let query = { recordType, sortBy: [{ systemFieldName: 'modifiedTimestamp', ascending: false }] };
   const byID = new Map(), seen = new Set();

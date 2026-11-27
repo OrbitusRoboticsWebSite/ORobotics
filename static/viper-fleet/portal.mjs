@@ -79,7 +79,7 @@ document.querySelectorAll('[data-view]').forEach(button => button.addEventListen
   $('fleet-view').hidden = view !== 'fleet'; $('report-view').hidden = view !== 'report'; $('queue-view').hidden = view !== 'queue'; queue.render();
 }));
 function showRequest() {
-  text('request-example', `# Node.js 22 or later. Keep the profile and key outside the website.
+  text('request-example', `# Node.js 22 or later on the operator-controlled server. Keep the Apple private key here.
 # Validate locally first; this does not send a report.
 node report-direct.mjs --profile /private/reporter-profile.json --report status.json --validate
 
@@ -150,7 +150,7 @@ async function initialize() {
     config.inventoryGroups = inventoryGroups(config.inventoryGroups);
     for (const slug of config.inventoryGroups) $('inventory-scope').add(new Option(slug, slug));
     if (!/^iCloud\.[A-Za-z0-9.-]+$/.test(config.container) || !config.apiToken || !['production', 'development'].includes(config.environment)) throw new Error('Configuration incomplete');
-    text('intake-status', `Direct CloudKit reporting · ${config.environment === 'development' ? 'Development pilot: use synthetic reports while validating access.' : 'Use the profile issued by your administrator.'}`);
+    text('intake-status', `Direct CloudKit reporting · ${config.environment === 'development' ? 'Development pilot: use synthetic reports while validating access.' : 'Use the server-side profile on the operator-controlled server.'}`);
     await new Promise((resolve, reject) => {
       const script = document.createElement('script'); script.src = 'https://cdn.apple-cloudkit.com/ck/2/cloudkit.js';
       script.onload = resolve; script.onerror = reject; document.head.append(script);
