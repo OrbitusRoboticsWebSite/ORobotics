@@ -26,7 +26,7 @@
     <h1>Fleet inventory check-ins</h1>
     <p>A managed Mac, Windows PC or Linux system appears in Fleet when Apple accepts its first inventory report. Later reports update the same reporting identity’s last-seen time.</p>
     <p>This guide covers the private 0.5.2 development build for personal devices. The current Fleet portal uses CloudKit’s development environment. Your administrator must provision the inventory role and key there before a device can report.</p>
-    <p>Choose your installation scope. The <a href="#per-user-macos">signed-in user installer</a> reports inventory from one Apple silicon Mac login session. The <a href="#system-helper">system helper</a> runs as a machine service on a supported managed Mac, Windows PC or Linux system.</p>
+    <p>Choose your installation scope. The <a href="#per-user-macos">signed-in user installer</a> reports inventory from one Apple silicon Mac login session. For the newer version with an Applications shortcut, see <a href="#management-app-build-2">management app build 2</a>. The <a href="#system-helper">system helper</a> runs as a machine service on a supported managed Mac, Windows PC or Linux system.</p>
   </header>
   <section id="per-user-macos" aria-labelledby="per-user-heading">
     <h2 id="per-user-heading">Install for one Mac user</h2>
@@ -47,6 +47,22 @@
     <h3>4. Remove the login item</h3>
     <p>Click <strong>Uninstall</strong>. It stops the reporter and removes the login item, runtime and installed controls for this account. Reporter identity, state and private provisioning are retained in the user’s Application Support folder for reinstallation. A previously accepted Fleet row retains its last receipt.</p>
     <p>If you have already removed the downloaded app, use Finder’s <strong>Go → Go to Folder…</strong> to open <code>~/Library/Application Support/Orbitus/RedAgent Inventory/</code>. Open <strong>Inventory Status.command</strong> or <strong>Uninstall Inventory.command</strong> there.</p>
+  </section>
+  <section id="management-app-build-2" aria-labelledby="management-heading">
+    <h2 id="management-heading">Manage the reporter from Applications · build 2</h2>
+    <p>The separate private 0.5.2 build 2 runs on macOS 26 or later on Apple silicon. See <a href="../#inventory-management-build-2">build 2 package details and SHA-256</a> to identify your download. The <a href="#per-user-macos">original build 1</a> remains available for comparison.</p>
+    <p>The available ZIP is ad-hoc signed and unnotarized. Gatekeeper rejected it in the distribution assessment. If your Mac blocks it, ask your distributor for an approved build.</p>
+    <h3>1. Install or upgrade from your own account</h3>
+    <p>Extract the ZIP in Finder and open <strong>RedAgent Inventory Installer.app</strong>. Read the build and signing label in the window. Click <strong>Install for This User</strong> to install the management app and start the reporter for this login and future logins. Opening the window alone leaves reporting off on a fresh installation. To upgrade build 1 or replace a recognized build 2, open the new download from the same account and use the same button. Your private profile, key, identity and saved status carry forward.</p>
+    <h3>2. Reopen the management app</h3>
+    <p>In Finder, choose <strong>Go → Go to Folder…</strong>, enter <code>~/Applications</code> and open <strong>RedAgent Inventory Installer.app</strong>. This visible shortcut opens the management app at <code>/Users/Shared/.ra/RedAgent Inventory Installer.app</code>. The account that created the owner-only directory manages it. If it belongs to another account or a different app occupies the destination, installation stops. Use the original installing account to manage its copy.</p>
+    <h3>3. Check or remove the reporter</h3>
+    <p>Click <strong>Show Status</strong> to see the management and launcher paths and read the last reporting result. The login item still runs the executable in <code>~/Library/Application Support/Orbitus/RedAgent Inventory/Runtime/</code>. The same <a href="#per-user-macos">private provisioning and receipt checks</a> apply. A new installation waits when its account has no Fleet profile.</p>
+    <figure><pre aria-label="Packaged build 2 status"><code>Management app: /Users/Shared/.ra/RedAgent Inventory Installer.app
+Visible launcher: ~/Applications/RedAgent Inventory Installer.app
+Inventory login item: loaded
+{&quot;state&quot;: &quot;waiting&quot;, &quot;reason&quot;: &quot;&quot;, &quot;deviceId&quot;: null, &quot;receivedAt&quot;: null, &quot;environment&quot;: null, &quot;scope&quot;: &quot;user&quot;, &quot;updatedAt&quot;: &quot;2026-11-27T00:44:02Z&quot;}</code></pre><figcaption>Actual status output from the released build 2 ad-hoc package in an unprovisioned login. The home folder is shown as <code>~</code>. The login item loaded, and <code>receivedAt</code> was null.</figcaption></figure>
+    <p>Click <strong>Uninstall</strong> to stop the reporter and remove its login item, runtime, installed controls, Applications shortcut and management app. The installer removes its shared directory if it created it and it is empty. The account’s private reporting profile, key, identity and saved status remain available for reinstallation. The original downloaded ZIP and extracted app stay where you put them.</p>
   </section>
   <section id="system-helper"><h2>1. Check the installed system helper</h2>
     <p>Open RedAgent and choose <strong>Cloud Fleet</strong>. Select <strong>Refresh status</strong> and check the helper version. Inventory reporting requires the 0.5.2 helper. The 0.4.0 packages on the public <a href="../">RedAgent download page</a> predate this feature.</p>
