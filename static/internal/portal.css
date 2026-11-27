@@ -26,7 +26,8 @@
 @media(max-width: 680px) {
   .calendar-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1.3rem .7rem; }
   .calendar-card select { width: 100%; }
-  .calendar-filters label { width: 100%; }
+  .calendar-filters label { width: 100%; min-width: 0; }
+  .calendar-filters select { width: 100%; min-width: 0; max-width: 100%; }
   .calendar-card .eyebrow { font-size: .65rem; }
   .calendar-actions button { min-height: 44px; }
 }
