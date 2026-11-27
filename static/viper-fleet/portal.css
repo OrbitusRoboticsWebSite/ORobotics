@@ -9,5 +9,3 @@
 #queue-preview,#queue-receipt { max-height:420px; overflow:auto; white-space:pre-wrap; overflow-wrap:anywhere; }
 @media(max-width:700px) { .queue-inputs { grid-template-columns:1fr; } .queue-job { align-items:flex-start; flex-direction:column; } }
 #inventory-scope-control { margin:0 24px 12px; max-width:24rem; }
-.inventory-page { max-width:66rem; }
-.inventory-page #group-form { justify-content:flex-start; align-items:end; padding-block:0; }

@@ -54,7 +54,7 @@ jobs:
           node --test tests/redagent-portal.test.mjs
 
       - name: Validate Viper Fleet staging and filters
-        run: node --test tests/viper-fleet.test.mjs tests/viper-queue.test.mjs tests/inventory-portal.test.mjs
+        run: node --test tests/viper-fleet.test.mjs tests/viper-queue.test.mjs
 
       - name: Validate private employee portal boundaries
         run: node --test tests/internal-portal.test.mjs tests/internal-downloads.test.mjs
@@ -92,9 +92,6 @@ jobs:
           VIPER_FLEET_CONTAINER: ${{ vars.VIPER_FLEET_CONTAINER }}
           VIPER_FLEET_ENVIRONMENT: ${{ vars.VIPER_FLEET_ENVIRONMENT }}
           VIPER_FLEET_API_TOKEN: ${{ secrets.VIPER_FLEET_API_TOKEN }}
-          REDAGENT_INVENTORY_WEB_ENABLED: ${{ vars.REDAGENT_INVENTORY_WEB_ENABLED }}
-          REDAGENT_INVENTORY_WEB_ENVIRONMENT: ${{ vars.REDAGENT_INVENTORY_WEB_ENVIRONMENT }}
-          REDAGENT_INVENTORY_WEB_API_TOKEN: ${{ secrets.REDAGENT_INVENTORY_WEB_API_TOKEN }}
 
       - name: Validate optimized gallery output
         run: npm run validate

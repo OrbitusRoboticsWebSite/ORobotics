@@ -68,13 +68,7 @@ The optional GitHub Actions repository variable `VIPER_FLEET_INVENTORY_GROUPS` a
 
 In **Managed machines**, an authenticated operator can use **Inventory scope** to read the selected group’s Mac reports. **Default fleet** queries `ViperFleetStatus`. Each group queries its own `InventoryGroup_<code>` record type in the same configured container. CloudKit grants must control access to each record type. Switching scopes clears prior rows, visible details and pending results. The developer group view presents inventory status only.
 
-Prepared recipient kits show **Waiting for cloud activation**, disable **Install and Share Status**, and start no reporter. There is no active developer-group download or verified production receipt. The proposed intake service would accept a revocable credential for inventory submissions to one assigned group. The credential could not authenticate directly to Apple. Only the server would hold the Apple signing key and choose the CloudKit destination. The guide shows the packaged pending state and the real portal with synthetic reports. [Developer inventory kit guide](https://www.orbitusrobotics.com/r/developer-inventory/)
-
-### Separate inventory container
-
-**Developer inventory portal** opens the unlisted `/viper-fleet/inventory/` page. It uses its own Apple sign-in and a website API token for `iCloud.orbitusrobotics.RedAgentInventory`. In that container, grant the intended operator the `FleetAdmin` role and give the role read access to the intended `InventoryGroup_<slug>` record types. Members of this role can read every inventory group type that grants it read access. The group code selects a type and grants no permissions. The page supports only group status queries. Operators enter the group code at runtime. The site does not store codes or put them in URLs.
-
-Leave `REDAGENT_INVENTORY_WEB_ENABLED` unset until the dedicated container, reader grants and browser token are verified in the intended environment. Enabling this page then requires that variable set to `true`, `REDAGENT_INVENTORY_WEB_ENVIRONMENT` set to `development` or `production`, and `REDAGENT_INVENTORY_WEB_API_TOKEN` set to the inventory container’s website token restricted to the canonical origin. The browser token is visible to visitors. Keep private service keys and device credentials off the website. Legacy Fleet configuration is independent.
+Prepared recipient kits show **Waiting for cloud activation**, disable **Install and Share Status**, and start no reporter. There is no active developer-group download or verified production receipt. The recipient reporting and authentication design is pending. Use public group metadata only in prepared kits. Keep Apple server-to-server private keys out of all recipient packages. The guide shows the packaged pending state and the real portal with synthetic reports. [Developer inventory kit guide](https://www.orbitusrobotics.com/r/developer-inventory/)
 
 ## Verification
 
